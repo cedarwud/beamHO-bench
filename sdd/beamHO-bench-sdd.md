@@ -104,22 +104,20 @@ Core invariant:
 
 ## 3.3 Configuration (`beamHO-bench/src/config/paper-profiles`)
 
-Already present and treated as source of truth:
+Implemented and treated as source of truth:
 1. `paper-profile.schema.json`
 2. `types.ts`
 3. `case9-default.json`
 4. `starlink-like.json`
 5. `oneweb-like.json`
 6. `README.md`
-
-Missing implementation to add:
-1. `loader.ts` (schema validate + merge runtime overrides)
+7. `loader.ts` (schema validate + merge runtime overrides + source-map validation)
 
 Normative baseline values are pinned in:
 1. `beamHO-bench/src/config/paper-profiles/case9-default.json`
 2. `sdd/beamHO-bench-profile-baseline.md`
 
-Additional traceability files to add:
+Traceability files:
 1. `beamHO-bench/src/config/paper-profiles/case9-default.sources.json`
 2. `beamHO-bench/src/config/paper-profiles/starlink-like.sources.json`
 3. `beamHO-bench/src/config/paper-profiles/oneweb-like.sources.json`

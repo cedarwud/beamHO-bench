@@ -76,6 +76,7 @@ canvas {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .sim-hud__actions button {
@@ -90,6 +91,23 @@ canvas {
 
 .sim-hud__actions button:hover {
   background: rgba(14, 116, 144, 0.35);
+}
+
+.sim-hud__select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.sim-hud__select select {
+  border: 1px solid rgba(125, 211, 252, 0.45);
+  border-radius: 7px;
+  padding: 6px 8px;
+  background: rgba(14, 116, 144, 0.2);
+  color: #e2e8f0;
+  font-size: 12px;
 }
 
 .sim-kpi-grid {

@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { AdaptiveDpr, OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
 import { NTPUScene } from './NTPUScene';
@@ -13,6 +13,7 @@ import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
 import { SceneLoader } from '../ui/SceneLoader';
 import { SceneErrorBoundary } from '../ui/SceneErrorBoundary';
 import { useSimulation } from '@/hooks/useSimulation';
+import type { RuntimeBaseline } from '@/sim/handover/baselines';
 
 const SHOW_DEBUG =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_SCENE_DEBUG === 'true';
@@ -32,18 +33,26 @@ function isMobileLikeDevice() {
 }
 
 export function MainScene() {
+  const [selectedBaseline, setSelectedBaseline] =
+    useState<RuntimeBaseline>('max-rsrp');
+
   const {
     profile,
     snapshot,
+    baseline,
     isRunning,
     sourceTraceFileName,
+    kpiResultFileName,
+    kpiTimeseriesFileName,
     start,
     stop,
     step,
     reset,
     exportSourceTrace,
+    exportKpiReport,
   } = useSimulation({
     profileId: 'case9-default',
+    baseline: selectedBaseline,
     seed: 42,
     autoStart: false,
   });
@@ -63,13 +72,28 @@ export function MainScene() {
         <div className="sim-hud__title">Phase 1a Case9 Analytic Orbit</div>
         <div className="sim-hud__meta">
           profile: <strong>{profile.profileId}</strong> | tick: <strong>{snapshot.tick}</strong> |
-          sat: <strong>{snapshot.satellites.length}</strong> | beams:{' '}
+          baseline: <strong>{baseline}</strong> | sat: <strong>{snapshot.satellites.length}</strong> | beams:{' '}
           <strong>
             {snapshot.satellites.reduce((sum, satellite) => sum + satellite.beams.length, 0)}
           </strong>{' '}
           | ue: <strong>{snapshot.ues.length}</strong>
         </div>
         <div className="sim-hud__actions">
+          <label className="sim-hud__select">
+            Baseline
+            <select
+              value={selectedBaseline}
+              onChange={(event) =>
+                setSelectedBaseline(event.target.value as RuntimeBaseline)
+              }
+            >
+              <option value="max-rsrp">max-rsrp</option>
+              <option value="max-elevation">max-elevation</option>
+              <option value="max-remaining-time">max-remaining-time</option>
+              <option value="a3">a3</option>
+              <option value="a4">a4</option>
+            </select>
+          </label>
           <button type="button" onClick={isRunning ? stop : start}>
             {isRunning ? 'Pause' : 'Run'}
           </button>
@@ -87,6 +111,15 @@ export function MainScene() {
             title={sourceTraceFileName}
           >
             Export Source Trace
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              exportKpiReport();
+            }}
+            title={`${kpiResultFileName}\n${kpiTimeseriesFileName}`}
+          >
+            Export KPI Report
           </button>
         </div>
         <KpiHUD kpi={snapshot.kpiCumulative} />

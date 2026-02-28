@@ -1,5 +1,9 @@
 import type { PaperProfile } from '@/config/paper-profiles/types';
-import { runMaxRsrpBaseline } from '@/sim/handover/max-rsrp';
+import {
+  runHandoverBaseline,
+  type RuntimeBaseline,
+  type TriggerMemoryStore,
+} from '@/sim/handover/baselines';
 import { applyHandoverStateMachine } from '@/sim/handover/state-machine';
 import { computeJainFairness, updateKpiAccumulator } from '@/sim/kpi/accumulator';
 import type {
@@ -29,6 +33,7 @@ const DEFAULT_OBSERVER = {
 interface Case9AnalyticScenarioOptions {
   profile: PaperProfile;
   seed: number;
+  baseline?: RuntimeBaseline;
   scenarioId?: string;
   kmToWorldScale?: number;
   observerLat?: number;
@@ -356,9 +361,11 @@ function attachUesToBeams(ues: UEState[], satellites: SatelliteState[]): Satelli
 export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOptions): SimScenario {
   const profile = options.profile;
   const scenarioId = options.scenarioId ?? 'phase1a-case9-analytic';
+  const baseline = options.baseline ?? 'max-rsrp';
   const kmToWorldScale = options.kmToWorldScale ?? 0.6;
   const observerLat = options.observerLat ?? DEFAULT_OBSERVER.lat;
   const observerLon = options.observerLon ?? DEFAULT_OBSERVER.lon;
+  let triggerMemory: TriggerMemoryStore = new Map();
 
   const satCount =
     profile.constellation.activeSatellitesInWindow ?? profile.constellation.satellitesPerPlane;
@@ -430,12 +437,16 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       wrapWidthWorld,
     });
 
-    const decision = runMaxRsrpBaseline({
+    const decision = runHandoverBaseline({
       tick: previous.tick + 1,
+      timeStepSec: context.timeStepSec,
       profile,
       satellites: satellitesAtTime,
       ues: movedUes,
+      baseline,
+      triggerMemory,
     });
+    triggerMemory = decision.nextTriggerMemory;
 
     const stateMachine = applyHandoverStateMachine({
       profile,
@@ -476,13 +487,16 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
   return {
     id: scenarioId,
     profileId: profile.profileId,
-    createInitialSnapshot: () => ({
-      ...initialSnapshot,
-      satellites: initialSatellites,
-      ues: initialUes,
-      hoEvents: [],
-      kpiCumulative: { ...EMPTY_KPI },
-    }),
+    createInitialSnapshot: () => {
+      triggerMemory = new Map();
+      return {
+        ...initialSnapshot,
+        satellites: initialSatellites,
+        ues: initialUes,
+        hoEvents: [],
+        kpiCumulative: { ...EMPTY_KPI },
+      };
+    },
     nextSnapshot,
   };
 }
