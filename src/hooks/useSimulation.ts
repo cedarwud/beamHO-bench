@@ -14,6 +14,7 @@ import {
   type KpiResultArtifact,
 } from '@/sim/kpi/reporter';
 import { createCase9AnalyticScenario } from '@/sim/scenarios/case9-analytic';
+import { createRealTraceScenario } from '@/sim/scenarios/real-trace';
 import {
   createSourceTraceArtifact,
   createSourceTraceDownload,
@@ -63,7 +64,10 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
 
   const setup = useMemo(() => {
     const profile = loadPaperProfile(profileId, runtimeOverrides);
-    const scenario = createCase9AnalyticScenario({ profile, seed, baseline });
+    const scenario =
+      profile.mode === 'real-trace'
+        ? createRealTraceScenario({ profile, seed, baseline })
+        : createCase9AnalyticScenario({ profile, seed, baseline });
     const engine = new SimEngine({
       scenario,
       timeStepSec: profile.timeStepSec,
@@ -139,6 +143,11 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
   }, [setup, cloneSnapshot]);
 
   const exportSourceTrace = useCallback(async () => {
+    const assumptionMode =
+      setup.profile.mode === 'real-trace'
+        ? 'real-trace uses Kepler fallback over TLE mean elements; true SGP4 adapter pending runtime dependency'
+        : 'paper-baseline uses analytic case9 orbit model';
+
     const artifact = await createSourceTraceArtifact({
       scenarioId: setup.scenario.id,
       profileId,
@@ -146,6 +155,7 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
       seed,
       runtimeOverrides,
       assumptions: [
+        assumptionMode,
         'phase0-phase3 partial implementation; CHO/MC-HO are simplified baseline variants',
       ],
     });

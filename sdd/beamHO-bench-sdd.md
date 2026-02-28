@@ -27,7 +27,7 @@ This SDD defines the target software architecture of **beamHO-bench**: a reprodu
 
 1. Reproduce Layer-A academic baselines under standardized NTN settings.
 2. Compare baseline and custom algorithms under identical scenario + seed.
-3. Support two modes: `paper-baseline` (analytic orbit, case9-style) and `real-trace` (SGP4 + TLE).
+3. Support two modes: `paper-baseline` (analytic orbit, case9-style) and `real-trace` (TLE-driven propagation; SGP4 adapter target).
 4. Keep simulation core independent from rendering stack.
 
 ### 1.4 Deferred (from latest `todo.md`)
@@ -73,7 +73,7 @@ Core invariant:
 |---|---|---|---|
 | `SimEngine` | `src/sim/engine.ts` | tick orchestration and lifecycle control | M1 |
 | `OrbitAnalytic` | `src/sim/orbit/analytic.ts` | case9-style analytic pass (7.56 km/s) | M1 |
-| `OrbitSGP4` | `src/sim/orbit/sgp4.ts` | TLE propagation and visibility | M4 (Phase 1b) |
+| `OrbitSGP4` | `src/sim/orbit/sgp4.ts` | TLE propagation and visibility (current: Kepler fallback adapter) | M4 (Phase 1b) |
 | `BeamGeometry` | `src/sim/beam/geometry.ts` | 19-beam layout, footprint projection, overlap geometry | M0-M1 |
 | `ChannelLargeScale` | `src/sim/channel/large-scale.ts` | FSPL + 3GPP TR 38.811 SF/CL lookup | M1 |
 | `ChannelSmallScale` | `src/sim/channel/small-scale.ts` | Shadowed-Rician/Loo plugin | M3+ |
@@ -225,7 +225,7 @@ Traceability contracts (for governance and audit) are defined in:
 ## 6. Simulation Pipeline
 
 Per-tick order:
-1. Orbit update (analytic or SGP4)
+1. Orbit update (analytic or real-trace propagator)
 2. Beam footprint projection and overlap map
 3. UE position update
 4. Large-scale channel update (FSPL + SF/CL)
@@ -333,7 +333,7 @@ Performance rules:
 3. Multi-baseline batch comparison
 
 ### M4 / Phase 1b complete
-1. SGP4/TLE real-trace mode
+1. TLE real-trace mode (current implementation uses Kepler fallback; true SGP4 adapter pending)
 2. `starlink-like` and `oneweb-like` profiles in benchmark runs
 
 ---

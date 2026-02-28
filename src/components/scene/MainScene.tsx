@@ -13,6 +13,7 @@ import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
 import { SceneLoader } from '../ui/SceneLoader';
 import { SceneErrorBoundary } from '../ui/SceneErrorBoundary';
 import { useSimulation } from '@/hooks/useSimulation';
+import type { CanonicalProfileId } from '@/config/paper-profiles/loader';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 
 const SHOW_DEBUG =
@@ -33,6 +34,8 @@ function isMobileLikeDevice() {
 }
 
 export function MainScene() {
+  const [selectedProfileId, setSelectedProfileId] =
+    useState<CanonicalProfileId>('case9-default');
   const [selectedBaseline, setSelectedBaseline] =
     useState<RuntimeBaseline>('max-rsrp');
 
@@ -51,7 +54,7 @@ export function MainScene() {
     exportSourceTrace,
     exportKpiReport,
   } = useSimulation({
-    profileId: 'case9-default',
+    profileId: selectedProfileId,
     baseline: selectedBaseline,
     seed: 42,
     autoStart: false,
@@ -69,7 +72,11 @@ export function MainScene() {
     <div className="scene-root">
       <Starfield starCount={180} />
       <div className="sim-hud" role="status" aria-live="polite">
-        <div className="sim-hud__title">Phase 1a Case9 Analytic Orbit</div>
+        <div className="sim-hud__title">
+          {profile.mode === 'real-trace'
+            ? 'Phase 1b Real Trace Orbit'
+            : 'Phase 1a Case9 Analytic Orbit'}
+        </div>
         <div className="sim-hud__meta">
           profile: <strong>{profile.profileId}</strong> | tick: <strong>{snapshot.tick}</strong> |
           baseline: <strong>{baseline}</strong> | sat: <strong>{snapshot.satellites.length}</strong> | beams:{' '}
@@ -79,6 +86,19 @@ export function MainScene() {
           | ue: <strong>{snapshot.ues.length}</strong>
         </div>
         <div className="sim-hud__actions">
+          <label className="sim-hud__select">
+            Profile
+            <select
+              value={selectedProfileId}
+              onChange={(event) =>
+                setSelectedProfileId(event.target.value as CanonicalProfileId)
+              }
+            >
+              <option value="case9-default">case9-default</option>
+              <option value="starlink-like">starlink-like</option>
+              <option value="oneweb-like">oneweb-like</option>
+            </select>
+          </label>
           <label className="sim-hud__select">
             Baseline
             <select

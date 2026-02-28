@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "sync:tle-fixtures": "node scripts/sync-tle-fixtures.mjs"
   },
   "keywords": [
     "3d",
