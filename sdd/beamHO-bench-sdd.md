@@ -334,7 +334,8 @@ Performance rules:
 
 ### M4 / Phase 1b complete
 1. TLE real-trace mode (current implementation uses Kepler fallback; true SGP4 adapter pending)
-2. `starlink-like` and `oneweb-like` profiles in benchmark runs
+2. Propagator switch contract: `VITE_ORBIT_PROPAGATOR=sgp4` may request SGP4, but shall fail-open to deterministic fallback with explicit runtime warning until adapter is available
+3. `starlink-like` and `oneweb-like` profiles in benchmark runs
 
 ---
 

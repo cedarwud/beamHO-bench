@@ -54,12 +54,17 @@ export interface OrbitElement {
 
 export interface OrbitCatalog {
   provider: Provider;
+  propagationEngine: OrbitPropagationEngine;
   sourceFile: string;
   sourceRecordCount: number;
   sampledRecordCount: number;
   records: OrbitElement[];
   startTimeUtcMs: number;
 }
+
+export type OrbitPropagationEngine =
+  | 'kepler-fallback'
+  | 'sgp4-requested-but-unavailable';
 
 export interface ObserverContext {
   latDeg: number;
@@ -98,6 +103,7 @@ const EARTH_F = 1 / 298.257223563;
 const EARTH_B_KM = EARTH_A_KM * (1 - EARTH_F);
 const TWO_PI = Math.PI * 2;
 const DAY_SEC = 86400;
+let warnedUnavailableSgp4 = false;
 
 function degToRad(deg: number): number {
   return (deg * Math.PI) / 180;
@@ -127,6 +133,28 @@ function selectProvider(profile: PaperProfile): Provider {
     return 'oneweb';
   }
   return 'starlink';
+}
+
+function resolvePropagationEngine(): OrbitPropagationEngine {
+  const envValue = (
+    import.meta as ImportMeta & {
+      env?: Record<string, string | undefined>;
+    }
+  ).env?.VITE_ORBIT_PROPAGATOR;
+
+  if (envValue?.toLowerCase() === 'sgp4') {
+    if (!warnedUnavailableSgp4) {
+      warnedUnavailableSgp4 = true;
+      // Source: STD-3GPP-TR38.811-6.6.2-1
+      // Runtime is explicitly transparent that SGP4 was requested but unavailable.
+      console.warn(
+        '[orbit] VITE_ORBIT_PROPAGATOR=sgp4 requested, but satellite.js runtime adapter is unavailable. Falling back to Kepler propagation over TLE mean elements.',
+      );
+    }
+    return 'sgp4-requested-but-unavailable';
+  }
+
+  return 'kepler-fallback';
 }
 
 function resolveFixture(provider: Provider): TleFixtureFile {
@@ -167,6 +195,7 @@ function parseOrbitElement(record: TleFixtureRecord): OrbitElement | null {
 
 export function loadOrbitCatalog(profile: PaperProfile): OrbitCatalog {
   const provider = selectProvider(profile);
+  const propagationEngine = resolvePropagationEngine();
   const fixture = resolveFixture(provider);
   const maxSatellites = profile.constellation.tle?.selection?.maxSatellites;
 
@@ -189,6 +218,7 @@ export function loadOrbitCatalog(profile: PaperProfile): OrbitCatalog {
 
   return {
     provider,
+    propagationEngine,
     sourceFile: fixture.sourceFile,
     sourceRecordCount: fixture.sourceRecordCount,
     sampledRecordCount: records.length,

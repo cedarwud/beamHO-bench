@@ -145,7 +145,9 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
   const exportSourceTrace = useCallback(async () => {
     const assumptionMode =
       setup.profile.mode === 'real-trace'
-        ? 'real-trace uses Kepler fallback over TLE mean elements; true SGP4 adapter pending runtime dependency'
+        ? setup.scenario.id.includes('sgp4-requested-but-unavailable')
+          ? 'real-trace requested SGP4, but runtime adapter is unavailable; using Kepler fallback over TLE mean elements'
+          : 'real-trace uses Kepler fallback over TLE mean elements'
         : 'paper-baseline uses analytic case9 orbit model';
 
     const artifact = await createSourceTraceArtifact({

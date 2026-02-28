@@ -270,7 +270,9 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
   const profile = options.profile;
   const catalog = loadOrbitCatalog(profile);
   const baseline = options.baseline ?? 'max-rsrp';
-  const scenarioId = options.scenarioId ?? `phase1b-real-trace-${catalog.provider}`;
+  const scenarioId =
+    options.scenarioId ??
+    `phase1b-real-trace-${catalog.provider}-${catalog.propagationEngine}`;
   const kmToWorldScale = options.kmToWorldScale ?? 0.6;
   const observerLat = options.observerLat ?? DEFAULT_OBSERVER.lat;
   const observerLon = options.observerLon ?? DEFAULT_OBSERVER.lon;
@@ -453,4 +455,3 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
     nextSnapshot,
   };
 }
-

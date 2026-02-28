@@ -139,6 +139,13 @@ npm run sync:tle-fixtures
 - `src/data/tle/starlink-sample.json`
 - `src/data/tle/oneweb-sample.json`
 
+### Real-trace 傳播器模式
+
+- 預設模式：`kepler-fallback`（以 TLE mean elements 做決定性傳播）
+- 可設定：`VITE_ORBIT_PROPAGATOR=sgp4`
+  - 目前若設定 `sgp4`，系統會明確警告並自動回退到 `kepler-fallback`
+  - 原因：目前環境尚未成功安裝 `satellite.js` runtime adapter
+
 ## 專案結構
 
 ```
@@ -399,6 +406,13 @@ This refreshes:
 
 - `src/data/tle/starlink-sample.json`
 - `src/data/tle/oneweb-sample.json`
+
+### Real-trace Propagator Mode
+
+- Default: `kepler-fallback` (deterministic propagation over TLE mean elements)
+- Optional: `VITE_ORBIT_PROPAGATOR=sgp4`
+  - At this stage, requesting `sgp4` emits an explicit warning and falls back to `kepler-fallback`
+  - Reason: `satellite.js` runtime adapter is not yet available in this environment
 
 ## Project Structure
 
