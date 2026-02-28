@@ -145,7 +145,9 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
       baseline,
       seed,
       runtimeOverrides,
-      assumptions: ['phase0-phase2 implementation; CHO/MC-HO baselines pending'],
+      assumptions: [
+        'phase0-phase3 partial implementation; CHO/MC-HO are simplified baseline variants',
+      ],
     });
 
     const fileName = `source-trace_${setup.scenario.id}_${profileId}_${seed}_${baseline}.json`;

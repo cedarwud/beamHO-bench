@@ -92,6 +92,8 @@ export function MainScene() {
               <option value="max-remaining-time">max-remaining-time</option>
               <option value="a3">a3</option>
               <option value="a4">a4</option>
+              <option value="cho">cho</option>
+              <option value="mc-ho">mc-ho</option>
             </select>
           </label>
           <button type="button" onClick={isRunning ? stop : start}>

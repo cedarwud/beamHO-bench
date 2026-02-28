@@ -10,24 +10,27 @@ import type { BeamState, HOEvent, SatelliteState, UEState } from '@/sim/types';
 /**
  * Provenance:
  * - PAP-2022-A4EVENT-CORE
+ * - PAP-2024-MCCHO-CORE
  * - PAP-2025-TIMERCHO-CORE
  * - STD-3GPP-TS38.331-RRC
  */
 
 export type RuntimeBaseline = Extract<
   HandoverBaseline,
-  'max-rsrp' | 'max-elevation' | 'max-remaining-time' | 'a3' | 'a4'
+  'max-rsrp' | 'max-elevation' | 'max-remaining-time' | 'a3' | 'a4' | 'cho' | 'mc-ho'
 >;
 
 interface CandidateMemory {
   satId: number;
   beamId: number;
   elapsedMs: number;
+  targetMs?: number;
 }
 
 interface UeTriggerMemory {
   a3?: CandidateMemory;
   a4?: CandidateMemory;
+  cho?: CandidateMemory;
 }
 
 export type TriggerMemoryStore = Map<number, UeTriggerMemory>;
@@ -54,6 +57,8 @@ interface CandidateDecision {
   selected: LinkSample | null;
   triggerEvent: boolean;
   reasonSuffix?: string;
+  secondary?: LinkSample | null;
+  prepared?: CandidateMemory | null;
 }
 
 const DEFAULT_NO_LINK_SINR_DB = -40;
@@ -63,10 +68,21 @@ function sampleKey(satId: number, beamId: number): string {
   return `${satId}:${beamId}`;
 }
 
+function clamp(value: number, min: number, max: number): number {
+  if (value < min) {
+    return min;
+  }
+  if (value > max) {
+    return max;
+  }
+  return value;
+}
+
 function findServingSample(links: LinkSample[], ue: UEState): LinkSample | null {
   if (ue.servingSatId === null || ue.servingBeamId === null) {
     return null;
   }
+
   return (
     links.find(
       (sample) =>
@@ -163,6 +179,16 @@ function selectByRemainingTime(
   }
 
   return best;
+}
+
+function sortByRsrp(links: LinkSample[]): LinkSample[] {
+  return [...links].sort((left, right) => right.rsrpDbm - left.rsrpDbm);
+}
+
+function meetsAbsoluteThreshold(profile: PaperProfile, sample: LinkSample): boolean {
+  const thresholdDbm = profile.handover.params.a4ThresholdDbm ?? -120;
+  const homDb = profile.handover.params.homDb ?? 0;
+  return sample.rsrpDbm >= thresholdDbm + homDb;
 }
 
 function resolveA3Decision(options: {
@@ -269,9 +295,7 @@ function resolveA4Decision(options: {
     return { selected: null, triggerEvent: false };
   }
 
-  const thresholdDbm = profile.handover.params.a4ThresholdDbm ?? -120;
-  const homDb = profile.handover.params.homDb ?? 0;
-  const meetsThreshold = bestSample.rsrpDbm >= thresholdDbm + homDb;
+  const meetsThreshold = meetsAbsoluteThreshold(profile, bestSample);
 
   // Source: PAP-2022-A4EVENT-CORE
   // A4 condition: target quality crosses the absolute threshold.
@@ -322,6 +346,127 @@ function resolveA4Decision(options: {
   }
 
   return { selected: servingSample, triggerEvent: false };
+}
+
+function resolveChoDecision(options: {
+  profile: PaperProfile;
+  ue: UEState;
+  links: LinkSample[];
+  servingSample: LinkSample | null;
+  bestSample: LinkSample | null;
+  memory: UeTriggerMemory;
+  timeStepSec: number;
+  beamByKey: Map<string, BeamState>;
+}): CandidateDecision {
+  const {
+    profile,
+    ue,
+    links,
+    servingSample,
+    bestSample,
+    memory,
+    timeStepSec,
+    beamByKey,
+  } = options;
+
+  if (links.length === 0 || !bestSample) {
+    delete memory.cho;
+    return { selected: null, triggerEvent: false };
+  }
+
+  if (!servingSample) {
+    delete memory.cho;
+    return {
+      selected: bestSample,
+      triggerEvent: ue.servingSatId !== null,
+      reasonSuffix: 'forced',
+    };
+  }
+
+  if (
+    bestSample.satId === servingSample.satId &&
+    bestSample.beamId === servingSample.beamId
+  ) {
+    delete memory.cho;
+    return { selected: servingSample, triggerEvent: false };
+  }
+
+  // Source: PAP-2024-MCCHO-CORE
+  // CHO is only prepared when serving and target are both in overlap-capable quality range.
+  const overlapReady =
+    meetsAbsoluteThreshold(profile, servingSample) &&
+    meetsAbsoluteThreshold(profile, bestSample);
+
+  if (!overlapReady) {
+    delete memory.cho;
+    return { selected: servingSample, triggerEvent: false };
+  }
+
+  const remainingSec = estimateRemainingServiceSec(
+    profile,
+    ue,
+    beamByKey.get(sampleKey(bestSample.satId, bestSample.beamId)),
+  );
+
+  // Source: PAP-2025-TIMERCHO-CORE
+  // Timer-based CHO executes after alpha-scaled expected service duration.
+  const alpha = clamp(profile.handover.params.timerAlphaOptions?.[0] ?? 0.85, 0.1, 1);
+  const targetMs = Math.max(100, Math.round(alpha * remainingSec * 1000));
+
+  const previous = memory.cho;
+  const sameCandidate =
+    previous &&
+    previous.satId === bestSample.satId &&
+    previous.beamId === bestSample.beamId;
+  const elapsedMs = (sameCandidate ? previous.elapsedMs : 0) + timeStepSec * 1000;
+
+  memory.cho = {
+    satId: bestSample.satId,
+    beamId: bestSample.beamId,
+    elapsedMs,
+    targetMs,
+  };
+
+  if (elapsedMs >= targetMs) {
+    delete memory.cho;
+    return { selected: bestSample, triggerEvent: true, reasonSuffix: 'timer-cho' };
+  }
+
+  return {
+    selected: servingSample,
+    triggerEvent: false,
+    reasonSuffix: 'prepared',
+    prepared: memory.cho,
+  };
+}
+
+function resolveMcHoDecision(options: {
+  profile: PaperProfile;
+  links: LinkSample[];
+}): CandidateDecision {
+  const { profile, links } = options;
+
+  if (links.length === 0) {
+    return { selected: null, secondary: null, triggerEvent: false };
+  }
+
+  const sorted = sortByRsrp(links);
+  const primary = sorted[0];
+
+  // Source: PAP-2024-MCCHO-CORE
+  // MC baseline keeps a secondary candidate above threshold, preferably from another satellite.
+  const secondary =
+    sorted.find(
+      (candidate) =>
+        candidate.satId !== primary.satId && meetsAbsoluteThreshold(profile, candidate),
+    ) ?? null;
+
+  return {
+    selected: primary,
+    secondary,
+    triggerEvent: true,
+    reasonSuffix: secondary ? 'dual' : 'single',
+  };
 }
 
 function selectCandidate(options: {
@@ -379,6 +524,22 @@ function selectCandidate(options: {
         memory,
         timeStepSec,
       });
+    case 'cho':
+      return resolveChoDecision({
+        profile,
+        ue,
+        links,
+        servingSample,
+        bestSample,
+        memory,
+        timeStepSec,
+        beamByKey,
+      });
+    case 'mc-ho':
+      return resolveMcHoDecision({
+        profile,
+        links,
+      });
     default:
       return { selected: bestSample, triggerEvent: true };
   }
@@ -428,12 +589,17 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
       timeStepSec,
     });
 
-    if (baseline !== 'a3' && baseline !== 'a4') {
+    if (baseline !== 'a3') {
       delete ueMemory.a3;
+    }
+    if (baseline !== 'a4') {
       delete ueMemory.a4;
     }
+    if (baseline !== 'cho') {
+      delete ueMemory.cho;
+    }
 
-    if (ueMemory.a3 || ueMemory.a4) {
+    if (ueMemory.a3 || ueMemory.a4 || ueMemory.cho) {
       nextTriggerMemory.set(ue.id, ueMemory);
     } else {
       nextTriggerMemory.delete(ue.id);
@@ -445,6 +611,12 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
         ...ue,
         servingSatId: null,
         servingBeamId: null,
+        secondarySatId: null,
+        secondaryBeamId: null,
+        choPreparedSatId: null,
+        choPreparedBeamId: null,
+        choPreparedElapsedMs: null,
+        choPreparedTargetMs: null,
         rsrpDbm: DEFAULT_NO_LINK_RSRP_DBM,
         sinrDb: DEFAULT_NO_LINK_SINR_DB,
       });
@@ -478,6 +650,20 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
       ...ue,
       servingSatId: selected.satId,
       servingBeamId: selected.beamId,
+      secondarySatId:
+        baseline === 'mc-ho' && decision.secondary ? decision.secondary.satId : null,
+      secondaryBeamId:
+        baseline === 'mc-ho' && decision.secondary ? decision.secondary.beamId : null,
+      choPreparedSatId:
+        baseline === 'cho' && decision.prepared ? decision.prepared.satId : null,
+      choPreparedBeamId:
+        baseline === 'cho' && decision.prepared ? decision.prepared.beamId : null,
+      choPreparedElapsedMs:
+        baseline === 'cho' && decision.prepared ? decision.prepared.elapsedMs : null,
+      choPreparedTargetMs:
+        baseline === 'cho' && decision.prepared
+          ? (decision.prepared.targetMs ?? null)
+          : null,
       rsrpDbm: selected.rsrpDbm,
       sinrDb: selected.sinrDb,
     });

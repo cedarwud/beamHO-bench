@@ -34,6 +34,12 @@ export interface UEState {
   speedKmph: number;
   servingSatId: number | null;
   servingBeamId: number | null;
+  secondarySatId?: number | null;
+  secondaryBeamId?: number | null;
+  choPreparedSatId?: number | null;
+  choPreparedBeamId?: number | null;
+  choPreparedElapsedMs?: number | null;
+  choPreparedTargetMs?: number | null;
   rsrpDbm: number;
   sinrDb: number;
   hoState: HandoverState;

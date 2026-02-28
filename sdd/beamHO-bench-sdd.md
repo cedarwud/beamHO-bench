@@ -328,8 +328,8 @@ Performance rules:
 4. KPI report export
 
 ### M3 / Phase 3 + remaining Phase 4 + Phase 5 basics
-1. CHO timer/location variants
-2. MC-HO dual connectivity flow
+1. CHO timer/location variants (v1 simplified runtime baseline available)
+2. MC-HO dual connectivity flow (v1 simplified secondary-link baseline available)
 3. Multi-baseline batch comparison
 
 ### M4 / Phase 1b complete
