@@ -1,0 +1,106 @@
+{
+  "profileId": "starlink-like",
+  "name": "Starlink-like Real Trace Profile",
+  "mode": "real-trace",
+  "sourcePapers": [
+    "2022_12_Seamless_Handover_in_LEO_Based_Non-Terrestrial_Networks_Service_Continuity_and_Optimization"
+  ],
+  "timeStepSec": 1,
+  "scenario": {
+    "deployment": "suburban",
+    "areaKm": {
+      "width": 120,
+      "height": 120
+    }
+  },
+  "constellation": {
+    "type": "tle",
+    "constellationName": "starlink-phase1-like",
+    "altitudeKm": 550,
+    "inclinationDeg": 53,
+    "orbitalPlanes": 24,
+    "satellitesPerPlane": 66,
+    "activeSatellitesInWindow": 7,
+    "satelliteSpeedKmps": 7.6,
+    "minElevationDeg": 10,
+    "tle": {
+      "provider": "starlink",
+      "pathPattern": "tle_data/starlink/tle/starlink_*.tle",
+      "selection": {
+        "maxSatellites": 1584,
+        "preferLatest": true
+      }
+    }
+  },
+  "beam": {
+    "beamsPerSatellite": 16,
+    "layout": "hex-16",
+    "footprintDiameterKm": 50,
+    "beamwidth3dBDeg": 4.4,
+    "overlapRatio": 0.2,
+    "gainModel": "bessel-j1",
+    "frequencyReuse": "FR1",
+    "eirpDensityDbwPerMHz": 34
+  },
+  "channel": {
+    "carrierFrequencyGHz": 2,
+    "bandwidthMHz": 30,
+    "largeScaleModel": "3gpp-tr-38.811",
+    "smallScaleModel": "shadowed-rician",
+    "sfClSource": "3GPP TR 38.811 Table 6.6.2-1",
+    "ueGTdBPerK": -33.6,
+    "ueAntennaGainDbi": 0,
+    "noiseTemperatureK": 290
+  },
+  "rlfStateMachine": {
+    "qOutDb": -8,
+    "qInDb": -6,
+    "t310Ms": 1000,
+    "n310": 1,
+    "n311": 1,
+    "l3FilterK": 4,
+    "harqMaxRetx": 7,
+    "rlcMaxRetx": 3,
+    "preambleMsg3MaxRetx": 4,
+    "raResponseTimerSubframes": 5,
+    "contentionResolutionTimerSubframes": 40
+  },
+  "ue": {
+    "count": 100,
+    "distribution": "uniform",
+    "speedKmphOptions": [0, 3, 30, 60]
+  },
+  "handover": {
+    "baselines": [
+      "max-rsrp",
+      "max-elevation",
+      "max-remaining-time",
+      "a3",
+      "a4",
+      "cho",
+      "mc-ho"
+    ],
+    "params": {
+      "a3OffsetDb": 2,
+      "a3TttMs": 0,
+      "a4ThresholdDbm": -101,
+      "homDb": 2,
+      "mtsSec": 1,
+      "timerAlphaOptions": [0.8, 0.85, 0.9]
+    }
+  },
+  "kpis": [
+    "throughput",
+    "handover-rate",
+    "hof",
+    "rlf",
+    "uho",
+    "hopp",
+    "avg-dl-sinr",
+    "jain-fairness"
+  ],
+  "notes": [
+    "Use real Starlink TLE snapshots under tle_data/.",
+    "Override deployment and area size per experiment."
+  ]
+}

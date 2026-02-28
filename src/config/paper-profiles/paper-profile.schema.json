@@ -1,0 +1,282 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beamho-bench.local/schema/paper-profile.schema.json",
+  "title": "beamHO-bench Paper Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profileId",
+    "name",
+    "mode",
+    "sourcePapers",
+    "timeStepSec",
+    "scenario",
+    "constellation",
+    "beam",
+    "channel",
+    "rlfStateMachine",
+    "ue",
+    "handover",
+    "kpis"
+  ],
+  "properties": {
+    "profileId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["paper-baseline", "real-trace"]
+    },
+    "sourcePapers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "timeStepSec": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deployment", "areaKm"],
+      "properties": {
+        "deployment": {
+          "type": "string",
+          "enum": ["rural", "suburban", "dense-urban"]
+        },
+        "areaKm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        }
+      }
+    },
+    "constellation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "constellationName",
+        "altitudeKm",
+        "inclinationDeg",
+        "orbitalPlanes",
+        "satellitesPerPlane",
+        "minElevationDeg"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["synthetic", "tle"]
+        },
+        "constellationName": { "type": "string" },
+        "altitudeKm": { "type": "number", "exclusiveMinimum": 0 },
+        "inclinationDeg": { "type": "number", "minimum": 0, "maximum": 180 },
+        "orbitalPlanes": { "type": "integer", "minimum": 1 },
+        "satellitesPerPlane": { "type": "integer", "minimum": 1 },
+        "activeSatellitesInWindow": { "type": "integer", "minimum": 1 },
+        "satelliteSpeedKmps": { "type": "number", "exclusiveMinimum": 0 },
+        "minElevationDeg": { "type": "number", "minimum": 0, "maximum": 90 },
+        "tle": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provider", "pathPattern"],
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": ["starlink", "oneweb", "custom"]
+            },
+            "pathPattern": { "type": "string" },
+            "selection": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "maxSatellites": { "type": "integer", "minimum": 1 },
+                "preferLatest": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "beam": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "beamsPerSatellite",
+        "layout",
+        "footprintDiameterKm",
+        "beamwidth3dBDeg",
+        "gainModel",
+        "frequencyReuse",
+        "eirpDensityDbwPerMHz"
+      ],
+      "properties": {
+        "beamsPerSatellite": { "type": "integer", "minimum": 1 },
+        "layout": {
+          "type": "string",
+          "enum": ["hex-7", "hex-16", "hex-19", "hex-50", "custom"]
+        },
+        "footprintDiameterKm": { "type": "number", "exclusiveMinimum": 0 },
+        "beamwidth3dBDeg": { "type": "number", "exclusiveMinimum": 0 },
+        "overlapRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "gainModel": {
+          "type": "string",
+          "enum": ["flat", "bessel-j1", "bessel-j1-j3", "custom"]
+        },
+        "frequencyReuse": {
+          "type": "string",
+          "enum": ["FR1", "reuse-4", "custom"]
+        },
+        "eirpDensityDbwPerMHz": { "type": "number" }
+      }
+    },
+    "channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "carrierFrequencyGHz",
+        "bandwidthMHz",
+        "largeScaleModel",
+        "smallScaleModel",
+        "sfClSource",
+        "ueGTdBPerK",
+        "ueAntennaGainDbi",
+        "noiseTemperatureK"
+      ],
+      "properties": {
+        "carrierFrequencyGHz": { "type": "number", "exclusiveMinimum": 0 },
+        "bandwidthMHz": { "type": "number", "exclusiveMinimum": 0 },
+        "largeScaleModel": {
+          "type": "string",
+          "enum": ["3gpp-tr-38.811", "custom"]
+        },
+        "smallScaleModel": {
+          "type": "string",
+          "enum": ["none", "shadowed-rician", "loo", "custom"]
+        },
+        "sfClSource": { "type": "string" },
+        "ueGTdBPerK": { "type": "number" },
+        "ueAntennaGainDbi": { "type": "number" },
+        "noiseTemperatureK": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "rlfStateMachine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "qOutDb",
+        "qInDb",
+        "t310Ms",
+        "n310",
+        "n311",
+        "l3FilterK",
+        "harqMaxRetx",
+        "rlcMaxRetx",
+        "preambleMsg3MaxRetx",
+        "raResponseTimerSubframes",
+        "contentionResolutionTimerSubframes"
+      ],
+      "properties": {
+        "qOutDb": { "type": "number" },
+        "qInDb": { "type": "number" },
+        "t310Ms": { "type": "integer", "minimum": 1 },
+        "n310": { "type": "integer", "minimum": 1 },
+        "n311": { "type": "integer", "minimum": 1 },
+        "l3FilterK": { "type": "integer", "minimum": 0 },
+        "harqMaxRetx": { "type": "integer", "minimum": 0 },
+        "rlcMaxRetx": { "type": "integer", "minimum": 0 },
+        "preambleMsg3MaxRetx": { "type": "integer", "minimum": 0 },
+        "raResponseTimerSubframes": { "type": "integer", "minimum": 1 },
+        "contentionResolutionTimerSubframes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "ue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "distribution", "speedKmphOptions"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 1 },
+        "distribution": {
+          "type": "string",
+          "enum": ["uniform", "clustered", "custom"]
+        },
+        "speedKmphOptions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "handover": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baselines", "params"],
+      "properties": {
+        "baselines": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "max-rsrp",
+              "max-elevation",
+              "max-remaining-time",
+              "a3",
+              "a4",
+              "cho",
+              "mc-ho"
+            ]
+          }
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "a3OffsetDb": { "type": "number" },
+            "a3TttMs": { "type": "integer", "minimum": 0 },
+            "a4ThresholdDbm": { "type": "number" },
+            "homDb": { "type": "number" },
+            "mtsSec": { "type": "number", "minimum": 0 },
+            "timerAlphaOptions": {
+              "type": "array",
+              "items": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "kpis": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "throughput",
+          "handover-rate",
+          "hof",
+          "rlf",
+          "uho",
+          "hopp",
+          "avg-dl-sinr",
+          "jain-fairness"
+        ]
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

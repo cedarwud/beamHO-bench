@@ -1,0 +1,54 @@
+{
+  "generatedAtUtc": "2026-03-01T00:35:00Z",
+  "policy": "metadata-only; paper full-text PDFs are git-ignored for copyright safety",
+  "entries": [
+    {
+      "sourceId": "PAP-2022-A4EVENT-CORE",
+      "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",
+      "doi": "10.1109/APWCS55727.2022.9906486",
+      "canonicalUrl": "https://doi.org/10.1109/APWCS55727.2022.9906486",
+      "localFilename": "2022_10_Performance_Evaluation_of_Handover_using_A4_Event_in_LEO_Satellites_Network.pdf",
+      "sha256": "77788c064b29b93b34183d98b9193445ea2dfcf44a9c7d18f2da628353db3908"
+    },
+    {
+      "sourceId": "PAP-2022-SEAMLESSNTN-CORE",
+      "title": "Seamless Handover in LEO Based Non-Terrestrial Networks: Service Continuity and Optimization",
+      "doi": "10.1109/TCOMM.2022.3229014",
+      "canonicalUrl": "https://doi.org/10.1109/TCOMM.2022.3229014",
+      "localFilename": "2022_12_Seamless_Handover_in_LEO_Based_Non-Terrestrial_Networks_Service_Continuity_and_Optimization.pdf",
+      "sha256": "985a42cf8425b08cf2160cdfbb1f8d18a43668fafcbf888eb3ddad1313d8459b"
+    },
+    {
+      "sourceId": "PAP-2024-MADRL-CORE",
+      "title": "A Multi-Agent Deep Reinforcement Learning-Based Handover Scheme for Mega-Constellation Under Dynamic Propagation Conditions",
+      "doi": "10.1109/TWC.2024.3407358",
+      "canonicalUrl": "https://doi.org/10.1109/TWC.2024.3407358",
+      "localFilename": "2024_06_A_Multi-Agent_Deep_Reinforcement_Learning-Based_Handover_Scheme_for_Mega-Constellation_Under_Dynamic_Propagation_Conditions.pdf",
+      "sha256": "ffaf373133d2c5ffc25a2f24f9212aa3483e3fdab2e00459f42ba3b030324d09"
+    },
+    {
+      "sourceId": "PAP-2024-MCCHO-CORE",
+      "title": "Enhancing Handover Performance in LEO Satellite Networks with Multi-Connectivity and Conditional Handover Approach",
+      "doi": "10.23919/SoftCOM62040.2024.10721800",
+      "canonicalUrl": "https://doi.org/10.23919/SoftCOM62040.2024.10721800",
+      "localFilename": "2024_10_Enhancing_Handover_Performance_in_LEO_Satellite_Networks_with_Multi-Connectivity_and_Conditional_Handover_Approach.pdf",
+      "sha256": "9762cb127464aba811d68fb2957eb23e75f7c84382614130ebfd7419a42cdf3a"
+    },
+    {
+      "sourceId": "PAP-2025-DAPS-CORE",
+      "title": "A Novel Joint Multistage Handover Strategy for DAPS-enabled LEO Satellite Networks",
+      "doi": "10.1109/INFOCOMWKSHPS65812.2025.11152957",
+      "canonicalUrl": "https://doi.org/10.1109/INFOCOMWKSHPS65812.2025.11152957",
+      "localFilename": "2025_05_A_Novel_Joint_Multistage_Handover_Strategy_for_DAPS-enabled_LEO_Satellite_Networks.pdf",
+      "sha256": "dca5b4017be0e82db44a1873cf5b905a9ea10ea5af6760f2c9a34f56485c2cb0"
+    },
+    {
+      "sourceId": "PAP-2025-TIMERCHO-CORE",
+      "title": "Mobility-Aware Timer-based Conditional Handover for LEO Satellite Networks",
+      "doi": "10.1109/APWCS67981.2025.11151939",
+      "canonicalUrl": "https://doi.org/10.1109/APWCS67981.2025.11151939",
+      "localFilename": "2025_08_Mobility-Aware_Timer-based_Conditional_Handover_for_LEO_Satellite_Networks.pdf",
+      "sha256": "5c216b705e2600bd0c2266f8d94e8fd248d67c1e06de3edc9f72e7644f68b5d8"
+    }
+  ]
+}

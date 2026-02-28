@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# TypeScript
+*.tsbuildinfo
+src/**/*.js
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# claude
+.claude/
+
+# Research references policy:
+# - Do NOT version-control third-party full-text/binary artifacts.
+# - Keep only metadata/index files for traceability.
+papers/**/*
+!papers/**/
+!papers/**/*.md
+!papers/**/*.json
+!papers/**/*.yml
+!papers/**/*.yaml
+!papers/**/*.txt
+!papers/**/*.bib

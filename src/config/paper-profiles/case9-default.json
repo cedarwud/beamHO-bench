@@ -1,0 +1,100 @@
+{
+  "profileId": "case9-default",
+  "name": "3GPP Case-9 Default Baseline",
+  "mode": "paper-baseline",
+  "sourcePapers": [
+    "2022_10_Performance_Evaluation_of_Handover_using_A4_Event_in_LEO_Satellites_Network",
+    "2025_08_Mobility-Aware_Timer-based_Conditional_Handover_for_LEO_Satellite_Networks",
+    "2024_10_Enhancing_Handover_Performance_in_LEO_Satellite_Networks_with_Multi-Connectivity_and_Conditional_Handover_Approach"
+  ],
+  "timeStepSec": 1,
+  "scenario": {
+    "deployment": "rural",
+    "areaKm": {
+      "width": 110,
+      "height": 35
+    }
+  },
+  "constellation": {
+    "type": "synthetic",
+    "constellationName": "case9-window",
+    "altitudeKm": 600,
+    "inclinationDeg": 90,
+    "orbitalPlanes": 1,
+    "satellitesPerPlane": 7,
+    "activeSatellitesInWindow": 7,
+    "satelliteSpeedKmps": 7.56,
+    "minElevationDeg": 10
+  },
+  "beam": {
+    "beamsPerSatellite": 19,
+    "layout": "hex-19",
+    "footprintDiameterKm": 50,
+    "beamwidth3dBDeg": 4.4127,
+    "overlapRatio": 0.25,
+    "gainModel": "bessel-j1",
+    "frequencyReuse": "FR1",
+    "eirpDensityDbwPerMHz": 34
+  },
+  "channel": {
+    "carrierFrequencyGHz": 2,
+    "bandwidthMHz": 20,
+    "largeScaleModel": "3gpp-tr-38.811",
+    "smallScaleModel": "none",
+    "sfClSource": "3GPP TR 38.811 Table 6.6.2-1",
+    "ueGTdBPerK": -33.6,
+    "ueAntennaGainDbi": 0,
+    "noiseTemperatureK": 290
+  },
+  "rlfStateMachine": {
+    "qOutDb": -8,
+    "qInDb": -6,
+    "t310Ms": 1000,
+    "n310": 1,
+    "n311": 1,
+    "l3FilterK": 4,
+    "harqMaxRetx": 7,
+    "rlcMaxRetx": 3,
+    "preambleMsg3MaxRetx": 4,
+    "raResponseTimerSubframes": 5,
+    "contentionResolutionTimerSubframes": 40
+  },
+  "ue": {
+    "count": 100,
+    "distribution": "uniform",
+    "speedKmphOptions": [0, 3, 30, 60]
+  },
+  "handover": {
+    "baselines": [
+      "max-rsrp",
+      "max-elevation",
+      "max-remaining-time",
+      "a3",
+      "a4",
+      "cho",
+      "mc-ho"
+    ],
+    "params": {
+      "a3OffsetDb": 0,
+      "a3TttMs": 0,
+      "a4ThresholdDbm": -100,
+      "homDb": 2,
+      "mtsSec": 1,
+      "timerAlphaOptions": [0.8, 0.85, 0.9]
+    }
+  },
+  "kpis": [
+    "throughput",
+    "handover-rate",
+    "hof",
+    "rlf",
+    "uho",
+    "hopp",
+    "avg-dl-sinr",
+    "jain-fairness"
+  ],
+  "notes": [
+    "Baseline profile for first reproducible implementation in beamHO-bench.",
+    "Use synthetic linear orbit in paper-baseline mode before switching to SGP4 TLE mode."
+  ]
+}

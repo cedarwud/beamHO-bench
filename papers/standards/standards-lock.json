@@ -1,0 +1,41 @@
+{
+  "generatedAtUtc": "2026-03-01T00:35:00Z",
+  "policy": "metadata-only; third-party standard binaries are intentionally git-ignored",
+  "entries": [
+    {
+      "sourceId": "STD-3GPP-TR38.811-6.6.2-1",
+      "spec": "TR 38.811",
+      "versionFile": "38811-f40.zip",
+      "archiveUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.811/38811-f40.zip",
+      "sha256": "fff99141ab5f93fcfbca8321de8c4eb48b98347d01c5be53baf5c782308f37b3"
+    },
+    {
+      "sourceId": "STD-3GPP-TR38.821-NTN",
+      "spec": "TR 38.821",
+      "versionFile": "38821-g20.zip",
+      "archiveUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.821/38821-g20.zip",
+      "sha256": "7b3a2528b88fd1446d79c937040972b5da39618b5c2522583f8d13f97f12de85"
+    },
+    {
+      "sourceId": "STD-3GPP-TS38.331-RRC",
+      "spec": "TS 38.331",
+      "versionFile": "38331-j10.zip",
+      "archiveUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.331/38331-j10.zip",
+      "sha256": "5919f455d796d52330c52557bbe01b993e7d607a667cb8a887e287d872337990"
+    },
+    {
+      "sourceId": "STD-3GPP-TS38.321-MAC",
+      "spec": "TS 38.321",
+      "versionFile": "38321-j10.zip",
+      "archiveUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.321/38321-j10.zip",
+      "sha256": "722411628b0c72d7b0d42646259a5dd912681c9310450a5786a406dc6c1e3434"
+    },
+    {
+      "sourceId": "STD-3GPP-TS38.322-RLC",
+      "spec": "TS 38.322",
+      "versionFile": "38322-j10.zip",
+      "archiveUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.322/38322-j10.zip",
+      "sha256": "c21f6621ab058e214f2832e9ae41b0fe77c908ce45a6d837f9ae6bca786df8c0"
+    }
+  ]
+}

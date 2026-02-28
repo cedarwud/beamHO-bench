@@ -1,0 +1,107 @@
+{
+  "profileId": "oneweb-like",
+  "name": "OneWeb-like Real Trace Profile",
+  "mode": "real-trace",
+  "sourcePapers": [
+    "2024_06_A_Multi-Agent_Deep_Reinforcement_Learning-Based_Handover_Scheme_for_Mega-Constellation_Under_Dynamic_Propagation_Conditions",
+    "2025_05_A_Novel_Joint_Multistage_Handover_Strategy_for_DAPS-enabled_LEO_Satellite_Networks"
+  ],
+  "timeStepSec": 1,
+  "scenario": {
+    "deployment": "rural",
+    "areaKm": {
+      "width": 110,
+      "height": 35
+    }
+  },
+  "constellation": {
+    "type": "tle",
+    "constellationName": "oneweb-like",
+    "altitudeKm": 1200,
+    "inclinationDeg": 87.9,
+    "orbitalPlanes": 18,
+    "satellitesPerPlane": 40,
+    "activeSatellitesInWindow": 10,
+    "satelliteSpeedKmps": 7.4,
+    "minElevationDeg": 10,
+    "tle": {
+      "provider": "oneweb",
+      "pathPattern": "tle_data/oneweb/tle/oneweb_*.tle",
+      "selection": {
+        "maxSatellites": 720,
+        "preferLatest": true
+      }
+    }
+  },
+  "beam": {
+    "beamsPerSatellite": 19,
+    "layout": "hex-19",
+    "footprintDiameterKm": 50,
+    "beamwidth3dBDeg": 4.4,
+    "overlapRatio": 0.25,
+    "gainModel": "bessel-j1",
+    "frequencyReuse": "FR1",
+    "eirpDensityDbwPerMHz": 34
+  },
+  "channel": {
+    "carrierFrequencyGHz": 2.2,
+    "bandwidthMHz": 20,
+    "largeScaleModel": "3gpp-tr-38.811",
+    "smallScaleModel": "shadowed-rician",
+    "sfClSource": "3GPP TR 38.811 Table 6.6.2-1",
+    "ueGTdBPerK": -33.6,
+    "ueAntennaGainDbi": 0,
+    "noiseTemperatureK": 290
+  },
+  "rlfStateMachine": {
+    "qOutDb": -8,
+    "qInDb": -6,
+    "t310Ms": 1000,
+    "n310": 1,
+    "n311": 1,
+    "l3FilterK": 4,
+    "harqMaxRetx": 7,
+    "rlcMaxRetx": 3,
+    "preambleMsg3MaxRetx": 4,
+    "raResponseTimerSubframes": 5,
+    "contentionResolutionTimerSubframes": 40
+  },
+  "ue": {
+    "count": 100,
+    "distribution": "uniform",
+    "speedKmphOptions": [0, 3, 30, 60]
+  },
+  "handover": {
+    "baselines": [
+      "max-rsrp",
+      "max-elevation",
+      "max-remaining-time",
+      "a3",
+      "a4",
+      "cho",
+      "mc-ho"
+    ],
+    "params": {
+      "a3OffsetDb": 0,
+      "a3TttMs": 0,
+      "a4ThresholdDbm": -100,
+      "homDb": 2,
+      "mtsSec": 1,
+      "timerAlphaOptions": [0.8, 0.85, 0.9]
+    }
+  },
+  "kpis": [
+    "throughput",
+    "handover-rate",
+    "hof",
+    "rlf",
+    "uho",
+    "hopp",
+    "avg-dl-sinr",
+    "jain-fairness"
+  ],
+  "notes": [
+    "OneWeb profile focuses on higher-altitude LEO dynamics.",
+    "Use same KPI definitions as case9-default for comparability."
+  ]
+}
