@@ -1,0 +1,42 @@
+{
+  "profileId": "oneweb-like",
+  "sources": {
+    "constellation.altitudeKm": [
+      "PAP-2024-MADRL-CORE"
+    ],
+    "constellation.inclinationDeg": [
+      "PAP-2024-MADRL-CORE"
+    ],
+    "constellation.orbitalPlanes": [
+      "PAP-2024-MADRL-CORE"
+    ],
+    "constellation.satellitesPerPlane": [
+      "PAP-2024-MADRL-CORE"
+    ],
+    "channel.smallScaleModel": [
+      "PAP-2024-MADRL-CORE"
+    ],
+    "channel.sfClSource": [
+      "STD-3GPP-TR38.811-6.6.2-1"
+    ],
+    "handover.params.timerAlphaOptions": [
+      "PAP-2025-TIMERCHO-CORE"
+    ],
+    "beam.overlapRatio": [
+      "PAP-2025-DAPS-CORE"
+    ],
+    "rlfStateMachine.t310Ms": [
+      "STD-3GPP-TS38.331-RRC"
+    ],
+    "rlfStateMachine.harqMaxRetx": [
+      "STD-3GPP-TS38.321-MAC"
+    ],
+    "rlfStateMachine.rlcMaxRetx": [
+      "STD-3GPP-TS38.322-RLC"
+    ],
+    "constellation.tle.pathPattern": [
+      "PAP-2024-MADRL-CORE",
+      "PAP-2025-DAPS-CORE"
+    ]
+  }
+}

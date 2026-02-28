@@ -1,0 +1,115 @@
+{
+  "generatedAtUtc": "2026-03-01T00:40:00Z",
+  "entries": [
+    {
+      "sourceId": "STD-3GPP-TR38.811-6.6.2-1",
+      "type": "standard",
+      "title": "3GPP TR 38.811",
+      "locator": "Table 6.6.2-1",
+      "year": 2020,
+      "canonicalUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.811/38811-f40.zip",
+      "licenseNote": "3GPP copyrighted standard; do not redistribute full text in public repo.",
+      "artifactSha256": "fff99141ab5f93fcfbca8321de8c4eb48b98347d01c5be53baf5c782308f37b3"
+    },
+    {
+      "sourceId": "STD-3GPP-TR38.821-NTN",
+      "type": "standard",
+      "title": "3GPP TR 38.821",
+      "locator": "NTN RAN study item",
+      "year": 2022,
+      "canonicalUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.821/38821-g20.zip",
+      "licenseNote": "3GPP copyrighted standard; do not redistribute full text in public repo.",
+      "artifactSha256": "7b3a2528b88fd1446d79c937040972b5da39618b5c2522583f8d13f97f12de85"
+    },
+    {
+      "sourceId": "STD-3GPP-TS38.331-RRC",
+      "type": "standard",
+      "title": "3GPP TS 38.331",
+      "locator": "RRC mobility events and timers",
+      "year": 2026,
+      "canonicalUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.331/38331-j10.zip",
+      "licenseNote": "3GPP copyrighted standard; do not redistribute full text in public repo.",
+      "artifactSha256": "5919f455d796d52330c52557bbe01b993e7d607a667cb8a887e287d872337990"
+    },
+    {
+      "sourceId": "STD-3GPP-TS38.321-MAC",
+      "type": "standard",
+      "title": "3GPP TS 38.321",
+      "locator": "MAC HARQ and random access behavior",
+      "year": 2026,
+      "canonicalUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.321/38321-j10.zip",
+      "licenseNote": "3GPP copyrighted standard; do not redistribute full text in public repo.",
+      "artifactSha256": "722411628b0c72d7b0d42646259a5dd912681c9310450a5786a406dc6c1e3434"
+    },
+    {
+      "sourceId": "STD-3GPP-TS38.322-RLC",
+      "type": "standard",
+      "title": "3GPP TS 38.322",
+      "locator": "RLC retransmission procedures",
+      "year": 2026,
+      "canonicalUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.322/38322-j10.zip",
+      "licenseNote": "3GPP copyrighted standard; do not redistribute full text in public repo.",
+      "artifactSha256": "c21f6621ab058e214f2832e9ae41b0fe77c908ce45a6d837f9ae6bca786df8c0"
+    },
+    {
+      "sourceId": "PAP-2022-A4EVENT-CORE",
+      "type": "paper",
+      "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",
+      "locator": "A3/A4 trigger baseline and state-centric KPI",
+      "year": 2022,
+      "canonicalUrl": "https://doi.org/10.1109/APWCS55727.2022.9906486",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF.",
+      "artifactSha256": "77788c064b29b93b34183d98b9193445ea2dfcf44a9c7d18f2da628353db3908"
+    },
+    {
+      "sourceId": "PAP-2022-SEAMLESSNTN-CORE",
+      "type": "paper",
+      "title": "Seamless Handover in LEO Based Non-Terrestrial Networks: Service Continuity and Optimization",
+      "locator": "Starlink-like constellation and seamless HO sequence",
+      "year": 2022,
+      "canonicalUrl": "https://doi.org/10.1109/TCOMM.2022.3229014",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF.",
+      "artifactSha256": "985a42cf8425b08cf2160cdfbb1f8d18a43668fafcbf888eb3ddad1313d8459b"
+    },
+    {
+      "sourceId": "PAP-2024-MADRL-CORE",
+      "type": "paper",
+      "title": "A Multi-Agent Deep Reinforcement Learning-Based Handover Scheme for Mega-Constellation Under Dynamic Propagation Conditions",
+      "locator": "OneWeb-like setting and dynamic propagation assumptions",
+      "year": 2024,
+      "canonicalUrl": "https://doi.org/10.1109/TWC.2024.3407358",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF.",
+      "artifactSha256": "ffaf373133d2c5ffc25a2f24f9212aa3483e3fdab2e00459f42ba3b030324d09"
+    },
+    {
+      "sourceId": "PAP-2024-MCCHO-CORE",
+      "type": "paper",
+      "title": "Enhancing Handover Performance in LEO Satellite Networks with Multi-Connectivity and Conditional Handover Approach",
+      "locator": "MC plus CHO overlap-driven handover behavior",
+      "year": 2024,
+      "canonicalUrl": "https://doi.org/10.23919/SoftCOM62040.2024.10721800",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF.",
+      "artifactSha256": "9762cb127464aba811d68fb2957eb23e75f7c84382614130ebfd7419a42cdf3a"
+    },
+    {
+      "sourceId": "PAP-2025-DAPS-CORE",
+      "type": "paper",
+      "title": "A Novel Joint Multistage Handover Strategy for DAPS-enabled LEO Satellite Networks",
+      "locator": "DAPS-oriented multistage HO assumptions",
+      "year": 2025,
+      "canonicalUrl": "https://doi.org/10.1109/INFOCOMWKSHPS65812.2025.11152957",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF.",
+      "artifactSha256": "dca5b4017be0e82db44a1873cf5b905a9ea10ea5af6760f2c9a34f56485c2cb0"
+    },
+    {
+      "sourceId": "PAP-2025-TIMERCHO-CORE",
+      "type": "paper",
+      "title": "Mobility-Aware Timer-based Conditional Handover for LEO Satellite Networks",
+      "locator": "Timer-aware CHO and alpha sweep setting",
+      "year": 2025,
+      "canonicalUrl": "https://doi.org/10.1109/APWCS67981.2025.11151939",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF.",
+      "artifactSha256": "5c216b705e2600bd0c2266f8d94e8fd248d67c1e06de3edc9f72e7644f68b5d8"
+    }
+  ]
+}

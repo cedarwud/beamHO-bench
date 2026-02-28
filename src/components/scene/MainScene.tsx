@@ -3,11 +3,16 @@ import { Canvas } from '@react-three/fiber';
 import { AdaptiveDpr, OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
 import { NTPUScene } from './NTPUScene';
 import { UAV } from './UAV';
+import { SatelliteModel } from '../sim/SatelliteModel';
+import { BeamFootprint } from '../sim/BeamFootprint';
+import { UEMarkers } from '../sim/UEMarkers';
+import { KpiHUD } from '../sim/KpiHUD';
 import { NTPU_CONFIG } from '@/config/ntpu.config';
 import { Starfield } from '../ui/Starfield';
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
 import { SceneLoader } from '../ui/SceneLoader';
 import { SceneErrorBoundary } from '../ui/SceneErrorBoundary';
+import { useSimulation } from '@/hooks/useSimulation';
 
 const SHOW_DEBUG =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_SCENE_DEBUG === 'true';
@@ -27,6 +32,22 @@ function isMobileLikeDevice() {
 }
 
 export function MainScene() {
+  const {
+    profile,
+    snapshot,
+    isRunning,
+    sourceTraceFileName,
+    start,
+    stop,
+    step,
+    reset,
+    exportSourceTrace,
+  } = useSimulation({
+    profileId: 'case9-default',
+    seed: 42,
+    autoStart: false,
+  });
+
   const lowPowerMode = useMemo(() => isMobileLikeDevice(), []);
   const shadowMapSize = lowPowerMode
     ? NTPU_CONFIG.lighting.directional.shadow.mapSizeMobile
@@ -38,6 +59,38 @@ export function MainScene() {
   return (
     <div className="scene-root">
       <Starfield starCount={180} />
+      <div className="sim-hud" role="status" aria-live="polite">
+        <div className="sim-hud__title">Phase 1a Case9 Analytic Orbit</div>
+        <div className="sim-hud__meta">
+          profile: <strong>{profile.profileId}</strong> | tick: <strong>{snapshot.tick}</strong> |
+          sat: <strong>{snapshot.satellites.length}</strong> | beams:{' '}
+          <strong>
+            {snapshot.satellites.reduce((sum, satellite) => sum + satellite.beams.length, 0)}
+          </strong>{' '}
+          | ue: <strong>{snapshot.ues.length}</strong>
+        </div>
+        <div className="sim-hud__actions">
+          <button type="button" onClick={isRunning ? stop : start}>
+            {isRunning ? 'Pause' : 'Run'}
+          </button>
+          <button type="button" onClick={step}>
+            Step
+          </button>
+          <button type="button" onClick={reset}>
+            Reset
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              void exportSourceTrace();
+            }}
+            title={sourceTraceFileName}
+          >
+            Export Source Trace
+          </button>
+        </div>
+        <KpiHUD kpi={snapshot.kpiCumulative} />
+      </div>
 
       <SceneErrorBoundary>
         <Canvas
@@ -101,6 +154,9 @@ export function MainScene() {
           <Suspense fallback={<SceneLoader label="Loading NTPU Scene..." />}>
             <NTPUScene />
             <UAV position={NTPU_CONFIG.uav.position} scale={NTPU_CONFIG.uav.scale} />
+            <BeamFootprint satellites={snapshot.satellites} />
+            <UEMarkers ues={snapshot.ues} />
+            <SatelliteModel satellites={snapshot.satellites} />
           </Suspense>
 
           {/* 動態 DPR 調整 */}

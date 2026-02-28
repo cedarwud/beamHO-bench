@@ -1,0 +1,42 @@
+{
+  "profileId": "starlink-like",
+  "sources": {
+    "constellation.altitudeKm": [
+      "PAP-2022-SEAMLESSNTN-CORE"
+    ],
+    "constellation.inclinationDeg": [
+      "PAP-2022-SEAMLESSNTN-CORE"
+    ],
+    "constellation.orbitalPlanes": [
+      "PAP-2022-SEAMLESSNTN-CORE"
+    ],
+    "constellation.satellitesPerPlane": [
+      "PAP-2022-SEAMLESSNTN-CORE"
+    ],
+    "channel.sfClSource": [
+      "STD-3GPP-TR38.811-6.6.2-1"
+    ],
+    "handover.params.a4ThresholdDbm": [
+      "PAP-2022-A4EVENT-CORE",
+      "STD-3GPP-TS38.331-RRC"
+    ],
+    "handover.params.timerAlphaOptions": [
+      "PAP-2025-TIMERCHO-CORE"
+    ],
+    "rlfStateMachine.t310Ms": [
+      "STD-3GPP-TS38.331-RRC"
+    ],
+    "rlfStateMachine.harqMaxRetx": [
+      "STD-3GPP-TS38.321-MAC"
+    ],
+    "rlfStateMachine.rlcMaxRetx": [
+      "STD-3GPP-TS38.322-RLC"
+    ],
+    "beam.overlapRatio": [
+      "PAP-2024-MCCHO-CORE"
+    ],
+    "constellation.tle.pathPattern": [
+      "PAP-2022-SEAMLESSNTN-CORE"
+    ]
+  }
+}
