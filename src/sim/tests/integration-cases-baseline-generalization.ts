@@ -1,3 +1,4 @@
+import { buildValidationDefinitions } from '@/sim/bench/validation-definitions';
 import { runCoreValidationSuite } from '@/sim/bench/validation-suite';
 import { assertAlmostEqual, assertCondition } from './helpers';
 import type { SimTestCase } from './types';
@@ -12,6 +13,28 @@ function getCsvCell(row: string[], header: string[], key: string): string {
 
 export function buildBaselineGeneralizationIntegrationCases(): SimTestCase[] {
   return [
+    {
+      name: 'integration: deferred rsma/drl scope is excluded from active validation gates',
+      kind: 'integration',
+      run: () => {
+        const definitions = buildValidationDefinitions();
+        const forbiddenPattern =
+          /\brsma\b|\bsoft[-\s]?ho\b|\blarge[-\s]?scale\s+drl\b|\bmulti[-\s]?paper\s+drl\b/i;
+
+        for (const definition of definitions) {
+          assertCondition(
+            !forbiddenPattern.test(definition.validationId),
+            `Deferred scope keyword found in validationId '${definition.validationId}'.`,
+          );
+          for (const suiteCase of definition.cases) {
+            assertCondition(
+              !forbiddenPattern.test(suiteCase.caseId),
+              `Deferred scope keyword found in caseId '${definition.validationId}/${suiteCase.caseId}'.`,
+            );
+          }
+        }
+      },
+    },
     {
       name: 'integration: beam-count sweep emits metadata and normalized KPI output',
       kind: 'integration',
