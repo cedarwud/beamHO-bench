@@ -12,6 +12,7 @@ import { buildRunManifest } from '@/sim/reporting/manifest';
 import { createSourceTraceArtifact } from '@/sim/reporting/source-trace';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import { assertAlmostEqual, assertCondition, normalizeBatchForDeterminism } from './helpers';
+import { buildBaselineGeneralizationIntegrationCases } from './integration-cases-baseline-generalization';
 import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy-scheduler';
 import type { SimTestCase } from './types';
 
@@ -305,6 +306,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
         assertCondition(Number.isFinite(throughput), 'Throughput must be finite in integration test.');
       },
     },
+    ...buildBaselineGeneralizationIntegrationCases(),
     ...buildPolicySchedulerIntegrationCases(),
     {
       name: 'integration: real-trace multi-baseline batch comparison works on starlink-like profile',
