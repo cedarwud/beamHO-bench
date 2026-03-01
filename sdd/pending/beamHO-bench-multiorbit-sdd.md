@@ -1,22 +1,29 @@
-# beamHO-bench — Multi-Orbit Scheduler SDD (Pending)
+# beamHO-bench — Multi-Orbit Scheduler SDD (Backlog)
 
-**Version:** 0.1.0  
+**Version:** 0.2.0  
 **Date:** 2026-03-01  
 **Status:** Backlog Only / Not Implemented / Out of current LEO-only scope
 
 ---
 
-## 1. Goal
+## 1. Scope Statement
 
-Extend simulation from LEO-only to unified LEO/MEO/GEO candidate management and scheduling.
+This document is a long-term reference for potential extension to LEO/MEO/GEO unified scheduling.
 
-Current scope note:
-1. This document is archived as a long-term extension reference.
-2. Do not treat it as an active implementation target unless research scope is explicitly expanded beyond LEO.
+Current policy:
+1. Do not treat this document as an active implementation target.
+2. Do not add multi-orbit code paths in current roadmap phases.
+3. Use this document only after an explicit scope-change decision.
 
 ---
 
-## 2. Planned Architecture
+## 2. Potential Goal (Future Only)
+
+Extend simulation from LEO-only to unified LEO/MEO/GEO candidate management and scheduling.
+
+---
+
+## 3. Future Architecture Candidates
 
 1. orbit-layer abstraction (`orbitClass`, visibility and latency traits)
 2. cross-orbit candidate ranking and handover policy
@@ -24,16 +31,19 @@ Current scope note:
 
 ---
 
-## 3. Data and Config Plan
+## 4. Future Data and Config Candidates
 
 1. multi-orbit profile schema extension
-2. per-orbit propagation and channel parameter blocks
-3. artifact fields for orbit-level serving history
+2. per-orbit propagation/channel parameter blocks
+3. artifact fields for orbit-class serving history
 
 ---
 
-## 4. Validation Plan
+## 5. Reactivation Preconditions
 
-1. single-orbit compatibility tests (must match v1 behavior)
-2. multi-orbit smoke scenarios with deterministic replay
-3. KPI decomposition by orbit class in output reports
+This backlog item can be promoted to active pending only when all are true:
+1. research scope is explicitly expanded beyond LEO.
+2. roadmap document is updated and approved.
+3. requirements and validation matrix are revised for multi-orbit gates.
+4. compatibility plan proves no regression for existing LEO-only baselines.
+
