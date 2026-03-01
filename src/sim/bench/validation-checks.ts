@@ -371,6 +371,7 @@ export function checkSchedulerStateSanity(
 ): ValidationCheckResult {
   const invalid = batch.runs.find((run) => {
     const scheduler = run.result.metadata.beamScheduler;
+    const coupled = run.result.metadata.coupledDecisionStats;
     const ratiosFinite =
       Number.isFinite(scheduler.utilizationRatio) &&
       Number.isFinite(scheduler.fairnessIndex);
@@ -385,8 +386,11 @@ export function checkSchedulerStateSanity(
     const hashOk =
       typeof scheduler.scheduleStateHash === 'string' &&
       scheduler.scheduleStateHash.length > 0;
+    const coupledOk =
+      coupled.blockedByScheduleHandoverCount >= 0 &&
+      coupled.schedulerInducedInterruptionSec >= 0;
 
-    if (!ratiosFinite || !rangesOk || !hashOk) {
+    if (!ratiosFinite || !rangesOk || !hashOk || !coupledOk) {
       return true;
     }
 
@@ -394,6 +398,14 @@ export function checkSchedulerStateSanity(
       scheduler.mode === 'uncoupled' &&
       scheduler.totalBeamCount > 0 &&
       scheduler.activeBeamCount !== scheduler.totalBeamCount
+    ) {
+      return true;
+    }
+
+    if (
+      scheduler.mode === 'uncoupled' &&
+      (coupled.blockedByScheduleHandoverCount !== 0 ||
+        coupled.schedulerInducedInterruptionSec !== 0)
     ) {
       return true;
     }
@@ -434,6 +446,7 @@ function fingerprintBatch(batch: BaselineBatchResult): string {
         runtimeParameterAudit: run.result.metadata.runtimeParameterAudit,
         policyRuntime: run.result.metadata.policyRuntime,
         beamScheduler: run.result.metadata.beamScheduler,
+        coupledDecisionStats: run.result.metadata.coupledDecisionStats,
       },
       summary: run.result.summary,
       timeseriesCsv: run.timeseriesCsv,

@@ -279,5 +279,25 @@ export function buildValidationDefinitions(): ValidationSuiteDefinition[] {
         },
       ],
     },
+    {
+      validationId: 'VAL-JBH-CAPACITY-GUARD-SMOKE',
+      profileId: 'case9-default',
+      requiresFullFidelity: true,
+      cases: [
+        {
+          caseId: 'scheduler-capacity-fairness-guard',
+          baselines: ['a4'],
+          tickCount: 120,
+          runtimeOverrides: {
+            scheduler: {
+              mode: 'coupled',
+              activeWindowFraction: 0.2,
+              maxUsersPerActiveBeam: 1,
+              fairnessTargetJain: 0.6,
+            },
+          },
+        },
+      ],
+    },
   ];
 }

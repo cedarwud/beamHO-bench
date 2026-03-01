@@ -104,6 +104,73 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       },
     },
     {
+      name: 'integration: scheduler coupled mode exports guard counters and auditable block reason map',
+      kind: 'integration',
+      run: () => {
+        const profile = loadPaperProfile('case9-default', {
+          scheduler: {
+            mode: 'coupled',
+            activeWindowFraction: 0.2,
+            maxUsersPerActiveBeam: 1,
+            fairnessTargetJain: 0.6,
+          },
+        });
+        const batch = runBaselineBatch({
+          profile,
+          seed: 27,
+          baselines: ['a4'],
+          tickCount: 40,
+          captureSnapshots: true,
+        });
+
+        const run = batch.runs[0];
+        const coupledStats = run.result.metadata.coupledDecisionStats;
+        assertCondition(
+          coupledStats.mode === 'coupled',
+          'Expected coupled stats mode for constrained scheduler run.',
+        );
+        assertCondition(
+          coupledStats.blockedByScheduleHandoverCount >= 0,
+          'Expected non-negative blocked handover count.',
+        );
+        assertCondition(
+          coupledStats.schedulerInducedInterruptionSec >= 0,
+          'Expected non-negative scheduler-induced interruption seconds.',
+        );
+
+        for (const reason of Object.keys(coupledStats.blockedReasons)) {
+          assertCondition(
+            reason.startsWith('blocked-by-schedule-'),
+            `Unexpected coupled blocked reason '${reason}'.`,
+          );
+        }
+
+        const schedulerBlockEvents = (run.snapshots ?? []).flatMap((snapshot) =>
+          snapshot.hoEvents.filter((event) => event.reason.startsWith('scheduler-block:')),
+        );
+        if (coupledStats.blockedByScheduleHandoverCount > 0) {
+          assertCondition(
+            schedulerBlockEvents.length > 0,
+            'Expected scheduler-block events when blocked handover count is positive.',
+          );
+        } else {
+          assertCondition(
+            schedulerBlockEvents.length === 0,
+            'Expected no scheduler-block events when blocked handover count is zero.',
+          );
+        }
+
+        const totalReasonCount = Object.values(coupledStats.blockedReasons).reduce(
+          (sum, count) => sum + count,
+          0,
+        );
+        assertCondition(
+          totalReasonCount === coupledStats.blockedByScheduleHandoverCount,
+          'Blocked reason counter sum must equal blocked handover count.',
+        );
+      },
+    },
+    {
       name: 'integration: scheduler metadata is exported to source-trace and manifest artifacts',
       kind: 'integration',
       run: async () => {

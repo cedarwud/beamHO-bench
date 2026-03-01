@@ -1,10 +1,49 @@
 import { loadPaperProfile } from '@/config/paper-profiles/loader';
 import { computeThroughputMbps, evaluateLinksForUe, selectBestLink } from '@/sim/channel/link-budget';
 import { applyHandoverStateMachine } from '@/sim/handover/state-machine';
+import { sampleKey } from '@/sim/handover/baseline-helpers';
+import { resolveCoupledHandoverConflicts } from '@/sim/scheduler/coupled-resolver';
+import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
+import type { BeamState } from '@/sim/types';
 import { assertCondition, createBaseUe, createInvisibleSatellite } from './helpers';
 import type { SimTestCase } from './types';
 
 export function buildUnitTestCases(): SimTestCase[] {
+  const createBeam = (
+    beamId: number,
+    centerX: number,
+    centerZ: number,
+    radiusWorld = 10,
+  ): BeamState => ({
+    beamId,
+    centerLatLon: [0, 0],
+    centerWorld: [centerX, 0, centerZ],
+    radiusKm: 10,
+    radiusWorld,
+    connectedUeIds: [],
+  });
+
+  const createSchedulerSnapshot = (
+    states: BeamSchedulerSnapshot['states'],
+  ): BeamSchedulerSnapshot => ({
+    tick: 1,
+    timeSec: 1,
+    summary: {
+      mode: 'coupled',
+      windowId: 0,
+      totalBeamCount: states.length,
+      activeBeamCount: states.filter((state) => state.isActive).length,
+      utilizationRatio:
+        states.length > 0
+          ? states.filter((state) => state.isActive).length / states.length
+          : 0,
+      fairnessIndex: 1,
+      scheduleStateHash: 'sched-unit-test',
+    },
+    states,
+    events: [],
+  });
+
   return [
     {
       name: 'unit: throughput monotonic with SINR',
@@ -117,6 +156,228 @@ export function buildUnitTestCases(): SimTestCase[] {
         assertCondition(result.rlfDelta.state1 === 1, 'Expected one state1 RLF increment.');
         assertCondition(result.ues[0].servingSatId === null, 'RLF should clear servingSatId.');
         assertCondition(result.ues[0].servingBeamId === null, 'RLF should clear servingBeamId.');
+      },
+    },
+    {
+      name: 'unit: coupled resolver enforces per-beam capacity with deterministic tie-break',
+      kind: 'unit',
+      run: () => {
+        const profile = loadPaperProfile('case9-default', {
+          scheduler: {
+            mode: 'coupled',
+            maxUsersPerActiveBeam: 1,
+            fairnessTargetJain: 0,
+          },
+        });
+        const beam11 = createBeam(11, 0, 0);
+        const beam12 = createBeam(12, 5, 0);
+        const beamByKey = new Map([
+          [sampleKey(1, 11), beam11],
+          [sampleKey(1, 12), beam12],
+        ]);
+        const scheduler = createSchedulerSnapshot([
+          {
+            tick: 1,
+            satId: 1,
+            beamId: 11,
+            isActive: true,
+            freqBlockId: 1,
+            powerClass: 'active',
+            windowId: 0,
+          },
+          {
+            tick: 1,
+            satId: 1,
+            beamId: 12,
+            isActive: true,
+            freqBlockId: 2,
+            powerClass: 'active',
+            windowId: 0,
+          },
+        ]);
+
+        const result = resolveCoupledHandoverConflicts({
+          profile,
+          beamScheduler: scheduler,
+          beamByKey,
+          currentUes: [
+            createBaseUe({ id: 1, servingSatId: 1, servingBeamId: 11, rsrpDbm: -100 }),
+            createBaseUe({ id: 2, servingSatId: 1, servingBeamId: 11, rsrpDbm: -95 }),
+          ],
+          timeStepSec: 1,
+          proposals: [
+            {
+              ueId: 1,
+              servingSatId: 1,
+              servingBeamId: 11,
+              servingRsrpDbm: -100,
+              targetSatId: 1,
+              targetBeamId: 12,
+              targetRsrpDbm: -85,
+              targetSinrDb: 5,
+              triggerEvent: true,
+            },
+            {
+              ueId: 2,
+              servingSatId: 1,
+              servingBeamId: 11,
+              servingRsrpDbm: -95,
+              targetSatId: 1,
+              targetBeamId: 12,
+              targetRsrpDbm: -84,
+              targetSinrDb: 6,
+              triggerEvent: true,
+            },
+          ],
+        });
+
+        assertCondition(
+          result.stats.blockedByScheduleHandoverCount === 1,
+          'Expected exactly one capacity-blocked proposal.',
+        );
+        assertCondition(
+          result.rejectedByUeId.size === 1,
+          'Expected exactly one rejected UE for capacity guard.',
+        );
+        assertCondition(
+          [...result.rejectedByUeId.values()][0] === 'blocked-by-schedule-capacity',
+          'Expected capacity rejection reason.',
+        );
+      },
+    },
+    {
+      name: 'unit: coupled resolver enforces overlap constraint',
+      kind: 'unit',
+      run: () => {
+        const profile = loadPaperProfile('case9-default', {
+          scheduler: {
+            mode: 'coupled',
+            fairnessTargetJain: 0,
+          },
+          beam: {
+            overlapRatio: 0.1,
+          },
+        });
+        const beam11 = createBeam(11, 0, 0, 10);
+        const beam13 = createBeam(13, 80, 0, 10);
+        const beamByKey = new Map([
+          [sampleKey(1, 11), beam11],
+          [sampleKey(1, 13), beam13],
+        ]);
+        const scheduler = createSchedulerSnapshot([
+          {
+            tick: 1,
+            satId: 1,
+            beamId: 11,
+            isActive: true,
+            freqBlockId: 1,
+            powerClass: 'active',
+            windowId: 0,
+          },
+          {
+            tick: 1,
+            satId: 1,
+            beamId: 13,
+            isActive: true,
+            freqBlockId: 2,
+            powerClass: 'active',
+            windowId: 0,
+          },
+        ]);
+
+        const result = resolveCoupledHandoverConflicts({
+          profile,
+          beamScheduler: scheduler,
+          beamByKey,
+          currentUes: [createBaseUe({ id: 7, servingSatId: 1, servingBeamId: 11 })],
+          timeStepSec: 1,
+          proposals: [
+            {
+              ueId: 7,
+              servingSatId: 1,
+              servingBeamId: 11,
+              servingRsrpDbm: -90,
+              targetSatId: 1,
+              targetBeamId: 13,
+              targetRsrpDbm: -88,
+              targetSinrDb: 3,
+              triggerEvent: true,
+            },
+          ],
+        });
+
+        assertCondition(
+          result.rejectedByUeId.get(7) === 'blocked-by-schedule-overlap-constraint',
+          'Expected overlap constraint rejection.',
+        );
+      },
+    },
+    {
+      name: 'unit: coupled resolver enforces fairness guard target',
+      kind: 'unit',
+      run: () => {
+        const profile = loadPaperProfile('case9-default', {
+          scheduler: {
+            mode: 'coupled',
+            maxUsersPerActiveBeam: 10,
+            fairnessTargetJain: 0.9,
+          },
+        });
+        const beam11 = createBeam(11, 0, 0);
+        const beam12 = createBeam(12, 6, 0);
+        const beamByKey = new Map([
+          [sampleKey(1, 11), beam11],
+          [sampleKey(1, 12), beam12],
+        ]);
+        const scheduler = createSchedulerSnapshot([
+          {
+            tick: 1,
+            satId: 1,
+            beamId: 11,
+            isActive: true,
+            freqBlockId: 1,
+            powerClass: 'active',
+            windowId: 0,
+          },
+          {
+            tick: 1,
+            satId: 1,
+            beamId: 12,
+            isActive: true,
+            freqBlockId: 2,
+            powerClass: 'active',
+            windowId: 0,
+          },
+        ]);
+
+        const result = resolveCoupledHandoverConflicts({
+          profile,
+          beamScheduler: scheduler,
+          beamByKey,
+          currentUes: [
+            createBaseUe({ id: 1, servingSatId: 1, servingBeamId: 11 }),
+            createBaseUe({ id: 2, servingSatId: 1, servingBeamId: 12 }),
+          ],
+          timeStepSec: 1,
+          proposals: [
+            {
+              ueId: 2,
+              servingSatId: 1,
+              servingBeamId: 12,
+              servingRsrpDbm: -80,
+              targetSatId: 1,
+              targetBeamId: 11,
+              targetRsrpDbm: -70,
+              targetSinrDb: 10,
+              triggerEvent: true,
+            },
+          ],
+        });
+
+        assertCondition(
+          result.rejectedByUeId.get(2) === 'blocked-by-schedule-fairness-guard',
+          'Expected fairness guard rejection.',
+        );
       },
     },
   ];

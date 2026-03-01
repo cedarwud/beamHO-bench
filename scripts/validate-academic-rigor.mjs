@@ -28,6 +28,8 @@ const REQUIRED_SOURCE_PATHS = [
   'scheduler.minActiveBeamsPerSatellite',
   'scheduler.maxActiveBeamsPerSatellite',
   'scheduler.frequencyBlockCount',
+  'scheduler.maxUsersPerActiveBeam',
+  'scheduler.fairnessTargetJain',
   'rlfStateMachine.qOutDb',
   'rlfStateMachine.qInDb',
   'rlfStateMachine.t310Ms',
@@ -59,6 +61,7 @@ const CRITICAL_PROVENANCE_FILES = [
   'src/sim/policy/runtime-session.ts',
   'src/sim/scheduler/types.ts',
   'src/sim/scheduler/window-engine.ts',
+  'src/sim/scheduler/coupled-resolver.ts',
   'src/sim/reporting/source-trace.ts',
   'src/sim/reporting/manifest.ts',
   'src/sim/engine.ts',
@@ -106,6 +109,8 @@ const SCHEDULER_REQUIRED_REFERENCES = [
   'profile.scheduler.minActiveBeamsPerSatellite',
   'profile.scheduler.maxActiveBeamsPerSatellite',
   'profile.scheduler.frequencyBlockCount',
+  'profile.scheduler.maxUsersPerActiveBeam',
+  'profile.scheduler.fairnessTargetJain',
 ];
 
 const LINK_BUDGET_FORBIDDEN_PATTERNS = [
@@ -343,7 +348,10 @@ async function validateParameterConsumption(errors) {
     }
   }
 
-  const scheduler = await readText('src/sim/scheduler/window-engine.ts');
+  const scheduler = [
+    await readText('src/sim/scheduler/window-engine.ts'),
+    await readText('src/sim/scheduler/coupled-resolver.ts'),
+  ].join('\n');
   for (const reference of SCHEDULER_REQUIRED_REFERENCES) {
     if (!scheduler.includes(reference)) {
       pushError(
@@ -370,6 +378,8 @@ async function validateArtifactsContract(errors) {
     'policy_reward_source_ids',
     'scheduler_mode',
     'scheduler_state_hash',
+    'scheduler_blocked_handover_count',
+    'scheduler_blocked_reasons',
   ];
 
   for (const token of requiredSourceTraceTokens) {
@@ -406,6 +416,8 @@ async function validateArtifactsContract(errors) {
     'scheduler_window_id',
     'scheduler_utilization_ratio',
     'scheduler_state_hash',
+    'scheduler_blocked_handover_count',
+    'scheduler_blocked_reasons',
   ];
   for (const token of requiredManifestTokens) {
     if (!manifest.includes(token)) {
