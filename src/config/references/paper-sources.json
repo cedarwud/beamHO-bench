@@ -102,6 +102,16 @@
       "note": "Benchmark-default path uses full CHO/MC-HO implementation."
     },
     {
+      "sourceId": "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG",
+      "type": "assumption",
+      "title": "Deterministic Beam Scheduler Window Configuration",
+      "locator": "scheduler.*",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:beam-scheduler-window-config",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Default beam-hopping window parameters for deterministic scheduler A/B studies."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

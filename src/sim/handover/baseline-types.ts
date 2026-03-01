@@ -1,6 +1,7 @@
 import type { HandoverBaseline, PaperProfile } from '@/config/paper-profiles/types';
 import type { LinkSample } from '@/sim/channel/link-budget';
 import type { PolicyRuntimeSession } from '@/sim/policy/runtime-session';
+import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
 import type { HOEvent, SatelliteState, UEState } from '@/sim/types';
 
 export type RuntimeBaseline = Extract<
@@ -41,6 +42,7 @@ export interface DecisionContext {
   baseline: RuntimeBaseline;
   triggerMemory?: TriggerMemoryStore;
   policyRuntime?: PolicyRuntimeSession;
+  beamScheduler?: BeamSchedulerSnapshot;
 }
 
 export interface CandidateDecision {

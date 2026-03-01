@@ -59,6 +59,24 @@
     "handover.params.timerAlphaOptions": [
       "PAP-2025-TIMERCHO-CORE"
     ],
+    "scheduler.mode": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
+    "scheduler.windowPeriodSec": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
+    "scheduler.activeWindowFraction": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
+    "scheduler.minActiveBeamsPerSatellite": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
+    "scheduler.maxActiveBeamsPerSatellite": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
+    "scheduler.frequencyBlockCount": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
     "beam.overlapRatio": [
       "PAP-2024-MCCHO-CORE"
     ],

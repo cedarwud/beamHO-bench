@@ -85,6 +85,14 @@
     "distribution": "uniform",
     "speedKmphOptions": [0, 3, 30, 60]
   },
+  "scheduler": {
+    "mode": "uncoupled",
+    "windowPeriodSec": 6,
+    "activeWindowFraction": 0.5,
+    "minActiveBeamsPerSatellite": 1,
+    "maxActiveBeamsPerSatellite": 10,
+    "frequencyBlockCount": 4
+  },
   "handover": {
     "algorithmFidelity": "full",
     "baselines": [

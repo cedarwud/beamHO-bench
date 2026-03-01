@@ -83,6 +83,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       runtimeOverrides,
       assumptionIds: setup.resolvedAssumptionIds,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
+      beamScheduler: latestSnapshot.beamScheduler ?? null,
       assumptions: [assumptionMode, fidelityNote],
     });
 
@@ -103,6 +104,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       resolvedAssumptionIds: setup.resolvedAssumptionIds,
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
+      beamScheduler: latestSnapshot.beamScheduler ?? null,
     });
 
     const runTag = `${setup.scenario.id}_${profileId}_${seed}_${baseline}`;
@@ -224,6 +226,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       runtimeOverrides,
       assumptionIds: setup.resolvedAssumptionIds,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
+      beamScheduler: latestSnapshot.beamScheduler ?? null,
       assumptions: [
         setup.profile.mode === 'real-trace'
           ? 'real-trace mode run bundle export'
@@ -241,6 +244,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       resolvedAssumptionIds: setup.resolvedAssumptionIds,
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
+      beamScheduler: latestSnapshot.beamScheduler ?? null,
     });
     const timeseriesCsv = buildTimeseriesCsv(historyRef.current);
 
@@ -255,6 +259,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       generatedAtUtc,
       resolvedAssumptionIds: setup.resolvedAssumptionIds,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
+      beamScheduler: latestSnapshot.beamScheduler ?? null,
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
       validationGate: {
         pass: validationGateSummary.pass,

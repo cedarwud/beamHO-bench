@@ -7,6 +7,7 @@ import {
 } from '@/config/paper-profiles/loader';
 import type { AlgorithmFidelity, PaperProfile } from '@/config/paper-profiles/types';
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
+import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
 
 /**
  * Provenance:
@@ -40,6 +41,11 @@ export interface SourceTraceArtifact {
   policy_rejection_reasons: Record<string, number>;
   policy_state_feature_sources: Record<string, string[]>;
   policy_reward_source_ids: string[];
+  scheduler_mode: 'uncoupled' | 'coupled';
+  scheduler_window_id: number;
+  scheduler_utilization_ratio: number;
+  scheduler_fairness_index: number;
+  scheduler_state_hash: string;
   assumptions: string[];
 }
 
@@ -54,6 +60,7 @@ export interface SourceTraceOptions {
   assumptionIds?: string[];
   assumptions?: string[];
   policyRuntime?: PolicyRuntimeSnapshot | null;
+  beamScheduler?: BeamSchedulerSnapshot | null;
 }
 
 const POLICY_OFF_RUNTIME: PolicyRuntimeSnapshot = {
@@ -95,6 +102,34 @@ function clonePolicyRuntime(
   };
 }
 
+function cloneBeamSchedulerSummary(
+  scheduler: BeamSchedulerSnapshot | null | undefined,
+): {
+  mode: 'uncoupled' | 'coupled';
+  windowId: number;
+  utilizationRatio: number;
+  fairnessIndex: number;
+  scheduleStateHash: string;
+} {
+  if (!scheduler) {
+    return {
+      mode: 'uncoupled',
+      windowId: 0,
+      utilizationRatio: 0,
+      fairnessIndex: 1,
+      scheduleStateHash: 'scheduler-none',
+    };
+  }
+
+  return {
+    mode: scheduler.summary.mode,
+    windowId: scheduler.summary.windowId,
+    utilizationRatio: scheduler.summary.utilizationRatio,
+    fairnessIndex: scheduler.summary.fairnessIndex,
+    scheduleStateHash: scheduler.summary.scheduleStateHash,
+  };
+}
+
 export async function createSourceTraceArtifact(
   options: SourceTraceOptions,
 ): Promise<SourceTraceArtifact> {
@@ -102,6 +137,7 @@ export async function createSourceTraceArtifact(
   const explicitAssumptionIds = options.assumptionIds ?? [];
   const assumptions = options.assumptions ?? [];
   const policyRuntime = clonePolicyRuntime(options.policyRuntime);
+  const beamScheduler = cloneBeamSchedulerSummary(options.beamScheduler);
 
   const profile = loadPaperProfile(options.profileId, runtimeOverrides);
   const tracePayload = await buildSourceTracePayload(options.profileId, runtimeOverrides);
@@ -131,6 +167,11 @@ export async function createSourceTraceArtifact(
     policy_rejection_reasons: policyRuntime.rejectionReasons,
     policy_state_feature_sources: policyRuntime.stateFeatureSourceMap,
     policy_reward_source_ids: policyRuntime.rewardSourceIds,
+    scheduler_mode: beamScheduler.mode,
+    scheduler_window_id: beamScheduler.windowId,
+    scheduler_utilization_ratio: beamScheduler.utilizationRatio,
+    scheduler_fairness_index: beamScheduler.fairnessIndex,
+    scheduler_state_hash: beamScheduler.scheduleStateHash,
     assumptions,
   };
 }

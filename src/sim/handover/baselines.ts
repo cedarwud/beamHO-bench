@@ -25,6 +25,20 @@ import type {
 
 export type { RuntimeBaseline, TriggerMemoryStore, HandoverDecisionResult };
 
+function filterLinksByScheduler(
+  links: ReturnType<typeof evaluateLinksForUe>,
+  mode: 'uncoupled' | 'coupled' | undefined,
+  activeBeamKeys: Set<string> | null,
+): ReturnType<typeof evaluateLinksForUe> {
+  if (mode !== 'coupled' || !activeBeamKeys) {
+    return links;
+  }
+
+  // Source: PAP-2025-DAPS-CORE
+  // Coupled mode constrains HO candidates to scheduler-active beams.
+  return links.filter((sample) => activeBeamKeys.has(sampleKey(sample.satId, sample.beamId)));
+}
+
 export function runHandoverBaseline(context: DecisionContext): HandoverDecisionResult {
   const {
     tick,
@@ -36,6 +50,7 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
     baseline,
     triggerMemory,
     policyRuntime,
+    beamScheduler,
   } = context;
 
   const satById = new Map<number, SatelliteState>(
@@ -51,11 +66,24 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
   const nextTriggerMemory: TriggerMemoryStore = triggerMemory ?? new Map();
   const events: HandoverDecisionResult['events'] = [];
   const nextUes: HandoverDecisionResult['nextUes'] = [];
+  const schedulerMode = beamScheduler?.summary.mode;
+  const activeBeamKeys =
+    schedulerMode === 'coupled'
+      ? new Set(
+          (beamScheduler?.states ?? [])
+            .filter((state) => state.isActive)
+            .map((state) => sampleKey(state.satId, state.beamId)),
+        )
+      : null;
   let sinrSum = 0;
   let throughputSum = 0;
 
   for (const ue of ues) {
-    const links = evaluateLinksForUe(profile, ue, satellites);
+    const links = filterLinksByScheduler(
+      evaluateLinksForUe(profile, ue, satellites),
+      schedulerMode,
+      activeBeamKeys,
+    );
     const servingSample = findServingSample(links, ue);
     const ueMemory = nextTriggerMemory.get(ue.id) ?? {};
     const policyResolution = policyRuntime?.isEnabled()

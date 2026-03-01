@@ -3,6 +3,7 @@ import type { KpiResult, SimSnapshot } from '@/sim/types';
 import type { AlgorithmFidelity } from '@/config/paper-profiles/types';
 import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-parameter-audit';
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
+import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
 
 /**
  * Provenance:
@@ -20,6 +21,16 @@ export interface RunMetadata {
   resolvedAssumptionIds: string[];
   runtimeParameterAudit: RuntimeParameterAuditSnapshot | null;
   policyRuntime: PolicyRuntimeSnapshot;
+  beamScheduler: {
+    mode: 'uncoupled' | 'coupled';
+    windowId: number;
+    totalBeamCount: number;
+    activeBeamCount: number;
+    utilizationRatio: number;
+    fairnessIndex: number;
+    scheduleStateHash: string;
+    eventCount: number;
+  };
   generatedAtUtc: string;
 }
 
@@ -46,6 +57,7 @@ export interface BuildKpiResultMetadata {
   resolvedAssumptionIds: string[];
   runtimeParameterAudit: RuntimeParameterAuditSnapshot | null;
   policyRuntime?: PolicyRuntimeSnapshot | null;
+  beamScheduler?: BeamSchedulerSnapshot | null;
 }
 
 const POLICY_OFF_RUNTIME: PolicyRuntimeSnapshot = {
@@ -90,6 +102,34 @@ function clonePolicyRuntime(
   };
 }
 
+function cloneBeamSchedulerSummary(
+  scheduler: BeamSchedulerSnapshot | null | undefined,
+): RunMetadata['beamScheduler'] {
+  if (!scheduler) {
+    return {
+      mode: 'uncoupled',
+      windowId: 0,
+      totalBeamCount: 0,
+      activeBeamCount: 0,
+      utilizationRatio: 0,
+      fairnessIndex: 1,
+      scheduleStateHash: 'scheduler-none',
+      eventCount: 0,
+    };
+  }
+
+  return {
+    mode: scheduler.summary.mode,
+    windowId: scheduler.summary.windowId,
+    totalBeamCount: scheduler.summary.totalBeamCount,
+    activeBeamCount: scheduler.summary.activeBeamCount,
+    utilizationRatio: scheduler.summary.utilizationRatio,
+    fairnessIndex: scheduler.summary.fairnessIndex,
+    scheduleStateHash: scheduler.summary.scheduleStateHash,
+    eventCount: scheduler.events.length,
+  };
+}
+
 function cloneKpi(kpi: KpiResult): KpiResult {
   return {
     throughput: kpi.throughput,
@@ -117,6 +157,7 @@ export function buildKpiResultArtifact(
     metadata: {
       ...metadata,
       policyRuntime: clonePolicyRuntime(metadata.policyRuntime),
+      beamScheduler: cloneBeamSchedulerSummary(metadata.beamScheduler),
       generatedAtUtc: new Date().toISOString(),
     },
     summary: {

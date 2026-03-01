@@ -4,6 +4,7 @@ import onewebFixtureJson from '@/data/tle/oneweb-sample.json';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-parameter-audit';
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
+import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
 
 /**
  * Provenance:
@@ -43,6 +44,11 @@ export interface RunManifest {
   policy_decision_count: number;
   policy_rejection_count: number;
   policy_rejection_reasons: Record<string, number>;
+  scheduler_mode: 'uncoupled' | 'coupled';
+  scheduler_window_id: number;
+  scheduler_utilization_ratio: number;
+  scheduler_fairness_index: number;
+  scheduler_state_hash: string;
   validation_gate?: {
     pass: boolean;
     total_cases: number;
@@ -71,6 +77,7 @@ export interface RunManifestOptions {
   profileSchemaVersion?: string;
   resolvedAssumptionIds?: string[];
   policyRuntime?: PolicyRuntimeSnapshot | null;
+  beamScheduler?: BeamSchedulerSnapshot | null;
   runtimeParameterAudit?: RuntimeParameterAuditSnapshot | null;
   validationGate?: {
     pass: boolean;
@@ -122,6 +129,34 @@ function clonePolicyRuntime(
   };
 }
 
+function cloneBeamSchedulerSummary(
+  scheduler: BeamSchedulerSnapshot | null | undefined,
+): {
+  mode: 'uncoupled' | 'coupled';
+  windowId: number;
+  utilizationRatio: number;
+  fairnessIndex: number;
+  scheduleStateHash: string;
+} {
+  if (!scheduler) {
+    return {
+      mode: 'uncoupled',
+      windowId: 0,
+      utilizationRatio: 0,
+      fairnessIndex: 1,
+      scheduleStateHash: 'scheduler-none',
+    };
+  }
+
+  return {
+    mode: scheduler.summary.mode,
+    windowId: scheduler.summary.windowId,
+    utilizationRatio: scheduler.summary.utilizationRatio,
+    fairnessIndex: scheduler.summary.fairnessIndex,
+    scheduleStateHash: scheduler.summary.scheduleStateHash,
+  };
+}
+
 function resolveTleSnapshotUtc(profile: PaperProfile): string | undefined {
   if (profile.mode !== 'real-trace') {
     return undefined;
@@ -140,6 +175,7 @@ function resolveTleSnapshotUtc(profile: PaperProfile): string | undefined {
 export function buildRunManifest(options: RunManifestOptions): RunManifest {
   const generatedAtUtc = options.generatedAtUtc ?? new Date().toISOString();
   const policyRuntime = clonePolicyRuntime(options.policyRuntime);
+  const beamScheduler = cloneBeamSchedulerSummary(options.beamScheduler);
 
   const manifest: RunManifest = {
     scenario_id: options.scenarioId,
@@ -163,6 +199,11 @@ export function buildRunManifest(options: RunManifestOptions): RunManifest {
     policy_decision_count: policyRuntime.decisionCount,
     policy_rejection_count: policyRuntime.rejectionCount,
     policy_rejection_reasons: policyRuntime.rejectionReasons,
+    scheduler_mode: beamScheduler.mode,
+    scheduler_window_id: beamScheduler.windowId,
+    scheduler_utilization_ratio: beamScheduler.utilizationRatio,
+    scheduler_fairness_index: beamScheduler.fairnessIndex,
+    scheduler_state_hash: beamScheduler.scheduleStateHash,
   };
 
   if (

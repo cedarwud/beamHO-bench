@@ -16,6 +16,7 @@
     "channel",
     "rlfStateMachine",
     "ue",
+    "scheduler",
     "handover",
     "kpis"
   ],
@@ -252,6 +253,29 @@
           "minItems": 1,
           "items": { "type": "number", "minimum": 0 }
         }
+      }
+    },
+    "scheduler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "windowPeriodSec",
+        "activeWindowFraction",
+        "minActiveBeamsPerSatellite",
+        "maxActiveBeamsPerSatellite",
+        "frequencyBlockCount"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["uncoupled", "coupled"]
+        },
+        "windowPeriodSec": { "type": "number", "exclusiveMinimum": 0 },
+        "activeWindowFraction": { "type": "number", "minimum": 0, "maximum": 1 },
+        "minActiveBeamsPerSatellite": { "type": "integer", "minimum": 0 },
+        "maxActiveBeamsPerSatellite": { "type": "integer", "minimum": 1 },
+        "frequencyBlockCount": { "type": "integer", "minimum": 1 }
       }
     },
     "handover": {

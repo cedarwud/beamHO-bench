@@ -9,6 +9,7 @@
 
 import type { RuntimeParameterAuditSnapshot } from './audit/runtime-parameter-audit';
 import type { PolicyRuntimeSnapshot } from './policy/types';
+import type { BeamSchedulerSnapshot } from './scheduler/types';
 
 export type HandoverState = 1 | 2 | 3;
 
@@ -100,6 +101,7 @@ export interface SimSnapshot {
   kpiCumulative: KpiResult;
   runtimeParameterAudit?: RuntimeParameterAuditSnapshot;
   policyRuntime?: PolicyRuntimeSnapshot;
+  beamScheduler?: BeamSchedulerSnapshot;
 }
 
 export interface SimTickContext {

@@ -126,6 +126,14 @@ export interface PaperProfile {
     distribution: "uniform" | "clustered" | "custom";
     speedKmphOptions: number[];
   };
+  scheduler: {
+    mode: "uncoupled" | "coupled";
+    windowPeriodSec: number;
+    activeWindowFraction: number;
+    minActiveBeamsPerSatellite: number;
+    maxActiveBeamsPerSatellite: number;
+    frequencyBlockCount: number;
+  };
   handover: {
     algorithmFidelity: AlgorithmFidelity;
     baselines: HandoverBaseline[];

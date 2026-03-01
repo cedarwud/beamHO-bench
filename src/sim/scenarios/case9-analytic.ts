@@ -9,6 +9,7 @@ import { applyHandoverStateMachine } from '@/sim/handover/state-machine';
 import { computeJainFairness, updateKpiAccumulator } from '@/sim/kpi/accumulator';
 import { PolicyRuntimeSession } from '@/sim/policy/runtime-session';
 import type { PolicyMode, PolicyPlugin } from '@/sim/policy/types';
+import { BeamSchedulerWindowEngine } from '@/sim/scheduler/window-engine';
 import type { KpiResult, SatelliteState, SimScenario, SimSnapshot, SimTickContext, UEState } from '@/sim/types';
 import { SeededRng } from '@/sim/util/rng';
 import {
@@ -196,6 +197,10 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
     seed: options.seed,
     scenarioId,
   });
+  const beamScheduler = new BeamSchedulerWindowEngine({
+    profile,
+    seed: options.seed,
+  });
   let triggerMemory: TriggerMemoryStore = new Map();
 
   const satCount =
@@ -238,6 +243,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
     kpiCumulative: { ...EMPTY_KPI },
     runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
     policyRuntime: policyRuntime.snapshot(),
+    beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatellites),
   };
 
   function nextSnapshot(previous: SimSnapshot, context: SimTickContext): SimSnapshot {
@@ -263,6 +269,11 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       beamSpacingWorld,
       wrapWidthWorld,
     });
+    const beamSchedulerSnapshot = beamScheduler.buildSnapshot(
+      previous.tick + 1,
+      timeSec,
+      satellitesAtTime,
+    );
 
     const decision = runHandoverBaseline({
       tick: previous.tick + 1,
@@ -274,6 +285,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       baseline,
       triggerMemory,
       policyRuntime,
+      beamScheduler: beamSchedulerSnapshot,
     });
     triggerMemory = decision.nextTriggerMemory;
 
@@ -313,6 +325,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       kpiCumulative,
       runtimeParameterAudit: runtimeParameterAudit.snapshot(previous.tick + 1),
       policyRuntime: policyRuntime.snapshot(),
+      beamScheduler: beamSchedulerSnapshot,
     };
   }
 
@@ -323,6 +336,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       triggerMemory = new Map();
       runtimeParameterAudit.reset();
       policyRuntime.reset();
+      beamScheduler.reset();
       return {
         ...initialSnapshot,
         satellites: initialSatellites,
@@ -331,6 +345,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
         kpiCumulative: { ...EMPTY_KPI },
         runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
         policyRuntime: policyRuntime.snapshot(),
+        beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatellites),
       };
     },
     nextSnapshot,
