@@ -1,35 +1,41 @@
 # SDD Document Set
 
-This folder contains the design and governance documents for beamHO-bench.
+This folder is explicitly split into implemented and planned SDD documents.
 
-## Files
+## Folder Structure
 
-1. `beamHO-bench-sdd.md`  
-Architecture and module-level design, aligned with latest `todo.md`.
+1. `completed/`
+   - SDDs already implemented in code and validated by current stage gate.
+2. `pending/`
+   - Next-phase SDDs not implemented yet (planning/design state).
 
-2. `beamHO-bench-requirements.md`  
-Functional/non-functional requirements and milestone acceptance gates.
+## Completed (Implemented)
 
-3. `beamHO-bench-profile-baseline.md`  
-Canonical profile IDs and pinned baseline values (especially `case9-default`).
+1. `completed/beamHO-bench-sdd.md`
+2. `completed/beamHO-bench-requirements.md`
+3. `completed/beamHO-bench-profile-baseline.md`
+4. `completed/beamHO-bench-paper-traceability.md`
+5. `completed/beamHO-bench-validation-matrix.md`
+6. `completed/beamHO-bench-experiment-protocol.md`
+7. `completed/beamHO-bench-implementation-status.md`
 
-4. `beamHO-bench-paper-traceability.md`  
-Source ID convention, code comment policy, and runtime source-trace artifact spec.
+## Pending (Not Implemented Yet)
 
-5. `beamHO-bench-validation-matrix.md`  
-Paper-to-experiment validation mapping and trend-based pass criteria.
+1. `pending/beamHO-bench-sdd-v2-roadmap.md`
+2. `pending/beamHO-bench-rl-plugin-sdd.md`
+3. `pending/beamHO-bench-joint-beamho-sdd.md`
+4. `pending/beamHO-bench-multiorbit-sdd.md`
 
-6. `beamHO-bench-experiment-protocol.md`  
-Run ID, seed policy, artifact layout, rerun protocol, and comparison rules.
+## Reference Locks (outside `sdd/`)
 
-7. Reference indexes and lock files (outside `sdd/`):  
-`papers/sdd-required/papers-index.md`, `papers/sdd-required/papers-lock.json`, `papers/standards/standards-index.md`, `papers/standards/standards-lock.json`
+1. `papers/sdd-required/papers-index.md`
+2. `papers/sdd-required/papers-lock.json`
+3. `papers/standards/standards-index.md`
+4. `papers/standards/standards-lock.json`
 
-## Recommended Reading Order
+## Promotion Rule
 
-1. `beamHO-bench-requirements.md`
-2. `beamHO-bench-profile-baseline.md`
-3. `beamHO-bench-paper-traceability.md`
-4. `beamHO-bench-sdd.md`
-5. `beamHO-bench-validation-matrix.md`
-6. `beamHO-bench-experiment-protocol.md`
+A pending SDD can move from `pending/` to `completed/` only when:
+1. corresponding code implementation is merged;
+2. stage gate passes (`npm run validate:stage`);
+3. traceability and validation artifacts are updated.
