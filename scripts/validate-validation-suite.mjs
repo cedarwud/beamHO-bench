@@ -2,7 +2,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import { mkdir, rm, writeFile } from 'fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { pathToFileURL } from 'url';
 import { build } from 'esbuild';
 
@@ -18,6 +18,72 @@ const RUNTIME_AUDIT_SUMMARY_PATH = path.join(
   ARTIFACT_DIR,
   'runtime-parameter-audit-summary.json',
 );
+const VALIDATION_MATRIX_PATH = path.join(
+  ROOT,
+  'sdd',
+  'completed',
+  'beamHO-bench-validation-matrix.md',
+);
+const VALIDATION_DEFINITIONS_PATH = path.join(
+  ROOT,
+  'src',
+  'sim',
+  'bench',
+  'validation-definitions.ts',
+);
+
+function unique(values) {
+  return [...new Set(values)];
+}
+
+function extractRequiredValidationIdsFromMatrix(markdown) {
+  const sectionStart = markdown.indexOf('## 5. Required Validation Runs');
+  if (sectionStart < 0) {
+    throw new Error(
+      `Validation matrix is missing section '## 5. Required Validation Runs': ${path.relative(ROOT, VALIDATION_MATRIX_PATH)}`,
+    );
+  }
+
+  const sectionTail = markdown.slice(sectionStart + '## 5. Required Validation Runs'.length);
+  const nextSectionIndex = sectionTail.search(/\n##\s+\d+\./);
+  const sectionBody =
+    nextSectionIndex >= 0 ? sectionTail.slice(0, nextSectionIndex) : sectionTail;
+
+  const matches = sectionBody.matchAll(/`(VAL-[A-Z0-9-]+)`/g);
+  return unique([...matches].map((match) => match[1]));
+}
+
+function extractDefinedValidationIdsFromDefinitions(sourceText) {
+  const matches = sourceText.matchAll(/validationId:\s*['"]([^'"]+)['"]/g);
+  return unique([...matches].map((match) => match[1]));
+}
+
+async function validateMatrixDefinitionAlignment() {
+  const [matrixMarkdown, definitionsSource] = await Promise.all([
+    readFile(VALIDATION_MATRIX_PATH, 'utf8'),
+    readFile(VALIDATION_DEFINITIONS_PATH, 'utf8'),
+  ]);
+
+  const requiredIds = extractRequiredValidationIdsFromMatrix(matrixMarkdown);
+  const definedIds = extractDefinedValidationIdsFromDefinitions(definitionsSource);
+  const definedIdSet = new Set(definedIds);
+  const requiredIdSet = new Set(requiredIds);
+
+  const missingInDefinitions = requiredIds.filter((id) => !definedIdSet.has(id));
+  const extraInDefinitions = definedIds.filter((id) => !requiredIdSet.has(id));
+
+  if (missingInDefinitions.length > 0) {
+    throw new Error(
+      `Validation matrix IDs missing in validation definitions: ${missingInDefinitions.join(', ')}`,
+    );
+  }
+
+  if (extraInDefinitions.length > 0) {
+    console.warn(
+      `[validation-suite] WARN validation definitions include IDs not listed in matrix section 5: ${extraInDefinitions.join(', ')}`,
+    );
+  }
+}
 
 async function bundleCli() {
   await mkdir(TMP_DIR, { recursive: true });
@@ -174,6 +240,7 @@ async function cleanup() {
 
 async function main() {
   try {
+    await validateMatrixDefinitionAlignment();
     await bundleCli();
     const gateResult = await executeGate();
     printGateSummary(gateResult.summary);
