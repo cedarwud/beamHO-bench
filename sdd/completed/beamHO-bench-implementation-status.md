@@ -76,7 +76,9 @@ Primary references:
 2. `sdd/completed/beamHO-bench-requirements.md`
 3. `sdd/completed/beamHO-bench-validation-matrix.md`
 4. `sdd/completed/beamHO-bench-paper-traceability.md`
-5. `sdd/completed/beamHO-bench-baseline-generalization-closure.md`
+5. `sdd/completed/beamHO-bench-rl-plugin-closure.md`
+6. `sdd/completed/beamHO-bench-joint-beamho-closure.md`
+7. `sdd/completed/beamHO-bench-baseline-generalization-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
