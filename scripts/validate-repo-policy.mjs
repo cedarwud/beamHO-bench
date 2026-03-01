@@ -27,6 +27,25 @@ const FORBIDDEN_BINARY_EXTENSIONS = new Set([
   '.epub',
 ]);
 
+const DEFERRED_SCOPE_FORBIDDEN_PATTERNS = [
+  {
+    label: 'RSMA',
+    pattern: /\brsma\b/i,
+  },
+  {
+    label: 'soft-HO',
+    pattern: /\bsoft[-\s]?ho\b/i,
+  },
+  {
+    label: 'large-scale DRL',
+    pattern: /\blarge[-\s]?scale\s+drl\b/i,
+  },
+  {
+    label: 'multi-paper DRL',
+    pattern: /\bmulti[-\s]?paper\s+drl\b/i,
+  },
+];
+
 function listTrackedFiles() {
   const output = execSync('git ls-files', {
     cwd: ROOT,
@@ -77,11 +96,34 @@ async function validateGitignorePolicy(errors) {
   }
 }
 
+async function validateDeferredScopePolicy(files, errors) {
+  // Source: sdd/pending/beamHO-bench-baseline-generalization-sdd.md (BG-6)
+  // Active runtime code must not introduce RSMA/large-scale DRL paths before scope reactivation.
+  const runtimeCodeFiles = files.filter(
+    (file) =>
+      file.startsWith('src/') &&
+      !file.includes('/tests/') &&
+      /\.(ts|tsx|js|mjs|json)$/i.test(file),
+  );
+
+  for (const file of runtimeCodeFiles) {
+    const content = await readFile(path.join(ROOT, file), 'utf8');
+    for (const { label, pattern } of DEFERRED_SCOPE_FORBIDDEN_PATTERNS) {
+      if (pattern.test(content)) {
+        errors.push(
+          `Deferred-scope keyword '${label}' found in runtime code: ${file}`,
+        );
+      }
+    }
+  }
+}
+
 async function main() {
   const errors = [];
   const trackedFiles = listTrackedFiles();
   validateTrackedPaperFiles(trackedFiles, errors);
   await validateGitignorePolicy(errors);
+  await validateDeferredScopePolicy(trackedFiles, errors);
 
   if (errors.length > 0) {
     console.error('Repository policy validation failed:');

@@ -63,6 +63,7 @@ Phase V2-C:
 Phase V2-D:
 1. implement baseline generalization SDD items (`MORL/C-UCGM/LDAPS` role mapping policy, throughput model metadata, one-click rerun, Timer-CHO ToS visualization acceptance, 7/16/50 beam benchmark templates, deferred RSMA/DRL governance).
 2. merge only when BG validation gates are green.
+3. enforce BG-6 deferred policy checklist (`RSMA soft HO` and broad `large-scale DRL` remain out of active runtime paths).
 
 Dependency rule:
 1. V2-B depends on V2-A artifact extensions and validation harness.
@@ -93,3 +94,7 @@ Dependency rule:
 8. `dist/validation-suite.json`
 9. `dist/validation-gate-summary.json`
 10. pending-gap six-point checklist is fully covered by completed SDD references.
+11. BG-6 deferred policy checklist is green:
+12. no RSMA/soft-HO runtime code paths in `src/`.
+13. no broad large-scale/multi-paper DRL fusion runtime path in `src/`.
+14. any reactivation must originate from explicit pending SDD entry.

@@ -43,3 +43,11 @@ Promotion requires all conditions:
 2. required tests and stage validation pass.
 3. source-trace and artifact fields are complete.
 4. completed SDD documents are updated to reflect actual code paths.
+
+## 6. Deferred-Scope Checklist (BG-6)
+
+For active v2 milestones, all pending implementations must keep:
+1. no `RSMA` / `soft-HO` runtime path in `src/`.
+2. no broad `large-scale DRL` or `multi-paper DRL fusion` runtime path in `src/`.
+3. deferred items tracked only as pending SDD/backlog text, not partial active feature toggles.
+4. any reactivation must be introduced by a new pending SDD with scope/data contract/validation-gate definition.
