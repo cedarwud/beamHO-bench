@@ -29,6 +29,7 @@ export interface BaselineBatchOptions {
   seed: number;
   baselines: RuntimeBaseline[];
   tickCount: number;
+  scenarioId?: string;
   captureSnapshots?: boolean;
   policyRuntime?: {
     mode?: PolicyMode;
@@ -83,14 +84,15 @@ function createScenario(
   profile: PaperProfile,
   seed: number,
   baseline: RuntimeBaseline,
+  scenarioId: string | undefined,
   policyRuntime: {
     mode?: PolicyMode;
     plugin?: PolicyPlugin;
   },
 ) {
   return profile.mode === 'real-trace'
-    ? createRealTraceScenario({ profile, seed, baseline, policyRuntime })
-    : createCase9AnalyticScenario({ profile, seed, baseline, policyRuntime });
+    ? createRealTraceScenario({ profile, seed, baseline, policyRuntime, scenarioId })
+    : createCase9AnalyticScenario({ profile, seed, baseline, policyRuntime, scenarioId });
 }
 
 function buildSummaryCsv(runs: BaselineBatchRun[]): string {
@@ -213,7 +215,13 @@ export function runBaselineBatch(options: BaselineBatchOptions): BaselineBatchRe
           ? options.policyRuntime?.pluginFactory?.() ?? createNoOpPolicyPlugin()
           : undefined,
     };
-    const scenario = createScenario(profile, seed, baseline, scenarioPolicyRuntime);
+    const scenario = createScenario(
+      profile,
+      seed,
+      baseline,
+      options.scenarioId,
+      scenarioPolicyRuntime,
+    );
     const engine = new SimEngine({
       scenario,
       timeStepSec: profile.timeStepSec,

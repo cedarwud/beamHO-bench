@@ -11,6 +11,7 @@
     "test:sim": "node scripts/run-sim-tests.mjs",
     "sync:tle-fixtures": "node scripts/sync-tle-fixtures.mjs",
     "validate:rigor": "node scripts/validate-academic-rigor.mjs",
+    "rerun:contract": "node scripts/run-rerun-contract.mjs",
     "validate:structure": "node scripts/validate-module-structure.mjs",
     "validate:repo-policy": "node scripts/validate-repo-policy.mjs",
     "validate:val-suite": "node scripts/validate-validation-suite.mjs",
