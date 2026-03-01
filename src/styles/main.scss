@@ -93,6 +93,12 @@ canvas {
   background: rgba(14, 116, 144, 0.35);
 }
 
+.sim-hud__actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: rgba(15, 23, 42, 0.5);
+}
+
 .sim-hud__select {
   display: inline-flex;
   align-items: center;
@@ -108,6 +114,56 @@ canvas {
   background: rgba(14, 116, 144, 0.2);
   color: #e2e8f0;
   font-size: 12px;
+}
+
+.sim-timeline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sim-timeline__meta {
+  font-size: 11px;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.sim-link-legend {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.sim-link-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.sim-link-legend__item input {
+  accent-color: #38bdf8;
+}
+
+.sim-link-legend__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.sim-link-legend__swatch--serving {
+  background: #38bdf8;
+}
+
+.sim-link-legend__swatch--secondary {
+  background: #22d3ee;
+}
+
+.sim-link-legend__swatch--prepared {
+  background: #f59e0b;
 }
 
 .sim-kpi-grid {
@@ -139,6 +195,53 @@ canvas {
   font-weight: 700;
 }
 
+.sim-compare {
+  margin-top: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 8px;
+  padding: 8px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.sim-compare__header {
+  font-size: 11px;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+}
+
+.sim-compare__table-wrap {
+  overflow-x: auto;
+}
+
+.sim-compare__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.sim-compare__table th,
+.sim-compare__table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.sim-compare__table th:first-child,
+.sim-compare__table td:first-child {
+  text-align: left;
+}
+
+.sim-compare__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.sim-compare__best {
+  color: #7dd3fc;
+  font-weight: 700;
+}
+
 @media (max-width: 900px) {
   .sim-hud {
     min-width: 0;
@@ -147,6 +250,10 @@ canvas {
 
   .sim-kpi-grid {
     grid-template-columns: repeat(2, minmax(100px, 1fr));
+  }
+
+  .sim-timeline {
+    flex-wrap: wrap;
   }
 }
 

@@ -6,7 +6,11 @@ import { UAV } from './UAV';
 import { SatelliteModel } from '../sim/SatelliteModel';
 import { BeamFootprint } from '../sim/BeamFootprint';
 import { UEMarkers } from '../sim/UEMarkers';
+import { ConnectionLines } from '../sim/ConnectionLines';
+import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
+import { ComparisonChart } from '../sim/ComparisonChart';
+import { TimelineControls } from '../sim/TimelineControls';
 import { NTPU_CONFIG } from '@/config/ntpu.config';
 import { Starfield } from '../ui/Starfield';
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
@@ -15,6 +19,7 @@ import { SceneErrorBoundary } from '../ui/SceneErrorBoundary';
 import { useSimulation } from '@/hooks/useSimulation';
 import type { CanonicalProfileId } from '@/config/paper-profiles/loader';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
+import type { BaselineBatchResult } from '@/sim/bench/runner';
 
 const SHOW_DEBUG =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_SCENE_DEBUG === 'true';
@@ -38,12 +43,20 @@ export function MainScene() {
     useState<CanonicalProfileId>('case9-default');
   const [selectedBaseline, setSelectedBaseline] =
     useState<RuntimeBaseline>('max-rsrp');
+  const [comparisonBatch, setComparisonBatch] = useState<BaselineBatchResult | null>(null);
+  const [validationSuiteStatus, setValidationSuiteStatus] = useState<string | null>(null);
+  const [linkVisibility, setLinkVisibility] = useState<LinkVisibility>({
+    serving: true,
+    secondary: true,
+    prepared: true,
+  });
 
   const {
     profile,
     snapshot,
     baseline,
     isRunning,
+    playbackRate,
     sourceTraceFileName,
     kpiResultFileName,
     kpiTimeseriesFileName,
@@ -51,8 +64,12 @@ export function MainScene() {
     stop,
     step,
     reset,
+    setPlaybackRate,
     exportSourceTrace,
     exportKpiReport,
+    exportBaselineComparison,
+    exportValidationSuite,
+    exportRunBundle,
   } = useSimulation({
     profileId: selectedProfileId,
     baseline: selectedBaseline,
@@ -90,9 +107,10 @@ export function MainScene() {
             Profile
             <select
               value={selectedProfileId}
-              onChange={(event) =>
-                setSelectedProfileId(event.target.value as CanonicalProfileId)
-              }
+              onChange={(event) => {
+                setSelectedProfileId(event.target.value as CanonicalProfileId);
+                setComparisonBatch(null);
+              }}
             >
               <option value="case9-default">case9-default</option>
               <option value="starlink-like">starlink-like</option>
@@ -116,15 +134,16 @@ export function MainScene() {
               <option value="mc-ho">mc-ho</option>
             </select>
           </label>
-          <button type="button" onClick={isRunning ? stop : start}>
-            {isRunning ? 'Pause' : 'Run'}
-          </button>
-          <button type="button" onClick={step}>
-            Step
-          </button>
-          <button type="button" onClick={reset}>
-            Reset
-          </button>
+          <TimelineControls
+            tick={snapshot.tick}
+            timeSec={snapshot.timeSec}
+            isRunning={isRunning}
+            playbackRate={playbackRate}
+            onToggleRun={isRunning ? stop : start}
+            onStep={step}
+            onReset={reset}
+            onPlaybackRateChange={setPlaybackRate}
+          />
           <button
             type="button"
             onClick={() => {
@@ -143,8 +162,48 @@ export function MainScene() {
           >
             Export KPI Report
           </button>
+          <button
+            type="button"
+            onClick={() => {
+              const artifact = exportBaselineComparison();
+              setComparisonBatch(artifact.batch);
+            }}
+            title="Export summary CSV/JSON and per-baseline timeseries CSV files."
+          >
+            Export Baseline Comparison
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const artifact = exportValidationSuite();
+              setValidationSuiteStatus(
+                `Validation suite: ${artifact.gateSummary.passedCases}/${artifact.gateSummary.totalCases} cases passed`,
+              );
+            }}
+            title="Run core VAL-* suite and export suite JSON/CSV, per-case summary CSV, and validation-gate-summary JSON."
+          >
+            Export Validation Suite
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              void exportRunBundle();
+            }}
+            title="Export manifest/resolved-profile/source-trace/kpi-summary/timeseries/validation-gate-summary bundle."
+          >
+            Export Run Bundle
+          </button>
         </div>
+        {validationSuiteStatus ? (
+          <div className="sim-hud__meta">{validationSuiteStatus}</div>
+        ) : null}
+        <ConnectionLegend
+          ues={snapshot.ues}
+          visibility={linkVisibility}
+          onChange={setLinkVisibility}
+        />
         <KpiHUD kpi={snapshot.kpiCumulative} />
+        <ComparisonChart batch={comparisonBatch} />
       </div>
 
       <SceneErrorBoundary>
@@ -211,6 +270,13 @@ export function MainScene() {
             <UAV position={NTPU_CONFIG.uav.position} scale={NTPU_CONFIG.uav.scale} />
             <BeamFootprint satellites={snapshot.satellites} />
             <UEMarkers ues={snapshot.ues} />
+            <ConnectionLines
+              satellites={snapshot.satellites}
+              ues={snapshot.ues}
+              showServing={linkVisibility.serving}
+              showSecondary={linkVisibility.secondary}
+              showPrepared={linkVisibility.prepared}
+            />
             <SatelliteModel satellites={snapshot.satellites} />
           </Suspense>
 

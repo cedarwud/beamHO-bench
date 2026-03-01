@@ -1,54 +1,38 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  extractAssumptionIdsFromSourceMap,
+  isCanonicalProfileId,
   loadPaperProfile,
-  type CanonicalProfileId,
-  type DeepPartial,
+  loadProfileSourceMap,
 } from '@/config/paper-profiles/loader';
-import type { PaperProfile } from '@/config/paper-profiles/types';
 import { SimEngine } from '@/sim/engine';
-import type { RuntimeBaseline } from '@/sim/handover/baselines';
-import {
-  buildKpiResultArtifact,
-  buildTimeseriesCsv,
-  downloadTextArtifact,
-  type KpiResultArtifact,
-} from '@/sim/kpi/reporter';
 import { createCase9AnalyticScenario } from '@/sim/scenarios/case9-analytic';
 import { createRealTraceScenario } from '@/sim/scenarios/real-trace';
-import {
-  createSourceTraceArtifact,
-  createSourceTraceDownload,
-  type SourceTraceArtifact,
-} from '@/sim/reporting/source-trace';
 import type { SimSnapshot } from '@/sim/types';
+import { createSimulationExporters } from './useSimulation.exporters';
+import {
+  type BaselineComparisonExportArtifact,
+  type KpiExportArtifact,
+  type RunBundleExportArtifact,
+  type UseSimulationOptions,
+  type UseSimulationResult,
+  type ValidationSuiteExportArtifact,
+} from './useSimulation.types';
 
-export interface UseSimulationOptions {
-  profileId?: CanonicalProfileId;
-  runtimeOverrides?: DeepPartial<PaperProfile>;
-  baseline?: RuntimeBaseline;
-  seed?: number;
-  autoStart?: boolean;
-}
+export type {
+  UseSimulationOptions,
+  UseSimulationResult,
+  KpiExportArtifact,
+  BaselineComparisonExportArtifact,
+  ValidationSuiteExportArtifact,
+  RunBundleExportArtifact,
+} from './useSimulation.types';
 
-export interface KpiExportArtifact {
-  resultArtifact: KpiResultArtifact;
-  timeseriesCsv: string;
-}
-
-export interface UseSimulationResult {
-  profile: PaperProfile;
-  snapshot: SimSnapshot;
-  baseline: RuntimeBaseline;
-  isRunning: boolean;
-  sourceTraceFileName: string;
-  kpiResultFileName: string;
-  kpiTimeseriesFileName: string;
-  start: () => void;
-  stop: () => void;
-  step: () => void;
-  reset: () => void;
-  exportSourceTrace: () => Promise<SourceTraceArtifact>;
-  exportKpiReport: () => KpiExportArtifact;
+function normalizePlaybackRate(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 1;
+  }
+  return Math.min(Math.max(value, 0.25), 8);
 }
 
 export function useSimulation(options: UseSimulationOptions = {}): UseSimulationResult {
@@ -58,6 +42,7 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
     baseline = 'max-rsrp',
     seed = 42,
     autoStart = false,
+    playbackRate: initialPlaybackRate = 1,
   } = options;
 
   const runtimeOverrideKey = JSON.stringify(runtimeOverrides);
@@ -77,12 +62,18 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
       profile,
       scenario,
       engine,
+      resolvedAssumptionIds: isCanonicalProfileId(profile.profileId)
+        ? extractAssumptionIdsFromSourceMap(loadProfileSourceMap(profile.profileId))
+        : [],
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileId, seed, baseline, runtimeOverrideKey]);
 
   const [snapshot, setSnapshot] = useState<SimSnapshot>(() => setup.engine.getSnapshot());
   const [isRunning, setIsRunning] = useState(false);
+  const [playbackRate, setPlaybackRateState] = useState(() =>
+    normalizePlaybackRate(initialPlaybackRate),
+  );
   const historyRef = useRef<SimSnapshot[]>([]);
 
   const cloneSnapshot = useCallback((value: SimSnapshot): SimSnapshot => {
@@ -121,6 +112,10 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
     };
   }, [setup, autoStart, cloneSnapshot]);
 
+  useEffect(() => {
+    setup.engine.setPlaybackRate(normalizePlaybackRate(playbackRate));
+  }, [setup, playbackRate]);
+
   const start = useCallback(() => {
     setup.engine.start();
     setIsRunning(true);
@@ -142,63 +137,33 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
     setSnapshot(resetSnapshot);
   }, [setup, cloneSnapshot]);
 
-  const exportSourceTrace = useCallback(async () => {
-    const assumptionMode =
-      setup.profile.mode === 'real-trace'
-        ? setup.scenario.id.includes('sgp4-requested-but-unavailable')
-          ? 'real-trace requested SGP4, but runtime adapter is unavailable; using Kepler fallback over TLE mean elements'
-          : 'real-trace uses Kepler fallback over TLE mean elements'
-        : 'paper-baseline uses analytic case9 orbit model';
+  const setPlaybackRate = useCallback(
+    (nextPlaybackRate: number) => {
+      setup.engine.setPlaybackRate(nextPlaybackRate);
+      setPlaybackRateState(setup.engine.getPlaybackRate());
+    },
+    [setup],
+  );
 
-    const artifact = await createSourceTraceArtifact({
-      scenarioId: setup.scenario.id,
-      profileId,
-      baseline,
-      seed,
-      runtimeOverrides,
-      assumptions: [
-        assumptionMode,
-        'phase0-phase3 partial implementation; CHO/MC-HO are simplified baseline variants',
-      ],
-    });
-
-    const fileName = `source-trace_${setup.scenario.id}_${profileId}_${seed}_${baseline}.json`;
-    createSourceTraceDownload(artifact, fileName);
-    return artifact;
-  }, [setup, profileId, baseline, seed, runtimeOverrides]);
-
-  const exportKpiReport = useCallback((): KpiExportArtifact => {
-    const latestSnapshot = setup.engine.getSnapshot();
-    const resultArtifact = buildKpiResultArtifact(latestSnapshot, {
-      scenarioId: setup.scenario.id,
-      profileId,
-      baseline,
-      seed,
-    });
-
-    const runTag = `${setup.scenario.id}_${profileId}_${seed}_${baseline}`;
-    const resultFileName = `result_${runTag}.json`;
-    const timeseriesFileName = `timeseries_${runTag}.csv`;
-    const timeseriesCsv = buildTimeseriesCsv(historyRef.current);
-
-    downloadTextArtifact(
-      JSON.stringify(resultArtifact, null, 2),
-      resultFileName,
-      'application/json',
-    );
-    downloadTextArtifact(timeseriesCsv, timeseriesFileName, 'text/csv');
-
-    return {
-      resultArtifact,
-      timeseriesCsv,
-    };
-  }, [setup, profileId, baseline, seed]);
+  const exporters = useMemo(
+    () =>
+      createSimulationExporters({
+        setup,
+        profileId,
+        baseline,
+        seed,
+        runtimeOverrides,
+        historyRef,
+      }),
+    [setup, profileId, baseline, seed, runtimeOverrides],
+  );
 
   return {
     profile: setup.profile,
     snapshot,
     baseline,
     isRunning,
+    playbackRate,
     sourceTraceFileName: `source-trace_${setup.scenario.id}_${profileId}_${seed}_${baseline}.json`,
     kpiResultFileName: `result_${setup.scenario.id}_${profileId}_${seed}_${baseline}.json`,
     kpiTimeseriesFileName: `timeseries_${setup.scenario.id}_${profileId}_${seed}_${baseline}.csv`,
@@ -206,7 +171,11 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
     stop,
     step,
     reset,
-    exportSourceTrace,
-    exportKpiReport,
+    setPlaybackRate,
+    exportSourceTrace: exporters.exportSourceTrace,
+    exportKpiReport: exporters.exportKpiReport,
+    exportBaselineComparison: exporters.exportBaselineComparison,
+    exportValidationSuite: exporters.exportValidationSuite,
+    exportRunBundle: exporters.exportRunBundle,
   };
 }
