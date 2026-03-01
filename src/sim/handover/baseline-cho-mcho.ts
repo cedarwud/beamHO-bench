@@ -1,8 +1,17 @@
 import type { PaperProfile } from '@/config/paper-profiles/types';
 import type { LinkSample } from '@/sim/channel/link-budget';
-import type { BeamState, UEState } from '@/sim/types';
+import type { BeamState, SatelliteState, UEState } from '@/sim/types';
 import type { CandidateDecision, UeTriggerMemory } from './baseline-types';
-import { clamp, estimateRemainingServiceSec, isFullAlgorithmFidelity, meetsA3LikeCondition, meetsAbsoluteThreshold, sampleKey, sortByRsrp } from './baseline-helpers';
+import {
+  clamp,
+  estimateDistanceToBeamCenterKm,
+  estimateRemainingServiceSec,
+  isFullAlgorithmFidelity,
+  meetsA3LikeCondition,
+  meetsAbsoluteThreshold,
+  sampleKey,
+  sortByRsrp,
+} from './baseline-helpers';
 
 function resolveChoDecisionSimplified(options: {
   profile: PaperProfile;
@@ -13,6 +22,7 @@ function resolveChoDecisionSimplified(options: {
   memory: UeTriggerMemory;
   timeStepSec: number;
   beamByKey: Map<string, BeamState>;
+  satById: Map<number, SatelliteState>;
 }): CandidateDecision {
   const {
     profile,
@@ -23,6 +33,7 @@ function resolveChoDecisionSimplified(options: {
     memory,
     timeStepSec,
     beamByKey,
+    satById,
   } = options;
 
   if (links.length === 0 || !bestSample) {
@@ -58,11 +69,10 @@ function resolveChoDecisionSimplified(options: {
     return { selected: servingSample, triggerEvent: false };
   }
 
-  const remainingSec = estimateRemainingServiceSec(
-    profile,
-    ue,
-    beamByKey.get(sampleKey(bestSample.satId, bestSample.beamId)),
-  );
+  const targetBeam = beamByKey.get(sampleKey(bestSample.satId, bestSample.beamId));
+  const remainingSec = estimateRemainingServiceSec(profile, ue, targetBeam);
+  const targetDistanceKm = estimateDistanceToBeamCenterKm(ue, targetBeam);
+  const targetElevationDeg = satById.get(bestSample.satId)?.elevationDeg ?? null;
 
   // Source: PAP-2025-TIMERCHO-CORE
   // Timer-based CHO executes after alpha-scaled expected service duration.
@@ -75,12 +85,17 @@ function resolveChoDecisionSimplified(options: {
     previous.satId === bestSample.satId &&
     previous.beamId === bestSample.beamId;
   const elapsedMs = (sameCandidate ? previous.elapsedMs : 0) + timeStepSec * 1000;
+  const remainingMs = Math.max(targetMs - elapsedMs, 0);
 
   memory.cho = {
     satId: bestSample.satId,
     beamId: bestSample.beamId,
     elapsedMs,
     targetMs,
+    remainingMs,
+    targetDistanceKm,
+    targetElevationDeg,
+    timeToThresholdSec: remainingSec,
   };
 
   if (elapsedMs >= targetMs) {
@@ -105,6 +120,7 @@ function resolveChoDecisionFull(options: {
   memory: UeTriggerMemory;
   timeStepSec: number;
   beamByKey: Map<string, BeamState>;
+  satById: Map<number, SatelliteState>;
 }): CandidateDecision {
   const {
     profile,
@@ -115,6 +131,7 @@ function resolveChoDecisionFull(options: {
     memory,
     timeStepSec,
     beamByKey,
+    satById,
   } = options;
 
   if (links.length === 0 || !bestSample) {
@@ -149,16 +166,15 @@ function resolveChoDecisionFull(options: {
     return { selected: servingSample, triggerEvent: false };
   }
 
-  const targetRemainingSec = estimateRemainingServiceSec(
-    profile,
-    ue,
-    beamByKey.get(sampleKey(bestSample.satId, bestSample.beamId)),
-  );
+  const targetBeam = beamByKey.get(sampleKey(bestSample.satId, bestSample.beamId));
+  const targetRemainingSec = estimateRemainingServiceSec(profile, ue, targetBeam);
   const servingRemainingSec = estimateRemainingServiceSec(
     profile,
     ue,
     beamByKey.get(sampleKey(servingSample.satId, servingSample.beamId)),
   );
+  const targetDistanceKm = estimateDistanceToBeamCenterKm(ue, targetBeam);
+  const targetElevationDeg = satById.get(bestSample.satId)?.elevationDeg ?? null;
 
   // Source: PAP-2025-TIMERCHO-CORE
   // Full CHO execution supports timer-based and location-based trigger clauses.
@@ -173,12 +189,18 @@ function resolveChoDecisionFull(options: {
     previous.satId === bestSample.satId &&
     previous.beamId === bestSample.beamId;
   const elapsedMs = (sameCandidate ? previous.elapsedMs : 0) + timeStepSec * 1000;
+  const remainingMs = Math.max(timerTargetMs - elapsedMs, 0);
+  const timeToThresholdSec = Math.max(servingRemainingSec - locationThresholdSec, 0);
 
   memory.cho = {
     satId: bestSample.satId,
     beamId: bestSample.beamId,
     elapsedMs,
     targetMs: timerTargetMs,
+    remainingMs,
+    targetDistanceKm,
+    targetElevationDeg,
+    timeToThresholdSec,
   };
 
   const executeByTimer = elapsedMs >= timerTargetMs;
@@ -214,6 +236,7 @@ export function resolveChoDecision(options: {
   memory: UeTriggerMemory;
   timeStepSec: number;
   beamByKey: Map<string, BeamState>;
+  satById: Map<number, SatelliteState>;
 }): CandidateDecision {
   if (isFullAlgorithmFidelity(options.profile)) {
     return resolveChoDecisionFull(options);

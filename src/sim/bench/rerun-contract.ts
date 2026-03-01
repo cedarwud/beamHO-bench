@@ -283,12 +283,14 @@ export async function runRerunContract(
     baselines: [resolution.baseline],
     tickCount,
     scenarioId: input.scenarioId,
+    captureSnapshots: true,
     policyRuntime: resolution.policyRuntime,
   });
   const run = batch.runs[0];
   if (!run) {
     throw new Error('Rerun contract generated no run output.');
   }
+  const latestSnapshot = run.snapshots?.[run.snapshots.length - 1] ?? null;
 
   const [profileChecksumSha256, sourceCatalogChecksumSha256] = await Promise.all([
     computeProfileChecksum(profile),
@@ -305,8 +307,8 @@ export async function runRerunContract(
     runtimeOverrides,
     assumptionIds,
     policyRuntime: run.result.metadata.policyRuntime,
-    beamScheduler: null,
-    coupledDecisionStats: null,
+    beamScheduler: latestSnapshot?.beamScheduler ?? null,
+    coupledDecisionStats: latestSnapshot?.coupledDecisionStats ?? null,
     assumptions: ['rerun-contract execution'],
   });
   assertResolvedSourceIdsKnown(sourceTrace);
@@ -322,8 +324,8 @@ export async function runRerunContract(
     resolvedAssumptionIds: run.result.metadata.resolvedAssumptionIds,
     runtimeParameterAudit: run.result.metadata.runtimeParameterAudit,
     policyRuntime: run.result.metadata.policyRuntime,
-    beamScheduler: null,
-    coupledDecisionStats: null,
+    beamScheduler: latestSnapshot?.beamScheduler ?? null,
+    coupledDecisionStats: latestSnapshot?.coupledDecisionStats ?? null,
   });
 
   const digestSummary = await buildDigestSummary({

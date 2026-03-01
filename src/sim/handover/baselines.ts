@@ -40,6 +40,10 @@ interface UeDecisionDraft {
       beamId: number;
       elapsedMs: number;
       targetMs?: number;
+      remainingMs?: number;
+      targetDistanceKm?: number | null;
+      targetElevationDeg?: number | null;
+      timeToThresholdSec?: number | null;
     } | null;
   };
   policyResolution: {
@@ -262,6 +266,10 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
         choPreparedBeamId: null,
         choPreparedElapsedMs: null,
         choPreparedTargetMs: null,
+        choPreparedRemainingMs: null,
+        choGeometryDistanceKm: null,
+        choGeometryElevationDeg: null,
+        choGeometryTimeToThresholdSec: null,
         rsrpDbm: DEFAULT_NO_LINK_RSRP_DBM,
         sinrDb: DEFAULT_NO_LINK_SINR_DB,
       });
@@ -329,6 +337,22 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
       choPreparedTargetMs:
         baseline === 'cho' && effectiveDecision.prepared
           ? (effectiveDecision.prepared.targetMs ?? null)
+          : null,
+      choPreparedRemainingMs:
+        baseline === 'cho' && effectiveDecision.prepared
+          ? (effectiveDecision.prepared.remainingMs ?? null)
+          : null,
+      choGeometryDistanceKm:
+        baseline === 'cho' && effectiveDecision.prepared
+          ? (effectiveDecision.prepared.targetDistanceKm ?? null)
+          : null,
+      choGeometryElevationDeg:
+        baseline === 'cho' && effectiveDecision.prepared
+          ? (effectiveDecision.prepared.targetElevationDeg ?? null)
+          : null,
+      choGeometryTimeToThresholdSec:
+        baseline === 'cho' && effectiveDecision.prepared
+          ? (effectiveDecision.prepared.timeToThresholdSec ?? null)
           : null,
       rsrpDbm: selected.rsrpDbm,
       sinrDb: effectiveSinrDb,

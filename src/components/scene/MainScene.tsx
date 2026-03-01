@@ -202,7 +202,7 @@ export function MainScene() {
           visibility={linkVisibility}
           onChange={setLinkVisibility}
         />
-        <KpiHUD kpi={snapshot.kpiCumulative} />
+        <KpiHUD kpi={snapshot.kpiCumulative} ues={snapshot.ues} baseline={baseline} />
         <ComparisonChart batch={comparisonBatch} />
       </div>
 

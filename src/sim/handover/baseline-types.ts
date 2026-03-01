@@ -14,6 +14,10 @@ export interface CandidateMemory {
   beamId: number;
   elapsedMs: number;
   targetMs?: number;
+  remainingMs?: number;
+  targetDistanceKm?: number | null;
+  targetElevationDeg?: number | null;
+  timeToThresholdSec?: number | null;
 }
 
 export interface UeTriggerMemory {

@@ -53,6 +53,10 @@ export interface UEState {
   choPreparedBeamId?: number | null;
   choPreparedElapsedMs?: number | null;
   choPreparedTargetMs?: number | null;
+  choPreparedRemainingMs?: number | null;
+  choGeometryDistanceKm?: number | null;
+  choGeometryElevationDeg?: number | null;
+  choGeometryTimeToThresholdSec?: number | null;
   rsrpDbm: number;
   sinrDb: number;
   l3SinrDb?: number;

@@ -84,6 +84,21 @@ export function estimateRemainingServiceSec(
   return remainingRadiusKm / relativeSpeedKmps;
 }
 
+export function estimateDistanceToBeamCenterKm(
+  ue: UEState,
+  beam: BeamState | undefined,
+): number | null {
+  if (!beam || beam.radiusWorld <= 0 || beam.radiusKm <= 0) {
+    return null;
+  }
+
+  const dx = ue.positionWorld[0] - beam.centerWorld[0];
+  const dz = ue.positionWorld[2] - beam.centerWorld[2];
+  const distanceWorld = Math.hypot(dx, dz);
+  const kmPerWorld = beam.radiusKm / beam.radiusWorld;
+  return distanceWorld * kmPerWorld;
+}
+
 export function selectByRemainingTime(
   profile: PaperProfile,
   ue: UEState,

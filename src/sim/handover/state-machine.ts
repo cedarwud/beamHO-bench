@@ -168,6 +168,11 @@ export function applyHandoverStateMachine(input: StateMachineInput): StateMachin
       choPreparedBeamId: rlfDeclared ? null : (ue.choPreparedBeamId ?? null),
       choPreparedElapsedMs: rlfDeclared ? null : (ue.choPreparedElapsedMs ?? null),
       choPreparedTargetMs: rlfDeclared ? null : (ue.choPreparedTargetMs ?? null),
+      choPreparedRemainingMs: rlfDeclared ? null : (ue.choPreparedRemainingMs ?? null),
+      choGeometryDistanceKm: rlfDeclared ? null : (ue.choGeometryDistanceKm ?? null),
+      choGeometryElevationDeg: rlfDeclared ? null : (ue.choGeometryElevationDeg ?? null),
+      choGeometryTimeToThresholdSec:
+        rlfDeclared ? null : (ue.choGeometryTimeToThresholdSec ?? null),
       l3SinrDb,
       qOutCounter: rlfDeclared || ue.servingSatId === null ? 0 : nextQOutCounter,
       qInCounter: rlfDeclared || ue.servingSatId === null ? 0 : nextQInCounter,

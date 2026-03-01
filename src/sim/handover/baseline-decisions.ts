@@ -75,6 +75,7 @@ export function selectCandidate(options: {
         memory,
         timeStepSec,
         beamByKey,
+        satById,
       });
     case 'mc-ho':
       return resolveMcHoDecision({
