@@ -5,6 +5,8 @@ import {
   validateLayerDRoleMapping,
 } from '@/config/references/layer-d-role-mapping';
 import { runBaselineBatch } from '@/sim/bench/runner';
+import { runRerunContract } from '@/sim/bench/rerun-contract';
+import { runRerunContractCli } from '@/sim/bench/cli-rerun-contract';
 import { runCoreValidationSuite } from '@/sim/bench/validation-suite';
 import { buildRunManifest } from '@/sim/reporting/manifest';
 import { createSourceTraceArtifact } from '@/sim/reporting/source-trace';
@@ -100,6 +102,50 @@ export function buildIntegrationTestCases(): SimTestCase[] {
             .slice(0, 2)
             .map((issue) => `${issue.path} ${issue.message}`)
             .join(' | ')}`,
+        );
+      },
+    },
+    {
+      name: 'integration: rerun contract digest is deterministic for fixed input tuple',
+      kind: 'integration',
+      run: async () => {
+        const execute = () =>
+          runRerunContract({
+            scenarioId: 'phase1a-case9-analytic-rerun-test',
+            profileId: 'case9-default',
+            seed: 123,
+            baselineOrPolicy: 'policy:greedy-sinr@max-rsrp',
+            tickCount: 40,
+          });
+
+        const first = await execute();
+        const second = await execute();
+
+        assertCondition(
+          JSON.stringify(first.digestSummary) === JSON.stringify(second.digestSummary),
+          'Expected identical rerun digest summary for fixed tuple.',
+        );
+      },
+    },
+    {
+      name: 'integration: rerun contract fails fast on unknown profile id',
+      kind: 'integration',
+      run: async () => {
+        const output = await runRerunContractCli([
+          '--scenario_id',
+          'phase1a-case9-analytic-rerun-test',
+          '--profile_id',
+          'unknown-profile',
+          '--seed',
+          '123',
+          '--baseline_or_policy',
+          'max-rsrp',
+        ]);
+
+        assertCondition(output.exitCode !== 0, 'Expected rerun CLI failure for unknown profile.');
+        assertCondition(
+          Boolean(output.error) && output.error?.includes('Unknown profile_id'),
+          'Expected unknown profile error message in rerun CLI output.',
         );
       },
     },

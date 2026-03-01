@@ -69,6 +69,8 @@ const CRITICAL_PROVENANCE_FILES = [
   'src/sim/reporting/manifest.ts',
   'src/sim/engine.ts',
   'src/sim/bench/validation-suite.ts',
+  'src/sim/bench/rerun-contract.ts',
+  'src/sim/bench/cli-rerun-contract.ts',
   'src/sim/types.ts',
   'src/sim/util/rng.ts',
   'src/config/paper-profiles/loader.ts',
