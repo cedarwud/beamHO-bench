@@ -153,7 +153,9 @@
         "sfClSource",
         "ueGTdBPerK",
         "ueAntennaGainDbi",
-        "noiseTemperatureK"
+        "noiseTemperatureK",
+        "noiseFigureDb",
+        "systemLossDb"
       ],
       "properties": {
         "carrierFrequencyGHz": { "type": "number", "exclusiveMinimum": 0 },
@@ -166,10 +168,43 @@
           "type": "string",
           "enum": ["none", "shadowed-rician", "loo", "custom"]
         },
+        "smallScaleParams": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "shadowedRician": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kFactorMinDb",
+                "kFactorMaxDb",
+                "shadowingStdDevDb",
+                "multipathStdDevDb"
+              ],
+              "properties": {
+                "kFactorMinDb": { "type": "number" },
+                "kFactorMaxDb": { "type": "number" },
+                "shadowingStdDevDb": { "type": "number", "minimum": 0 },
+                "multipathStdDevDb": { "type": "number", "minimum": 0 }
+              }
+            },
+            "loo": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["shadowingStdDevDb", "rayleighScaleDb"],
+              "properties": {
+                "shadowingStdDevDb": { "type": "number", "minimum": 0 },
+                "rayleighScaleDb": { "type": "number", "minimum": 0 }
+              }
+            }
+          }
+        },
         "sfClSource": { "type": "string" },
         "ueGTdBPerK": { "type": "number" },
         "ueAntennaGainDbi": { "type": "number" },
-        "noiseTemperatureK": { "type": "number", "exclusiveMinimum": 0 }
+        "noiseTemperatureK": { "type": "number", "exclusiveMinimum": 0 },
+        "noiseFigureDb": { "type": "number", "minimum": 0 },
+        "systemLossDb": { "type": "number", "minimum": 0 }
       }
     },
     "rlfStateMachine": {
@@ -222,8 +257,12 @@
     "handover": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["baselines", "params"],
+      "required": ["algorithmFidelity", "baselines", "params"],
       "properties": {
+        "algorithmFidelity": {
+          "type": "string",
+          "enum": ["full", "simplified"]
+        },
         "baselines": {
           "type": "array",
           "minItems": 1,

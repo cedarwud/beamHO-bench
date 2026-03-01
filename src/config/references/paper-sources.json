@@ -52,6 +52,56 @@
       "artifactSha256": "c21f6621ab058e214f2832e9ae41b0fe77c908ce45a6d837f9ae6bca786df8c0"
     },
     {
+      "sourceId": "ASSUME-LINK-SYSTEM-LOSS-DB",
+      "type": "assumption",
+      "title": "Link Budget Aggregate System Loss",
+      "locator": "channel.systemLossDb",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:link-system-loss-db",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Used when paper/standard does not provide a single aggregate implementation loss term."
+    },
+    {
+      "sourceId": "ASSUME-RX-NOISE-FIGURE-DB",
+      "type": "assumption",
+      "title": "Receiver Noise Figure",
+      "locator": "channel.noiseFigureDb",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:rx-noise-figure-db",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Applied on top of thermal noise derived from kTB."
+    },
+    {
+      "sourceId": "ASSUME-SMALL-SCALE-PARAMS-DEFAULT",
+      "type": "assumption",
+      "title": "Small-Scale Fading Parameter Defaults",
+      "locator": "channel.smallScaleParams",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:small-scale-params-default",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Fallback profile parameters used to instantiate deterministic shadowed-Rician and Loo fading plugins."
+    },
+    {
+      "sourceId": "ASSUME-HANDOVER-FIDELITY-SIMPLIFIED",
+      "type": "assumption",
+      "title": "Handover Fidelity Set To Simplified",
+      "locator": "handover.algorithmFidelity",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:handover-fidelity-simplified",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Used only when the non-default simplified CHO/MC-HO path is explicitly selected."
+    },
+    {
+      "sourceId": "ASSUME-HANDOVER-FIDELITY-FULL",
+      "type": "assumption",
+      "title": "Handover Fidelity Set To Full",
+      "locator": "handover.algorithmFidelity",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:handover-fidelity-full",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Benchmark-default path uses full CHO/MC-HO implementation."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

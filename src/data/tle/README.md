@@ -20,4 +20,5 @@ Optional environment variables:
 
 ## Notes
 - Fixtures are sampled subsets for frontend runtime performance.
-- They are used by `src/sim/orbit/sgp4.ts` as current real-trace input data.
+- They are used by `src/sim/orbit/sgp4.ts` as real-trace input data.
+- Each sampled record keeps OMM-compatible fields (`MEAN_MOTION_DOT/DDOT`, `ELEMENT_SET_NO`) for true SGP4 replay.

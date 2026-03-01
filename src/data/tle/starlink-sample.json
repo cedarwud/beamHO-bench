@@ -1,5 +1,5 @@
 {
-  "generatedAtUtc": "2026-02-28T17:20:40.400Z",
+  "generatedAtUtc": "2026-03-01T00:11:17.240Z",
   "provider": "starlink",
   "sourceRootHint": "../tle_data",
   "sourceFile": "starlink/json/starlink_20260227.json",
@@ -17,7 +17,11 @@
       "raanDeg": 227.5601,
       "argPerigeeDeg": 313.3963,
       "meanAnomalyDeg": 46.7004,
-      "bstar": 0.000055373724
+      "bstar": 0.000055373724,
+      "meanMotionDot": 0.00001321,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 34726
     },
     {
       "objectName": "STARLINK-1169",
@@ -30,7 +34,11 @@
       "raanDeg": 329.981,
       "argPerigeeDeg": 72.8805,
       "meanAnomalyDeg": 287.2358,
-      "bstar": 0.00022521736
+      "bstar": 0.00022521736,
+      "meanMotionDot": 0.00006321,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 33493
     },
     {
       "objectName": "STARLINK-1222",
@@ -43,7 +51,11 @@
       "raanDeg": 32.9123,
       "argPerigeeDeg": 55.5909,
       "meanAnomalyDeg": 304.5481,
-      "bstar": 0.00061585351
+      "bstar": 0.00061585351,
+      "meanMotionDot": 0.00033386,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 33400
     },
     {
       "objectName": "STARLINK-1278",
@@ -56,7 +68,11 @@
       "raanDeg": 180.8521,
       "argPerigeeDeg": 137.1592,
       "meanAnomalyDeg": 284.522,
-      "bstar": 0.0023945576
+      "bstar": 0.0023945576,
+      "meanMotionDot": 0.00157421,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 575
     },
     {
       "objectName": "STARLINK-1347",
@@ -69,7 +85,11 @@
       "raanDeg": 79.7794,
       "argPerigeeDeg": 9.0712,
       "meanAnomalyDeg": 351.0405,
-      "bstar": 0.0013985922
+      "bstar": 0.0013985922,
+      "meanMotionDot": 0.00085503,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 32454
     },
     {
       "objectName": "STARLINK-1465",
@@ -82,7 +102,11 @@
       "raanDeg": 274.3797,
       "argPerigeeDeg": 185.7728,
       "meanAnomalyDeg": 174.3236,
-      "bstar": 0.0014782254
+      "bstar": 0.0014782254,
+      "meanMotionDot": 0.00078873,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 31472
     },
     {
       "objectName": "STARLINK-1527",
@@ -95,7 +119,11 @@
       "raanDeg": 162.3934,
       "argPerigeeDeg": 93.1767,
       "meanAnomalyDeg": 143.8858,
-      "bstar": 0.0021500932
+      "bstar": 0.0021500932,
+      "meanMotionDot": 0.00062184,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 577
     },
     {
       "objectName": "STARLINK-1625",
@@ -108,7 +136,11 @@
       "raanDeg": 300.6455,
       "argPerigeeDeg": 157.9006,
       "meanAnomalyDeg": 169.5639,
-      "bstar": 0.00088514305
+      "bstar": 0.00088514305,
+      "meanMotionDot": 0.00163744,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 579
     },
     {
       "objectName": "STARLINK-1765",
@@ -121,7 +153,11 @@
       "raanDeg": 354.3841,
       "argPerigeeDeg": 116.382,
       "meanAnomalyDeg": 306.8292,
-      "bstar": 0.0012783263
+      "bstar": 0.0012783263,
+      "meanMotionDot": 0.0027639,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 586
     },
     {
       "objectName": "STARLINK-1733",
@@ -134,7 +170,11 @@
       "raanDeg": 159.0784,
       "argPerigeeDeg": 222.9712,
       "meanAnomalyDeg": 137.1176,
-      "bstar": 0.0017854749
+      "bstar": 0.0017854749,
+      "meanMotionDot": 0.00236151,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29882
     },
     {
       "objectName": "STARLINK-1821",
@@ -147,7 +187,11 @@
       "raanDeg": 276.8705,
       "argPerigeeDeg": 123.5905,
       "meanAnomalyDeg": 236.5772,
-      "bstar": 0.0015101636
+      "bstar": 0.0015101636,
+      "meanMotionDot": 0.00054048,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29570
     },
     {
       "objectName": "STARLINK-2017",
@@ -160,7 +204,11 @@
       "raanDeg": 62.1462,
       "argPerigeeDeg": 82.6543,
       "meanAnomalyDeg": 277.4623,
-      "bstar": 0.00049957046
+      "bstar": 0.00049957046,
+      "meanMotionDot": 0.00014474,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28212
     },
     {
       "objectName": "STARLINK-2111",
@@ -173,7 +221,11 @@
       "raanDeg": 108.8671,
       "argPerigeeDeg": 96.4525,
       "meanAnomalyDeg": 263.6619,
-      "bstar": 0.000047175827
+      "bstar": 0.000047175827,
+      "meanMotionDot": 0.00000421,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28145
     },
     {
       "objectName": "STARLINK-1655",
@@ -186,7 +238,11 @@
       "raanDeg": 17.1597,
       "argPerigeeDeg": 285.7285,
       "meanAnomalyDeg": 230.7776,
-      "bstar": 0.0018074016
+      "bstar": 0.0018074016,
+      "meanMotionDot": 0.0015942,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 592
     },
     {
       "objectName": "STARLINK-2156",
@@ -199,7 +255,11 @@
       "raanDeg": 242.7282,
       "argPerigeeDeg": 73.7028,
       "meanAnomalyDeg": 286.4076,
-      "bstar": 0.00001960565
+      "bstar": 0.00001960565,
+      "meanMotionDot": 0.00000222,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 27643
     },
     {
       "objectName": "STARLINK-2380",
@@ -212,7 +272,11 @@
       "raanDeg": 279.3804,
       "argPerigeeDeg": 92.5644,
       "meanAnomalyDeg": 267.5492,
-      "bstar": 0.00012510038
+      "bstar": 0.00012510038,
+      "meanMotionDot": 0.00001582,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 27526
     },
     {
       "objectName": "STARLINK-2429",
@@ -225,7 +289,11 @@
       "raanDeg": 294.6603,
       "argPerigeeDeg": 74.5927,
       "meanAnomalyDeg": 285.5269,
-      "bstar": 0.00054151305
+      "bstar": 0.00054151305,
+      "meanMotionDot": 0.00015691,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 27506
     },
     {
       "objectName": "STARLINK-2273",
@@ -238,7 +306,11 @@
       "raanDeg": 344.0977,
       "argPerigeeDeg": 93.9903,
       "meanAnomalyDeg": 266.1246,
-      "bstar": 0.0078618645
+      "bstar": 0.0078618645,
+      "meanMotionDot": 0.00122215,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 27352
     },
     {
       "objectName": "STARLINK-2462",
@@ -251,7 +323,11 @@
       "raanDeg": 205.5764,
       "argPerigeeDeg": 90.1204,
       "meanAnomalyDeg": 269.9933,
-      "bstar": 0.000097074291
+      "bstar": 0.000097074291,
+      "meanMotionDot": 0.00002516,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 27098
     },
     {
       "objectName": "STARLINK-2558",
@@ -264,7 +340,11 @@
       "raanDeg": 124.1828,
       "argPerigeeDeg": 87.7322,
       "meanAnomalyDeg": 272.3843,
-      "bstar": 0.000039122782
+      "bstar": 0.000039122782,
+      "meanMotionDot": 0.00000799,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 26680
     },
     {
       "objectName": "STARLINK-2457",
@@ -277,7 +357,11 @@
       "raanDeg": 151.2501,
       "argPerigeeDeg": 87.485,
       "meanAnomalyDeg": 272.6278,
-      "bstar": 0.000086358
+      "bstar": 0.000086358,
+      "meanMotionDot": 0.00001005,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 26636
     },
     {
       "objectName": "STARLINK-2610",
@@ -290,7 +374,11 @@
       "raanDeg": 36.3413,
       "argPerigeeDeg": 105.9995,
       "meanAnomalyDeg": 254.1218,
-      "bstar": 0.00019766725
+      "bstar": 0.00019766725,
+      "meanMotionDot": 0.00005356,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 26562
     },
     {
       "objectName": "STARLINK-2699",
@@ -303,7 +391,11 @@
       "raanDeg": 200.255,
       "argPerigeeDeg": 82.6979,
       "meanAnomalyDeg": 277.4144,
-      "bstar": 0.000077371
+      "bstar": 0.000077371,
+      "meanMotionDot": 0.00000871,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 26541
     },
     {
       "objectName": "STARLINK-2722",
@@ -316,7 +408,11 @@
       "raanDeg": 238.3663,
       "argPerigeeDeg": 63.681,
       "meanAnomalyDeg": 296.441,
-      "bstar": 0.0056932542
+      "bstar": 0.0056932542,
+      "meanMotionDot": 0.00087148,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 26491
     },
     {
       "objectName": "STARLINK-2234",
@@ -329,7 +425,11 @@
       "raanDeg": 149.464,
       "argPerigeeDeg": 70.2842,
       "meanAnomalyDeg": 289.8293,
-      "bstar": 0.000062297914
+      "bstar": 0.000062297914,
+      "meanMotionDot": 0.00001486,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 26404
     },
     {
       "objectName": "STARLINK-2701",
@@ -342,7 +442,11 @@
       "raanDeg": 162.1562,
       "argPerigeeDeg": 83.4468,
       "meanAnomalyDeg": 276.6691,
-      "bstar": 0.000088760679
+      "bstar": 0.000088760679,
+      "meanMotionDot": 0.0000227,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 26223
     },
     {
       "objectName": "STARLINK-2748",
@@ -355,7 +459,11 @@
       "raanDeg": 130.7647,
       "argPerigeeDeg": 98.8833,
       "meanAnomalyDeg": 261.2317,
-      "bstar": 0.000076739
+      "bstar": 0.000076739,
+      "meanMotionDot": 0.00001913,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 26259
     },
     {
       "objectName": "STARLINK-3088",
@@ -368,7 +476,11 @@
       "raanDeg": 301.926,
       "argPerigeeDeg": 284.6128,
       "meanAnomalyDeg": 75.4794,
-      "bstar": -0.00011266696
+      "bstar": -0.00011266696,
+      "meanMotionDot": -0.00001408,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 24602
     },
     {
       "objectName": "STARLINK-3139",
@@ -381,7 +493,11 @@
       "raanDeg": 277.0701,
       "argPerigeeDeg": 85.5984,
       "meanAnomalyDeg": 274.5154,
-      "bstar": 0.000023594498
+      "bstar": 0.000023594498,
+      "meanMotionDot": 8.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23702
     },
     {
       "objectName": "STARLINK-3156",
@@ -394,7 +510,11 @@
       "raanDeg": 265.92,
       "argPerigeeDeg": 86.3933,
       "meanAnomalyDeg": 273.7236,
-      "bstar": 0.000091740521
+      "bstar": 0.000091740521,
+      "meanMotionDot": 0.00001173,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23720
     },
     {
       "objectName": "STARLINK-3200",
@@ -407,7 +527,11 @@
       "raanDeg": 198.6317,
       "argPerigeeDeg": 100.0839,
       "meanAnomalyDeg": 260.0234,
-      "bstar": 0.00058069
+      "bstar": 0.00058069,
+      "meanMotionDot": 0.00008977,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23387
     },
     {
       "objectName": "STARLINK-3291",
@@ -420,7 +544,11 @@
       "raanDeg": 298.7103,
       "argPerigeeDeg": 83.5163,
       "meanAnomalyDeg": 276.6172,
-      "bstar": 0.0010503
+      "bstar": 0.0010503,
+      "meanMotionDot": 0.00016445,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23493
     },
     {
       "objectName": "STARLINK-3335",
@@ -433,7 +561,11 @@
       "raanDeg": 214.1708,
       "argPerigeeDeg": 97.2884,
       "meanAnomalyDeg": 262.8274,
-      "bstar": -0.00032330741
+      "bstar": -0.00032330741,
+      "meanMotionDot": -0.00005432,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22869
     },
     {
       "objectName": "STARLINK-3326",
@@ -446,7 +578,11 @@
       "raanDeg": 226.218,
       "argPerigeeDeg": 78.7877,
       "meanAnomalyDeg": 281.3304,
-      "bstar": 0.000020220392
+      "bstar": 0.000020220392,
+      "meanMotionDot": 3.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22868
     },
     {
       "objectName": "STARLINK-3395",
@@ -459,7 +595,11 @@
       "raanDeg": 346.1498,
       "argPerigeeDeg": 97.6893,
       "meanAnomalyDeg": 262.4258,
-      "bstar": 0.00004205272
+      "bstar": 0.00004205272,
+      "meanMotionDot": 0.00000381,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22714
     },
     {
       "objectName": "STARLINK-3533",
@@ -472,7 +612,11 @@
       "raanDeg": 15.9024,
       "argPerigeeDeg": 93.6927,
       "meanAnomalyDeg": 266.42,
-      "bstar": -0.000004398272
+      "bstar": -0.000004398272,
+      "meanMotionDot": -0.00000358,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22298
     },
     {
       "objectName": "STARLINK-3501",
@@ -485,7 +629,11 @@
       "raanDeg": 356.0205,
       "argPerigeeDeg": 84.8365,
       "meanAnomalyDeg": 275.2825,
-      "bstar": 0.000060898216
+      "bstar": 0.000060898216,
+      "meanMotionDot": 0.00000681,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22212
     },
     {
       "objectName": "STARLINK-3638",
@@ -498,7 +646,11 @@
       "raanDeg": 35.9553,
       "argPerigeeDeg": 86.3522,
       "meanAnomalyDeg": 273.7645,
-      "bstar": 0.000079024681
+      "bstar": 0.000079024681,
+      "meanMotionDot": 0.0000097,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22070
     },
     {
       "objectName": "STARLINK-3560",
@@ -511,7 +663,11 @@
       "raanDeg": 55.9641,
       "argPerigeeDeg": 95.4426,
       "meanAnomalyDeg": 264.6721,
-      "bstar": -0.000002939947
+      "bstar": -0.000002939947,
+      "meanMotionDot": -0.00000335,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22158
     },
     {
       "objectName": "STARLINK-3547",
@@ -524,7 +680,11 @@
       "raanDeg": 46.1422,
       "argPerigeeDeg": 88.973,
       "meanAnomalyDeg": 271.1424,
-      "bstar": 0.000019062305
+      "bstar": 0.000019062305,
+      "meanMotionDot": 1.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22166
     },
     {
       "objectName": "STARLINK-3655",
@@ -537,7 +697,11 @@
       "raanDeg": 85.8594,
       "argPerigeeDeg": 80.1584,
       "meanAnomalyDeg": 279.9585,
-      "bstar": 0.00019857313
+      "bstar": 0.00019857313,
+      "meanMotionDot": 0.00002875,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21948
     },
     {
       "objectName": "STARLINK-3706",
@@ -550,7 +714,11 @@
       "raanDeg": 129.0448,
       "argPerigeeDeg": 97.7253,
       "meanAnomalyDeg": 262.3883,
-      "bstar": 0.000060611
+      "bstar": 0.000060611,
+      "meanMotionDot": 0.00000677,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21910
     },
     {
       "objectName": "STARLINK-3682",
@@ -563,7 +731,11 @@
       "raanDeg": 119.5559,
       "argPerigeeDeg": 85.4835,
       "meanAnomalyDeg": 274.6309,
-      "bstar": -0.0000041791
+      "bstar": -0.0000041791,
+      "meanMotionDot": -0.00000354,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21924
     },
     {
       "objectName": "STARLINK-3765",
@@ -576,7 +748,11 @@
       "raanDeg": 148.775,
       "argPerigeeDeg": 98.8513,
       "meanAnomalyDeg": 261.2619,
-      "bstar": 0.000071092
+      "bstar": 0.000071092,
+      "meanMotionDot": 0.00000844,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21283
     },
     {
       "objectName": "STARLINK-3852",
@@ -589,7 +765,11 @@
       "raanDeg": 246.334,
       "argPerigeeDeg": 85.2111,
       "meanAnomalyDeg": 274.9029,
-      "bstar": 0.000092455401
+      "bstar": 0.000092455401,
+      "meanMotionDot": 0.00001183,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21418
     },
     {
       "objectName": "STARLINK-3806",
@@ -602,7 +782,11 @@
       "raanDeg": 236.1869,
       "argPerigeeDeg": 87.7823,
       "meanAnomalyDeg": 272.3346,
-      "bstar": 0.000080406739
+      "bstar": 0.000080406739,
+      "meanMotionDot": 0.00000992,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21434
     },
     {
       "objectName": "STARLINK-3825",
@@ -615,7 +799,11 @@
       "raanDeg": 106.365,
       "argPerigeeDeg": 94.021,
       "meanAnomalyDeg": 266.0931,
-      "bstar": 0.000075264773
+      "bstar": 0.000075264773,
+      "meanMotionDot": 0.0000091,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21190
     },
     {
       "objectName": "STARLINK-3845",
@@ -628,7 +816,11 @@
       "raanDeg": 183.3528,
       "argPerigeeDeg": 92.0748,
       "meanAnomalyDeg": 268.0385,
-      "bstar": 0.00019037388
+      "bstar": 0.00019037388,
+      "meanMotionDot": 0.00002743,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20971
     },
     {
       "objectName": "STARLINK-3915",
@@ -641,7 +833,11 @@
       "raanDeg": 165.8729,
       "argPerigeeDeg": 138.2631,
       "meanAnomalyDeg": 221.8461,
-      "bstar": -0.00000352691
+      "bstar": -0.00000352691,
+      "meanMotionDot": -0.00000344,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21001
     },
     {
       "objectName": "STARLINK-3986",
@@ -654,7 +850,11 @@
       "raanDeg": 316.5177,
       "argPerigeeDeg": 81.787,
       "meanAnomalyDeg": 278.3264,
-      "bstar": 0.000009762748
+      "bstar": 0.000009762748,
+      "meanMotionDot": -0.00000132,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20939
     },
     {
       "objectName": "STARLINK-4081",
@@ -667,7 +867,11 @@
       "raanDeg": 203.1963,
       "argPerigeeDeg": 93.0881,
       "meanAnomalyDeg": 267.0275,
-      "bstar": -0.000020480583
+      "bstar": -0.000020480583,
+      "meanMotionDot": -0.00000614,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20946
     },
     {
       "objectName": "STARLINK-4072",
@@ -680,7 +884,11 @@
       "raanDeg": 193.0584,
       "argPerigeeDeg": 100.7904,
       "meanAnomalyDeg": 259.3255,
-      "bstar": -0.000046444484
+      "bstar": -0.000046444484,
+      "meanMotionDot": -0.00001027,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20950
     },
     {
       "objectName": "STARLINK-4202",
@@ -693,7 +901,11 @@
       "raanDeg": 80.9141,
       "argPerigeeDeg": 90.7742,
       "meanAnomalyDeg": 269.3383,
-      "bstar": 0.000054913402
+      "bstar": 0.000054913402,
+      "meanMotionDot": 0.00000586,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20421
     },
     {
       "objectName": "STARLINK-4186",
@@ -706,7 +918,11 @@
       "raanDeg": 60.9763,
       "argPerigeeDeg": 74.8418,
       "meanAnomalyDeg": 285.2756,
-      "bstar": 0.000070648858
+      "bstar": 0.000070648858,
+      "meanMotionDot": 0.00000837,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20449
     },
     {
       "objectName": "STARLINK-4283",
@@ -719,7 +935,11 @@
       "raanDeg": 131.3649,
       "argPerigeeDeg": 85.4411,
       "meanAnomalyDeg": 274.6729,
-      "bstar": 0.00003935814
+      "bstar": 0.00003935814,
+      "meanMotionDot": 0.00000338,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20139
     },
     {
       "objectName": "STARLINK-4341",
@@ -732,7 +952,11 @@
       "raanDeg": 239.9884,
       "argPerigeeDeg": 44.9693,
       "meanAnomalyDeg": 315.1795,
-      "bstar": 0.000097875474
+      "bstar": 0.000097875474,
+      "meanMotionDot": 0.00001199,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19934
     },
     {
       "objectName": "STARLINK-4324",
@@ -745,7 +969,11 @@
       "raanDeg": 240.8969,
       "argPerigeeDeg": 80.9267,
       "meanAnomalyDeg": 279.2118,
-      "bstar": -0.000017455164
+      "bstar": -0.000017455164,
+      "meanMotionDot": -0.00000313,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19941
     },
     {
       "objectName": "STARLINK-4116",
@@ -758,7 +986,11 @@
       "raanDeg": 212.8379,
       "argPerigeeDeg": 89.0542,
       "meanAnomalyDeg": 271.0583,
-      "bstar": 0.00012906562
+      "bstar": 0.00012906562,
+      "meanMotionDot": 0.00001767,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19972
     },
     {
       "objectName": "STARLINK-4395",
@@ -771,7 +1003,11 @@
       "raanDeg": 120.8276,
       "argPerigeeDeg": 115.9539,
       "meanAnomalyDeg": 244.1806,
-      "bstar": 0.000018258257
+      "bstar": 0.000018258257,
+      "meanMotionDot": 0.00000203,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19779
     },
     {
       "objectName": "STARLINK-4372",
@@ -784,7 +1020,11 @@
       "raanDeg": 119.8738,
       "argPerigeeDeg": 130.089,
       "meanAnomalyDeg": 230.0491,
-      "bstar": 0.00020108991
+      "bstar": 0.00020108991,
+      "meanMotionDot": 0.00002524,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19773
     },
     {
       "objectName": "STARLINK-4050",
@@ -797,7 +1037,11 @@
       "raanDeg": 231.3249,
       "argPerigeeDeg": 89.3477,
       "meanAnomalyDeg": 270.7708,
-      "bstar": 0.000020483863
+      "bstar": 0.000020483863,
+      "meanMotionDot": 3.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19961
     },
     {
       "objectName": "STARLINK-4525",
@@ -810,7 +1054,11 @@
       "raanDeg": 170.8408,
       "argPerigeeDeg": 96.6149,
       "meanAnomalyDeg": 263.4997,
-      "bstar": 0.000023553772
+      "bstar": 0.000023553772,
+      "meanMotionDot": 8.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19694
     },
     {
       "objectName": "STARLINK-4498",
@@ -823,7 +1071,11 @@
       "raanDeg": 153.9225,
       "argPerigeeDeg": 91.7959,
       "meanAnomalyDeg": 268.318,
-      "bstar": 0.000031914
+      "bstar": 0.000031914,
+      "meanMotionDot": 0.0000022,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19711
     },
     {
       "objectName": "STARLINK-4450",
@@ -836,7 +1088,11 @@
       "raanDeg": 180.0431,
       "argPerigeeDeg": 214.4405,
       "meanAnomalyDeg": 145.6688,
-      "bstar": 0.000056966625
+      "bstar": 0.000056966625,
+      "meanMotionDot": 0.00000673,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19442
     },
     {
       "objectName": "STARLINK-4489",
@@ -849,7 +1105,11 @@
       "raanDeg": 111.3749,
       "argPerigeeDeg": 81.0572,
       "meanAnomalyDeg": 279.0557,
-      "bstar": 0.00001382216
+      "bstar": 0.00001382216,
+      "meanMotionDot": -6.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19540
     },
     {
       "objectName": "STARLINK-4581",
@@ -862,7 +1122,11 @@
       "raanDeg": 100.7263,
       "argPerigeeDeg": 137.8074,
       "meanAnomalyDeg": 222.3046,
-      "bstar": -0.000034285385
+      "bstar": -0.000034285385,
+      "meanMotionDot": -0.00000834,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19569
     },
     {
       "objectName": "STARLINK-4573",
@@ -875,7 +1139,11 @@
       "raanDeg": 281.9653,
       "argPerigeeDeg": 89.6018,
       "meanAnomalyDeg": 270.5131,
-      "bstar": 0.000031395525
+      "bstar": 0.000031395525,
+      "meanMotionDot": 0.00000212,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19413
     },
     {
       "objectName": "STARLINK-4357",
@@ -888,7 +1156,11 @@
       "raanDeg": 300.8455,
       "argPerigeeDeg": 74.5565,
       "meanAnomalyDeg": 285.5958,
-      "bstar": 0.00059495208
+      "bstar": 0.00059495208,
+      "meanMotionDot": 0.00008545,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19172
     },
     {
       "objectName": "STARLINK-4711",
@@ -901,7 +1173,11 @@
       "raanDeg": 293.2525,
       "argPerigeeDeg": 83.7358,
       "meanAnomalyDeg": 276.3779,
-      "bstar": 0.000074177
+      "bstar": 0.000074177,
+      "meanMotionDot": 0.00000893,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19319
     },
     {
       "objectName": "STARLINK-4652",
@@ -914,7 +1190,11 @@
       "raanDeg": 303.5917,
       "argPerigeeDeg": 95.7031,
       "meanAnomalyDeg": 264.4131,
-      "bstar": -4.78866e-7
+      "bstar": -4.78866e-7,
+      "meanMotionDot": -0.00000296,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19292
     },
     {
       "objectName": "STARLINK-4715",
@@ -927,7 +1207,11 @@
       "raanDeg": 313.1254,
       "argPerigeeDeg": 78.8952,
       "meanAnomalyDeg": 281.221,
-      "bstar": 0.000058908954
+      "bstar": 0.000058908954,
+      "meanMotionDot": 0.0000065,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19216
     },
     {
       "objectName": "STARLINK-4753",
@@ -940,7 +1224,11 @@
       "raanDeg": 341.0693,
       "argPerigeeDeg": 90.554,
       "meanAnomalyDeg": 269.5601,
-      "bstar": 0.000047832521
+      "bstar": 0.000047832521,
+      "meanMotionDot": 0.00000473,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19139
     },
     {
       "objectName": "STARLINK-5041",
@@ -953,7 +1241,11 @@
       "raanDeg": 11.4706,
       "argPerigeeDeg": 93.8379,
       "meanAnomalyDeg": 266.277,
-      "bstar": -0.000039737699
+      "bstar": -0.000039737699,
+      "meanMotionDot": -0.0000092,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19009
     },
     {
       "objectName": "STARLINK-5001",
@@ -966,7 +1258,11 @@
       "raanDeg": 356.0903,
       "argPerigeeDeg": 94.3018,
       "meanAnomalyDeg": 265.814,
-      "bstar": 0.000058232686
+      "bstar": 0.000058232686,
+      "meanMotionDot": 0.00000639,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19031
     },
     {
       "objectName": "STARLINK-5119",
@@ -979,7 +1275,11 @@
       "raanDeg": 252.3859,
       "argPerigeeDeg": 90.6515,
       "meanAnomalyDeg": 269.467,
-      "bstar": 0.000032132
+      "bstar": 0.000032132,
+      "meanMotionDot": 0.00000223,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 18796
     },
     {
       "objectName": "STARLINK-5167",
@@ -992,7 +1292,11 @@
       "raanDeg": 31.1158,
       "argPerigeeDeg": 84.4252,
       "meanAnomalyDeg": 275.6892,
-      "bstar": 0.000022386554
+      "bstar": 0.000022386554,
+      "meanMotionDot": 6.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 18526
     },
     {
       "objectName": "STARLINK-5213",
@@ -1005,7 +1309,11 @@
       "raanDeg": 20.9698,
       "argPerigeeDeg": 92.8338,
       "meanAnomalyDeg": 267.2807,
-      "bstar": 0.000085111649
+      "bstar": 0.000085111649,
+      "meanMotionDot": 0.00001067,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 18540
     },
     {
       "objectName": "STARLINK-5186",
@@ -1018,7 +1326,11 @@
       "raanDeg": 50.883,
       "argPerigeeDeg": 98.7373,
       "meanAnomalyDeg": 261.3783,
-      "bstar": 0.000087489643
+      "bstar": 0.000087489643,
+      "meanMotionDot": 0.00001105,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 18428
     },
     {
       "objectName": "STARLINK-5464",
@@ -1031,7 +1343,11 @@
       "raanDeg": 86.0833,
       "argPerigeeDeg": 86.8473,
       "meanAnomalyDeg": 273.2662,
-      "bstar": 0.000039224124
+      "bstar": 0.000039224124,
+      "meanMotionDot": 0.00000336,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 17841
     },
     {
       "objectName": "STARLINK-5433",
@@ -1044,7 +1360,11 @@
       "raanDeg": 65.7129,
       "argPerigeeDeg": 83.863,
       "meanAnomalyDeg": 276.2511,
-      "bstar": 0.000043319471
+      "bstar": 0.000043319471,
+      "meanMotionDot": 0.00000402,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 17870
     },
     {
       "objectName": "STARLINK-5384",
@@ -1057,7 +1377,11 @@
       "raanDeg": 188.8477,
       "argPerigeeDeg": 278.3776,
       "meanAnomalyDeg": 278.8495,
-      "bstar": 0.0036452803
+      "bstar": 0.0036452803,
+      "meanMotionDot": 0.00083929,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 577
     },
     {
       "objectName": "STARLINK-5402",
@@ -1070,7 +1394,11 @@
       "raanDeg": 179.8425,
       "argPerigeeDeg": 269.225,
       "meanAnomalyDeg": 90.8426,
-      "bstar": 0.000040286584
+      "bstar": 0.000040286584,
+      "meanMotionDot": 0.00000341,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 17545
     },
     {
       "objectName": "STARLINK-5284",
@@ -1083,7 +1411,11 @@
       "raanDeg": 50.7716,
       "argPerigeeDeg": 264.9371,
       "meanAnomalyDeg": 95.1488,
-      "bstar": -0.00017869023
+      "bstar": -0.00017869023,
+      "meanMotionDot": -0.00002225,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 17170
     },
     {
       "objectName": "STARLINK-5670",
@@ -1096,7 +1428,11 @@
       "raanDeg": 357.3821,
       "argPerigeeDeg": 266.3983,
       "meanAnomalyDeg": 93.672,
-      "bstar": -0.000022892918
+      "bstar": -0.000022892918,
+      "meanMotionDot": -0.00000513,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 17013
     },
     {
       "objectName": "STARLINK-5588",
@@ -1109,7 +1445,11 @@
       "raanDeg": 9.7233,
       "argPerigeeDeg": 272.9855,
       "meanAnomalyDeg": 87.0853,
-      "bstar": 0.000036148772
+      "bstar": 0.000036148772,
+      "meanMotionDot": 0.00000285,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16999
     },
     {
       "objectName": "STARLINK-5060",
@@ -1122,7 +1462,11 @@
       "raanDeg": 110.5871,
       "argPerigeeDeg": 231.7618,
       "meanAnomalyDeg": 128.329,
-      "bstar": 0.000064393396
+      "bstar": 0.000064393396,
+      "meanMotionDot": 0.00000676,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 17000
     },
     {
       "objectName": "STARLINK-5682",
@@ -1135,7 +1479,11 @@
       "raanDeg": 22.8612,
       "argPerigeeDeg": 269.6786,
       "meanAnomalyDeg": 90.3901,
-      "bstar": 0.00010398091
+      "bstar": 0.00010398091,
+      "meanMotionDot": 0.00001201,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16918
     },
     {
       "objectName": "STARLINK-5373",
@@ -1148,7 +1496,11 @@
       "raanDeg": 35.6667,
       "argPerigeeDeg": 273.3852,
       "meanAnomalyDeg": 86.6868,
-      "bstar": 0.000069162274
+      "bstar": 0.000069162274,
+      "meanMotionDot": 0.00000731,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16903
     },
     {
       "objectName": "STARLINK-5697",
@@ -1161,7 +1513,11 @@
       "raanDeg": 61.1224,
       "argPerigeeDeg": 276.9861,
       "meanAnomalyDeg": 83.0857,
-      "bstar": 0.0000335117
+      "bstar": 0.0000335117,
+      "meanMotionDot": 0.00000249,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16735
     },
     {
       "objectName": "STARLINK-5698",
@@ -1174,7 +1530,11 @@
       "raanDeg": 48.024,
       "argPerigeeDeg": 263.9917,
       "meanAnomalyDeg": 96.0778,
-      "bstar": 0.000055859229
+      "bstar": 0.000055859229,
+      "meanMotionDot": 0.00000551,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16750
     },
     {
       "objectName": "STARLINK-5475",
@@ -1187,7 +1547,11 @@
       "raanDeg": 192.6013,
       "argPerigeeDeg": 272.0415,
       "meanAnomalyDeg": 88.037,
-      "bstar": 0.000085389
+      "bstar": 0.000085389,
+      "meanMotionDot": 0.00000926,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16761
     },
     {
       "objectName": "STARLINK-5532",
@@ -1200,7 +1564,11 @@
       "raanDeg": 271.206,
       "argPerigeeDeg": 272.312,
       "meanAnomalyDeg": 87.7713,
-      "bstar": 0.00010807299
+      "bstar": 0.00010807299,
+      "meanMotionDot": 0.00001197,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16444
     },
     {
       "objectName": "STARLINK-5856",
@@ -1213,7 +1581,11 @@
       "raanDeg": 331.0342,
       "argPerigeeDeg": 266.0469,
       "meanAnomalyDeg": 94.0431,
-      "bstar": 0.000074848748
+      "bstar": 0.000074848748,
+      "meanMotionDot": 0.000008,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16260
     },
     {
       "objectName": "STARLINK-5851",
@@ -1226,7 +1598,11 @@
       "raanDeg": 308.8101,
       "argPerigeeDeg": 273.7489,
       "meanAnomalyDeg": 174.799,
-      "bstar": 0.027790886
+      "bstar": 0.027790886,
+      "meanMotionDot": 0.00913368,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 571
     },
     {
       "objectName": "STARLINK-5944",
@@ -1239,7 +1615,11 @@
       "raanDeg": 112.9595,
       "argPerigeeDeg": 272.1393,
       "meanAnomalyDeg": 87.9309,
-      "bstar": 0.000054074785
+      "bstar": 0.000054074785,
+      "meanMotionDot": 0.00000527,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16133
     },
     {
       "objectName": "STARLINK-5785",
@@ -1252,7 +1632,11 @@
       "raanDeg": 103.249,
       "argPerigeeDeg": 265.5498,
       "meanAnomalyDeg": 94.5164,
-      "bstar": 0.000045688
+      "bstar": 0.000045688,
+      "meanMotionDot": 0.00000414,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16139
     },
     {
       "objectName": "STARLINK-6107",
@@ -1265,7 +1649,11 @@
       "raanDeg": 207.1014,
       "argPerigeeDeg": 264.9855,
       "meanAnomalyDeg": 95.0833,
-      "bstar": 0.000013762
+      "bstar": 0.000013762,
+      "meanMotionDot": -1.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16052
     },
     {
       "objectName": "STARLINK-30095",
@@ -1278,7 +1666,11 @@
       "raanDeg": 240.9538,
       "argPerigeeDeg": 247.3568,
       "meanAnomalyDeg": 63.1404,
-      "bstar": 0.0029707319
+      "bstar": 0.0029707319,
+      "meanMotionDot": 0.00045319,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 567
     },
     {
       "objectName": "STARLINK-5093",
@@ -1291,7 +1683,11 @@
       "raanDeg": 59.9618,
       "argPerigeeDeg": 20.1498,
       "meanAnomalyDeg": 339.9839,
-      "bstar": 0.000008883686
+      "bstar": 0.000008883686,
+      "meanMotionDot": 5.6e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15656
     },
     {
       "objectName": "STARLINK-5972",
@@ -1304,7 +1700,11 @@
       "raanDeg": 60.1952,
       "argPerigeeDeg": 101.5973,
       "meanAnomalyDeg": 258.5467,
-      "bstar": -0.000095725
+      "bstar": -0.000095725,
+      "meanMotionDot": -0.00001442,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15651
     },
     {
       "objectName": "STARLINK-6283",
@@ -1317,7 +1717,11 @@
       "raanDeg": 243.3726,
       "argPerigeeDeg": 266.1968,
       "meanAnomalyDeg": 93.8719,
-      "bstar": 0.000087755
+      "bstar": 0.000087755,
+      "meanMotionDot": 0.00000982,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15527
     },
     {
       "objectName": "STARLINK-5987",
@@ -1330,7 +1734,11 @@
       "raanDeg": 170.739,
       "argPerigeeDeg": 263.4984,
       "meanAnomalyDeg": 96.5846,
-      "bstar": 0.000044750551
+      "bstar": 0.000044750551,
+      "meanMotionDot": 0.00000441,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15368
     },
     {
       "objectName": "STARLINK-6196",
@@ -1343,7 +1751,11 @@
       "raanDeg": 130.6146,
       "argPerigeeDeg": 273.917,
       "meanAnomalyDeg": 86.1627,
-      "bstar": 0.000094599027
+      "bstar": 0.000094599027,
+      "meanMotionDot": 0.00001036,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15467
     },
     {
       "objectName": "STARLINK-6328",
@@ -1356,7 +1768,11 @@
       "raanDeg": 270.1212,
       "argPerigeeDeg": 269.6547,
       "meanAnomalyDeg": 90.4147,
-      "bstar": 0.00002192
+      "bstar": 0.00002192,
+      "meanMotionDot": 9.2e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15496
     },
     {
       "objectName": "STARLINK-6295",
@@ -1369,7 +1785,11 @@
       "raanDeg": 280.9754,
       "argPerigeeDeg": 261.282,
       "meanAnomalyDeg": 98.7894,
-      "bstar": 0.000041053906
+      "bstar": 0.000041053906,
+      "meanMotionDot": 0.00000351,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15487
     },
     {
       "objectName": "STARLINK-6190",
@@ -1382,7 +1802,11 @@
       "raanDeg": 30.8301,
       "argPerigeeDeg": 285.9523,
       "meanAnomalyDeg": 74.1379,
-      "bstar": 0.0003468884
+      "bstar": 0.0003468884,
+      "meanMotionDot": 0.00004047,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15062
     },
     {
       "objectName": "STARLINK-6072",
@@ -1395,7 +1819,11 @@
       "raanDeg": 330.8412,
       "argPerigeeDeg": 271.9133,
       "meanAnomalyDeg": 88.1767,
-      "bstar": 0.000074356336
+      "bstar": 0.000074356336,
+      "meanMotionDot": 0.00000795,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15207
     },
     {
       "objectName": "STARLINK-6209",
@@ -1408,7 +1836,11 @@
       "raanDeg": 141.7938,
       "argPerigeeDeg": 262.6621,
       "meanAnomalyDeg": 97.4066,
-      "bstar": 0.000038051445
+      "bstar": 0.000038051445,
+      "meanMotionDot": 0.0000031,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15001
     },
     {
       "objectName": "STARLINK-6110",
@@ -1421,7 +1853,11 @@
       "raanDeg": 125.9646,
       "argPerigeeDeg": 269.7873,
       "meanAnomalyDeg": 90.2799,
-      "bstar": 0.000088758976
+      "bstar": 0.000088758976,
+      "meanMotionDot": 0.00000996,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15035
     },
     {
       "objectName": "STARLINK-6217",
@@ -1434,7 +1870,11 @@
       "raanDeg": 164.026,
       "argPerigeeDeg": 279.0029,
       "meanAnomalyDeg": 81.064,
-      "bstar": -0.000029961073
+      "bstar": -0.000029961073,
+      "meanMotionDot": -0.00000608,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14880
     },
     {
       "objectName": "STARLINK-6259",
@@ -1447,7 +1887,11 @@
       "raanDeg": 150.9209,
       "argPerigeeDeg": 277.6247,
       "meanAnomalyDeg": 82.4419,
-      "bstar": 0.000027977835
+      "bstar": 0.000027977835,
+      "meanMotionDot": 0.00000174,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14895
     },
     {
       "objectName": "STARLINK-6167",
@@ -1460,7 +1904,11 @@
       "raanDeg": 331.5587,
       "argPerigeeDeg": 273.6168,
       "meanAnomalyDeg": 86.4534,
-      "bstar": -0.00067397281
+      "bstar": -0.00067397281,
+      "meanMotionDot": -0.00009305,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14883
     },
     {
       "objectName": "STARLINK-5520",
@@ -1473,7 +1921,11 @@
       "raanDeg": 88.2008,
       "argPerigeeDeg": 269.9388,
       "meanAnomalyDeg": 90.1299,
-      "bstar": 0.000038050144
+      "bstar": 0.000038050144,
+      "meanMotionDot": 0.0000031,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14552
     },
     {
       "objectName": "STARLINK-5517",
@@ -1486,7 +1938,11 @@
       "raanDeg": 78.6791,
       "argPerigeeDeg": 277.658,
       "meanAnomalyDeg": 82.4008,
-      "bstar": 0.000082361
+      "bstar": 0.000082361,
+      "meanMotionDot": 0.00000909,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14557
     },
     {
       "objectName": "STARLINK-5585",
@@ -1499,7 +1955,11 @@
       "raanDeg": 306.6528,
       "argPerigeeDeg": 273.1223,
       "meanAnomalyDeg": 86.9492,
-      "bstar": -0.000017533176
+      "bstar": -0.000017533176,
+      "meanMotionDot": -0.0000044,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14452
     },
     {
       "objectName": "STARLINK-6356",
@@ -1512,7 +1972,11 @@
       "raanDeg": 293.9419,
       "argPerigeeDeg": 264.7623,
       "meanAnomalyDeg": 95.3063,
-      "bstar": 0.000062279021
+      "bstar": 0.000062279021,
+      "meanMotionDot": 0.00000638,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14466
     },
     {
       "objectName": "STARLINK-30043",
@@ -1525,7 +1989,11 @@
       "raanDeg": 306.5561,
       "argPerigeeDeg": 235.8359,
       "meanAnomalyDeg": 124.2376,
-      "bstar": 0.0033201819
+      "bstar": 0.0033201819,
+      "meanMotionDot": 0.0004538,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14463
     },
     {
       "objectName": "STARLINK-30204",
@@ -1538,7 +2006,11 @@
       "raanDeg": 34.6633,
       "argPerigeeDeg": 283.6753,
       "meanAnomalyDeg": 126.532,
-      "bstar": 0.0038667105
+      "bstar": 0.0038667105,
+      "meanMotionDot": 0.00080924,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 573
     },
     {
       "objectName": "STARLINK-30253",
@@ -1551,7 +2023,11 @@
       "raanDeg": 60.5557,
       "argPerigeeDeg": 296.1716,
       "meanAnomalyDeg": 100.553,
-      "bstar": 0.050945399
+      "bstar": 0.050945399,
+      "meanMotionDot": 0.01261077,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 557
     },
     {
       "objectName": "STARLINK-30100",
@@ -1564,7 +2040,11 @@
       "raanDeg": 138.5436,
       "argPerigeeDeg": 96.2694,
       "meanAnomalyDeg": 263.8331,
-      "bstar": 0.00020700081
+      "bstar": 0.00020700081,
+      "meanMotionDot": 0.00002597,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14151
     },
     {
       "objectName": "STARLINK-30274",
@@ -1577,7 +2057,11 @@
       "raanDeg": 257.0943,
       "argPerigeeDeg": 93.8345,
       "meanAnomalyDeg": 266.2808,
-      "bstar": 0.000027123
+      "bstar": 0.000027123,
+      "meanMotionDot": 0.00000444,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14191
     },
     {
       "objectName": "STARLINK-30310",
@@ -1590,7 +2074,11 @@
       "raanDeg": 228.6505,
       "argPerigeeDeg": 252.6064,
       "meanAnomalyDeg": 107.4644,
-      "bstar": 0.000046126847
+      "bstar": 0.000046126847,
+      "meanMotionDot": 0.0000042,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 13835
     },
     {
       "objectName": "STARLINK-30380",
@@ -1603,7 +2091,11 @@
       "raanDeg": 253.2213,
       "argPerigeeDeg": 297.2445,
       "meanAnomalyDeg": 26.4797,
-      "bstar": 0.049798555
+      "bstar": 0.049798555,
+      "meanMotionDot": 0.01209151,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 582
     },
     {
       "objectName": "STARLINK-30418",
@@ -1616,7 +2108,11 @@
       "raanDeg": 292.1859,
       "argPerigeeDeg": 284.8006,
       "meanAnomalyDeg": 43.5118,
-      "bstar": 0.052501985
+      "bstar": 0.052501985,
+      "meanMotionDot": 0.00972988,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 582
     },
     {
       "objectName": "STARLINK-30447",
@@ -1629,7 +2125,11 @@
       "raanDeg": 318.1691,
       "argPerigeeDeg": 273.7051,
       "meanAnomalyDeg": 287.3243,
-      "bstar": 0.049036435
+      "bstar": 0.049036435,
+      "meanMotionDot": 0.01133199,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 537
     },
     {
       "objectName": "STARLINK-30478",
@@ -1642,7 +2142,11 @@
       "raanDeg": 9.4493,
       "argPerigeeDeg": 268.8792,
       "meanAnomalyDeg": 91.1922,
-      "bstar": 0.0001651047
+      "bstar": 0.0001651047,
+      "meanMotionDot": 0.00002027,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 13550
     },
     {
       "objectName": "STARLINK-30706",
@@ -1655,7 +2159,11 @@
       "raanDeg": 72.8658,
       "argPerigeeDeg": 101.7826,
       "meanAnomalyDeg": 258.3293,
-      "bstar": 0.000043099876
+      "bstar": 0.000043099876,
+      "meanMotionDot": 0.00000918,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 13682
     },
     {
       "objectName": "STARLINK-30534",
@@ -1668,7 +2176,11 @@
       "raanDeg": 125.4953,
       "argPerigeeDeg": 304.3443,
       "meanAnomalyDeg": 129.8711,
-      "bstar": 0.069308857
+      "bstar": 0.069308857,
+      "meanMotionDot": 0.01569597,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 582
     },
     {
       "objectName": "STARLINK-30560",
@@ -1681,7 +2193,11 @@
       "raanDeg": 124.4425,
       "argPerigeeDeg": 110.6024,
       "meanAnomalyDeg": 249.5086,
-      "bstar": 5.86702e-7
+      "bstar": 5.86702e-7,
+      "meanMotionDot": -0.00000342,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 13469
     },
     {
       "objectName": "STARLINK-30532",
@@ -1694,7 +2210,11 @@
       "raanDeg": 85.9014,
       "argPerigeeDeg": 278.9383,
       "meanAnomalyDeg": 110.9053,
-      "bstar": 0.077974014
+      "bstar": 0.077974014,
+      "meanMotionDot": 0.02135137,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 573
     },
     {
       "objectName": "STARLINK-30589",
@@ -1707,7 +2227,11 @@
       "raanDeg": 214.5859,
       "argPerigeeDeg": 266.0758,
       "meanAnomalyDeg": 94.0094,
-      "bstar": -0.00006162371
+      "bstar": -0.00006162371,
+      "meanMotionDot": -0.00002184,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 13280
     },
     {
       "objectName": "STARLINK-30758",
@@ -1720,7 +2244,11 @@
       "raanDeg": 188.1093,
       "argPerigeeDeg": 275.1171,
       "meanAnomalyDeg": 301.32,
-      "bstar": 0.0020895209
+      "bstar": 0.0020895209,
+      "meanMotionDot": 0.0005623,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 572
     },
     {
       "objectName": "STARLINK-30753",
@@ -1733,7 +2261,11 @@
       "raanDeg": 202.0679,
       "argPerigeeDeg": 269.6911,
       "meanAnomalyDeg": 30.5899,
-      "bstar": 0.11805689
+      "bstar": 0.11805689,
+      "meanMotionDot": 0.02545784,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 568
     },
     {
       "objectName": "STARLINK-30813",
@@ -1746,7 +2278,11 @@
       "raanDeg": 252.4124,
       "argPerigeeDeg": 267.8857,
       "meanAnomalyDeg": 25.0055,
-      "bstar": 0.079097239
+      "bstar": 0.079097239,
+      "meanMotionDot": 0.01555294,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 573
     },
     {
       "objectName": "STARLINK-30886",
@@ -1759,7 +2295,11 @@
       "raanDeg": 342.6287,
       "argPerigeeDeg": 270.7133,
       "meanAnomalyDeg": 89.3598,
-      "bstar": 0.000036710558
+      "bstar": 0.000036710558,
+      "meanMotionDot": 0.00000292,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 12815
     },
     {
       "objectName": "STARLINK-30910",
@@ -1772,7 +2312,11 @@
       "raanDeg": 49.5365,
       "argPerigeeDeg": 80.3738,
       "meanAnomalyDeg": 279.7383,
-      "bstar": 0.000035543973
+      "bstar": 0.000035543973,
+      "meanMotionDot": 0.00000694,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 12829
     },
     {
       "objectName": "STARLINK-30931",
@@ -1785,7 +2329,11 @@
       "raanDeg": 99.9677,
       "argPerigeeDeg": 254.9881,
       "meanAnomalyDeg": 116.6475,
-      "bstar": 0.058437957
+      "bstar": 0.058437957,
+      "meanMotionDot": 0.01263644,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 573
     },
     {
       "objectName": "STARLINK-30935",
@@ -1798,7 +2346,11 @@
       "raanDeg": 99.9345,
       "argPerigeeDeg": 288.093,
       "meanAnomalyDeg": 123.972,
-      "bstar": 0.11053054
+      "bstar": 0.11053054,
+      "meanMotionDot": 0.01956573,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 558
     },
     {
       "objectName": "STARLINK-30968",
@@ -1811,7 +2363,11 @@
       "raanDeg": 162.557,
       "argPerigeeDeg": 292.4994,
       "meanAnomalyDeg": 34.4999,
-      "bstar": 0.10390988
+      "bstar": 0.10390988,
+      "meanMotionDot": 0.02489258,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 578
     },
     {
       "objectName": "STARLINK-31045",
@@ -1824,7 +2380,11 @@
       "raanDeg": 190.2481,
       "argPerigeeDeg": 85.7848,
       "meanAnomalyDeg": 274.3306,
-      "bstar": 0.000029045711
+      "bstar": 0.000029045711,
+      "meanMotionDot": 0.00000501,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 12322
     },
     {
       "objectName": "STARLINK-31089",
@@ -1837,7 +2397,11 @@
       "raanDeg": 227.2212,
       "argPerigeeDeg": 242.8369,
       "meanAnomalyDeg": 357.3687,
-      "bstar": 0.092378289
+      "bstar": 0.092378289,
+      "meanMotionDot": 0.01743004,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 583
     },
     {
       "objectName": "STARLINK-31126",
@@ -1850,7 +2414,11 @@
       "raanDeg": 143.7609,
       "argPerigeeDeg": 274.397,
       "meanAnomalyDeg": 85.669,
-      "bstar": -0.00013426235
+      "bstar": -0.00013426235,
+      "meanMotionDot": -0.00003958,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 12087
     },
     {
       "objectName": "STARLINK-31040",
@@ -1863,7 +2431,11 @@
       "raanDeg": 281.3037,
       "argPerigeeDeg": 93.4325,
       "meanAnomalyDeg": 266.6836,
-      "bstar": 0.0000093601
+      "bstar": 0.0000093601,
+      "meanMotionDot": -8.2e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 12032
     },
     {
       "objectName": "STARLINK-31135",
@@ -1876,7 +2448,11 @@
       "raanDeg": 60.0138,
       "argPerigeeDeg": 97.1495,
       "meanAnomalyDeg": 262.967,
-      "bstar": 0.000007241289
+      "bstar": 0.000007241289,
+      "meanMotionDot": -0.00000145,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11870
     },
     {
       "objectName": "STARLINK-31174",
@@ -1889,7 +2465,11 @@
       "raanDeg": 224.1867,
       "argPerigeeDeg": 255.2983,
       "meanAnomalyDeg": 104.7732,
-      "bstar": 0.00006130754
+      "bstar": 0.00006130754,
+      "meanMotionDot": 0.00001425,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11963
     },
     {
       "objectName": "STARLINK-31200",
@@ -1902,7 +2482,11 @@
       "raanDeg": 309.0265,
       "argPerigeeDeg": 329.6257,
       "meanAnomalyDeg": 30.4527,
-      "bstar": -0.000044748964
+      "bstar": -0.000044748964,
+      "meanMotionDot": -0.00001493,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11745
     },
     {
       "objectName": "STARLINK-31243",
@@ -1915,7 +2499,11 @@
       "raanDeg": 11.5538,
       "argPerigeeDeg": 79.9091,
       "meanAnomalyDeg": 280.2053,
-      "bstar": 0.000034879573
+      "bstar": 0.000034879573,
+      "meanMotionDot": 0.00000674,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11645
     },
     {
       "objectName": "STARLINK-31333",
@@ -1928,7 +2516,11 @@
       "raanDeg": 333.1796,
       "argPerigeeDeg": 90.4997,
       "meanAnomalyDeg": 269.613,
-      "bstar": -0.00013447941
+      "bstar": -0.00013447941,
+      "meanMotionDot": -0.00004341,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11509
     },
     {
       "objectName": "STARLINK-31521",
@@ -1941,7 +2533,11 @@
       "raanDeg": 129.8414,
       "argPerigeeDeg": 82.4888,
       "meanAnomalyDeg": 277.626,
-      "bstar": 0.000014502
+      "bstar": 0.000014502,
+      "meanMotionDot": 7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11362
     },
     {
       "objectName": "STARLINK-31281",
@@ -1954,7 +2550,11 @@
       "raanDeg": 9.1655,
       "argPerigeeDeg": 294.964,
       "meanAnomalyDeg": 65.1117,
-      "bstar": -0.000025565426
+      "bstar": -0.000025565426,
+      "meanMotionDot": -0.00000965,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11273
     },
     {
       "objectName": "STARLINK-31309",
@@ -1967,7 +2567,11 @@
       "raanDeg": 165.7338,
       "argPerigeeDeg": 290.599,
       "meanAnomalyDeg": 69.4598,
-      "bstar": 0.00006384157
+      "bstar": 0.00006384157,
+      "meanMotionDot": 0.00001495,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11200
     },
     {
       "objectName": "STARLINK-31590",
@@ -1980,7 +2584,11 @@
       "raanDeg": 151.7303,
       "argPerigeeDeg": 270.9747,
       "meanAnomalyDeg": 89.0945,
-      "bstar": 0.000016000567
+      "bstar": 0.000016000567,
+      "meanMotionDot": 0.00000178,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11156
     },
     {
       "objectName": "STARLINK-31467",
@@ -1993,7 +2601,11 @@
       "raanDeg": 205.2741,
       "argPerigeeDeg": 283.4208,
       "meanAnomalyDeg": 76.6494,
-      "bstar": 0.000045785161
+      "bstar": 0.000045785161,
+      "meanMotionDot": 0.00000998,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 11073
     },
     {
       "objectName": "STARLINK-31609",
@@ -2006,7 +2618,11 @@
       "raanDeg": 233.1033,
       "argPerigeeDeg": 108.8746,
       "meanAnomalyDeg": 251.2416,
-      "bstar": 0.00021911
+      "bstar": 0.00021911,
+      "meanMotionDot": 0.00006133,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10883
     },
     {
       "objectName": "STARLINK-31570",
@@ -2019,7 +2635,11 @@
       "raanDeg": 250.2731,
       "argPerigeeDeg": 193.4212,
       "meanAnomalyDeg": 166.6612,
-      "bstar": -0.000086461
+      "bstar": -0.000086461,
+      "meanMotionDot": -0.0000264,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10813
     },
     {
       "objectName": "STARLINK-31501",
@@ -2032,7 +2652,11 @@
       "raanDeg": 320.1568,
       "argPerigeeDeg": 270.9801,
       "meanAnomalyDeg": 89.0881,
-      "bstar": -0.00002718975
+      "bstar": -0.00002718975,
+      "meanMotionDot": -0.00001011,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10843
     },
     {
       "objectName": "STARLINK-31443",
@@ -2045,7 +2669,11 @@
       "raanDeg": 291.6858,
       "argPerigeeDeg": 106.4567,
       "meanAnomalyDeg": 253.6586,
-      "bstar": 0.0019943724
+      "bstar": 0.0019943724,
+      "meanMotionDot": 0.0005849,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10824
     },
     {
       "objectName": "STARLINK-11089 [DTC]",
@@ -2058,7 +2686,11 @@
       "raanDeg": 145.4672,
       "argPerigeeDeg": 89.5896,
       "meanAnomalyDeg": 270.5233,
-      "bstar": 0.000017025789
+      "bstar": 0.000017025789,
+      "meanMotionDot": 0.00001475,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10988
     },
     {
       "objectName": "STARLINK-31566",
@@ -2071,7 +2703,11 @@
       "raanDeg": 97.9172,
       "argPerigeeDeg": 248.2229,
       "meanAnomalyDeg": 111.8487,
-      "bstar": 0.000043321
+      "bstar": 0.000043321,
+      "meanMotionDot": 0.0000093,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10680
     },
     {
       "objectName": "STARLINK-31674",
@@ -2084,7 +2720,11 @@
       "raanDeg": 16.7575,
       "argPerigeeDeg": 269.3946,
       "meanAnomalyDeg": 90.6768,
-      "bstar": -0.000003739677
+      "bstar": -0.000003739677,
+      "meanMotionDot": -0.00000365,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10458
     },
     {
       "objectName": "STARLINK-31699",
@@ -2097,7 +2737,11 @@
       "raanDeg": 43.666,
       "argPerigeeDeg": 268.5498,
       "meanAnomalyDeg": 91.5213,
-      "bstar": 0.000069883361
+      "bstar": 0.000069883361,
+      "meanMotionDot": 0.00001661,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10438
     },
     {
       "objectName": "STARLINK-31778",
@@ -2110,7 +2754,11 @@
       "raanDeg": 97.3616,
       "argPerigeeDeg": 271.9224,
       "meanAnomalyDeg": 88.1429,
-      "bstar": 0.00015384
+      "bstar": 0.00015384,
+      "meanMotionDot": 0.0000397,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10287
     },
     {
       "objectName": "STARLINK-31806",
@@ -2123,7 +2771,11 @@
       "raanDeg": 203.2951,
       "argPerigeeDeg": 284.8299,
       "meanAnomalyDeg": 75.233,
-      "bstar": -0.0000015743
+      "bstar": -0.0000015743,
+      "meanMotionDot": -0.00000306,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10309
     },
     {
       "objectName": "STARLINK-31875",
@@ -2136,7 +2788,11 @@
       "raanDeg": 97.7021,
       "argPerigeeDeg": 282.8955,
       "meanAnomalyDeg": 77.1756,
-      "bstar": 0.0001180128
+      "bstar": 0.0001180128,
+      "meanMotionDot": 0.00002986,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10280
     },
     {
       "objectName": "STARLINK-11100 [DTC]",
@@ -2149,7 +2805,11 @@
       "raanDeg": 18.6848,
       "argPerigeeDeg": 77.0138,
       "meanAnomalyDeg": 283.0976,
-      "bstar": -0.00005198668
+      "bstar": -0.00005198668,
+      "meanMotionDot": -0.0000688,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10460
     },
     {
       "objectName": "STARLINK-31681",
@@ -2162,7 +2822,11 @@
       "raanDeg": 235.8804,
       "argPerigeeDeg": 271.6953,
       "meanAnomalyDeg": 88.3732,
-      "bstar": -0.000065564546
+      "bstar": -0.000065564546,
+      "meanMotionDot": -0.00002065,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10191
     },
     {
       "objectName": "STARLINK-31862",
@@ -2175,7 +2839,11 @@
       "raanDeg": 269.3329,
       "argPerigeeDeg": 269.1914,
       "meanAnomalyDeg": 90.8752,
-      "bstar": 0.000035733
+      "bstar": 0.000035733,
+      "meanMotionDot": 0.00000722,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10105
     },
     {
       "objectName": "STARLINK-31896",
@@ -2188,7 +2856,11 @@
       "raanDeg": 333.9186,
       "argPerigeeDeg": 222.967,
       "meanAnomalyDeg": 137.111,
-      "bstar": 0.00005091677
+      "bstar": 0.00005091677,
+      "meanMotionDot": 0.0000114,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 10030
     },
     {
       "objectName": "STARLINK-31965",
@@ -2201,7 +2873,11 @@
       "raanDeg": 189.5035,
       "argPerigeeDeg": 137.9655,
       "meanAnomalyDeg": 222.144,
-      "bstar": 0.0010159
+      "bstar": 0.0010159,
+      "meanMotionDot": 0.00027822,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 9932
     },
     {
       "objectName": "STARLINK-31432",
@@ -2214,7 +2890,11 @@
       "raanDeg": 31.6452,
       "argPerigeeDeg": 272.8087,
       "meanAnomalyDeg": 87.2615,
-      "bstar": -0.0021632081
+      "bstar": -0.0021632081,
+      "meanMotionDot": -0.00059263,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 9891
     },
     {
       "objectName": "STARLINK-31987",
@@ -2227,7 +2907,11 @@
       "raanDeg": 124.6111,
       "argPerigeeDeg": 79.8319,
       "meanAnomalyDeg": 280.2815,
-      "bstar": 0.00030247655
+      "bstar": 0.00030247655,
+      "meanMotionDot": 0.00008611,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 9738
     },
     {
       "objectName": "STARLINK-11151 [DTC]",
@@ -2240,7 +2924,11 @@
       "raanDeg": 318.1496,
       "argPerigeeDeg": 76.4713,
       "meanAnomalyDeg": 283.6426,
-      "bstar": 0.000013348716
+      "bstar": 0.000013348716,
+      "meanMotionDot": 0.00001029,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 9932
     },
     {
       "objectName": "STARLINK-31732",
@@ -2253,7 +2941,11 @@
       "raanDeg": 85.2276,
       "argPerigeeDeg": 86.6865,
       "meanAnomalyDeg": 273.4282,
-      "bstar": -0.00019851655
+      "bstar": -0.00019851655,
+      "meanMotionDot": -0.00006233,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 9529
     },
     {
       "objectName": "STARLINK-31845",
@@ -2266,7 +2958,11 @@
       "raanDeg": 73.19,
       "argPerigeeDeg": 94.5999,
       "meanAnomalyDeg": 265.5134,
-      "bstar": -0.000042625401
+      "bstar": -0.000042625401,
+      "meanMotionDot": -0.00001621,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 9412
     },
     {
       "objectName": "STARLINK-11197 [DTC]",
@@ -2279,7 +2975,11 @@
       "raanDeg": 212.9146,
       "argPerigeeDeg": 94.3496,
       "meanAnomalyDeg": 265.7613,
-      "bstar": -0.000029272121
+      "bstar": -0.000029272121,
+      "meanMotionDot": -0.00004132,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 9488
     },
     {
       "objectName": "STARLINK-32167",
@@ -2292,7 +2992,11 @@
       "raanDeg": 104.5925,
       "argPerigeeDeg": 88.6759,
       "meanAnomalyDeg": 271.4366,
-      "bstar": 0.000028737
+      "bstar": 0.000028737,
+      "meanMotionDot": 0.00000492,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8999
     },
     {
       "objectName": "STARLINK-32124",
@@ -2305,7 +3009,11 @@
       "raanDeg": 100.999,
       "argPerigeeDeg": 80.1894,
       "meanAnomalyDeg": 279.9223,
-      "bstar": 0.000017622177
+      "bstar": 0.000017622177,
+      "meanMotionDot": 0.00000163,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8996
     },
     {
       "objectName": "STARLINK-32078",
@@ -2318,7 +3026,11 @@
       "raanDeg": 124.5669,
       "argPerigeeDeg": 95.4506,
       "meanAnomalyDeg": 264.6638,
-      "bstar": 0.000035256137
+      "bstar": 0.000035256137,
+      "meanMotionDot": 0.00000685,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8805
     },
     {
       "objectName": "STARLINK-32223",
@@ -2331,7 +3043,11 @@
       "raanDeg": 358.9116,
       "argPerigeeDeg": 111.1059,
       "meanAnomalyDeg": 249.0088,
-      "bstar": -0.000067237178
+      "bstar": -0.000067237178,
+      "meanMotionDot": -0.0000235,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8890
     },
     {
       "objectName": "STARLINK-32242",
@@ -2344,7 +3060,11 @@
       "raanDeg": 267.1417,
       "argPerigeeDeg": 79.6774,
       "meanAnomalyDeg": 280.4378,
-      "bstar": 0.000092778
+      "bstar": 0.000092778,
+      "meanMotionDot": 0.00002391,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8770
     },
     {
       "objectName": "STARLINK-32210",
@@ -2357,7 +3077,11 @@
       "raanDeg": 355.3442,
       "argPerigeeDeg": 84.0309,
       "meanAnomalyDeg": 276.0806,
-      "bstar": 0.000038467486
+      "bstar": 0.000038467486,
+      "meanMotionDot": 0.0000078,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8644
     },
     {
       "objectName": "STARLINK-11242 [DTC]",
@@ -2370,7 +3094,11 @@
       "raanDeg": 185.4424,
       "argPerigeeDeg": 73.161,
       "meanAnomalyDeg": 286.9523,
-      "bstar": 0.0000095766
+      "bstar": 0.0000095766,
+      "meanMotionDot": 0.00000572,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8678
     },
     {
       "objectName": "STARLINK-11237 [DTC]",
@@ -2383,7 +3111,11 @@
       "raanDeg": 32.8154,
       "argPerigeeDeg": 137.9845,
       "meanAnomalyDeg": 222.1274,
-      "bstar": -0.000006835129
+      "bstar": -0.000006835129,
+      "meanMotionDot": -0.00001417,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8676
     },
     {
       "objectName": "STARLINK-11286 [DTC]",
@@ -2396,7 +3128,11 @@
       "raanDeg": 2.919,
       "argPerigeeDeg": 94.6942,
       "meanAnomalyDeg": 265.4158,
-      "bstar": -0.000013845522
+      "bstar": -0.000013845522,
+      "meanMotionDot": -0.00002265,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8377
     },
     {
       "objectName": "STARLINK-11298 [DTC]",
@@ -2409,7 +3145,11 @@
       "raanDeg": 228.3784,
       "argPerigeeDeg": 89.5394,
       "meanAnomalyDeg": 270.5768,
-      "bstar": -0.000012198477
+      "bstar": -0.000012198477,
+      "meanMotionDot": -0.00002066,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 8274
     },
     {
       "objectName": "STARLINK-32140",
@@ -2422,7 +3162,11 @@
       "raanDeg": 194.2171,
       "argPerigeeDeg": 103.5034,
       "meanAnomalyDeg": 256.6123,
-      "bstar": 0.00004126
+      "bstar": 0.00004126,
+      "meanMotionDot": 0.00000863,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7794
     },
     {
       "objectName": "STARLINK-11322 [DTC]",
@@ -2435,7 +3179,11 @@
       "raanDeg": 288.9396,
       "argPerigeeDeg": 36.9254,
       "meanAnomalyDeg": 323.1795,
-      "bstar": 0.000013853204
+      "bstar": 0.000013853204,
+      "meanMotionDot": 0.00001091,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7980
     },
     {
       "objectName": "STARLINK-32302",
@@ -2448,7 +3196,11 @@
       "raanDeg": 213.9098,
       "argPerigeeDeg": 264.3168,
       "meanAnomalyDeg": 95.7552,
-      "bstar": 0.000023385914
+      "bstar": 0.000023385914,
+      "meanMotionDot": 0.00000382,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7667
     },
     {
       "objectName": "STARLINK-32441",
@@ -2461,7 +3213,11 @@
       "raanDeg": 143.0397,
       "argPerigeeDeg": 68.4812,
       "meanAnomalyDeg": 291.6298,
-      "bstar": 0.000072432
+      "bstar": 0.000072432,
+      "meanMotionDot": 0.00001786,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7481
     },
     {
       "objectName": "STARLINK-32387",
@@ -2474,7 +3230,11 @@
       "raanDeg": 205.4165,
       "argPerigeeDeg": 89.7209,
       "meanAnomalyDeg": 270.3935,
-      "bstar": 0.000023387011
+      "bstar": 0.000023387011,
+      "meanMotionDot": 0.00000334,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7552
     },
     {
       "objectName": "STARLINK-32346",
@@ -2487,7 +3247,11 @@
       "raanDeg": 287.1955,
       "argPerigeeDeg": 223.7538,
       "meanAnomalyDeg": 136.3243,
-      "bstar": -0.0001488995
+      "bstar": -0.0001488995,
+      "meanMotionDot": -0.00004356,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7382
     },
     {
       "objectName": "STARLINK-32410",
@@ -2500,7 +3264,11 @@
       "raanDeg": 177.8334,
       "argPerigeeDeg": 111.9529,
       "meanAnomalyDeg": 248.1637,
-      "bstar": 0.000034394165
+      "bstar": 0.000034394165,
+      "meanMotionDot": 0.00000659,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7342
     },
     {
       "objectName": "STARLINK-11407 [DTC]",
@@ -2513,7 +3281,11 @@
       "raanDeg": 62.4293,
       "argPerigeeDeg": 45.2669,
       "meanAnomalyDeg": 314.8484,
-      "bstar": 0.0016259081
+      "bstar": 0.0016259081,
+      "meanMotionDot": 0.00201004,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7510
     },
     {
       "objectName": "STARLINK-32450",
@@ -2526,7 +3298,11 @@
       "raanDeg": 232.1048,
       "argPerigeeDeg": 287.6613,
       "meanAnomalyDeg": 72.4178,
-      "bstar": 0.00083086493
+      "bstar": 0.00083086493,
+      "meanMotionDot": 0.00022671,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7325
     },
     {
       "objectName": "STARLINK-32504",
@@ -2539,7 +3315,11 @@
       "raanDeg": 216.9453,
       "argPerigeeDeg": 78.5062,
       "meanAnomalyDeg": 281.6117,
-      "bstar": 0.0015921564
+      "bstar": 0.0015921564,
+      "meanMotionDot": 0.00047168,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7154
     },
     {
       "objectName": "STARLINK-11473 [DTC]",
@@ -2552,7 +3332,11 @@
       "raanDeg": 123.1838,
       "argPerigeeDeg": 104.3249,
       "meanAnomalyDeg": 255.7878,
-      "bstar": 0.002337171
+      "bstar": 0.002337171,
+      "meanMotionDot": 0.00295076,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7352
     },
     {
       "objectName": "STARLINK-33545",
@@ -2565,7 +3349,11 @@
       "raanDeg": 265.8704,
       "argPerigeeDeg": 250.8033,
       "meanAnomalyDeg": 109.2676,
-      "bstar": 0.0011939
+      "bstar": 0.0011939,
+      "meanMotionDot": 0.00032752,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7138
     },
     {
       "objectName": "STARLINK-32554",
@@ -2578,7 +3366,11 @@
       "raanDeg": 198.3693,
       "argPerigeeDeg": 272.5924,
       "meanAnomalyDeg": 87.4672,
-      "bstar": 0.0012650594
+      "bstar": 0.0012650594,
+      "meanMotionDot": 0.00034725,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7111
     },
     {
       "objectName": "STARLINK-32558",
@@ -2591,7 +3383,11 @@
       "raanDeg": 192.7867,
       "argPerigeeDeg": 270.1629,
       "meanAnomalyDeg": 89.915,
-      "bstar": 0.00021079
+      "bstar": 0.00021079,
+      "meanMotionDot": 0.00002423,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6819
     },
     {
       "objectName": "STARLINK-32448",
@@ -2604,7 +3400,11 @@
       "raanDeg": 329.8974,
       "argPerigeeDeg": 266.7082,
       "meanAnomalyDeg": 93.3509,
-      "bstar": 0.0013777004
+      "bstar": 0.0013777004,
+      "meanMotionDot": 0.00037877,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6895
     },
     {
       "objectName": "STARLINK-11501 [DTC]",
@@ -2617,7 +3417,11 @@
       "raanDeg": 119.7342,
       "argPerigeeDeg": 269.0828,
       "meanAnomalyDeg": 90.9922,
-      "bstar": 0.0010155684
+      "bstar": 0.0010155684,
+      "meanMotionDot": 0.00132324,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7135
     },
     {
       "objectName": "STARLINK-32678",
@@ -2630,7 +3434,11 @@
       "raanDeg": 230.0722,
       "argPerigeeDeg": 81.0761,
       "meanAnomalyDeg": 279.0454,
-      "bstar": 0.00094290794
+      "bstar": 0.00094290794,
+      "meanMotionDot": 0.00027681,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6795
     },
     {
       "objectName": "STARLINK-32659",
@@ -2643,7 +3451,11 @@
       "raanDeg": 13.331,
       "argPerigeeDeg": 257.0986,
       "meanAnomalyDeg": 102.961,
-      "bstar": 0.0012546289
+      "bstar": 0.0012546289,
+      "meanMotionDot": 0.00034431,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6621
     },
     {
       "objectName": "STARLINK-11511 [DTC]",
@@ -2656,7 +3468,11 @@
       "raanDeg": 287.2863,
       "argPerigeeDeg": 245.9464,
       "meanAnomalyDeg": 114.1022,
-      "bstar": 0.001637652
+      "bstar": 0.001637652,
+      "meanMotionDot": 0.00215462,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6772
     },
     {
       "objectName": "STARLINK-32788",
@@ -2669,7 +3485,11 @@
       "raanDeg": 348.2959,
       "argPerigeeDeg": 255.5375,
       "meanAnomalyDeg": 104.5422,
-      "bstar": 0.00077337707
+      "bstar": 0.00077337707,
+      "meanMotionDot": 0.00021093,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6494
     },
     {
       "objectName": "STARLINK-11534 [DTC]",
@@ -2682,7 +3502,11 @@
       "raanDeg": 207.5211,
       "argPerigeeDeg": 235.2543,
       "meanAnomalyDeg": 124.8144,
-      "bstar": 0.0022966
+      "bstar": 0.0022966,
+      "meanMotionDot": 0.00307618,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6483
     },
     {
       "objectName": "STARLINK-11258 [DTC]",
@@ -2695,7 +3519,11 @@
       "raanDeg": 192.0553,
       "argPerigeeDeg": 292.1008,
       "meanAnomalyDeg": 67.9677,
-      "bstar": 0.00096264628
+      "bstar": 0.00096264628,
+      "meanMotionDot": 0.00125187,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6556
     },
     {
       "objectName": "STARLINK-32745",
@@ -2708,7 +3536,11 @@
       "raanDeg": 214.072,
       "argPerigeeDeg": 263.1734,
       "meanAnomalyDeg": 96.8972,
-      "bstar": 0.00093247701
+      "bstar": 0.00093247701,
+      "meanMotionDot": 0.0002549,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6164
     },
     {
       "objectName": "STARLINK-32848",
@@ -2721,7 +3553,11 @@
       "raanDeg": 357.9568,
       "argPerigeeDeg": 57.8166,
       "meanAnomalyDeg": 302.3025,
-      "bstar": 0.00085537277
+      "bstar": 0.00085537277,
+      "meanMotionDot": 0.00025061,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6157
     },
     {
       "objectName": "STARLINK-11551 [DTC]",
@@ -2734,7 +3570,11 @@
       "raanDeg": 9.451,
       "argPerigeeDeg": 234.0931,
       "meanAnomalyDeg": 125.9771,
-      "bstar": 0.0017741186
+      "bstar": 0.0017741186,
+      "meanMotionDot": 0.00236467,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6222
     },
     {
       "objectName": "STARLINK-32793",
@@ -2747,7 +3587,11 @@
       "raanDeg": 180.551,
       "argPerigeeDeg": 71.552,
       "meanAnomalyDeg": 288.5583,
-      "bstar": 0.0010359537
+      "bstar": 0.0010359537,
+      "meanMotionDot": 0.00030483,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6022
     },
     {
       "objectName": "STARLINK-11566 [DTC]",
@@ -2760,7 +3604,11 @@
       "raanDeg": 52.1409,
       "argPerigeeDeg": 287.6031,
       "meanAnomalyDeg": 72.4429,
-      "bstar": 0.0022871975
+      "bstar": 0.0022871975,
+      "meanMotionDot": 0.00303695,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6151
     },
     {
       "objectName": "STARLINK-32887",
@@ -2773,7 +3621,11 @@
       "raanDeg": 279.7935,
       "argPerigeeDeg": 81.8,
       "meanAnomalyDeg": 278.3205,
-      "bstar": 0.0012046494
+      "bstar": 0.0012046494,
+      "meanMotionDot": 0.00035524,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5971
     },
     {
       "objectName": "STARLINK-11526 [DTC]",
@@ -2786,7 +3638,11 @@
       "raanDeg": 259.487,
       "argPerigeeDeg": 266.7279,
       "meanAnomalyDeg": 93.3438,
-      "bstar": 0.0012287683
+      "bstar": 0.0012287683,
+      "meanMotionDot": 0.00160871,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6053
     },
     {
       "objectName": "STARLINK-32820",
@@ -2799,7 +3655,11 @@
       "raanDeg": 306.7904,
       "argPerigeeDeg": 92.1542,
       "meanAnomalyDeg": 267.9614,
-      "bstar": 0.0010734525
+      "bstar": 0.0010734525,
+      "meanMotionDot": 0.00031578,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5748
     },
     {
       "objectName": "STARLINK-33624",
@@ -2812,7 +3672,11 @@
       "raanDeg": 207.4724,
       "argPerigeeDeg": 257.4162,
       "meanAnomalyDeg": 102.651,
-      "bstar": 0.00099798
+      "bstar": 0.00099798,
+      "meanMotionDot": 0.00027322,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5793
     },
     {
       "objectName": "STARLINK-11632 [DTC]",
@@ -2825,7 +3689,11 @@
       "raanDeg": 301.3797,
       "argPerigeeDeg": 263.6835,
       "meanAnomalyDeg": 96.3796,
-      "bstar": 0.0015263811
+      "bstar": 0.0015263811,
+      "meanMotionDot": 0.00200835,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5793
     },
     {
       "objectName": "STARLINK-32949",
@@ -2838,7 +3706,11 @@
       "raanDeg": 80.2199,
       "argPerigeeDeg": 277.6205,
       "meanAnomalyDeg": 82.4468,
-      "bstar": 0.00078135
+      "bstar": 0.00078135,
+      "meanMotionDot": 0.00021318,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5620
     },
     {
       "objectName": "STARLINK-11653 [DTC]",
@@ -2851,7 +3723,11 @@
       "raanDeg": 178.1026,
       "argPerigeeDeg": 278.3439,
       "meanAnomalyDeg": 81.7318,
-      "bstar": 0.0015908353
+      "bstar": 0.0015908353,
+      "meanMotionDot": 0.00209416,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5595
     },
     {
       "objectName": "STARLINK-11633 [DTC]",
@@ -2864,7 +3740,11 @@
       "raanDeg": 327.6915,
       "argPerigeeDeg": 310.4296,
       "meanAnomalyDeg": 49.6475,
-      "bstar": 0.0020155787
+      "bstar": 0.0020155787,
+      "meanMotionDot": 0.00266914,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5552
     },
     {
       "objectName": "STARLINK-33653",
@@ -2877,7 +3757,11 @@
       "raanDeg": 100.8698,
       "argPerigeeDeg": 79.4727,
       "meanAnomalyDeg": 280.6417,
-      "bstar": 0.00076852441
+      "bstar": 0.00076852441,
+      "meanMotionDot": 0.00022482,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5311
     },
     {
       "objectName": "STARLINK-33709",
@@ -2890,7 +3774,11 @@
       "raanDeg": 166.1424,
       "argPerigeeDeg": 191.6445,
       "meanAnomalyDeg": 168.4376,
-      "bstar": 0.0011329795
+      "bstar": 0.0011329795,
+      "meanMotionDot": 0.0003107,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5124
     },
     {
       "objectName": "STARLINK-33761",
@@ -2903,7 +3791,11 @@
       "raanDeg": 193.0663,
       "argPerigeeDeg": 300.0308,
       "meanAnomalyDeg": 60.0595,
-      "bstar": 0.00097520972
+      "bstar": 0.00097520972,
+      "meanMotionDot": 0.00028661,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5173
     },
     {
       "objectName": "STARLINK-33754",
@@ -2916,7 +3808,11 @@
       "raanDeg": 319.3899,
       "argPerigeeDeg": 272.2611,
       "meanAnomalyDeg": 87.8001,
-      "bstar": 0.0010533539
+      "bstar": 0.0010533539,
+      "meanMotionDot": 0.00028846,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5136
     },
     {
       "objectName": "STARLINK-11667 [DTC]",
@@ -2929,7 +3825,11 @@
       "raanDeg": 219.2839,
       "argPerigeeDeg": 257.9238,
       "meanAnomalyDeg": 102.1419,
-      "bstar": 0.0016945
+      "bstar": 0.0016945,
+      "meanMotionDot": 0.00223681,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5154
     },
     {
       "objectName": "STARLINK-33714",
@@ -2942,7 +3842,11 @@
       "raanDeg": 20.9271,
       "argPerigeeDeg": 283.6024,
       "meanAnomalyDeg": 76.4643,
-      "bstar": 0.00085992468
+      "bstar": 0.00085992468,
+      "meanMotionDot": 0.00023484,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 5022
     },
     {
       "objectName": "STARLINK-33684",
@@ -2955,7 +3859,11 @@
       "raanDeg": 65.3277,
       "argPerigeeDeg": 175.7943,
       "meanAnomalyDeg": 184.2916,
-      "bstar": 0.00075815831
+      "bstar": 0.00075815831,
+      "meanMotionDot": 0.00020684,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4843
     },
     {
       "objectName": "STARLINK-33886",
@@ -2968,7 +3876,11 @@
       "raanDeg": 89.9369,
       "argPerigeeDeg": 203.9151,
       "meanAnomalyDeg": 156.1644,
-      "bstar": 0.00078928887
+      "bstar": 0.00078928887,
+      "meanMotionDot": 0.0002153,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4726
     },
     {
       "objectName": "STARLINK-33767",
@@ -2981,7 +3893,11 @@
       "raanDeg": 269.1168,
       "argPerigeeDeg": 72.4229,
       "meanAnomalyDeg": 287.6881,
-      "bstar": 0.00054049057
+      "bstar": 0.00054049057,
+      "meanMotionDot": 0.0001568,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4756
     },
     {
       "objectName": "STARLINK-33846",
@@ -2994,7 +3910,11 @@
       "raanDeg": 112.0748,
       "argPerigeeDeg": 287.7977,
       "meanAnomalyDeg": 72.2735,
-      "bstar": 0.00079040008
+      "bstar": 0.00079040008,
+      "meanMotionDot": 0.00021566,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4734
     },
     {
       "objectName": "STARLINK-34110",
@@ -3007,7 +3927,11 @@
       "raanDeg": 227.5819,
       "argPerigeeDeg": 310.0051,
       "meanAnomalyDeg": 49.0026,
-      "bstar": 0.0039103732
+      "bstar": 0.0039103732,
+      "meanMotionDot": 0.00184949,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 596
     },
     {
       "objectName": "STARLINK-34041",
@@ -3020,7 +3944,11 @@
       "raanDeg": 137.1032,
       "argPerigeeDeg": 235.1821,
       "meanAnomalyDeg": 124.8974,
-      "bstar": 0.00078788707
+      "bstar": 0.00078788707,
+      "meanMotionDot": 0.00021491,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4637
     },
     {
       "objectName": "STARLINK-34061",
@@ -3033,7 +3961,11 @@
       "raanDeg": 261.4913,
       "argPerigeeDeg": 268.7296,
       "meanAnomalyDeg": 91.3632,
-      "bstar": -0.0034586034
+      "bstar": -0.0034586034,
+      "meanMotionDot": -0.00041071,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4560
     },
     {
       "objectName": "STARLINK-33770",
@@ -3046,7 +3978,11 @@
       "raanDeg": 235.2994,
       "argPerigeeDeg": 272.6519,
       "meanAnomalyDeg": 87.4203,
-      "bstar": 0.00058714577
+      "bstar": 0.00058714577,
+      "meanMotionDot": 0.00015933,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4617
     },
     {
       "objectName": "STARLINK-33996",
@@ -3059,7 +3995,11 @@
       "raanDeg": 301.0659,
       "argPerigeeDeg": 282.6538,
       "meanAnomalyDeg": 77.4363,
-      "bstar": -0.00010840808
+      "bstar": -0.00010840808,
+      "meanMotionDot": -0.00001386,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4497
     },
     {
       "objectName": "STARLINK-33942",
@@ -3072,7 +4012,11 @@
       "raanDeg": 234.2428,
       "argPerigeeDeg": 250.4033,
       "meanAnomalyDeg": 109.6533,
-      "bstar": 0.0012035454
+      "bstar": 0.0012035454,
+      "meanMotionDot": 0.00033042,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4571
     },
     {
       "objectName": "STARLINK-34162",
@@ -3085,7 +4029,11 @@
       "raanDeg": 56.7494,
       "argPerigeeDeg": 276.8628,
       "meanAnomalyDeg": 83.2057,
-      "bstar": 0.00074574877
+      "bstar": 0.00074574877,
+      "meanMotionDot": 0.00020327,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4546
     },
     {
       "objectName": "STARLINK-11709 [DTC]",
@@ -3098,7 +4046,11 @@
       "raanDeg": 161.3941,
       "argPerigeeDeg": 275.77,
       "meanAnomalyDeg": 84.2971,
-      "bstar": 0.0018124752
+      "bstar": 0.0018124752,
+      "meanMotionDot": 0.00239324,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4565
     },
     {
       "objectName": "STARLINK-34176",
@@ -3111,7 +4063,11 @@
       "raanDeg": 75.4088,
       "argPerigeeDeg": 125.2364,
       "meanAnomalyDeg": 234.8815,
-      "bstar": 0.0007278783
+      "bstar": 0.0007278783,
+      "meanMotionDot": 0.00021273,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4428
     },
     {
       "objectName": "STARLINK-11714 [DTC]",
@@ -3124,7 +4080,11 @@
       "raanDeg": 37.8134,
       "argPerigeeDeg": 186.7803,
       "meanAnomalyDeg": 173.303,
-      "bstar": 0.00025128521
+      "bstar": 0.00025128521,
+      "meanMotionDot": 0.00031947,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4496
     },
     {
       "objectName": "STARLINK-34263",
@@ -3137,7 +4097,11 @@
       "raanDeg": 111.199,
       "argPerigeeDeg": 159.0019,
       "meanAnomalyDeg": 201.1269,
-      "bstar": 0.0003775356
+      "bstar": 0.0003775356,
+      "meanMotionDot": 0.00005393,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4173
     },
     {
       "objectName": "STARLINK-34237",
@@ -3150,7 +4114,11 @@
       "raanDeg": 139.6531,
       "argPerigeeDeg": 74.2869,
       "meanAnomalyDeg": 285.8302,
-      "bstar": 0.00099653115
+      "bstar": 0.00099653115,
+      "meanMotionDot": 0.00029287,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4342
     },
     {
       "objectName": "STARLINK-11682 [DTC]",
@@ -3163,7 +4131,11 @@
       "raanDeg": 274.601,
       "argPerigeeDeg": 249.9463,
       "meanAnomalyDeg": 110.1229,
-      "bstar": 0.0023101
+      "bstar": 0.0023101,
+      "meanMotionDot": 0.00308503,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4354
     },
     {
       "objectName": "STARLINK-34333",
@@ -3176,7 +4148,11 @@
       "raanDeg": 167.2751,
       "argPerigeeDeg": 76.3413,
       "meanAnomalyDeg": 283.7685,
-      "bstar": 0.0011774375
+      "bstar": 0.0011774375,
+      "meanMotionDot": 0.0003468,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4219
     },
     {
       "objectName": "STARLINK-34379",
@@ -3189,7 +4165,11 @@
       "raanDeg": 194.3494,
       "argPerigeeDeg": 269.3286,
       "meanAnomalyDeg": 90.7488,
-      "bstar": 0.0012066342
+      "bstar": 0.0012066342,
+      "meanMotionDot": 0.00053111,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4067
     },
     {
       "objectName": "STARLINK-33782",
@@ -3202,7 +4182,11 @@
       "raanDeg": 180.2355,
       "argPerigeeDeg": 267.44,
       "meanAnomalyDeg": 92.6398,
-      "bstar": 0.0015684314
+      "bstar": 0.0015684314,
+      "meanMotionDot": 0.0004319,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 4019
     },
     {
       "objectName": "STARLINK-34483",
@@ -3215,7 +4199,11 @@
       "raanDeg": 60.7816,
       "argPerigeeDeg": 127.4704,
       "meanAnomalyDeg": 232.7089,
-      "bstar": -0.069559432
+      "bstar": -0.069559432,
+      "meanMotionDot": -0.00746529,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3911
     },
     {
       "objectName": "STARLINK-34514",
@@ -3228,7 +4216,11 @@
       "raanDeg": 100.6966,
       "argPerigeeDeg": 272.6183,
       "meanAnomalyDeg": 87.4587,
-      "bstar": 0.00060265294
+      "bstar": 0.00060265294,
+      "meanMotionDot": 0.00007106,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3972
     },
     {
       "objectName": "STARLINK-34402",
@@ -3241,7 +4233,11 @@
       "raanDeg": 136.8737,
       "argPerigeeDeg": 102.6681,
       "meanAnomalyDeg": 257.453,
-      "bstar": 0.00087792103
+      "bstar": 0.00087792103,
+      "meanMotionDot": 0.00025743,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3910
     },
     {
       "objectName": "STARLINK-34527",
@@ -3254,7 +4250,11 @@
       "raanDeg": 168.0203,
       "argPerigeeDeg": 91.1234,
       "meanAnomalyDeg": 268.9925,
-      "bstar": 0.00091918
+      "bstar": 0.00091918,
+      "meanMotionDot": 0.00026954,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3949
     },
     {
       "objectName": "STARLINK-34532",
@@ -3267,7 +4267,11 @@
       "raanDeg": 33.8779,
       "argPerigeeDeg": 77.0813,
       "meanAnomalyDeg": 283.033,
-      "bstar": -0.000036448827
+      "bstar": -0.000036448827,
+      "meanMotionDot": -0.00001439,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3899
     },
     {
       "objectName": "STARLINK-34553",
@@ -3280,7 +4284,11 @@
       "raanDeg": 175.7319,
       "argPerigeeDeg": 127.5246,
       "meanAnomalyDeg": 232.5968,
-      "bstar": 0.0010472084
+      "bstar": 0.0010472084,
+      "meanMotionDot": 0.00030803,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3867
     },
     {
       "objectName": "STARLINK-34548",
@@ -3293,7 +4301,11 @@
       "raanDeg": 340.767,
       "argPerigeeDeg": 270.6543,
       "meanAnomalyDeg": 89.4317,
-      "bstar": 0.00062971446
+      "bstar": 0.00062971446,
+      "meanMotionDot": 0.00007433,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3789
     },
     {
       "objectName": "STARLINK-34536",
@@ -3306,7 +4318,11 @@
       "raanDeg": 229.8705,
       "argPerigeeDeg": 84.2389,
       "meanAnomalyDeg": 275.8983,
-      "bstar": 0.00083738324
+      "bstar": 0.00083738324,
+      "meanMotionDot": 0.00024521,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3810
     },
     {
       "objectName": "STARLINK-34482",
@@ -3319,7 +4335,11 @@
       "raanDeg": 297.2188,
       "argPerigeeDeg": 103.7825,
       "meanAnomalyDeg": 256.3341,
-      "bstar": 0.00064853499
+      "bstar": 0.00064853499,
+      "meanMotionDot": 0.00018905,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3699
     },
     {
       "objectName": "STARLINK-34706",
@@ -3332,7 +4352,11 @@
       "raanDeg": 275.1007,
       "argPerigeeDeg": 82.3414,
       "meanAnomalyDeg": 277.8089,
-      "bstar": 0.00030073919
+      "bstar": 0.00030073919,
+      "meanMotionDot": 0.00004282,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3383
     },
     {
       "objectName": "STARLINK-34571",
@@ -3345,7 +4369,11 @@
       "raanDeg": 34.6416,
       "argPerigeeDeg": 76.7222,
       "meanAnomalyDeg": 283.393,
-      "bstar": 0.00088634694
+      "bstar": 0.00088634694,
+      "meanMotionDot": 0.00025988,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3446
     },
     {
       "objectName": "STARLINK-34373",
@@ -3358,7 +4386,11 @@
       "raanDeg": 283.699,
       "argPerigeeDeg": 95.0053,
       "meanAnomalyDeg": 265.1444,
-      "bstar": 0.00027803852
+      "bstar": 0.00027803852,
+      "meanMotionDot": 0.00003953,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3377
     },
     {
       "objectName": "STARLINK-34671",
@@ -3371,7 +4403,11 @@
       "raanDeg": 343.4268,
       "argPerigeeDeg": 84.6053,
       "meanAnomalyDeg": 275.5064,
-      "bstar": 0.00077510812
+      "bstar": 0.00077510812,
+      "meanMotionDot": 0.00022665,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3261
     },
     {
       "objectName": "STARLINK-34764",
@@ -3384,7 +4420,11 @@
       "raanDeg": 75.0676,
       "argPerigeeDeg": 150.4367,
       "meanAnomalyDeg": 209.6744,
-      "bstar": 0.0015050098
+      "bstar": 0.0015050098,
+      "meanMotionDot": 0.00044531,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3188
     },
     {
       "objectName": "STARLINK-34952",
@@ -3397,7 +4437,11 @@
       "raanDeg": 292.3589,
       "argPerigeeDeg": 68.8889,
       "meanAnomalyDeg": 291.2618,
-      "bstar": 0.00039499836
+      "bstar": 0.00039499836,
+      "meanMotionDot": 0.00005646,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 3106
     },
     {
       "objectName": "STARLINK-34904",
@@ -3410,7 +4454,11 @@
       "raanDeg": 112.1801,
       "argPerigeeDeg": 92.1343,
       "meanAnomalyDeg": 267.9949,
-      "bstar": 0.00029614001
+      "bstar": 0.00029614001,
+      "meanMotionDot": 0.00004215,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2970
     },
     {
       "objectName": "STARLINK-34864",
@@ -3423,7 +4471,11 @@
       "raanDeg": 256.5508,
       "argPerigeeDeg": 74.7982,
       "meanAnomalyDeg": 285.31,
-      "bstar": 0.00088977
+      "bstar": 0.00088977,
+      "meanMotionDot": 0.00026095,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2946
     },
     {
       "objectName": "STARLINK-34826",
@@ -3436,7 +4488,11 @@
       "raanDeg": 218.6729,
       "argPerigeeDeg": 343.7809,
       "meanAnomalyDeg": 16.318,
-      "bstar": 0.001101
+      "bstar": 0.001101,
+      "meanMotionDot": 0.00032415,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2762
     },
     {
       "objectName": "STARLINK-35083",
@@ -3449,7 +4505,11 @@
       "raanDeg": 291.1031,
       "argPerigeeDeg": 86.1891,
       "meanAnomalyDeg": 273.9629,
-      "bstar": 0.00030100627
+      "bstar": 0.00030100627,
+      "meanMotionDot": 0.00004286,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2868
     },
     {
       "objectName": "STARLINK-35074",
@@ -3462,7 +4522,11 @@
       "raanDeg": 280.8889,
       "argPerigeeDeg": 136.5483,
       "meanAnomalyDeg": 277.0166,
-      "bstar": 0.00021240961
+      "bstar": 0.00021240961,
+      "meanMotionDot": 0.00005934,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 574
     },
     {
       "objectName": "STARLINK-35059",
@@ -3475,7 +4539,11 @@
       "raanDeg": 274.6965,
       "argPerigeeDeg": 82.3379,
       "meanAnomalyDeg": 277.8059,
-      "bstar": 0.00017049126
+      "bstar": 0.00017049126,
+      "meanMotionDot": 0.00002132,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2810
     },
     {
       "objectName": "STARLINK-35089",
@@ -3488,7 +4556,11 @@
       "raanDeg": 310.8185,
       "argPerigeeDeg": 250.5641,
       "meanAnomalyDeg": 109.5265,
-      "bstar": 0.00078707
+      "bstar": 0.00078707,
+      "meanMotionDot": 0.0002304,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2824
     },
     {
       "objectName": "STARLINK-35112",
@@ -3501,7 +4573,11 @@
       "raanDeg": 129.3669,
       "argPerigeeDeg": 90.2459,
       "meanAnomalyDeg": 269.8897,
-      "bstar": 0.00023343928
+      "bstar": 0.00023343928,
+      "meanMotionDot": 0.00003309,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2754
     },
     {
       "objectName": "STARLINK-35245",
@@ -3514,7 +4590,11 @@
       "raanDeg": 128.3708,
       "argPerigeeDeg": 62.1886,
       "meanAnomalyDeg": 297.9402,
-      "bstar": 0.00054594674
+      "bstar": 0.00054594674,
+      "meanMotionDot": 0.00007827,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2668
     },
     {
       "objectName": "STARLINK-35150",
@@ -3527,7 +4607,11 @@
       "raanDeg": 356.5998,
       "argPerigeeDeg": 84.9781,
       "meanAnomalyDeg": 275.1347,
-      "bstar": 0.0012722864
+      "bstar": 0.0012722864,
+      "meanMotionDot": 0.00037531,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2610
     },
     {
       "objectName": "STARLINK-35361",
@@ -3540,7 +4624,11 @@
       "raanDeg": 103.6865,
       "argPerigeeDeg": 108.2494,
       "meanAnomalyDeg": 251.8887,
-      "bstar": 0.00014024673
+      "bstar": 0.00014024673,
+      "meanMotionDot": 0.00001963,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2545
     },
     {
       "objectName": "STARLINK-35113",
@@ -3553,7 +4641,11 @@
       "raanDeg": 33.9878,
       "argPerigeeDeg": 91.7112,
       "meanAnomalyDeg": 268.408,
-      "bstar": 0.00090369455
+      "bstar": 0.00090369455,
+      "meanMotionDot": 0.00026533,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2564
     },
     {
       "objectName": "STARLINK-35211",
@@ -3566,7 +4658,11 @@
       "raanDeg": 21.7501,
       "argPerigeeDeg": 86.6334,
       "meanAnomalyDeg": 273.4798,
-      "bstar": 0.00077227681
+      "bstar": 0.00077227681,
+      "meanMotionDot": 0.00022574,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2493
     },
     {
       "objectName": "STARLINK-35397",
@@ -3579,7 +4675,11 @@
       "raanDeg": 136.9054,
       "argPerigeeDeg": 92.0418,
       "meanAnomalyDeg": 268.0709,
-      "bstar": -0.000081737579
+      "bstar": -0.000081737579,
+      "meanMotionDot": -0.00002779,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2448
     },
     {
       "objectName": "STARLINK-35408",
@@ -3592,7 +4692,11 @@
       "raanDeg": 343.2799,
       "argPerigeeDeg": 79.3044,
       "meanAnomalyDeg": 280.8117,
-      "bstar": 0.0014462344
+      "bstar": 0.0014462344,
+      "meanMotionDot": 0.00042711,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2259
     },
     {
       "objectName": "STARLINK-35193",
@@ -3605,7 +4709,11 @@
       "raanDeg": 60.0581,
       "argPerigeeDeg": 38.1703,
       "meanAnomalyDeg": 321.9397,
-      "bstar": 0.00090575278
+      "bstar": 0.00090575278,
+      "meanMotionDot": 0.00026556,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2325
     },
     {
       "objectName": "STARLINK-35519",
@@ -3618,7 +4726,11 @@
       "raanDeg": 215.6553,
       "argPerigeeDeg": 86.9896,
       "meanAnomalyDeg": 273.1189,
-      "bstar": 0.0011326
+      "bstar": 0.0011326,
+      "meanMotionDot": 0.00033345,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2275
     },
     {
       "objectName": "STARLINK-35243",
@@ -3631,7 +4743,11 @@
       "raanDeg": 152.6479,
       "argPerigeeDeg": 115.4839,
       "meanAnomalyDeg": 244.6285,
-      "bstar": 0.00083153258
+      "bstar": 0.00083153258,
+      "meanMotionDot": 0.00024355,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2183
     },
     {
       "objectName": "STARLINK-35299",
@@ -3644,7 +4760,11 @@
       "raanDeg": 294.7373,
       "argPerigeeDeg": 289.9019,
       "meanAnomalyDeg": 70.1911,
-      "bstar": 0.00090041771
+      "bstar": 0.00090041771,
+      "meanMotionDot": 0.00026421,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2129
     },
     {
       "objectName": "STARLINK-35599",
@@ -3657,7 +4777,11 @@
       "raanDeg": 152.5395,
       "argPerigeeDeg": 66.858,
       "meanAnomalyDeg": 293.2636,
-      "bstar": 0.00083981371
+      "bstar": 0.00083981371,
+      "meanMotionDot": 0.00024609,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2128
     },
     {
       "objectName": "STARLINK-34412",
@@ -3670,7 +4794,11 @@
       "raanDeg": 88.0313,
       "argPerigeeDeg": 87.4539,
       "meanAnomalyDeg": 272.6607,
-      "bstar": 0.00073511986
+      "bstar": 0.00073511986,
+      "meanMotionDot": 0.00021487,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2092
     },
     {
       "objectName": "STARLINK-35624",
@@ -3683,7 +4811,11 @@
       "raanDeg": 111.297,
       "argPerigeeDeg": 88.3794,
       "meanAnomalyDeg": 271.7347,
-      "bstar": 0.00091641562
+      "bstar": 0.00091641562,
+      "meanMotionDot": 0.000269,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 2038
     },
     {
       "objectName": "STARLINK-35543",
@@ -3696,7 +4828,11 @@
       "raanDeg": 296.49,
       "argPerigeeDeg": 80.0665,
       "meanAnomalyDeg": 280.0605,
-      "bstar": 0.0011181
+      "bstar": 0.0011181,
+      "meanMotionDot": 0.0003293,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1896
     },
     {
       "objectName": "STARLINK-35753",
@@ -3709,7 +4845,11 @@
       "raanDeg": 281.5533,
       "argPerigeeDeg": 328.6361,
       "meanAnomalyDeg": 31.4581,
-      "bstar": 0.0011851
+      "bstar": 0.0011851,
+      "meanMotionDot": 0.00034929,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1996
     },
     {
       "objectName": "STARLINK-35487",
@@ -3722,7 +4862,11 @@
       "raanDeg": 332.7831,
       "argPerigeeDeg": 64.0837,
       "meanAnomalyDeg": 296.032,
-      "bstar": 0.0009027546
+      "bstar": 0.0009027546,
+      "meanMotionDot": 0.00026487,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1959
     },
     {
       "objectName": "STARLINK-34616",
@@ -3735,7 +4879,11 @@
       "raanDeg": 272.5093,
       "argPerigeeDeg": 268.6929,
       "meanAnomalyDeg": 91.366,
-      "bstar": 0.0010501423
+      "bstar": 0.0010501423,
+      "meanMotionDot": 0.00028777,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1869
     },
     {
       "objectName": "STARLINK-35829",
@@ -3748,7 +4896,11 @@
       "raanDeg": 281.9196,
       "argPerigeeDeg": 85.4243,
       "meanAnomalyDeg": 274.7008,
-      "bstar": 0.0012638441
+      "bstar": 0.0012638441,
+      "meanMotionDot": 0.00037294,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1734
     },
     {
       "objectName": "STARLINK-35659",
@@ -3761,7 +4913,11 @@
       "raanDeg": 268.5052,
       "argPerigeeDeg": 321.8596,
       "meanAnomalyDeg": 38.2276,
-      "bstar": 0.0011526
+      "bstar": 0.0011526,
+      "meanMotionDot": 0.00033964,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1803
     },
     {
       "objectName": "STARLINK-35610",
@@ -3774,7 +4930,11 @@
       "raanDeg": 334.0308,
       "argPerigeeDeg": 259.9806,
       "meanAnomalyDeg": 100.0803,
-      "bstar": 0.001158868
+      "bstar": 0.001158868,
+      "meanMotionDot": 0.00031789,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1787
     },
     {
       "objectName": "STARLINK-35463",
@@ -3787,7 +4947,11 @@
       "raanDeg": 355.7782,
       "argPerigeeDeg": 280.934,
       "meanAnomalyDeg": 79.1357,
-      "bstar": 0.00086190258
+      "bstar": 0.00086190258,
+      "meanMotionDot": 0.00023534,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1729
     },
     {
       "objectName": "STARLINK-35597",
@@ -3800,7 +4964,11 @@
       "raanDeg": 49.7614,
       "argPerigeeDeg": 249.5973,
       "meanAnomalyDeg": 110.4727,
-      "bstar": 0.00091055838
+      "bstar": 0.00091055838,
+      "meanMotionDot": 0.00024879,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1730
     },
     {
       "objectName": "STARLINK-35975",
@@ -3813,7 +4981,11 @@
       "raanDeg": 337.3606,
       "argPerigeeDeg": 263.9726,
       "meanAnomalyDeg": 96.0947,
-      "bstar": 0.0014954829
+      "bstar": 0.0014954829,
+      "meanMotionDot": 0.00041166,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1550
     },
     {
       "objectName": "STARLINK-35803",
@@ -3826,7 +4998,11 @@
       "raanDeg": 45.7981,
       "argPerigeeDeg": 296.1223,
       "meanAnomalyDeg": 63.9447,
-      "bstar": 0.00081662368
+      "bstar": 0.00081662368,
+      "meanMotionDot": 0.00022307,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1636
     },
     {
       "objectName": "STARLINK-35980",
@@ -3839,7 +5015,11 @@
       "raanDeg": 115.8794,
       "argPerigeeDeg": 279.1401,
       "meanAnomalyDeg": 80.9252,
-      "bstar": 0.0009753998
+      "bstar": 0.0009753998,
+      "meanMotionDot": 0.00026693,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1599
     },
     {
       "objectName": "STARLINK-35965",
@@ -3852,7 +5032,11 @@
       "raanDeg": 190.5482,
       "argPerigeeDeg": 93.0474,
       "meanAnomalyDeg": 267.0662,
-      "bstar": 0.001474848
+      "bstar": 0.001474848,
+      "meanMotionDot": 0.00043573,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1589
     },
     {
       "objectName": "STARLINK-36000",
@@ -3865,7 +5049,11 @@
       "raanDeg": 176.163,
       "argPerigeeDeg": 296.9376,
       "meanAnomalyDeg": 63.1117,
-      "bstar": 0.001225273
+      "bstar": 0.001225273,
+      "meanMotionDot": 0.00033649,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1353
     },
     {
       "objectName": "STARLINK-35717",
@@ -3878,7 +5066,11 @@
       "raanDeg": 0.7414,
       "argPerigeeDeg": 277.005,
       "meanAnomalyDeg": 83.0817,
-      "bstar": -0.00015634819
+      "bstar": -0.00015634819,
+      "meanMotionDot": -0.00001958,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1451
     },
     {
       "objectName": "STARLINK-36092",
@@ -3891,7 +5083,11 @@
       "raanDeg": 42.7453,
       "argPerigeeDeg": 281.5584,
       "meanAnomalyDeg": 78.5108,
-      "bstar": 0.000080426717
+      "bstar": 0.000080426717,
+      "meanMotionDot": 0.00001951,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1457
     },
     {
       "objectName": "STARLINK-36074",
@@ -3904,7 +5100,11 @@
       "raanDeg": 72.7874,
       "argPerigeeDeg": 85.036,
       "meanAnomalyDeg": 275.0794,
-      "bstar": 0.00070349771
+      "bstar": 0.00070349771,
+      "meanMotionDot": 0.00020546,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1424
     },
     {
       "objectName": "STARLINK-36096",
@@ -3917,7 +5117,11 @@
       "raanDeg": 46.6489,
       "argPerigeeDeg": 79.1465,
       "meanAnomalyDeg": 280.9674,
-      "bstar": 0.000064984076
+      "bstar": 0.000064984076,
+      "meanMotionDot": 0.00001567,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1382
     },
     {
       "objectName": "STARLINK-36103",
@@ -3930,7 +5134,11 @@
       "raanDeg": 86.8939,
       "argPerigeeDeg": 288.4465,
       "meanAnomalyDeg": 71.6297,
-      "bstar": 0.00085444
+      "bstar": 0.00085444,
+      "meanMotionDot": 0.00023341,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1357
     },
     {
       "objectName": "STARLINK-36150",
@@ -3943,7 +5151,11 @@
       "raanDeg": 97.1154,
       "argPerigeeDeg": 155.9979,
       "meanAnomalyDeg": 204.1031,
-      "bstar": 0.00091797562
+      "bstar": 0.00091797562,
+      "meanMotionDot": 0.00025112,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1319
     },
     {
       "objectName": "STARLINK-36243",
@@ -3956,7 +5168,11 @@
       "raanDeg": 41.0706,
       "argPerigeeDeg": 273.9183,
       "meanAnomalyDeg": 183.2605,
-      "bstar": -0.12702713
+      "bstar": -0.12702713,
+      "meanMotionDot": -0.02098691,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 585
     },
     {
       "objectName": "STARLINK-36196",
@@ -3969,7 +5185,11 @@
       "raanDeg": 233.1086,
       "argPerigeeDeg": 273.0206,
       "meanAnomalyDeg": 87.0535,
-      "bstar": 0.0014148
+      "bstar": 0.0014148,
+      "meanMotionDot": 0.00059339,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 1139
     },
     {
       "objectName": "STARLINK-36267",
@@ -3982,7 +5202,11 @@
       "raanDeg": 201.4625,
       "argPerigeeDeg": 279.2213,
       "meanAnomalyDeg": 26.4972,
-      "bstar": -0.0040670794
+      "bstar": -0.0040670794,
+      "meanMotionDot": -0.00048326,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 570
     },
     {
       "objectName": "STARLINK-36476",
@@ -3995,7 +5219,11 @@
       "raanDeg": 24.2006,
       "argPerigeeDeg": 262.8478,
       "meanAnomalyDeg": 97.2266,
-      "bstar": 0.0008694067
+      "bstar": 0.0008694067,
+      "meanMotionDot": 0.00023756,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 947
     },
     {
       "objectName": "STARLINK-35676",
@@ -4008,7 +5236,11 @@
       "raanDeg": 287.1555,
       "argPerigeeDeg": 268.2972,
       "meanAnomalyDeg": 91.7747,
-      "bstar": 0.00040085061
+      "bstar": 0.00040085061,
+      "meanMotionDot": 0.00010787,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 719
     },
     {
       "objectName": "STARLINK-36487",
@@ -4021,7 +5253,11 @@
       "raanDeg": 297.332,
       "argPerigeeDeg": 271.4616,
       "meanAnomalyDeg": 153.6714,
-      "bstar": -0.067863012
+      "bstar": -0.067863012,
+      "meanMotionDot": -0.02007326,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 573
     },
     {
       "objectName": "STARLINK-36528",
@@ -4034,7 +5270,11 @@
       "raanDeg": 267.3485,
       "argPerigeeDeg": 262.4801,
       "meanAnomalyDeg": 97.5931,
-      "bstar": 0.00090734
+      "bstar": 0.00090734,
+      "meanMotionDot": 0.00025449,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 788
     },
     {
       "objectName": "STARLINK-36526",
@@ -4047,7 +5287,11 @@
       "raanDeg": 14.2634,
       "argPerigeeDeg": 298.2389,
       "meanAnomalyDeg": 61.8165,
-      "bstar": 0.00071730395
+      "bstar": 0.00071730395,
+      "meanMotionDot": 0.00019526,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 613
     },
     {
       "objectName": "STARLINK-36564",
@@ -4060,7 +5304,11 @@
       "raanDeg": 302.6118,
       "argPerigeeDeg": 140.4808,
       "meanAnomalyDeg": 219.658,
-      "bstar": 0.0015584421
+      "bstar": 0.0015584421,
+      "meanMotionDot": 0.00238156,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 686
     },
     {
       "objectName": "STARLINK-36577",
@@ -4073,7 +5321,11 @@
       "raanDeg": 118.1561,
       "argPerigeeDeg": 92.4016,
       "meanAnomalyDeg": 267.7402,
-      "bstar": 0.0018657506
+      "bstar": 0.0018657506,
+      "meanMotionDot": 0.00289327,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 514
     },
     {
       "objectName": "STARLINK-36119",
@@ -4086,7 +5338,11 @@
       "raanDeg": 208.5499,
       "argPerigeeDeg": 270.5491,
       "meanAnomalyDeg": 89.493,
-      "bstar": 0.0022406856
+      "bstar": 0.0022406856,
+      "meanMotionDot": 0.00383607,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 436
     },
     {
       "objectName": "STARLINK-36696",
@@ -4099,7 +5355,11 @@
       "raanDeg": 91.4969,
       "argPerigeeDeg": 94.8534,
       "meanAnomalyDeg": 265.2918,
-      "bstar": 0.0015335776
+      "bstar": 0.0015335776,
+      "meanMotionDot": 0.00235606,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 387
     },
     {
       "objectName": "STARLINK-36713",
@@ -4112,7 +5372,11 @@
       "raanDeg": 169.309,
       "argPerigeeDeg": 86.1235,
       "meanAnomalyDeg": 13.5519,
-      "bstar": 0.0009408015
+      "bstar": 0.0009408015,
+      "meanMotionDot": 0.00142096,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 433
     },
     {
       "objectName": "STARLINK-36733",
@@ -4125,7 +5389,11 @@
       "raanDeg": 244.2434,
       "argPerigeeDeg": 93.3545,
       "meanAnomalyDeg": 191.5981,
-      "bstar": -0.00021553058
+      "bstar": -0.00021553058,
+      "meanMotionDot": -0.00041241,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 310
     },
     {
       "objectName": "STARLINK-36656",
@@ -4138,7 +5406,11 @@
       "raanDeg": 335.3029,
       "argPerigeeDeg": 287.9839,
       "meanAnomalyDeg": 357.5302,
-      "bstar": 0.00054482531
+      "bstar": 0.00054482531,
+      "meanMotionDot": 0.00115376,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 298
     },
     {
       "objectName": "STARLINK-36769",
@@ -4151,7 +5423,11 @@
       "raanDeg": 263.6236,
       "argPerigeeDeg": 69.8161,
       "meanAnomalyDeg": 29.56,
-      "bstar": -0.0051535426
+      "bstar": -0.0051535426,
+      "meanMotionDot": -0.01662916,
+      "meanMotionDdot": 0.00076628122,
+      "elementSetNo": 999,
+      "revAtEpoch": 218
     },
     {
       "objectName": "STARLINK-36336",
@@ -4164,7 +5440,11 @@
       "raanDeg": 349.7087,
       "argPerigeeDeg": 91.0495,
       "meanAnomalyDeg": 225.2227,
-      "bstar": -0.00067297422
+      "bstar": -0.00067297422,
+      "meanMotionDot": -0.00617921,
+      "meanMotionDdot": 0.00015119988,
+      "elementSetNo": 999,
+      "revAtEpoch": 212
     }
   ]
 }

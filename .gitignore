@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+.tmp/
 
 # TypeScript
 *.tsbuildinfo
@@ -13,6 +14,7 @@ src/**/*.js
 
 # Environment variables
 .env
+.env.local
 .env.*.local
 
 # OS

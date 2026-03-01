@@ -1,3 +1,12 @@
+/**
+ * Provenance:
+ * - sdd/completed/beamHO-bench-profile-baseline.md
+ * - sdd/completed/beamHO-bench-paper-traceability.md
+ *
+ * Notes:
+ * - PaperProfile is the typed schema surface used by runtime profile loading.
+ */
+
 export type ProfileMode = "paper-baseline" | "real-trace";
 
 export type Deployment = "rural" | "suburban" | "dense-urban";
@@ -11,6 +20,8 @@ export type GainModel = "flat" | "bessel-j1" | "bessel-j1-j3" | "custom";
 export type FrequencyReuse = "FR1" | "reuse-4" | "custom";
 
 export type SmallScaleModel = "none" | "shadowed-rician" | "loo" | "custom";
+
+export type AlgorithmFidelity = "full" | "simplified";
 
 export type HandoverBaseline =
   | "max-rsrp"
@@ -78,10 +89,24 @@ export interface PaperProfile {
     bandwidthMHz: number;
     largeScaleModel: "3gpp-tr-38.811" | "custom";
     smallScaleModel: SmallScaleModel;
+    smallScaleParams?: {
+      shadowedRician?: {
+        kFactorMinDb: number;
+        kFactorMaxDb: number;
+        shadowingStdDevDb: number;
+        multipathStdDevDb: number;
+      };
+      loo?: {
+        shadowingStdDevDb: number;
+        rayleighScaleDb: number;
+      };
+    };
     sfClSource: string;
     ueGTdBPerK: number;
     ueAntennaGainDbi: number;
     noiseTemperatureK: number;
+    noiseFigureDb: number;
+    systemLossDb: number;
   };
   rlfStateMachine: {
     qOutDb: number;
@@ -102,6 +127,7 @@ export interface PaperProfile {
     speedKmphOptions: number[];
   };
   handover: {
+    algorithmFidelity: AlgorithmFidelity;
     baselines: HandoverBaseline[];
     params: {
       a3OffsetDb?: number;

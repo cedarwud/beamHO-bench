@@ -12,6 +12,12 @@ This folder defines reproducible scenario profiles for `beamHO-bench`.
 - `oneweb-like.sources.json`: parameter-to-source mapping for traceability.
 - `loader.ts`: canonical profile loader, deep merge, schema and source-map validation.
 
+## Required traceability fields
+- `channel.noiseFigureDb` and `channel.systemLossDb` must be present and mapped in `*.sources.json`.
+- `channel.smallScaleModel` and `channel.smallScaleParams.*` must be present for deterministic fading plugins.
+- `handover.algorithmFidelity` (`full` or `simplified`) must be present and exported in run metadata.
+- Engineering assumptions must use `ASSUME-*` source IDs in `src/config/references/paper-sources.json`.
+
 ## Intended usage
 1. Load one profile as the base scenario.
 2. Apply experiment-specific overrides (`seed`, `ue.count`, `deployment`, etc.).

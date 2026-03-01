@@ -1,5 +1,5 @@
 {
-  "generatedAtUtc": "2026-02-28T17:20:40.406Z",
+  "generatedAtUtc": "2026-03-01T00:11:17.246Z",
   "provider": "oneweb",
   "sourceRootHint": "../tle_data",
   "sourceFile": "oneweb/json/oneweb_20260227.json",
@@ -17,7 +17,11 @@
       "raanDeg": 250.6977,
       "argPerigeeDeg": 79.9717,
       "meanAnomalyDeg": 280.1544,
-      "bstar": 0.0003343317
+      "bstar": 0.0003343317,
+      "meanMotionDot": 0.00000141,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 33707
     },
     {
       "objectName": "ONEWEB-0007",
@@ -30,7 +34,11 @@
       "raanDeg": 281.2,
       "argPerigeeDeg": 97.4211,
       "meanAnomalyDeg": 262.7075,
-      "bstar": 0.00034298651
+      "bstar": 0.00034298651,
+      "meanMotionDot": 0.00000142,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 33690
     },
     {
       "objectName": "ONEWEB-0017",
@@ -43,7 +51,11 @@
       "raanDeg": 58.1608,
       "argPerigeeDeg": 93.8772,
       "meanAnomalyDeg": 266.2586,
-      "bstar": 0.00052778658
+      "bstar": 0.00052778658,
+      "meanMotionDot": 0.00000197,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29355
     },
     {
       "objectName": "ONEWEB-0023",
@@ -56,7 +68,11 @@
       "raanDeg": 58.3089,
       "argPerigeeDeg": 84.6944,
       "meanAnomalyDeg": 275.438,
-      "bstar": 0.000046119
+      "bstar": 0.000046119,
+      "meanMotionDot": 2.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29358
     },
     {
       "objectName": "ONEWEB-0028",
@@ -69,7 +85,11 @@
       "raanDeg": 42.9372,
       "argPerigeeDeg": 69.7533,
       "meanAnomalyDeg": 290.3734,
-      "bstar": 0.00148609
+      "bstar": 0.00148609,
+      "meanMotionDot": 0.00000539,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29421
     },
     {
       "objectName": "ONEWEB-0036",
@@ -82,7 +102,11 @@
       "raanDeg": 58.1379,
       "argPerigeeDeg": 80.8369,
       "meanAnomalyDeg": 279.2954,
-      "bstar": 0.00060531898
+      "bstar": 0.00060531898,
+      "meanMotionDot": 0.00000222,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29397
     },
     {
       "objectName": "ONEWEB-0040",
@@ -95,7 +119,11 @@
       "raanDeg": 58.1766,
       "argPerigeeDeg": 91.4785,
       "meanAnomalyDeg": 268.6546,
-      "bstar": -0.0015028542
+      "bstar": -0.0015028542,
+      "meanMotionDot": -0.00000512,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29346
     },
     {
       "objectName": "ONEWEB-0047",
@@ -108,7 +136,11 @@
       "raanDeg": 58.1531,
       "argPerigeeDeg": 90.979,
       "meanAnomalyDeg": 269.1545,
-      "bstar": 0.0018661374
+      "bstar": 0.0018661374,
+      "meanMotionDot": 0.00000664,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29380
     },
     {
       "objectName": "ONEWEB-0051",
@@ -121,7 +153,11 @@
       "raanDeg": 42.9332,
       "argPerigeeDeg": 85.2033,
       "meanAnomalyDeg": 274.9305,
-      "bstar": -0.0012281371
+      "bstar": -0.0012281371,
+      "meanMotionDot": -0.00000423,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29667
     },
     {
       "objectName": "ONEWEB-0056",
@@ -134,7 +170,11 @@
       "raanDeg": 58.1538,
       "argPerigeeDeg": 84.0902,
       "meanAnomalyDeg": 276.0451,
-      "bstar": -0.0014194424
+      "bstar": -0.0014194424,
+      "meanMotionDot": -0.00000483,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29378
     },
     {
       "objectName": "ONEWEB-0062",
@@ -147,7 +187,11 @@
       "raanDeg": 58.1513,
       "argPerigeeDeg": 100.0691,
       "meanAnomalyDeg": 260.067,
-      "bstar": 0.001082415
+      "bstar": 0.001082415,
+      "meanMotionDot": 0.00000391,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 29379
     },
     {
       "objectName": "ONEWEB-0067",
@@ -160,7 +204,11 @@
       "raanDeg": 42.8387,
       "argPerigeeDeg": 79.597,
       "meanAnomalyDeg": 280.5353,
-      "bstar": 0.0011179626
+      "bstar": 0.0011179626,
+      "meanMotionDot": 0.00000409,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28832
     },
     {
       "objectName": "ONEWEB-0081",
@@ -173,7 +221,11 @@
       "raanDeg": 42.998,
       "argPerigeeDeg": 82.7269,
       "meanAnomalyDeg": 277.4048,
-      "bstar": -0.0013988
+      "bstar": -0.0013988,
+      "meanMotionDot": -0.00000483,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28828
     },
     {
       "objectName": "ONEWEB-0064",
@@ -186,7 +238,11 @@
       "raanDeg": 42.934,
       "argPerigeeDeg": 87.0773,
       "meanAnomalyDeg": 273.0581,
-      "bstar": 0.0012476459
+      "bstar": 0.0012476459,
+      "meanMotionDot": 0.00000455,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28827
     },
     {
       "objectName": "ONEWEB-0095",
@@ -199,7 +255,11 @@
       "raanDeg": 42.9391,
       "argPerigeeDeg": 72.3745,
       "meanAnomalyDeg": 287.7651,
-      "bstar": 0.0014279488
+      "bstar": 0.0014279488,
+      "meanMotionDot": 0.00000519,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28825
     },
     {
       "objectName": "ONEWEB-0037",
@@ -212,7 +272,11 @@
       "raanDeg": 42.8932,
       "argPerigeeDeg": 81.4563,
       "meanAnomalyDeg": 278.6781,
-      "bstar": 0.0016998003
+      "bstar": 0.0016998003,
+      "meanMotionDot": 0.00000615,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28828
     },
     {
       "objectName": "ONEWEB-0055",
@@ -225,7 +289,11 @@
       "raanDeg": 42.9295,
       "argPerigeeDeg": 86.9455,
       "meanAnomalyDeg": 273.1886,
-      "bstar": 0.00038083114
+      "bstar": 0.00038083114,
+      "meanMotionDot": 0.00000148,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28820
     },
     {
       "objectName": "ONEWEB-0046",
@@ -238,7 +306,11 @@
       "raanDeg": 42.9347,
       "argPerigeeDeg": 78.2571,
       "meanAnomalyDeg": 281.8757,
-      "bstar": -0.00097933439
+      "bstar": -0.00097933439,
+      "meanMotionDot": -0.00000334,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28819
     },
     {
       "objectName": "ONEWEB-0087",
@@ -251,7 +323,11 @@
       "raanDeg": 42.8904,
       "argPerigeeDeg": 86.9987,
       "meanAnomalyDeg": 273.132,
-      "bstar": 0.0013293066
+      "bstar": 0.0013293066,
+      "meanMotionDot": 0.00000484,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28817
     },
     {
       "objectName": "ONEWEB-0034",
@@ -264,7 +340,11 @@
       "raanDeg": 42.9315,
       "argPerigeeDeg": 87.4426,
       "meanAnomalyDeg": 272.6911,
-      "bstar": 0.001244608
+      "bstar": 0.001244608,
+      "meanMotionDot": 0.00000454,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 28817
     },
     {
       "objectName": "ONEWEB-0102",
@@ -277,7 +357,11 @@
       "raanDeg": 12.4952,
       "argPerigeeDeg": 88.4414,
       "meanAnomalyDeg": 271.6916,
-      "bstar": -0.001173762
+      "bstar": -0.001173762,
+      "meanMotionDot": -0.0000041,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25031
     },
     {
       "objectName": "ONEWEB-0111",
@@ -290,7 +374,11 @@
       "raanDeg": 12.4741,
       "argPerigeeDeg": 80.2494,
       "meanAnomalyDeg": 279.8827,
-      "bstar": -0.00027642807
+      "bstar": -0.00027642807,
+      "meanMotionDot": -8.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25014
     },
     {
       "objectName": "ONEWEB-0119",
@@ -303,7 +391,11 @@
       "raanDeg": 12.4919,
       "argPerigeeDeg": 81.0282,
       "meanAnomalyDeg": 279.1055,
-      "bstar": -0.00091196386
+      "bstar": -0.00091196386,
+      "meanMotionDot": -0.00000315,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25028
     },
     {
       "objectName": "ONEWEB-0123",
@@ -316,7 +408,11 @@
       "raanDeg": 12.4905,
       "argPerigeeDeg": 77.5916,
       "meanAnomalyDeg": 282.5423,
-      "bstar": -0.00082597233
+      "bstar": -0.00082597233,
+      "meanMotionDot": -0.00000284,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25027
     },
     {
       "objectName": "ONEWEB-0126",
@@ -329,7 +425,11 @@
       "raanDeg": 12.4903,
       "argPerigeeDeg": 80.9603,
       "meanAnomalyDeg": 279.1748,
-      "bstar": 0.00023890038
+      "bstar": 0.00023890038,
+      "meanMotionDot": 9.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25028
     },
     {
       "objectName": "ONEWEB-0130",
@@ -342,7 +442,11 @@
       "raanDeg": 12.4668,
       "argPerigeeDeg": 83.5534,
       "meanAnomalyDeg": 276.5812,
-      "bstar": 0.00070557909
+      "bstar": 0.00070557909,
+      "meanMotionDot": 0.00000267,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25022
     },
     {
       "objectName": "ONEWEB-0134",
@@ -355,7 +459,11 @@
       "raanDeg": 12.4537,
       "argPerigeeDeg": 89.1657,
       "meanAnomalyDeg": 270.9691,
-      "bstar": -0.0004988391
+      "bstar": -0.0004988391,
+      "meanMotionDot": -0.00000167,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25029
     },
     {
       "objectName": "ONEWEB-0137",
@@ -368,7 +476,11 @@
       "raanDeg": 12.5543,
       "argPerigeeDeg": 76.6492,
       "meanAnomalyDeg": 283.4848,
-      "bstar": -0.00085150297
+      "bstar": -0.00085150297,
+      "meanMotionDot": -0.00000294,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25009
     },
     {
       "objectName": "ONEWEB-0141",
@@ -381,7 +493,11 @@
       "raanDeg": 12.4668,
       "argPerigeeDeg": 72.0895,
       "meanAnomalyDeg": 288.0454,
-      "bstar": 0.0010106926
+      "bstar": 0.0010106926,
+      "meanMotionDot": 0.00000376,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25025
     },
     {
       "objectName": "ONEWEB-0144",
@@ -394,7 +510,11 @@
       "raanDeg": 12.5846,
       "argPerigeeDeg": 86.3542,
       "meanAnomalyDeg": 273.7829,
-      "bstar": -0.0010761
+      "bstar": -0.0010761,
+      "meanMotionDot": -0.00000374,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 25006
     },
     {
       "objectName": "ONEWEB-0115",
@@ -407,7 +527,11 @@
       "raanDeg": 342.0798,
       "argPerigeeDeg": 78.134,
       "meanAnomalyDeg": 281.9982,
-      "bstar": 0.00028417103
+      "bstar": 0.00028417103,
+      "meanMotionDot": 0.00000117,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23916
     },
     {
       "objectName": "ONEWEB-0116",
@@ -420,7 +544,11 @@
       "raanDeg": 342.1725,
       "argPerigeeDeg": 78.4963,
       "meanAnomalyDeg": 281.6348,
-      "bstar": -0.00055245271
+      "bstar": -0.00055245271,
+      "meanMotionDot": -0.00000189,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23915
     },
     {
       "objectName": "ONEWEB-0101",
@@ -433,7 +561,11 @@
       "raanDeg": 342.0974,
       "argPerigeeDeg": 82.3119,
       "meanAnomalyDeg": 277.8224,
-      "bstar": 0.00039343201
+      "bstar": 0.00039343201,
+      "meanMotionDot": 0.00000156,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23906
     },
     {
       "objectName": "ONEWEB-0161",
@@ -446,7 +578,11 @@
       "raanDeg": 342.0846,
       "argPerigeeDeg": 78.5239,
       "meanAnomalyDeg": 281.6111,
-      "bstar": 0.00072982667
+      "bstar": 0.00072982667,
+      "meanMotionDot": 0.00000279,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23907
     },
     {
       "objectName": "ONEWEB-0162",
@@ -459,7 +595,11 @@
       "raanDeg": 342.0912,
       "argPerigeeDeg": 73.6629,
       "meanAnomalyDeg": 286.47,
-      "bstar": -0.00056585491
+      "bstar": -0.00056585491,
+      "meanMotionDot": -0.00000194,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23910
     },
     {
       "objectName": "ONEWEB-0160",
@@ -472,7 +612,11 @@
       "raanDeg": 342.0976,
       "argPerigeeDeg": 81.2656,
       "meanAnomalyDeg": 278.8586,
-      "bstar": 0.00011663751
+      "bstar": 0.00011663751,
+      "meanMotionDot": 5.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23912
     },
     {
       "objectName": "ONEWEB-0167",
@@ -485,7 +629,11 @@
       "raanDeg": 342.1954,
       "argPerigeeDeg": 95.5935,
       "meanAnomalyDeg": 264.5444,
-      "bstar": -0.00067634336
+      "bstar": -0.00067634336,
+      "meanMotionDot": -0.00000234,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23907
     },
     {
       "objectName": "ONEWEB-0170",
@@ -498,7 +646,11 @@
       "raanDeg": 342.0871,
       "argPerigeeDeg": 105.3597,
       "meanAnomalyDeg": 254.7714,
-      "bstar": 0.0011924572
+      "bstar": 0.0011924572,
+      "meanMotionDot": 0.00000448,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23911
     },
     {
       "objectName": "ONEWEB-0172",
@@ -511,7 +663,11 @@
       "raanDeg": 342.0878,
       "argPerigeeDeg": 83.7969,
       "meanAnomalyDeg": 276.3373,
-      "bstar": 0.00068684239
+      "bstar": 0.00068684239,
+      "meanMotionDot": 0.00000264,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 24007
     },
     {
       "objectName": "ONEWEB-0178",
@@ -524,7 +680,11 @@
       "raanDeg": 342.1056,
       "argPerigeeDeg": 86.0361,
       "meanAnomalyDeg": 274.0986,
-      "bstar": -0.00069517506
+      "bstar": -0.00069517506,
+      "meanMotionDot": -0.00000241,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23929
     },
     {
       "objectName": "ONEWEB-0176",
@@ -537,7 +697,11 @@
       "raanDeg": 311.6286,
       "argPerigeeDeg": 82.8243,
       "meanAnomalyDeg": 277.3083,
-      "bstar": -0.00048179128
+      "bstar": -0.00048179128,
+      "meanMotionDot": -0.00000166,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23387
     },
     {
       "objectName": "ONEWEB-0218",
@@ -550,7 +714,11 @@
       "raanDeg": 311.6363,
       "argPerigeeDeg": 102.7659,
       "meanAnomalyDeg": 257.3717,
-      "bstar": -0.0003476058
+      "bstar": -0.0003476058,
+      "meanMotionDot": -0.00000116,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23392
     },
     {
       "objectName": "ONEWEB-0189",
@@ -563,7 +731,11 @@
       "raanDeg": 311.6274,
       "argPerigeeDeg": 87.0113,
       "meanAnomalyDeg": 273.125,
-      "bstar": -0.000092265141
+      "bstar": -0.000092265141,
+      "meanMotionDot": -2.1e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23378
     },
     {
       "objectName": "ONEWEB-0187",
@@ -576,7 +748,11 @@
       "raanDeg": 311.6649,
       "argPerigeeDeg": 79.0815,
       "meanAnomalyDeg": 281.0535,
-      "bstar": 0.000062389728
+      "bstar": 0.000062389728,
+      "meanMotionDot": 3.6e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23381
     },
     {
       "objectName": "ONEWEB-0204",
@@ -589,7 +765,11 @@
       "raanDeg": 311.633,
       "argPerigeeDeg": 68.4049,
       "meanAnomalyDeg": 291.7266,
-      "bstar": -0.000082519561
+      "bstar": -0.000082519561,
+      "meanMotionDot": -1.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23381
     },
     {
       "objectName": "ONEWEB-0182",
@@ -602,7 +782,11 @@
       "raanDeg": 311.6494,
       "argPerigeeDeg": 71.8628,
       "meanAnomalyDeg": 288.2687,
-      "bstar": -0.00048365785
+      "bstar": -0.00048365785,
+      "meanMotionDot": -0.00000167,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23398
     },
     {
       "objectName": "ONEWEB-0220",
@@ -615,7 +799,11 @@
       "raanDeg": 311.6221,
       "argPerigeeDeg": 75.5547,
       "meanAnomalyDeg": 284.5791,
-      "bstar": -0.00032628309
+      "bstar": -0.00032628309,
+      "meanMotionDot": -0.00000108,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23396
     },
     {
       "objectName": "ONEWEB-0203",
@@ -628,7 +816,11 @@
       "raanDeg": 311.6275,
       "argPerigeeDeg": 89.8053,
       "meanAnomalyDeg": 270.3213,
-      "bstar": 0.0051345304
+      "bstar": 0.0051345304,
+      "meanMotionDot": 0.00001917,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23382
     },
     {
       "objectName": "ONEWEB-0191",
@@ -641,7 +833,11 @@
       "raanDeg": 311.6273,
       "argPerigeeDeg": 77.2545,
       "meanAnomalyDeg": 282.8767,
-      "bstar": 0.00017430548
+      "bstar": 0.00017430548,
+      "meanMotionDot": 7.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23372
     },
     {
       "objectName": "ONEWEB-0208",
@@ -654,7 +850,11 @@
       "raanDeg": 311.6365,
       "argPerigeeDeg": 85.6423,
       "meanAnomalyDeg": 274.4924,
-      "bstar": 0.0001312597
+      "bstar": 0.0001312597,
+      "meanMotionDot": 6.1e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 23386
     },
     {
       "objectName": "ONEWEB-0211",
@@ -667,7 +867,11 @@
       "raanDeg": 281.0844,
       "argPerigeeDeg": 100.7884,
       "meanAnomalyDeg": 259.3458,
-      "bstar": 0.000068040857
+      "bstar": 0.000068040857,
+      "meanMotionDot": 3.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22996
     },
     {
       "objectName": "ONEWEB-0235",
@@ -680,7 +884,11 @@
       "raanDeg": 281.1573,
       "argPerigeeDeg": 103.9693,
       "meanAnomalyDeg": 256.161,
-      "bstar": 0.00042734241
+      "bstar": 0.00042734241,
+      "meanMotionDot": 0.00000174,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22991
     },
     {
       "objectName": "ONEWEB-0222",
@@ -693,7 +901,11 @@
       "raanDeg": 281.1672,
       "argPerigeeDeg": 99.8046,
       "meanAnomalyDeg": 260.3255,
-      "bstar": 0.00059019364
+      "bstar": 0.00059019364,
+      "meanMotionDot": 0.00000235,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22992
     },
     {
       "objectName": "ONEWEB-0245",
@@ -706,7 +918,11 @@
       "raanDeg": 281.155,
       "argPerigeeDeg": 92.1353,
       "meanAnomalyDeg": 267.9977,
-      "bstar": 0.000010795275
+      "bstar": 0.000010795275,
+      "meanMotionDot": 1.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22991
     },
     {
       "objectName": "ONEWEB-0231",
@@ -719,7 +935,11 @@
       "raanDeg": 281.1717,
       "argPerigeeDeg": 92.3574,
       "meanAnomalyDeg": 267.774,
-      "bstar": 0.00033185019
+      "bstar": 0.00033185019,
+      "meanMotionDot": 0.00000138,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22987
     },
     {
       "objectName": "ONEWEB-0240",
@@ -732,7 +952,11 @@
       "raanDeg": 281.1468,
       "argPerigeeDeg": 96.9054,
       "meanAnomalyDeg": 263.2282,
-      "bstar": 0.00012228695
+      "bstar": 0.00012228695,
+      "meanMotionDot": 5.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22993
     },
     {
       "objectName": "ONEWEB-0221",
@@ -745,7 +969,11 @@
       "raanDeg": 281.1606,
       "argPerigeeDeg": 96.8601,
       "meanAnomalyDeg": 263.2713,
-      "bstar": -0.000047329689
+      "bstar": -0.000047329689,
+      "meanMotionDot": -5e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22990
     },
     {
       "objectName": "ONEWEB-0226",
@@ -758,7 +986,11 @@
       "raanDeg": 281.1663,
       "argPerigeeDeg": 97.4468,
       "meanAnomalyDeg": 262.6818,
-      "bstar": 0.00040875887
+      "bstar": 0.00040875887,
+      "meanMotionDot": 0.00000167,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22988
     },
     {
       "objectName": "ONEWEB-0190",
@@ -771,7 +1003,11 @@
       "raanDeg": 281.1813,
       "argPerigeeDeg": 115.2877,
       "meanAnomalyDeg": 244.8413,
-      "bstar": -0.0002959292
+      "bstar": -0.0002959292,
+      "meanMotionDot": -9.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22989
     },
     {
       "objectName": "ONEWEB-0215",
@@ -784,7 +1020,11 @@
       "raanDeg": 281.1493,
       "argPerigeeDeg": 110.4836,
       "meanAnomalyDeg": 249.6478,
-      "bstar": 0.0001180797
+      "bstar": 0.0001180797,
+      "meanMotionDot": 5.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22982
     },
     {
       "objectName": "ONEWEB-0250",
@@ -797,7 +1037,11 @@
       "raanDeg": 248.8059,
       "argPerigeeDeg": 94.2687,
       "meanAnomalyDeg": 265.8757,
-      "bstar": 0.000086925032
+      "bstar": 0.000086925032,
+      "meanMotionDot": 5.1e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22562
     },
     {
       "objectName": "ONEWEB-0254",
@@ -810,7 +1054,11 @@
       "raanDeg": 250.6863,
       "argPerigeeDeg": 103.1495,
       "meanAnomalyDeg": 256.9828,
-      "bstar": 0.000084492928
+      "bstar": 0.000084492928,
+      "meanMotionDot": 4.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22509
     },
     {
       "objectName": "ONEWEB-0258",
@@ -823,7 +1071,11 @@
       "raanDeg": 250.6941,
       "argPerigeeDeg": 92.5597,
       "meanAnomalyDeg": 267.5728,
-      "bstar": 0.0002176247
+      "bstar": 0.0002176247,
+      "meanMotionDot": 9.6e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22510
     },
     {
       "objectName": "ONEWEB-0261",
@@ -836,7 +1088,11 @@
       "raanDeg": 250.6958,
       "argPerigeeDeg": 117.6438,
       "meanAnomalyDeg": 242.4895,
-      "bstar": 0.0027371943
+      "bstar": 0.0027371943,
+      "meanMotionDot": 0.0000106,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22517
     },
     {
       "objectName": "ONEWEB-0266",
@@ -849,7 +1105,11 @@
       "raanDeg": 250.6501,
       "argPerigeeDeg": 92.2561,
       "meanAnomalyDeg": 267.8772,
-      "bstar": -0.00001779696
+      "bstar": -0.00001779696,
+      "meanMotionDot": 6e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22511
     },
     {
       "objectName": "ONEWEB-0270",
@@ -862,7 +1122,11 @@
       "raanDeg": 250.6931,
       "argPerigeeDeg": 106.9545,
       "meanAnomalyDeg": 253.1783,
-      "bstar": 0.00035418758
+      "bstar": 0.00035418758,
+      "meanMotionDot": 0.00000148,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22517
     },
     {
       "objectName": "ONEWEB-0273",
@@ -875,7 +1139,11 @@
       "raanDeg": 250.6568,
       "argPerigeeDeg": 98.9953,
       "meanAnomalyDeg": 261.1362,
-      "bstar": -0.000076481851
+      "bstar": -0.000076481851,
+      "meanMotionDot": -1.6e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22512
     },
     {
       "objectName": "ONEWEB-0277",
@@ -888,7 +1156,11 @@
       "raanDeg": 250.669,
       "argPerigeeDeg": 98.9505,
       "meanAnomalyDeg": 261.1811,
-      "bstar": 0.00012289782
+      "bstar": 0.00012289782,
+      "meanMotionDot": 6e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22509
     },
     {
       "objectName": "ONEWEB-0280",
@@ -901,7 +1173,11 @@
       "raanDeg": 250.6512,
       "argPerigeeDeg": 98.5667,
       "meanAnomalyDeg": 261.5684,
-      "bstar": -0.000068763344
+      "bstar": -0.000068763344,
+      "meanMotionDot": -1.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22509
     },
     {
       "objectName": "ONEWEB-0284",
@@ -914,7 +1190,11 @@
       "raanDeg": 250.6871,
       "argPerigeeDeg": 94.8015,
       "meanAnomalyDeg": 265.3325,
-      "bstar": -0.00002065205
+      "bstar": -0.00002065205,
+      "meanMotionDot": 5e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22510
     },
     {
       "objectName": "ONEWEB-0288",
@@ -927,7 +1207,11 @@
       "raanDeg": 12.4757,
       "argPerigeeDeg": 79.4321,
       "meanAnomalyDeg": 280.7031,
-      "bstar": 0.0010576899
+      "bstar": 0.0010576899,
+      "meanMotionDot": 0.00000393,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22076
     },
     {
       "objectName": "ONEWEB-0291",
@@ -940,7 +1224,11 @@
       "raanDeg": 27.8618,
       "argPerigeeDeg": 78.2411,
       "meanAnomalyDeg": 281.897,
-      "bstar": 0.000091477
+      "bstar": 0.000091477,
+      "meanMotionDot": 4.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21901
     },
     {
       "objectName": "ONEWEB-0296",
@@ -953,7 +1241,11 @@
       "raanDeg": 12.4988,
       "argPerigeeDeg": 74.7605,
       "meanAnomalyDeg": 285.3761,
-      "bstar": 0.00015473132
+      "bstar": 0.00015473132,
+      "meanMotionDot": 6.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22014
     },
     {
       "objectName": "ONEWEB-0300",
@@ -966,7 +1258,11 @@
       "raanDeg": 12.4727,
       "argPerigeeDeg": 75.5122,
       "meanAnomalyDeg": 284.6175,
-      "bstar": 0.0013059672
+      "bstar": 0.0013059672,
+      "meanMotionDot": 0.00000483,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22078
     },
     {
       "objectName": "ONEWEB-0304",
@@ -979,7 +1275,11 @@
       "raanDeg": 27.7683,
       "argPerigeeDeg": 79.6193,
       "meanAnomalyDeg": 280.516,
-      "bstar": 0.00012592
+      "bstar": 0.00012592,
+      "meanMotionDot": 6.2e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21905
     },
     {
       "objectName": "ONEWEB-0310",
@@ -992,7 +1292,11 @@
       "raanDeg": 12.5252,
       "argPerigeeDeg": 81.7354,
       "meanAnomalyDeg": 278.3982,
-      "bstar": 0.00014939783
+      "bstar": 0.00014939783,
+      "meanMotionDot": 6.6e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22075
     },
     {
       "objectName": "ONEWEB-0313",
@@ -1005,7 +1309,11 @@
       "raanDeg": 27.7313,
       "argPerigeeDeg": 78.7391,
       "meanAnomalyDeg": 281.3954,
-      "bstar": 0.000016097512
+      "bstar": 0.000016097512,
+      "meanMotionDot": 1.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21910
     },
     {
       "objectName": "ONEWEB-0317",
@@ -1018,7 +1326,11 @@
       "raanDeg": 12.6136,
       "argPerigeeDeg": 100.3072,
       "meanAnomalyDeg": 259.8304,
-      "bstar": -0.0011741
+      "bstar": -0.0011741,
+      "meanMotionDot": -0.0000041,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22068
     },
     {
       "objectName": "ONEWEB-0329",
@@ -1031,7 +1343,11 @@
       "raanDeg": 27.7216,
       "argPerigeeDeg": 79.1298,
       "meanAnomalyDeg": 281.0057,
-      "bstar": 0.000053321301
+      "bstar": 0.000053321301,
+      "meanMotionDot": 3.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21909
     },
     {
       "objectName": "ONEWEB-0303",
@@ -1044,7 +1360,11 @@
       "raanDeg": 357.2959,
       "argPerigeeDeg": 73.8114,
       "meanAnomalyDeg": 286.3222,
-      "bstar": -0.000043327143
+      "bstar": -0.000043327143,
+      "meanMotionDot": -4e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21548
     },
     {
       "objectName": "ONEWEB-0321",
@@ -1057,7 +1377,11 @@
       "raanDeg": 296.3929,
       "argPerigeeDeg": 94.4827,
       "meanAnomalyDeg": 265.6507,
-      "bstar": -0.000011777519
+      "bstar": -0.000011777519,
+      "meanMotionDot": 8e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22231
     },
     {
       "objectName": "ONEWEB-0325",
@@ -1070,7 +1394,11 @@
       "raanDeg": 357.2906,
       "argPerigeeDeg": 81.4677,
       "meanAnomalyDeg": 278.6658,
-      "bstar": -0.000050913096
+      "bstar": -0.000050913096,
+      "meanMotionDot": -7e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21552
     },
     {
       "objectName": "ONEWEB-0331",
@@ -1083,7 +1411,11 @@
       "raanDeg": 357.2709,
       "argPerigeeDeg": 69.3553,
       "meanAnomalyDeg": 290.7792,
-      "bstar": -0.0001087377
+      "bstar": -0.0001087377,
+      "meanMotionDot": -3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21552
     },
     {
       "objectName": "ONEWEB-0336",
@@ -1096,7 +1428,11 @@
       "raanDeg": 342.0929,
       "argPerigeeDeg": 66.3052,
       "meanAnomalyDeg": 293.8288,
-      "bstar": -0.00024068819
+      "bstar": -0.00024068819,
+      "meanMotionDot": -7.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21648
     },
     {
       "objectName": "ONEWEB-0339",
@@ -1109,7 +1445,11 @@
       "raanDeg": 342.1917,
       "argPerigeeDeg": 87.7061,
       "meanAnomalyDeg": 272.4275,
-      "bstar": -0.00065480006
+      "bstar": -0.00065480006,
+      "meanMotionDot": -0.00000226,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21639
     },
     {
       "objectName": "ONEWEB-0343",
@@ -1122,7 +1462,11 @@
       "raanDeg": 357.2943,
       "argPerigeeDeg": 91.2784,
       "meanAnomalyDeg": 268.8616,
-      "bstar": -0.000093297083
+      "bstar": -0.000093297083,
+      "meanMotionDot": -2.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21554
     },
     {
       "objectName": "ONEWEB-0348",
@@ -1135,7 +1479,11 @@
       "raanDeg": 296.4006,
       "argPerigeeDeg": 68.2997,
       "meanAnomalyDeg": 291.8344,
-      "bstar": 0.000028456137
+      "bstar": 0.000028456137,
+      "meanMotionDot": 2.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 22229
     },
     {
       "objectName": "ONEWEB-0352",
@@ -1148,7 +1496,11 @@
       "raanDeg": 342.0979,
       "argPerigeeDeg": 89.3107,
       "meanAnomalyDeg": 270.8242,
-      "bstar": 0.00010892966
+      "bstar": 0.00010892966,
+      "meanMotionDot": 5.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21659
     },
     {
       "objectName": "ONEWEB-0332",
@@ -1161,7 +1513,11 @@
       "raanDeg": 311.6451,
       "argPerigeeDeg": 86.0901,
       "meanAnomalyDeg": 274.0405,
-      "bstar": 0.00061846022
+      "bstar": 0.00061846022,
+      "meanMotionDot": 0.00000242,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21313
     },
     {
       "objectName": "ONEWEB-0353",
@@ -1174,7 +1530,11 @@
       "raanDeg": 311.6402,
       "argPerigeeDeg": 85.9259,
       "meanAnomalyDeg": 274.2038,
-      "bstar": 0.00071237985
+      "bstar": 0.00071237985,
+      "meanMotionDot": 0.00000277,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21313
     },
     {
       "objectName": "ONEWEB-0360",
@@ -1187,7 +1547,11 @@
       "raanDeg": 296.4078,
       "argPerigeeDeg": 87.1973,
       "meanAnomalyDeg": 272.9363,
-      "bstar": 0.00030056831
+      "bstar": 0.00030056831,
+      "meanMotionDot": 0.00000135,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21532
     },
     {
       "objectName": "ONEWEB-0364",
@@ -1200,7 +1564,11 @@
       "raanDeg": 296.4129,
       "argPerigeeDeg": 78.3877,
       "meanAnomalyDeg": 281.7434,
-      "bstar": 0.000011578446
+      "bstar": 0.000011578446,
+      "meanMotionDot": 1.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21692
     },
     {
       "objectName": "ONEWEB-0367",
@@ -1213,7 +1581,11 @@
       "raanDeg": 296.4047,
       "argPerigeeDeg": 87.8966,
       "meanAnomalyDeg": 272.2369,
-      "bstar": 0.00024082475
+      "bstar": 0.00024082475,
+      "meanMotionDot": 0.00000111,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21530
     },
     {
       "objectName": "ONEWEB-0371",
@@ -1226,7 +1598,11 @@
       "raanDeg": 326.8612,
       "argPerigeeDeg": 80.9108,
       "meanAnomalyDeg": 279.2236,
-      "bstar": 0.000074817012
+      "bstar": 0.000074817012,
+      "meanMotionDot": 4.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21195
     },
     {
       "objectName": "ONEWEB-0374",
@@ -1239,7 +1615,11 @@
       "raanDeg": 311.6372,
       "argPerigeeDeg": 63.5982,
       "meanAnomalyDeg": 296.5283,
-      "bstar": -0.000010815251
+      "bstar": -0.000010815251,
+      "meanMotionDot": 9e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21311
     },
     {
       "objectName": "ONEWEB-0378",
@@ -1252,7 +1632,11 @@
       "raanDeg": 296.4085,
       "argPerigeeDeg": 77.6609,
       "meanAnomalyDeg": 282.4699,
-      "bstar": -0.00016585743
+      "bstar": -0.00016585743,
+      "meanMotionDot": -5.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21526
     },
     {
       "objectName": "ONEWEB-0382",
@@ -1265,7 +1649,11 @@
       "raanDeg": 296.4047,
       "argPerigeeDeg": 67.2124,
       "meanAnomalyDeg": 292.9198,
-      "bstar": 0.00015958531
+      "bstar": 0.00015958531,
+      "meanMotionDot": 7.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21529
     },
     {
       "objectName": "ONEWEB-0385",
@@ -1278,7 +1666,11 @@
       "raanDeg": 296.3943,
       "argPerigeeDeg": 75.0716,
       "meanAnomalyDeg": 285.0586,
-      "bstar": 0.00018649313
+      "bstar": 0.00018649313,
+      "meanMotionDot": 8.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 21528
     },
     {
       "objectName": "ONEWEB-0389",
@@ -1291,7 +1683,11 @@
       "raanDeg": 27.7183,
       "argPerigeeDeg": 71.3451,
       "meanAnomalyDeg": 288.7887,
-      "bstar": 0.000055563155
+      "bstar": 0.000055563155,
+      "meanMotionDot": 3.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20359
     },
     {
       "objectName": "ONEWEB-0393",
@@ -1304,7 +1700,11 @@
       "raanDeg": 27.7696,
       "argPerigeeDeg": 77.1142,
       "meanAnomalyDeg": 283.0201,
-      "bstar": 8.2714e-7
+      "bstar": 8.2714e-7,
+      "meanMotionDot": 1.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20358
     },
     {
       "objectName": "ONEWEB-0396",
@@ -1317,7 +1717,11 @@
       "raanDeg": 357.2869,
       "argPerigeeDeg": 75.1229,
       "meanAnomalyDeg": 285.01,
-      "bstar": -0.00001810051
+      "bstar": -0.00001810051,
+      "meanMotionDot": 6e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20714
     },
     {
       "objectName": "ONEWEB-0400",
@@ -1330,7 +1734,11 @@
       "raanDeg": 357.2786,
       "argPerigeeDeg": 82.5779,
       "meanAnomalyDeg": 277.5579,
-      "bstar": 0.000023609435
+      "bstar": 0.000023609435,
+      "meanMotionDot": 2.2e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20711
     },
     {
       "objectName": "ONEWEB-0403",
@@ -1343,7 +1751,11 @@
       "raanDeg": 357.2818,
       "argPerigeeDeg": 75.7006,
       "meanAnomalyDeg": 284.433,
-      "bstar": 0.000010863682
+      "bstar": 0.000010863682,
+      "meanMotionDot": 1.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20710
     },
     {
       "objectName": "ONEWEB-0407",
@@ -1356,7 +1768,11 @@
       "raanDeg": 357.275,
       "argPerigeeDeg": 84.3239,
       "meanAnomalyDeg": 275.8089,
-      "bstar": 4.92486e-7
+      "bstar": 4.92486e-7,
+      "meanMotionDot": 1.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20707
     },
     {
       "objectName": "ONEWEB-0414",
@@ -1369,7 +1785,11 @@
       "raanDeg": 357.2686,
       "argPerigeeDeg": 75.0155,
       "meanAnomalyDeg": 285.1163,
-      "bstar": 0.00010011433
+      "bstar": 0.00010011433,
+      "meanMotionDot": 5.2e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20713
     },
     {
       "objectName": "ONEWEB-0419",
@@ -1382,7 +1802,11 @@
       "raanDeg": 357.2798,
       "argPerigeeDeg": 77.35,
       "meanAnomalyDeg": 282.7869,
-      "bstar": 0.00010471682
+      "bstar": 0.00010471682,
+      "meanMotionDot": 5.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20709
     },
     {
       "objectName": "ONEWEB-0426",
@@ -1395,7 +1819,11 @@
       "raanDeg": 357.2801,
       "argPerigeeDeg": 57.8216,
       "meanAnomalyDeg": 302.3075,
-      "bstar": 0.00010530176
+      "bstar": 0.00010530176,
+      "meanMotionDot": 5.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20709
     },
     {
       "objectName": "ONEWEB-0430",
@@ -1408,7 +1836,11 @@
       "raanDeg": 357.2926,
       "argPerigeeDeg": 81.4271,
       "meanAnomalyDeg": 278.7098,
-      "bstar": 0.00013281268
+      "bstar": 0.00013281268,
+      "meanMotionDot": 6.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 20713
     },
     {
       "objectName": "ONEWEB-0410",
@@ -1421,7 +1853,11 @@
       "raanDeg": 27.6923,
       "argPerigeeDeg": 45.7515,
       "meanAnomalyDeg": 314.3806,
-      "bstar": 0.000056508912
+      "bstar": 0.000056508912,
+      "meanMotionDot": 3.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19921
     },
     {
       "objectName": "ONEWEB-0422",
@@ -1434,7 +1870,11 @@
       "raanDeg": 27.6931,
       "argPerigeeDeg": 103.1842,
       "meanAnomalyDeg": 256.9466,
-      "bstar": 0.00005501494
+      "bstar": 0.00005501494,
+      "meanMotionDot": 3.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19932
     },
     {
       "objectName": "ONEWEB-0428",
@@ -1447,7 +1887,11 @@
       "raanDeg": 58.1643,
       "argPerigeeDeg": 88.9449,
       "meanAnomalyDeg": 271.1888,
-      "bstar": 0.0019015099
+      "bstar": 0.0019015099,
+      "meanMotionDot": 0.00000677,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19489
     },
     {
       "objectName": "ONEWEB-0436",
@@ -1460,7 +1904,11 @@
       "raanDeg": 27.6839,
       "argPerigeeDeg": 89.9293,
       "meanAnomalyDeg": 270.205,
-      "bstar": -0.0002467588
+      "bstar": -0.0002467588,
+      "meanMotionDot": -8.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19919
     },
     {
       "objectName": "ONEWEB-0443",
@@ -1473,7 +1921,11 @@
       "raanDeg": 27.7242,
       "argPerigeeDeg": 79.0808,
       "meanAnomalyDeg": 281.0498,
-      "bstar": -0.000014584989
+      "bstar": -0.000014584989,
+      "meanMotionDot": 7e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19923
     },
     {
       "objectName": "ONEWEB-0446",
@@ -1486,7 +1938,11 @@
       "raanDeg": 58.1722,
       "argPerigeeDeg": 87.8111,
       "meanAnomalyDeg": 272.3249,
-      "bstar": 0.001904401
+      "bstar": 0.001904401,
+      "meanMotionDot": 0.00000678,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19493
     },
     {
       "objectName": "ONEWEB-0452",
@@ -1499,7 +1955,11 @@
       "raanDeg": 27.788,
       "argPerigeeDeg": 77.3324,
       "meanAnomalyDeg": 282.7987,
-      "bstar": 0.000012516
+      "bstar": 0.000012516,
+      "meanMotionDot": 1.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19914
     },
     {
       "objectName": "ONEWEB-0458",
@@ -1512,7 +1972,11 @@
       "raanDeg": 58.1516,
       "argPerigeeDeg": 85.9977,
       "meanAnomalyDeg": 274.1345,
-      "bstar": 0.00007074639
+      "bstar": 0.00007074639,
+      "meanMotionDot": 3.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19490
     },
     {
       "objectName": "ONEWEB-0468",
@@ -1525,7 +1989,11 @@
       "raanDeg": 58.1745,
       "argPerigeeDeg": 97.5917,
       "meanAnomalyDeg": 262.5395,
-      "bstar": -0.0011084741
+      "bstar": -0.0011084741,
+      "meanMotionDot": -0.00000374,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 19490
     },
     {
       "objectName": "ONEWEB-0490",
@@ -1538,7 +2006,11 @@
       "raanDeg": 326.8846,
       "argPerigeeDeg": 84.2138,
       "meanAnomalyDeg": 275.9191,
-      "bstar": -0.00013325298
+      "bstar": -0.00013325298,
+      "meanMotionDot": -4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16231
     },
     {
       "objectName": "ONEWEB-0497",
@@ -1551,7 +2023,11 @@
       "raanDeg": 326.8677,
       "argPerigeeDeg": 80.7579,
       "meanAnomalyDeg": 279.3748,
-      "bstar": 0.000010891009
+      "bstar": 0.000010891009,
+      "meanMotionDot": 1.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16230
     },
     {
       "objectName": "ONEWEB-0502",
@@ -1564,7 +2040,11 @@
       "raanDeg": 326.8513,
       "argPerigeeDeg": 82.797,
       "meanAnomalyDeg": 277.3343,
-      "bstar": 0.000090092376
+      "bstar": 0.000090092376,
+      "meanMotionDot": 4.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16232
     },
     {
       "objectName": "ONEWEB-0506",
@@ -1577,7 +2057,11 @@
       "raanDeg": 326.8545,
       "argPerigeeDeg": 87.9099,
       "meanAnomalyDeg": 272.2208,
-      "bstar": 0.00014924685
+      "bstar": 0.00014924685,
+      "meanMotionDot": 7.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16230
     },
     {
       "objectName": "ONEWEB-0509",
@@ -1590,7 +2074,11 @@
       "raanDeg": 326.8557,
       "argPerigeeDeg": 79.5508,
       "meanAnomalyDeg": 280.5822,
-      "bstar": -0.00042243101
+      "bstar": -0.00042243101,
+      "meanMotionDot": -0.00000156,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16230
     },
     {
       "objectName": "ONEWEB-0513",
@@ -1603,7 +2091,11 @@
       "raanDeg": 326.8367,
       "argPerigeeDeg": 74.9086,
       "meanAnomalyDeg": 285.2179,
-      "bstar": -0.000060289605
+      "bstar": -0.000060289605,
+      "meanMotionDot": -1.1e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16220
     },
     {
       "objectName": "ONEWEB-0516",
@@ -1616,7 +2108,11 @@
       "raanDeg": 326.8803,
       "argPerigeeDeg": 81.958,
       "meanAnomalyDeg": 278.176,
-      "bstar": 0.000044480754
+      "bstar": 0.000044480754,
+      "meanMotionDot": 3.1e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16232
     },
     {
       "objectName": "ONEWEB-0520",
@@ -1629,7 +2125,11 @@
       "raanDeg": 326.8711,
       "argPerigeeDeg": 87.3593,
       "meanAnomalyDeg": 272.7729,
-      "bstar": -0.00012390785
+      "bstar": -0.00012390785,
+      "meanMotionDot": -3.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16231
     },
     {
       "objectName": "ONEWEB-0524",
@@ -1642,7 +2142,11 @@
       "raanDeg": 296.4035,
       "argPerigeeDeg": 87.1548,
       "meanAnomalyDeg": 272.9877,
-      "bstar": 0.00018208614
+      "bstar": 0.00018208614,
+      "meanMotionDot": 8.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16478
     },
     {
       "objectName": "ONEWEB-0529",
@@ -1655,7 +2159,11 @@
       "raanDeg": 326.871,
       "argPerigeeDeg": 85.989,
       "meanAnomalyDeg": 274.1437,
-      "bstar": -0.00013102066
+      "bstar": -0.00013102066,
+      "meanMotionDot": -4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 16232
     },
     {
       "objectName": "ONEWEB-0527",
@@ -1668,7 +2176,11 @@
       "raanDeg": 265.9223,
       "argPerigeeDeg": 91.5148,
       "meanAnomalyDeg": 268.6175,
-      "bstar": 0.00025390723
+      "bstar": 0.00025390723,
+      "meanMotionDot": 0.00000118,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15701
     },
     {
       "objectName": "ONEWEB-0540",
@@ -1681,7 +2193,11 @@
       "raanDeg": 265.964,
       "argPerigeeDeg": 81.1034,
       "meanAnomalyDeg": 279.0268,
-      "bstar": 0.0002625135
+      "bstar": 0.0002625135,
+      "meanMotionDot": 0.00000121,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15698
     },
     {
       "objectName": "ONEWEB-0582",
@@ -1694,7 +2210,11 @@
       "raanDeg": 265.9382,
       "argPerigeeDeg": 77.7905,
       "meanAnomalyDeg": 282.3366,
-      "bstar": 0.000188098
+      "bstar": 0.000188098,
+      "meanMotionDot": 9.1e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15697
     },
     {
       "objectName": "ONEWEB-0586",
@@ -1707,7 +2227,11 @@
       "raanDeg": 265.9619,
       "argPerigeeDeg": 87.9513,
       "meanAnomalyDeg": 272.1782,
-      "bstar": 0.00034287502
+      "bstar": 0.00034287502,
+      "meanMotionDot": 0.00000155,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15697
     },
     {
       "objectName": "ONEWEB-0590",
@@ -1720,7 +2244,11 @@
       "raanDeg": 265.9253,
       "argPerigeeDeg": 78.0399,
       "meanAnomalyDeg": 282.0954,
-      "bstar": 0.00032495419
+      "bstar": 0.00032495419,
+      "meanMotionDot": 0.00000147,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15698
     },
     {
       "objectName": "ONEWEB-0594",
@@ -1733,7 +2261,11 @@
       "raanDeg": 265.9588,
       "argPerigeeDeg": 93.0853,
       "meanAnomalyDeg": 267.0471,
-      "bstar": 0.00021145368
+      "bstar": 0.00021145368,
+      "meanMotionDot": 0.000001,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15701
     },
     {
       "objectName": "ONEWEB-0600",
@@ -1746,7 +2278,11 @@
       "raanDeg": 265.9321,
       "argPerigeeDeg": 77.2657,
       "meanAnomalyDeg": 282.865,
-      "bstar": 0.00038241243
+      "bstar": 0.00038241243,
+      "meanMotionDot": 0.00000171,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15697
     },
     {
       "objectName": "ONEWEB-0603",
@@ -1759,7 +2295,11 @@
       "raanDeg": 265.908,
       "argPerigeeDeg": 75.8749,
       "meanAnomalyDeg": 284.2554,
-      "bstar": 0.00012435186
+      "bstar": 0.00012435186,
+      "meanMotionDot": 6.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15693
     },
     {
       "objectName": "ONEWEB-0607",
@@ -1772,7 +2312,11 @@
       "raanDeg": 265.9293,
       "argPerigeeDeg": 87.9976,
       "meanAnomalyDeg": 272.1324,
-      "bstar": 0.00028984943
+      "bstar": 0.00028984943,
+      "meanMotionDot": 0.00000133,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15699
     },
     {
       "objectName": "ONEWEB-0611",
@@ -1785,7 +2329,11 @@
       "raanDeg": 265.9341,
       "argPerigeeDeg": 83.6878,
       "meanAnomalyDeg": 276.4445,
-      "bstar": 0.000042524099
+      "bstar": 0.000042524099,
+      "meanMotionDot": 3.1e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15690
     },
     {
       "objectName": "ONEWEB-0659",
@@ -1798,7 +2346,11 @@
       "raanDeg": 265.9468,
       "argPerigeeDeg": 88.4194,
       "meanAnomalyDeg": 271.7134,
-      "bstar": 0.000011912417
+      "bstar": 0.000011912417,
+      "meanMotionDot": 1.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15698
     },
     {
       "objectName": "ONEWEB-0532",
@@ -1811,7 +2363,11 @@
       "raanDeg": 27.7142,
       "argPerigeeDeg": 73.1527,
       "meanAnomalyDeg": 286.9833,
-      "bstar": 0.000066363591
+      "bstar": 0.000066363591,
+      "meanMotionDot": 3.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15309
     },
     {
       "objectName": "ONEWEB-0543",
@@ -1824,7 +2380,11 @@
       "raanDeg": 357.3168,
       "argPerigeeDeg": 87.6319,
       "meanAnomalyDeg": 272.5004,
-      "bstar": 0.00027595206
+      "bstar": 0.00027595206,
+      "meanMotionDot": 0.00000122,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15520
     },
     {
       "objectName": "ONEWEB-0567",
@@ -1837,7 +2397,11 @@
       "raanDeg": 357.3049,
       "argPerigeeDeg": 85.8073,
       "meanAnomalyDeg": 274.3308,
-      "bstar": -0.000020555216
+      "bstar": -0.000020555216,
+      "meanMotionDot": 5e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15521
     },
     {
       "objectName": "ONEWEB-0571",
@@ -1850,7 +2414,11 @@
       "raanDeg": 357.3033,
       "argPerigeeDeg": 89.6853,
       "meanAnomalyDeg": 270.4635,
-      "bstar": 0.000028092031
+      "bstar": 0.000028092031,
+      "meanMotionDot": 2.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15521
     },
     {
       "objectName": "ONEWEB-0598",
@@ -1863,7 +2431,11 @@
       "raanDeg": 42.9414,
       "argPerigeeDeg": 98.0021,
       "meanAnomalyDeg": 262.1364,
-      "bstar": -0.0014271429
+      "bstar": -0.0014271429,
+      "meanMotionDot": -0.00000493,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15148
     },
     {
       "objectName": "ONEWEB-0617",
@@ -1876,7 +2448,11 @@
       "raanDeg": 42.9359,
       "argPerigeeDeg": 78.7653,
       "meanAnomalyDeg": 281.3712,
-      "bstar": -0.00090235384
+      "bstar": -0.00090235384,
+      "meanMotionDot": -0.00000307,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15144
     },
     {
       "objectName": "ONEWEB-0620",
@@ -1889,7 +2465,11 @@
       "raanDeg": 42.9535,
       "argPerigeeDeg": 86.6184,
       "meanAnomalyDeg": 273.5191,
-      "bstar": -0.000019044531
+      "bstar": -0.000019044531,
+      "meanMotionDot": 6e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15141
     },
     {
       "objectName": "ONEWEB-0624",
@@ -1902,7 +2482,11 @@
       "raanDeg": 12.429,
       "argPerigeeDeg": 75.1678,
       "meanAnomalyDeg": 284.9662,
-      "bstar": 0.00020004227
+      "bstar": 0.00020004227,
+      "meanMotionDot": 8.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15364
     },
     {
       "objectName": "ONEWEB-0628",
@@ -1915,7 +2499,11 @@
       "raanDeg": 12.4723,
       "argPerigeeDeg": 58.2177,
       "meanAnomalyDeg": 301.913,
-      "bstar": 0.0013403658
+      "bstar": 0.0013403658,
+      "meanMotionDot": 0.00000495,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15361
     },
     {
       "objectName": "ONEWEB-0709",
@@ -1928,7 +2516,11 @@
       "raanDeg": 42.9592,
       "argPerigeeDeg": 99.6946,
       "meanAnomalyDeg": 260.447,
-      "bstar": 0.0011460859
+      "bstar": 0.0011460859,
+      "meanMotionDot": 0.00000419,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15145
     },
     {
       "objectName": "ONEWEB-0715",
@@ -1941,7 +2533,11 @@
       "raanDeg": 42.9277,
       "argPerigeeDeg": 88.4449,
       "meanAnomalyDeg": 271.6974,
-      "bstar": 0.0015843521
+      "bstar": 0.0015843521,
+      "meanMotionDot": 0.00000574,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15145
     },
     {
       "objectName": "ONEWEB-0719",
@@ -1954,7 +2550,11 @@
       "raanDeg": 27.6788,
       "argPerigeeDeg": 82.5763,
       "meanAnomalyDeg": 277.5556,
-      "bstar": -0.00011758647
+      "bstar": -0.00011758647,
+      "meanMotionDot": -3.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 15309
     },
     {
       "objectName": "ONEWEB-0562",
@@ -1967,7 +2567,11 @@
       "raanDeg": 296.4306,
       "argPerigeeDeg": 47.6389,
       "meanAnomalyDeg": 312.4858,
-      "bstar": 0.00020771577
+      "bstar": 0.00020771577,
+      "meanMotionDot": 9.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14662
     },
     {
       "objectName": "ONEWEB-0639",
@@ -1980,7 +2584,11 @@
       "raanDeg": 326.8745,
       "argPerigeeDeg": 113.4832,
       "meanAnomalyDeg": 246.6504,
-      "bstar": 0.000007727929
+      "bstar": 0.000007727929,
+      "meanMotionDot": 1.6e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14440
     },
     {
       "objectName": "ONEWEB-0642",
@@ -1993,7 +2601,11 @@
       "raanDeg": 326.8784,
       "argPerigeeDeg": 98.7322,
       "meanAnomalyDeg": 261.4058,
-      "bstar": 0.00020052819
+      "bstar": 0.00020052819,
+      "meanMotionDot": 9.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14440
     },
     {
       "objectName": "ONEWEB-0646",
@@ -2006,7 +2618,11 @@
       "raanDeg": 326.8859,
       "argPerigeeDeg": 88.1221,
       "meanAnomalyDeg": 272.0127,
-      "bstar": -0.000049692366
+      "bstar": -0.000049692366,
+      "meanMotionDot": -7e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14438
     },
     {
       "objectName": "ONEWEB-0650",
@@ -2019,7 +2635,11 @@
       "raanDeg": 326.8813,
       "argPerigeeDeg": 93.0178,
       "meanAnomalyDeg": 267.1168,
-      "bstar": 0.00011066197
+      "bstar": 0.00011066197,
+      "meanMotionDot": 5.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14439
     },
     {
       "objectName": "ONEWEB-0656",
@@ -2032,7 +2652,11 @@
       "raanDeg": 296.3869,
       "argPerigeeDeg": 68.4546,
       "meanAnomalyDeg": 291.6767,
-      "bstar": 0.00005105969
+      "bstar": 0.00005105969,
+      "meanMotionDot": 3.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14663
     },
     {
       "objectName": "ONEWEB-0661",
@@ -2045,7 +2669,11 @@
       "raanDeg": 311.6845,
       "argPerigeeDeg": 82.1549,
       "meanAnomalyDeg": 277.9735,
-      "bstar": -0.000035864774
+      "bstar": -0.000035864774,
+      "meanMotionDot": -1e-8,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14494
     },
     {
       "objectName": "ONEWEB-0664",
@@ -2058,7 +2686,11 @@
       "raanDeg": 296.4542,
       "argPerigeeDeg": 79.564,
       "meanAnomalyDeg": 280.5621,
-      "bstar": -0.000068998899
+      "bstar": -0.000068998899,
+      "meanMotionDot": -1.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14662
     },
     {
       "objectName": "ONEWEB-0669",
@@ -2071,7 +2703,11 @@
       "raanDeg": 296.4138,
       "argPerigeeDeg": 61.5109,
       "meanAnomalyDeg": 298.6179,
-      "bstar": 0.000035628497
+      "bstar": 0.000035628497,
+      "meanMotionDot": 2.7e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14662
     },
     {
       "objectName": "ONEWEB-0673",
@@ -2084,7 +2720,11 @@
       "raanDeg": 326.8589,
       "argPerigeeDeg": 76.6893,
       "meanAnomalyDeg": 283.443,
-      "bstar": 0.00012933346
+      "bstar": 0.00012933346,
+      "meanMotionDot": 6.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14440
     },
     {
       "objectName": "ONEWEB-0720",
@@ -2097,7 +2737,11 @@
       "raanDeg": 326.8747,
       "argPerigeeDeg": 90.1656,
       "meanAnomalyDeg": 269.967,
-      "bstar": 0.00010196872
+      "bstar": 0.00010196872,
+      "meanMotionDot": 5.4e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14434
     },
     {
       "objectName": "ONEWEB-0547",
@@ -2110,7 +2754,11 @@
       "raanDeg": 265.8957,
       "argPerigeeDeg": 93.4766,
       "meanAnomalyDeg": 266.6558,
-      "bstar": -0.00060614288
+      "bstar": -0.00060614288,
+      "meanMotionDot": -0.00000237,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14370
     },
     {
       "objectName": "ONEWEB-0550",
@@ -2123,7 +2771,11 @@
       "raanDeg": 266.0437,
       "argPerigeeDeg": 86.7095,
       "meanAnomalyDeg": 273.4211,
-      "bstar": -0.000054616
+      "bstar": -0.000054616,
+      "meanMotionDot": -1e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14361
     },
     {
       "objectName": "ONEWEB-0554",
@@ -2136,7 +2788,11 @@
       "raanDeg": 250.6982,
       "argPerigeeDeg": 86.4075,
       "meanAnomalyDeg": 273.7204,
-      "bstar": 0.00018787147
+      "bstar": 0.00018787147,
+      "meanMotionDot": 8.5e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14446
     },
     {
       "objectName": "ONEWEB-0559",
@@ -2149,7 +2805,11 @@
       "raanDeg": 265.9368,
       "argPerigeeDeg": 101.2804,
       "meanAnomalyDeg": 258.8513,
-      "bstar": 0.00039727504
+      "bstar": 0.00039727504,
+      "meanMotionDot": 0.00000177,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14370
     },
     {
       "objectName": "ONEWEB-0574",
@@ -2162,7 +2822,11 @@
       "raanDeg": 265.8849,
       "argPerigeeDeg": 84.5875,
       "meanAnomalyDeg": 275.5423,
-      "bstar": 0.00010923536
+      "bstar": 0.00010923536,
+      "meanMotionDot": 5.8e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14375
     },
     {
       "objectName": "ONEWEB-0578",
@@ -2175,7 +2839,11 @@
       "raanDeg": 265.9255,
       "argPerigeeDeg": 82.2196,
       "meanAnomalyDeg": 277.9141,
-      "bstar": 0.000038572946
+      "bstar": 0.000038572946,
+      "meanMotionDot": 2.9e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14369
     },
     {
       "objectName": "ONEWEB-0609",
@@ -2188,7 +2856,11 @@
       "raanDeg": 281.1937,
       "argPerigeeDeg": 88.164,
       "meanAnomalyDeg": 271.968,
-      "bstar": 0.0003878036
+      "bstar": 0.0003878036,
+      "meanMotionDot": 0.00000159,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14196
     },
     {
       "objectName": "ONEWEB-0633",
@@ -2201,7 +2873,11 @@
       "raanDeg": 281.1624,
       "argPerigeeDeg": 99.8719,
       "meanAnomalyDeg": 260.2617,
-      "bstar": -0.00037885184
+      "bstar": -0.00037885184,
+      "meanMotionDot": -0.0000013,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14193
     },
     {
       "objectName": "ONEWEB-0637",
@@ -2214,7 +2890,11 @@
       "raanDeg": 281.19,
       "argPerigeeDeg": 68.505,
       "meanAnomalyDeg": 291.627,
-      "bstar": 0.00032990408
+      "bstar": 0.00032990408,
+      "meanMotionDot": 0.00000137,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14196
     },
     {
       "objectName": "ONEWEB-0718",
@@ -2227,7 +2907,11 @@
       "raanDeg": 281.1952,
       "argPerigeeDeg": 84.3304,
       "meanAnomalyDeg": 275.8064,
-      "bstar": 0.00046353669
+      "bstar": 0.00046353669,
+      "meanMotionDot": 0.00000187,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 14195
     },
     {
       "objectName": "ONEWEB-0677",
@@ -2240,7 +2924,11 @@
       "raanDeg": 296.3976,
       "argPerigeeDeg": 75.6345,
       "meanAnomalyDeg": 284.4972,
-      "bstar": -0.00013290976
+      "bstar": -0.00013290976,
+      "meanMotionDot": -4.1e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 13528
     },
     {
       "objectName": "ONEWEB-0681",
@@ -2253,7 +2941,11 @@
       "raanDeg": 265.9304,
       "argPerigeeDeg": 63.2869,
       "meanAnomalyDeg": 296.834,
-      "bstar": 0.000071453611
+      "bstar": 0.000071453611,
+      "meanMotionDot": 4.3e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 13654
     },
     {
       "objectName": "ONEWEB-0684",
@@ -2266,7 +2958,11 @@
       "raanDeg": 281.1489,
       "argPerigeeDeg": 124.6188,
       "meanAnomalyDeg": 235.5148,
-      "bstar": 0.00031375622
+      "bstar": 0.00031375622,
+      "meanMotionDot": 0.00000131,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 13478
     },
     {
       "objectName": "ONEWEB-0703",
@@ -2279,7 +2975,11 @@
       "raanDeg": 281.1828,
       "argPerigeeDeg": 124.1814,
       "meanAnomalyDeg": 235.9414,
-      "bstar": 0.00052934309
+      "bstar": 0.00052934309,
+      "meanMotionDot": 0.00000212,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 13478
     },
     {
       "objectName": "ONEWEB-0687",
@@ -2292,7 +2992,11 @@
       "raanDeg": 27.7286,
       "argPerigeeDeg": 69.5194,
       "meanAnomalyDeg": 290.6173,
-      "bstar": 0.00029139036
+      "bstar": 0.00029139036,
+      "meanMotionDot": 0.00000126,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7141
     },
     {
       "objectName": "ONEWEB-0691",
@@ -2305,7 +3009,11 @@
       "raanDeg": 42.8317,
       "argPerigeeDeg": 71.862,
       "meanAnomalyDeg": 288.2705,
-      "bstar": 0.0016268353
+      "bstar": 0.0016268353,
+      "meanMotionDot": 0.00000589,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7006
     },
     {
       "objectName": "ONEWEB-0697",
@@ -2318,7 +3026,11 @@
       "raanDeg": 42.9406,
       "argPerigeeDeg": 97.683,
       "meanAnomalyDeg": 262.4583,
-      "bstar": -0.0012543655
+      "bstar": -0.0012543655,
+      "meanMotionDot": -0.00000432,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 7003
     },
     {
       "objectName": "ONEWEB-0700",
@@ -2331,7 +3043,11 @@
       "raanDeg": 58.0494,
       "argPerigeeDeg": 91.1893,
       "meanAnomalyDeg": 268.9529,
-      "bstar": -0.0012291703
+      "bstar": -0.0012291703,
+      "meanMotionDot": -0.00000416,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6890
     },
     {
       "objectName": "ONEWEB-0705",
@@ -2344,7 +3060,11 @@
       "raanDeg": 58.1425,
       "argPerigeeDeg": 72.7872,
       "meanAnomalyDeg": 287.3563,
-      "bstar": 0.000083757815
+      "bstar": 0.000083757815,
+      "meanMotionDot": 4.2e-7,
+      "meanMotionDdot": 0,
+      "elementSetNo": 999,
+      "revAtEpoch": 6106
     }
   ]
 }

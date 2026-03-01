@@ -1,12 +1,31 @@
+import sourceCatalogJson from '../references/paper-sources.json';
 import case9DefaultProfile from './case9-default.json';
+import case9DefaultSourceMap from './case9-default.sources.json';
 import onewebLikeProfile from './oneweb-like.json';
+import onewebLikeSourceMap from './oneweb-like.sources.json';
 import paperProfileSchema from './paper-profile.schema.json';
 import starlinkLikeProfile from './starlink-like.json';
-import case9DefaultSourceMap from './case9-default.sources.json';
-import onewebLikeSourceMap from './oneweb-like.sources.json';
 import starlinkLikeSourceMap from './starlink-like.sources.json';
-import sourceCatalogJson from '../references/paper-sources.json';
+import { sha256Hex, stableStringify } from './checksum-utils';
+import type { JsonSchema, ValidationIssue } from './schema-utils';
+import { validateAgainstSchema, validateOverridePaths } from './schema-utils';
+import type { SourceCatalogEntry, SourceCatalogFile } from './source-map-utils';
+import {
+  buildResolvedSourceLinks as buildResolvedSourceLinksFromCatalog,
+  extractAssumptionIdsFromSourceMap as extractAssumptionIdsFromMap,
+  type GenericProfileSourceMap,
+  validateSourceMap,
+} from './source-map-utils';
 import type { PaperProfile } from './types';
+
+/**
+ * Provenance:
+ * - sdd/completed/beamHO-bench-paper-traceability.md
+ * - sdd/completed/beamHO-bench-requirements.md (FR-025/026/027/028)
+ *
+ * Notes:
+ * - This loader is the authoritative gate for profile schema validation and source-map validation.
+ */
 
 export type CanonicalProfileId = 'case9-default' | 'starlink-like' | 'oneweb-like';
 
@@ -18,10 +37,8 @@ export type DeepPartial<T> = {
       : T[K];
 };
 
-export interface ValidationIssue {
-  path: string;
-  message: string;
-}
+export type { ValidationIssue, SourceCatalogEntry };
+export type ProfileSourceMap = GenericProfileSourceMap<CanonicalProfileId>;
 
 export class ProfileValidationError extends Error {
   public readonly issues: ValidationIssue[];
@@ -33,49 +50,12 @@ export class ProfileValidationError extends Error {
   }
 }
 
-interface JsonSchema {
-  $id?: string;
-  type?: 'object' | 'array' | 'string' | 'number' | 'integer' | 'boolean';
-  required?: string[];
-  properties?: Record<string, JsonSchema>;
-  additionalProperties?: boolean;
-  enum?: unknown[];
-  pattern?: string;
-  minLength?: number;
-  minItems?: number;
-  minimum?: number;
-  maximum?: number;
-  exclusiveMinimum?: number;
-  items?: JsonSchema;
-}
-
-export interface SourceCatalogEntry {
-  sourceId: string;
-  type: 'standard' | 'paper';
-  title: string;
-  locator: string;
-  year: number;
-  canonicalUrl: string;
-  licenseNote: string;
-  note?: string;
-  artifactSha256?: string;
-}
-
-interface SourceCatalogFile {
-  generatedAtUtc: string;
-  entries: SourceCatalogEntry[];
-}
-
-export interface ProfileSourceMap {
-  profileId: CanonicalProfileId;
-  sources: Record<string, string[]>;
-}
-
 export interface SourceTracePayload {
   profileId: CanonicalProfileId;
   sourceCatalogChecksumSha256: string;
   resolvedParameterSources: Record<string, string[]>;
   resolvedSourceLinks: Record<string, string>;
+  resolvedAssumptionIds: string[];
 }
 
 const PROFILE_CATALOG: Record<CanonicalProfileId, PaperProfile> = {
@@ -102,10 +82,6 @@ const CANONICAL_PROFILE_IDS: CanonicalProfileId[] = [
   'oneweb-like',
 ];
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 function cloneValue<T>(value: T): T {
   if (typeof globalThis.structuredClone === 'function') {
     return globalThis.structuredClone(value);
@@ -122,194 +98,27 @@ function mergeValue(base: unknown, overrides: unknown): unknown {
     return cloneValue(overrides);
   }
 
-  if (isPlainObject(base) && isPlainObject(overrides)) {
+  if (
+    typeof base === 'object' &&
+    base !== null &&
+    !Array.isArray(base) &&
+    typeof overrides === 'object' &&
+    overrides !== null &&
+    !Array.isArray(overrides)
+  ) {
+    const baseRecord = base as Record<string, unknown>;
+    const overrideRecord = overrides as Record<string, unknown>;
     const result: Record<string, unknown> = {};
-    const keys = new Set([...Object.keys(base), ...Object.keys(overrides)]);
+    const keys = new Set([...Object.keys(baseRecord), ...Object.keys(overrideRecord)]);
 
     for (const key of keys) {
-      result[key] = mergeValue(base[key], overrides[key]);
+      result[key] = mergeValue(baseRecord[key], overrideRecord[key]);
     }
 
     return result;
   }
 
   return cloneValue(overrides);
-}
-
-function validateAgainstSchema(
-  value: unknown,
-  schema: JsonSchema,
-  path: string,
-  issues: ValidationIssue[],
-): void {
-  if (schema.enum && !schema.enum.some((item) => Object.is(item, value))) {
-    issues.push({
-      path,
-      message: `must be one of: ${schema.enum.map((item) => JSON.stringify(item)).join(', ')}`,
-    });
-    return;
-  }
-
-  if (!schema.type) {
-    return;
-  }
-
-  if (schema.type === 'object') {
-    if (!isPlainObject(value)) {
-      issues.push({ path, message: 'must be an object' });
-      return;
-    }
-
-    const properties = schema.properties ?? {};
-
-    if (schema.required) {
-      for (const key of schema.required) {
-        if (!(key in value)) {
-          issues.push({ path: `${path}.${key}`, message: 'is required' });
-        }
-      }
-    }
-
-    if (schema.additionalProperties === false) {
-      for (const key of Object.keys(value)) {
-        if (!(key in properties)) {
-          issues.push({ path: `${path}.${key}`, message: 'is not allowed' });
-        }
-      }
-    }
-
-    for (const [key, childSchema] of Object.entries(properties)) {
-      if (key in value) {
-        validateAgainstSchema(value[key], childSchema, `${path}.${key}`, issues);
-      }
-    }
-
-    return;
-  }
-
-  if (schema.type === 'array') {
-    if (!Array.isArray(value)) {
-      issues.push({ path, message: 'must be an array' });
-      return;
-    }
-
-    if (schema.minItems !== undefined && value.length < schema.minItems) {
-      issues.push({ path, message: `must contain at least ${schema.minItems} item(s)` });
-    }
-
-    if (schema.items) {
-      value.forEach((item, index) => {
-        validateAgainstSchema(item, schema.items as JsonSchema, `${path}[${index}]`, issues);
-      });
-    }
-
-    return;
-  }
-
-  if (schema.type === 'string') {
-    if (typeof value !== 'string') {
-      issues.push({ path, message: 'must be a string' });
-      return;
-    }
-
-    if (schema.minLength !== undefined && value.length < schema.minLength) {
-      issues.push({ path, message: `length must be >= ${schema.minLength}` });
-    }
-
-    if (schema.pattern) {
-      const pattern = new RegExp(schema.pattern);
-      if (!pattern.test(value)) {
-        issues.push({ path, message: `must match pattern ${schema.pattern}` });
-      }
-    }
-
-    return;
-  }
-
-  if (schema.type === 'boolean') {
-    if (typeof value !== 'boolean') {
-      issues.push({ path, message: 'must be a boolean' });
-    }
-    return;
-  }
-
-  if (schema.type === 'integer') {
-    if (typeof value !== 'number' || !Number.isInteger(value)) {
-      issues.push({ path, message: 'must be an integer' });
-      return;
-    }
-
-    if (schema.minimum !== undefined && value < schema.minimum) {
-      issues.push({ path, message: `must be >= ${schema.minimum}` });
-    }
-
-    if (schema.maximum !== undefined && value > schema.maximum) {
-      issues.push({ path, message: `must be <= ${schema.maximum}` });
-    }
-
-    if (schema.exclusiveMinimum !== undefined && value <= schema.exclusiveMinimum) {
-      issues.push({ path, message: `must be > ${schema.exclusiveMinimum}` });
-    }
-
-    return;
-  }
-
-  if (schema.type === 'number') {
-    if (typeof value !== 'number' || !Number.isFinite(value)) {
-      issues.push({ path, message: 'must be a finite number' });
-      return;
-    }
-
-    if (schema.minimum !== undefined && value < schema.minimum) {
-      issues.push({ path, message: `must be >= ${schema.minimum}` });
-    }
-
-    if (schema.maximum !== undefined && value > schema.maximum) {
-      issues.push({ path, message: `must be <= ${schema.maximum}` });
-    }
-
-    if (schema.exclusiveMinimum !== undefined && value <= schema.exclusiveMinimum) {
-      issues.push({ path, message: `must be > ${schema.exclusiveMinimum}` });
-    }
-  }
-}
-
-function validateOverridePaths(
-  overrides: unknown,
-  schema: JsonSchema,
-  path: string,
-  issues: ValidationIssue[],
-): void {
-  if (overrides === undefined || overrides === null) {
-    return;
-  }
-
-  if (schema.type === 'object') {
-    if (!isPlainObject(overrides)) {
-      return;
-    }
-
-    const properties = schema.properties ?? {};
-
-    for (const [key, value] of Object.entries(overrides)) {
-      const nextSchema = properties[key];
-
-      if (!nextSchema) {
-        issues.push({ path: `${path}.${key}`, message: 'is not a valid override path' });
-        continue;
-      }
-
-      validateOverridePaths(value, nextSchema, `${path}.${key}`, issues);
-    }
-
-    return;
-  }
-
-  if (schema.type === 'array' && Array.isArray(overrides) && schema.items) {
-    overrides.forEach((item, index) => {
-      validateOverridePaths(item, schema.items as JsonSchema, `${path}[${index}]`, issues);
-    });
-  }
 }
 
 function normalizePath(path: string): string {
@@ -322,36 +131,11 @@ function validateProfile(profile: unknown): ValidationIssue[] {
   return issues;
 }
 
-function validateSourceMap(profileId: CanonicalProfileId, map: ProfileSourceMap): ValidationIssue[] {
-  const issues: ValidationIssue[] = [];
-
-  if (map.profileId !== profileId) {
-    issues.push({
-      path: '$.profileId',
-      message: `must match requested profile id '${profileId}'`,
-    });
-  }
-
-  for (const [parameterPath, sourceIds] of Object.entries(map.sources)) {
-    if (!Array.isArray(sourceIds) || sourceIds.length === 0) {
-      issues.push({
-        path: `$.sources.${parameterPath}`,
-        message: 'must contain at least one sourceId',
-      });
-      continue;
-    }
-
-    for (const sourceId of sourceIds) {
-      if (!SOURCE_CATALOG_BY_ID.has(sourceId)) {
-        issues.push({
-          path: `$.sources.${parameterPath}`,
-          message: `references unknown sourceId '${sourceId}'`,
-        });
-      }
-    }
-  }
-
-  return issues;
+function validateCanonicalSourceMap(
+  profileId: CanonicalProfileId,
+  map: ProfileSourceMap,
+): ValidationIssue[] {
+  return validateSourceMap(profileId, map, SOURCE_CATALOG_BY_ID);
 }
 
 export function isCanonicalProfileId(value: string): value is CanonicalProfileId {
@@ -396,7 +180,7 @@ export function loadPaperProfile(
 
 export function loadProfileSourceMap(profileId: CanonicalProfileId): ProfileSourceMap {
   const sourceMap = cloneValue(PROFILE_SOURCE_MAP_CATALOG[profileId]);
-  const issues = validateSourceMap(profileId, sourceMap);
+  const issues = validateCanonicalSourceMap(profileId, sourceMap);
 
   if (issues.length > 0) {
     throw new ProfileValidationError(
@@ -418,45 +202,14 @@ export function getSourceEntry(sourceId: string): SourceCatalogEntry | undefined
 }
 
 export function buildResolvedSourceLinks(sourceMap: ProfileSourceMap): Record<string, string> {
-  const links: Record<string, string> = {};
-
-  for (const sourceIds of Object.values(sourceMap.sources)) {
-    for (const sourceId of sourceIds) {
-      const entry = SOURCE_CATALOG_BY_ID.get(sourceId);
-      if (entry) {
-        links[sourceId] = entry.canonicalUrl;
-      }
-    }
-  }
-
-  return links;
+  return buildResolvedSourceLinksFromCatalog(sourceMap, SOURCE_CATALOG_BY_ID);
 }
 
-function stableStringify(value: unknown): string {
-  if (value === null || typeof value !== 'object') {
-    return JSON.stringify(value);
-  }
-
-  if (Array.isArray(value)) {
-    return `[${value.map((item) => stableStringify(item)).join(',')}]`;
-  }
-
-  const keys = Object.keys(value).sort();
-  const keyValuePairs = keys.map((key) => `${JSON.stringify(key)}:${stableStringify((value as Record<string, unknown>)[key])}`);
-  return `{${keyValuePairs.join(',')}}`;
+export function extractAssumptionIdsFromSourceMap(sourceMap: ProfileSourceMap): string[] {
+  return extractAssumptionIdsFromMap(sourceMap);
 }
 
-export async function sha256Hex(payload: string): Promise<string> {
-  if (!globalThis.crypto?.subtle) {
-    throw new Error('Web Crypto API is not available');
-  }
-
-  const buffer = new TextEncoder().encode(payload);
-  const digest = await globalThis.crypto.subtle.digest('SHA-256', buffer);
-  return Array.from(new Uint8Array(digest))
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('');
-}
+export { sha256Hex };
 
 export async function computeProfileChecksum(profile: PaperProfile): Promise<string> {
   return sha256Hex(stableStringify(profile));
@@ -478,6 +231,7 @@ export async function buildSourceTracePayload(
     sourceCatalogChecksumSha256: await computeSourceCatalogChecksum(),
     resolvedParameterSources: cloneValue(sourceMap.sources),
     resolvedSourceLinks: buildResolvedSourceLinks(sourceMap),
+    resolvedAssumptionIds: extractAssumptionIdsFromSourceMap(sourceMap),
   };
 }
 
@@ -496,8 +250,7 @@ export async function buildSourceTracePayload(
       );
     }
 
-    const sourceMapIssues = validateSourceMap(profileId, PROFILE_SOURCE_MAP_CATALOG[profileId]);
-
+    const sourceMapIssues = validateCanonicalSourceMap(profileId, PROFILE_SOURCE_MAP_CATALOG[profileId]);
     if (sourceMapIssues.length > 0) {
       throw new ProfileValidationError(
         `Bundled source map '${profileId}' failed validation`,

@@ -16,14 +16,71 @@
     "channel.sfClSource": [
       "STD-3GPP-TR38.811-6.6.2-1"
     ],
+    "channel.smallScaleModel": [
+      "PAP-2024-MADRL-CORE"
+    ],
+    "channel.smallScaleParams.shadowedRician.kFactorMinDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.shadowedRician.kFactorMaxDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.shadowedRician.shadowingStdDevDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.shadowedRician.multipathStdDevDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.loo.shadowingStdDevDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.loo.rayleighScaleDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.noiseFigureDb": [
+      "ASSUME-RX-NOISE-FIGURE-DB"
+    ],
+    "channel.systemLossDb": [
+      "ASSUME-LINK-SYSTEM-LOSS-DB"
+    ],
+    "handover.algorithmFidelity": [
+      "ASSUME-HANDOVER-FIDELITY-FULL"
+    ],
     "handover.params.a4ThresholdDbm": [
+      "PAP-2022-A4EVENT-CORE",
+      "STD-3GPP-TS38.331-RRC"
+    ],
+    "handover.params.homDb": [
       "PAP-2022-A4EVENT-CORE",
       "STD-3GPP-TS38.331-RRC"
     ],
     "handover.params.timerAlphaOptions": [
       "PAP-2025-TIMERCHO-CORE"
     ],
+    "rlfStateMachine.qOutDb": [
+      "PAP-2022-A4EVENT-CORE",
+      "STD-3GPP-TS38.331-RRC"
+    ],
+    "rlfStateMachine.qInDb": [
+      "PAP-2022-A4EVENT-CORE",
+      "STD-3GPP-TS38.331-RRC"
+    ],
     "rlfStateMachine.t310Ms": [
+      "STD-3GPP-TS38.331-RRC"
+    ],
+    "rlfStateMachine.n310": [
+      "STD-3GPP-TS38.331-RRC"
+    ],
+    "rlfStateMachine.n311": [
+      "STD-3GPP-TS38.331-RRC"
+    ],
+    "rlfStateMachine.l3FilterK": [
       "STD-3GPP-TS38.331-RRC"
     ],
     "rlfStateMachine.harqMaxRetx": [
@@ -31,6 +88,15 @@
     ],
     "rlfStateMachine.rlcMaxRetx": [
       "STD-3GPP-TS38.322-RLC"
+    ],
+    "rlfStateMachine.preambleMsg3MaxRetx": [
+      "STD-3GPP-TS38.321-MAC"
+    ],
+    "rlfStateMachine.raResponseTimerSubframes": [
+      "STD-3GPP-TS38.321-MAC"
+    ],
+    "rlfStateMachine.contentionResolutionTimerSubframes": [
+      "STD-3GPP-TS38.321-MAC"
     ],
     "beam.overlapRatio": [
       "PAP-2024-MCCHO-CORE"

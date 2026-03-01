@@ -1,3 +1,13 @@
+/**
+ * Provenance:
+ * - sdd/completed/beamHO-bench-sdd.md
+ * - todo.md
+ *
+ * Notes:
+ * - NTPU observer coordinates are the project default and should stay fixed
+ *   unless a scenario explicitly overrides them.
+ */
+
 export type Vec3 = [number, number, number];
 
 interface SceneConfig {

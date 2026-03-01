@@ -47,10 +47,24 @@
     "bandwidthMHz": 30,
     "largeScaleModel": "3gpp-tr-38.811",
     "smallScaleModel": "shadowed-rician",
+    "smallScaleParams": {
+      "shadowedRician": {
+        "kFactorMinDb": -2,
+        "kFactorMaxDb": 10,
+        "shadowingStdDevDb": 2.3,
+        "multipathStdDevDb": 1.8
+      },
+      "loo": {
+        "shadowingStdDevDb": 2.5,
+        "rayleighScaleDb": 0.8
+      }
+    },
     "sfClSource": "3GPP TR 38.811 Table 6.6.2-1",
     "ueGTdBPerK": -33.6,
     "ueAntennaGainDbi": 0,
-    "noiseTemperatureK": 290
+    "noiseTemperatureK": 290,
+    "noiseFigureDb": 5,
+    "systemLossDb": 70
   },
   "rlfStateMachine": {
     "qOutDb": -8,
@@ -71,6 +85,7 @@
     "speedKmphOptions": [0, 3, 30, 60]
   },
   "handover": {
+    "algorithmFidelity": "full",
     "baselines": [
       "max-rsrp",
       "max-elevation",

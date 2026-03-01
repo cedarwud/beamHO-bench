@@ -52,6 +52,10 @@ function normalizeRecord(raw) {
     argPerigeeDeg: Number(raw.ARG_OF_PERICENTER ?? 0),
     meanAnomalyDeg: Number(raw.MEAN_ANOMALY ?? 0),
     bstar: Number(raw.BSTAR ?? 0),
+    meanMotionDot: Number(raw.MEAN_MOTION_DOT ?? 0),
+    meanMotionDdot: Number(raw.MEAN_MOTION_DDOT ?? 0),
+    elementSetNo: Number(raw.ELEMENT_SET_NO ?? 1),
+    revAtEpoch: Number(raw.REV_AT_EPOCH ?? 0),
   };
 }
 

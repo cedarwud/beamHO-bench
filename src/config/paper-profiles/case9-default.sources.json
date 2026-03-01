@@ -4,6 +4,42 @@
     "channel.sfClSource": [
       "STD-3GPP-TR38.811-6.6.2-1"
     ],
+    "channel.smallScaleModel": [
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.shadowedRician.kFactorMinDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.shadowedRician.kFactorMaxDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.shadowedRician.shadowingStdDevDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.shadowedRician.multipathStdDevDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.loo.shadowingStdDevDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.smallScaleParams.loo.rayleighScaleDb": [
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
+    ],
+    "channel.noiseFigureDb": [
+      "ASSUME-RX-NOISE-FIGURE-DB"
+    ],
+    "channel.systemLossDb": [
+      "ASSUME-LINK-SYSTEM-LOSS-DB"
+    ],
+    "handover.algorithmFidelity": [
+      "ASSUME-HANDOVER-FIDELITY-FULL"
+    ],
     "handover.params.a3OffsetDb": [
       "PAP-2022-A4EVENT-CORE",
       "STD-3GPP-TS38.331-RRC"
