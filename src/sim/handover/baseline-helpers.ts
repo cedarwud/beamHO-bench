@@ -92,6 +92,8 @@ export function estimateDistanceToBeamCenterKm(
     return null;
   }
 
+  // Source: PAP-2025-TIMERCHO-CORE
+  // Distance-to-center is tracked for prepared-target geometry telemetry and HUD audit.
   const dx = ue.positionWorld[0] - beam.centerWorld[0];
   const dz = ue.positionWorld[2] - beam.centerWorld[2];
   const distanceWorld = Math.hypot(dx, dz);

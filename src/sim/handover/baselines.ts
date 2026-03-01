@@ -338,6 +338,8 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
         baseline === 'cho' && effectiveDecision.prepared
           ? (effectiveDecision.prepared.targetMs ?? null)
           : null,
+      // Source: PAP-2025-TIMERCHO-CORE
+      // Persist timer/geometry prepared metadata for runtime visualization and validation checks.
       choPreparedRemainingMs:
         baseline === 'cho' && effectiveDecision.prepared
           ? (effectiveDecision.prepared.remainingMs ?? null)
