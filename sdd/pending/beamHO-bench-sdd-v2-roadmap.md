@@ -103,7 +103,8 @@ Dependency rule:
 
 ## 6. Closure References
 
-1. `sdd/completed/beamHO-bench-rl-plugin-closure.md`
-2. `sdd/completed/beamHO-bench-joint-beamho-closure.md`
-3. `sdd/completed/beamHO-bench-baseline-generalization-closure.md`
-4. `sdd/completed/beamHO-bench-implementation-status.md`
+1. `sdd/completed/beamHO-bench-sdd-v2-roadmap-closure.md`
+2. `sdd/completed/beamHO-bench-rl-plugin-closure.md`
+3. `sdd/completed/beamHO-bench-joint-beamho-closure.md`
+4. `sdd/completed/beamHO-bench-baseline-generalization-closure.md`
+5. `sdd/completed/beamHO-bench-implementation-status.md`
