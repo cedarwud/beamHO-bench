@@ -72,13 +72,14 @@ Latest local verification (2026-03-01):
 ## 5. Traceability Cross-Reference
 
 Primary references:
-1. `sdd/completed/beamHO-bench-sdd.md`
-2. `sdd/completed/beamHO-bench-requirements.md`
-3. `sdd/completed/beamHO-bench-validation-matrix.md`
-4. `sdd/completed/beamHO-bench-paper-traceability.md`
-5. `sdd/completed/beamHO-bench-rl-plugin-closure.md`
-6. `sdd/completed/beamHO-bench-joint-beamho-closure.md`
-7. `sdd/completed/beamHO-bench-baseline-generalization-closure.md`
+1. `sdd/completed/beamHO-bench-sdd-v2-roadmap-closure.md`
+2. `sdd/completed/beamHO-bench-sdd.md`
+3. `sdd/completed/beamHO-bench-requirements.md`
+4. `sdd/completed/beamHO-bench-validation-matrix.md`
+5. `sdd/completed/beamHO-bench-paper-traceability.md`
+6. `sdd/completed/beamHO-bench-rl-plugin-closure.md`
+7. `sdd/completed/beamHO-bench-joint-beamho-closure.md`
+8. `sdd/completed/beamHO-bench-baseline-generalization-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
