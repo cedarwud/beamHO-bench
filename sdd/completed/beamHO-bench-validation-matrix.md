@@ -1,6 +1,6 @@
 # beamHO-bench — Validation Matrix
 
-**Version:** 0.7.0  
+**Version:** 0.8.0  
 **Date:** 2026-03-01  
 **Status:** Active (CI-enforced validation suite)
 
@@ -73,10 +73,18 @@ Minimum run set for CI/nightly:
 6. `VAL-ONEWEB-TRACE-SMOKE`
 7. `VAL-REALTRACE-MULTI-BASELINE-SMOKE`
 8. `VAL-ONEWEB-MULTI-BASELINE-SMOKE`
-9. `VAL-CONSTANT-TRACE-LINT`
-10. `VAL-FR018-PARAM-COVERAGE`
-11. `VAL-CHO-MCHO-FULLMODE-SMOKE`
-12. `VAL-REPO-POLICY`
+9. `VAL-CHO-MCHO-FULLMODE-SMOKE`
+10. `VAL-RL-POLICY-OFF-PARITY`
+11. `VAL-RL-DETERMINISM-ON`
+12. `VAL-RL-INVALID-ACTION-SAFETY`
+13. `VAL-RL-REALTRACE-SMOKE`
+14. `VAL-JBH-UNCOUPLED-PARITY`
+15. `VAL-JBH-COUPLED-DETERMINISM`
+16. `VAL-JBH-REALTRACE-COUPLED-SMOKE`
+17. `VAL-JBH-CAPACITY-GUARD-SMOKE`
+18. `VAL-JBH-HOPPING-PERIOD-SWEEP`
+19. `VAL-JBH-OVERLAP-SWEEP`
+20. `VAL-BG-BEAM-COUNT-SWEEP`
 
 Each run must vary one factor only while keeping profile and seed policy controlled.
 
@@ -102,12 +110,17 @@ For each validation run, store:
 15. `runtime-parameter-audit-summary.json` (suite-level FR-028 coverage aggregate for CI and appendix)
 16. `validation-suite_*.json` case-level `trendPolicy` (`metric`, `direction`, optional `tolerance`) for directional-check provenance
 17. `validation-suite.csv` (compact table for appendix and quick regression diff)
+18. `profile_beams_per_satellite` and `profile_beam_layout` in batch summary CSV for beam-count comparability provenance
+19. normalized KPI columns in batch summary CSV:
+20. `normalized_throughput_per_total_beam_mbps`
+21. `normalized_handover_rate_per_total_beam`
 
 Validation gate policy:
 1. blocking checks (`determinism`, `fidelity-mode`, `kpi-sanity`, `runtime-parameter-audit`, `link-state-consistency`) can fail the gate.
 2. non-blocking diagnostic checks (`trend-directional`, `rank-consistency`) are reported in `warnings` and check pass-rate stats, but do not fail stage gate.
 3. `trend-directional` is applied only to validation groups with explicit directional expectation; flat outcomes are acceptable if they do not violate configured direction.
 4. directional expectation and metric are configured in `src/sim/bench/validation-definitions.ts` via `trendPolicy`.
+5. deferred-scope policy (BG-6) is enforced by repo-policy/runtime-code scan and integration guards; active validation IDs must not introduce deferred runtime scope.
 
 ---
 
@@ -117,12 +130,13 @@ Validation gate policy:
 2. Verify deterministic replay check passes for all validation cases.
 3. Verify every flagged constant has profile-path source or `ASSUME-*` mapping.
 4. Verify trend-directional and rank-consistency checks are reported and pass for applicable groups.
-5. Verify FR-018 parameter coverage report includes all configured HO/RLF fields.
+5. Verify runtime parameter audit summary has no missing FR-028 runtime keys.
 6. Verify benchmark runs are `algorithm_fidelity=full`.
 7. Verify runtime parameter audit check passes and has zero missing FR-028 keys.
 8. Verify CHO/MC-HO cases pass link-state consistency (`prepared/secondary/event` coherence).
 9. Verify repository policy check blocks forbidden tracked binaries under `papers/`.
-10. Mark compliance as `PASS` only when all checks pass.
+10. Verify deferred-scope governance check is green (no active runtime RSMA/soft-HO/large-scale DRL path).
+11. Mark compliance as `PASS` only when all checks pass.
 
 ---
 
