@@ -1,7 +1,7 @@
 # beamHO-bench — Paper Traceability Specification
 
-**Version:** 0.2.0  
-**Date:** 2026-02-28  
+**Version:** 0.3.0  
+**Date:** 2026-03-01  
 **Status:** Draft
 
 ---
@@ -29,7 +29,7 @@ Create a central source catalog at:
 
 Each catalog entry shall include:
 1. `sourceId`
-2. `type` (`standard` or `paper`)
+2. `type` (`standard`, `paper`, or `assumption`)
 3. `title`
 4. `locator` (section/table/equation)
 5. `year`
@@ -46,6 +46,7 @@ Recommended initial IDs:
 5. `PAP-2022-SEAMLESSNTN-CORE`
 6. `PAP-2024-MADRL-CORE`
 7. `PAP-2025-DAPS-CORE`
+8. `ASSUME-<topic>` for engineering assumptions that are not directly pinned by paper/standard values
 
 ---
 
@@ -82,6 +83,7 @@ Rules:
 1. every key affecting KPI outcomes must have at least one `sourceId`
 2. if value is engineering assumption, set `sourceId` as `ASSUME-<topic>` and add rationale note in run manifest
 3. every non-assumption `sourceId` must resolve to a `canonicalUrl`
+4. benchmark default path must avoid assumption-only substitutions when paper/standard values exist
 
 ---
 
@@ -121,17 +123,21 @@ For core modules (`events.ts`, `state-machine.ts`, `cho.ts`, `mc-ho.ts`, `large-
 
 Each run shall emit:
 1. `source-trace.json`
+2. `validation-gate-summary.json` (blocking failures + non-blocking warnings, with check-level pass-rate summary for gate reproducibility evidence)
 
 Required fields:
 1. `scenario_id`
 2. `profile_id`
 3. `baseline`
 4. `seed`
-5. `profile_checksum_sha256`
-6. `source_catalog_checksum_sha256`
-7. `resolvedParameterSources` (path -> sourceId array)
-8. `resolvedSourceLinks` (sourceId -> canonicalUrl)
-9. `assumptions` (optional list)
+5. `playback_rate`
+6. `profile_checksum_sha256`
+7. `source_catalog_checksum_sha256`
+8. `resolvedParameterSources` (path -> sourceId array)
+9. `resolvedSourceLinks` (sourceId -> canonicalUrl)
+10. `assumptions` (optional list)
+11. `algorithm_fidelity` (`full` or `simplified`)
+12. `resolvedAssumptionIds` (list of `ASSUME-*` IDs used in active runtime path)
 
 Example:
 
@@ -141,6 +147,7 @@ Example:
   "profile_id": "case9-default",
   "baseline": "a4",
   "seed": 42,
+  "playback_rate": 1,
   "profile_checksum_sha256": "...",
   "source_catalog_checksum_sha256": "...",
   "resolvedParameterSources": {
@@ -174,6 +181,8 @@ Add a traceability check in CI:
 1. fail if key parameter paths are missing source mappings
 2. fail if source IDs used in comments are not present in source catalog
 3. fail if run artifact lacks `source-trace.json`
+4. fail if benchmark-labeled runs use `algorithm_fidelity=simplified`
+5. fail if active engineering assumptions are missing `ASSUME-*` source IDs
 
 Manual review checklist:
 1. can reviewer locate paper/standard for every critical KPI-driving parameter

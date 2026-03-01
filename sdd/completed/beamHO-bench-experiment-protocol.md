@@ -162,9 +162,9 @@ Pass condition:
 2. Any profile schema change requires schema version bump.
 3. Historical results are never overwritten; append new run directory.
 4. Any change to baseline pinned values requires updating `beamHO-bench/src/config/paper-profiles/case9-default.json`.
-5. The same baseline change must update `sdd/beamHO-bench-profile-baseline.md` in the same commit.
+5. The same baseline change must update `sdd/completed/beamHO-bench-profile-baseline.md` in the same commit.
 
 Related spec:
-1. `sdd/beamHO-bench-paper-traceability.md`
+1. `sdd/completed/beamHO-bench-paper-traceability.md`
 2. `papers/sdd-required/papers-lock.json`
 3. `papers/standards/standards-lock.json`

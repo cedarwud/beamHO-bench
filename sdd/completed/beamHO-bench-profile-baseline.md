@@ -12,8 +12,8 @@ This document pins profile-level baseline values used by `beamHO-bench` and clar
 
 This is the normative companion for:
 1. `beamHO-bench/src/config/paper-profiles/*.json`
-2. `sdd/beamHO-bench-sdd.md`
-3. `sdd/beamHO-bench-experiment-protocol.md`
+2. `sdd/completed/beamHO-bench-sdd.md`
+3. `sdd/completed/beamHO-bench-experiment-protocol.md`
 
 ---
 
@@ -119,5 +119,5 @@ Use these source IDs in sidecar mapping files and code comments:
 5. `PAP-2022-SEAMLESSNTN-CORE` for starlink-like extension context
 
 Detailed traceability workflow is defined in:
-1. `sdd/beamHO-bench-paper-traceability.md`
+1. `sdd/completed/beamHO-bench-paper-traceability.md`
 2. `papers/sdd-required/papers-lock.json`

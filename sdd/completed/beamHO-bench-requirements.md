@@ -1,8 +1,8 @@
 # beamHO-bench — Requirements Specification
 
-**Version:** 0.5.0  
-**Date:** 2026-02-28  
-**Status:** Draft
+**Version:** 1.0.0  
+**Date:** 2026-03-01  
+**Status:** Baseline Implemented (validated by stage gate)
 
 ---
 
@@ -40,6 +40,10 @@ This document defines functional and non-functional requirements derived from th
 | FR-022 | System shall annotate key algorithm modules with provenance comments using stable source IDs. | Should | Critical modules include file-level or block-level source IDs that match source catalog. |
 | FR-023 | System shall maintain metadata lock files for standards and required papers, including canonical URL and checksum. | Must | `papers/standards/standards-lock.json` and `papers/sdd-required/papers-lock.json` are present and valid JSON. |
 | FR-024 | System shall prevent third-party full-text binaries from being committed to public repo history. | Must | `.gitignore` rules block binaries under `papers/`; CI check fails on forbidden tracked file types. |
+| FR-025 | System shall not keep KPI-impacting runtime constants as undocumented hardcoded literals in SimCore. | Must | Every KPI-impacting constant is either profile-sourced or mapped to `ASSUME-*` source ID with rationale. |
+| FR-026 | System shall maintain an assumption registry for engineering assumptions (`ASSUME-*`) used in runtime logic. | Must | `source-trace.json` and source maps expose all `ASSUME-*` IDs referenced by code paths used in the run. |
+| FR-027 | System shall provide research-grade full implementations for CHO and MC-HO, and mark simplified variants as non-default research baselines. | Must | Run metadata explicitly indicates `algorithm_fidelity` and benchmark profiles default to `full`. |
+| FR-028 | System shall use the full configured RLF/HO parameter set in event and state-machine logic (`Qout/Qin/T310/N310/N311/L3/HARQ/RLC/RA`). | Must | Runtime parameter audit confirms all configured fields are consumed by the active logic path. |
 
 ---
 
@@ -56,6 +60,8 @@ This document defines functional and non-functional requirements derived from th
 | NFR-007 | Documentation integrity | Must | SDD, protocol, and validation matrix stay consistent with `todo.md`. |
 | NFR-008 | Research traceability | Must | Reviewer can trace KPI-critical parameters and logic back to a source ID within 5 minutes. |
 | NFR-009 | Copyright safety | Must | Public repository includes only legal metadata pointers, not redistributed publisher full text. |
+| NFR-010 | Research fidelity by default | Must | Default benchmark path uses full (non-simplified) CHO/MC-HO and profile/trace-backed constants. |
+| NFR-011 | Assumption governance | Must | Any new engineering assumption requires `ASSUME-*` registration and validation-matrix coverage in same change set. |
 
 ---
 
@@ -78,17 +84,23 @@ This document defines functional and non-functional requirements derived from th
 2. 3-state HO machine active with state-aware RLF/HOF counting.
 3. KPI JSON + CSV exports generated per run.
 4. A3/A4 and state-machine modules include provenance annotations.
+5. Link-budget and state-machine KPI-impacting constants are profile-sourced or `ASSUME-*`-mapped.
+6. Runtime audit confirms FR-028 parameter consumption coverage.
 
 ## M3 Gate
 1. CHO timer/location flows integrated.
 2. MC-HO dual connectivity behavior observable.
 3. Multi-baseline benchmark runner produces comparison outputs.
+4. Full-fidelity CHO/MC-HO path is available and set as benchmark default.
+5. Simplified CHO/MC-HO path (if retained) is explicitly labeled and excluded from baseline claims unless selected.
 
 ## M4 Gate
 1. SGP4 mode runs with `starlink-like` and `oneweb-like` profiles.
 2. Visibility selection is stable and reproducible from TLE snapshots.
 3. Baseline comparison works in real-trace mode.
 4. `source-trace.json` emitted in both `paper-baseline` and `real-trace`.
+5. Real-trace run passes the same hardcoded-constant and assumption-registry checks as paper-baseline mode.
+6. Repository policy gate blocks forbidden tracked binaries in `papers/` and validates `.gitignore` policy patterns.
 
 ---
 
@@ -110,10 +122,10 @@ This requirements spec concretizes:
 5. Section 6/7 (reproducibility and milestones)
 
 Reference documents:
-1. `sdd/beamHO-bench-sdd.md`
-2. `sdd/beamHO-bench-profile-baseline.md`
-3. `sdd/beamHO-bench-paper-traceability.md`
-4. `sdd/beamHO-bench-validation-matrix.md`
-5. `sdd/beamHO-bench-experiment-protocol.md`
+1. `sdd/completed/beamHO-bench-sdd.md`
+2. `sdd/completed/beamHO-bench-profile-baseline.md`
+3. `sdd/completed/beamHO-bench-paper-traceability.md`
+4. `sdd/completed/beamHO-bench-validation-matrix.md`
+5. `sdd/completed/beamHO-bench-experiment-protocol.md`
 6. `papers/sdd-required/papers-lock.json`
 7. `papers/standards/standards-lock.json`

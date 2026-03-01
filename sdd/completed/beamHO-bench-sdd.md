@@ -1,8 +1,8 @@
 # beamHO-bench — Software Design Document
 
-**Version:** 0.6.0  
-**Date:** 2026-02-28  
-**Status:** Working Draft (Aligned with latest `todo.md`)
+**Version:** 1.0.0  
+**Date:** 2026-03-01  
+**Status:** Implemented Baseline (M0-M4 core scope landed)
 
 ---
 
@@ -27,8 +27,9 @@ This SDD defines the target software architecture of **beamHO-bench**: a reprodu
 
 1. Reproduce Layer-A academic baselines under standardized NTN settings.
 2. Compare baseline and custom algorithms under identical scenario + seed.
-3. Support two modes: `paper-baseline` (analytic orbit, case9-style) and `real-trace` (TLE-driven propagation; SGP4 adapter target).
+3. Support two modes: `paper-baseline` (analytic orbit, case9-style) and `real-trace` (TLE-driven propagation with `satellite.js` SGP4 and Kepler fallback).
 4. Keep simulation core independent from rendering stack.
+5. Keep KPI-impacting logic academically traceable: no undocumented simplification or hidden constants.
 
 ### 1.4 Deferred (from latest `todo.md`)
 
@@ -72,16 +73,23 @@ Core invariant:
 | Module | Target Path | Responsibility | Phase |
 |---|---|---|---|
 | `SimEngine` | `src/sim/engine.ts` | tick orchestration and lifecycle control | M1 |
-| `OrbitAnalytic` | `src/sim/orbit/analytic.ts` | case9-style analytic pass (7.56 km/s) | M1 |
-| `OrbitSGP4` | `src/sim/orbit/sgp4.ts` | TLE propagation and visibility (current: Kepler fallback adapter) | M4 (Phase 1b) |
-| `BeamGeometry` | `src/sim/beam/geometry.ts` | 19-beam layout, footprint projection, overlap geometry | M0-M1 |
+| `OrbitAnalytic` | `src/sim/scenarios/case9-analytic.ts` | case9-style analytic pass (7.56 km/s) | M1 |
+| `OrbitSGP4Facade` | `src/sim/orbit/sgp4.ts` | public orbit API facade for scenario modules | M4 (Phase 1b) |
+| `OrbitCatalogLoader` | `src/sim/orbit/catalog.ts` | TLE/OMM fixture parsing and profile/provider selection | M4 (Phase 1b) |
+| `OrbitPropagation` | `src/sim/orbit/propagation.ts` | true SGP4 + Kepler fallback propagation | M4 (Phase 1b) |
+| `OrbitTopocentric` | `src/sim/orbit/topocentric.ts` | observer context and ENU/topocentric conversions | M4 (Phase 1b) |
+| `OrbitMath` | `src/sim/orbit/math.ts` | shared angle and clamp helpers for orbit modules | M4 (Phase 1b) |
+| `BeamGeometry` | `src/sim/scenarios/common/beam-layout.ts` | hex layout, footprint projection, overlap spacing | M0-M1 |
+| `ScenarioRuntimeCommon` | `src/sim/scenarios/common/runtime.ts` | UE movement wrapper and UE-beam attachment | M0-M2 |
 | `ChannelLargeScale` | `src/sim/channel/large-scale.ts` | FSPL + 3GPP TR 38.811 SF/CL lookup | M1 |
 | `ChannelSmallScale` | `src/sim/channel/small-scale.ts` | Shadowed-Rician/Loo plugin | M3+ |
 | `LinkBudget` | `src/sim/channel/link-budget.ts` | RSRP/SINR matrix + interference + noise | M2 |
-| `HOBaselines` | `src/sim/handover/baselines.ts` | max-RSRP/max-elevation/max-remaining-time | M1 |
-| `HOEvents` | `src/sim/handover/events.ts` | A3/A4 trigger evaluation with TTT/HOM/filter | M2 |
-| `HOCHO` | `src/sim/handover/cho.ts` | CHO prepare/execute (location/timer) | M3 |
-| `HOMCHO` | `src/sim/handover/mc-ho.ts` | dual connectivity and packet-duplication flow | M3 |
+| `HOBaselineOrchestrator` | `src/sim/handover/baselines.ts` | runtime orchestration and event emission | M1-M3 |
+| `HOBaselineTypes` | `src/sim/handover/baseline-types.ts` | baseline type contracts and trigger memory types | M3 |
+| `HOBaselineHelpers` | `src/sim/handover/baseline-helpers.ts` | shared scoring and threshold helpers | M3 |
+| `HODecisionRouter` | `src/sim/handover/baseline-decisions.ts` | baseline switch routing and input wiring | M3 |
+| `HOA3A4Decisions` | `src/sim/handover/baseline-a3a4.ts` | A3/A4 trigger logic with TTT and threshold gates | M3 |
+| `HOChoMcHoDecisions` | `src/sim/handover/baseline-cho-mcho.ts` | CHO/MC-HO logic (full/simplified) | M3 |
 | `HOStateMachine` | `src/sim/handover/state-machine.ts` | State1/2/3 transitions + RLF/HOF detection | M2 |
 | `KpiAccumulator` | `src/sim/kpi/accumulator.ts` | KPI updates per tick/event | M2 |
 | `KpiReporter` | `src/sim/kpi/reporter.ts` | deterministic CSV/JSON outputs | M2 |
@@ -94,10 +102,13 @@ Core invariant:
 | Module | Target Path | Responsibility | Phase |
 |---|---|---|---|
 | `useSimulation` | `src/hooks/useSimulation.ts` | bridge SimCore -> React | M1 |
+| `useSimulationExporters` | `src/hooks/useSimulation.exporters.ts` | export/report bundle action factory | M2-M4 |
+| `useSimulationTypes` | `src/hooks/useSimulation.types.ts` | hook-facing API contracts and baseline helper guard | M2-M4 |
 | `SatelliteModel` | `src/components/sim/SatelliteModel.tsx` | GLB satellite rendering | M0 |
 | `BeamFootprint` | `src/components/sim/BeamFootprint.tsx` | beam projection rendering | M0 |
 | `UEMarkers` | `src/components/sim/UEMarkers.tsx` | instanced UE markers | M0 |
 | `ConnectionLines` | `src/components/sim/ConnectionLines.tsx` | UE-satellite/MC links | M2 |
+| `ConnectionLegend` | `src/components/sim/ConnectionLegend.tsx` | serving/secondary/prepared visibility toggles + counters | M2 |
 | `KpiHUD` | `src/components/sim/KpiHUD.tsx` | live counters and summary | M2 |
 | `ComparisonChart` | `src/components/sim/ComparisonChart.tsx` | multi-baseline KPI comparison | M3 |
 | `TimelineControls` | `src/components/sim/TimelineControls.tsx` | play/pause/step/speed | M1 |
@@ -115,7 +126,7 @@ Implemented and treated as source of truth:
 
 Normative baseline values are pinned in:
 1. `beamHO-bench/src/config/paper-profiles/case9-default.json`
-2. `sdd/beamHO-bench-profile-baseline.md`
+2. `sdd/completed/beamHO-bench-profile-baseline.md`
 
 Traceability files:
 1. `beamHO-bench/src/config/paper-profiles/case9-default.sources.json`
@@ -168,7 +179,23 @@ Use exactly:
 3. HO/RLF state machine: `Qout=-8 dB`, `Qin=-6 dB`, `T310=1000 ms`, `HARQ=7`, `RLC=3`
 
 For the full parameter table and override policy, see:
-1. `sdd/beamHO-bench-profile-baseline.md`
+1. `sdd/completed/beamHO-bench-profile-baseline.md`
+
+## 4.5 Academic Rigor Guardrails
+
+All KPI-impacting runtime values shall follow:
+1. profile-sourced parameter path, or
+2. `ASSUME-*` source ID with rationale and audit visibility.
+
+`ASSUME-*` usage policy:
+1. assumption ID must exist in source catalog metadata.
+2. assumption ID must be referenced by profile sidecar mapping or run-level source trace.
+3. assumption rationale must be emitted in run artifact assumptions.
+
+Simplification policy:
+1. simplified algorithm path is allowed only as explicitly labeled engineering mode.
+2. benchmark/research-claim default path must use full (non-simplified) algorithm fidelity.
+3. comparisons against papers must declare fidelity mode in run metadata.
 
 ---
 
@@ -218,7 +245,7 @@ export interface UEState {
 ```
 
 Traceability contracts (for governance and audit) are defined in:
-1. `sdd/beamHO-bench-paper-traceability.md`
+1. `sdd/completed/beamHO-bench-paper-traceability.md`
 
 ---
 
@@ -271,6 +298,17 @@ Use `profile.rlfStateMachine` as runtime source for:
 4. `HARQ/RLC/RA timers`
 
 No hidden hardcoded constants allowed in HO modules.
+
+## 7.4 Fidelity Modes
+
+Handover algorithm fidelity:
+1. `full`: paper/standard-conformant implementation used for benchmark claims.
+2. `simplified`: engineering preview path for early iteration or visualization sanity checks.
+
+Fidelity governance:
+1. `full` must be default for benchmark profiles.
+2. if `simplified` path is selected, run metadata and source trace must explicitly mark it.
+3. `simplified` runs are excluded from paper-reproduction conclusions unless paper baseline is itself simplified.
 
 ---
 
@@ -327,14 +365,24 @@ Performance rules:
 3. RLF/HOF state-aware counting
 4. KPI report export
 
+### M2b / Academic Rigor Closure
+1. Remove undocumented KPI-impacting hardcoded constants from channel/link-budget/state machine paths.
+2. Register unavoidable engineering assumptions via `ASSUME-*` and emit them in source-trace assumptions.
+3. Add runtime parameter audit for full RLF/HO parameter-set consumption.
+
 ### M3 / Phase 3 + remaining Phase 4 + Phase 5 basics
 1. CHO timer/location variants (v1 simplified runtime baseline available)
 2. MC-HO dual connectivity flow (v1 simplified secondary-link baseline available)
-3. Multi-baseline batch comparison
+3. Multi-baseline batch comparison (v1 batch runner available)
+
+### M3b / Fidelity Promotion
+1. Promote CHO/MC-HO full-fidelity path to benchmark default.
+2. Keep simplified CHO/MC-HO path only as explicit non-default mode.
+3. Add fidelity mode field into run artifacts and comparison outputs.
 
 ### M4 / Phase 1b complete
-1. TLE real-trace mode (current implementation uses Kepler fallback; true SGP4 adapter pending)
-2. Propagator switch contract: `VITE_ORBIT_PROPAGATOR=sgp4` may request SGP4, but shall fail-open to deterministic fallback with explicit runtime warning until adapter is available
+1. TLE real-trace mode (`satellite.js` SGP4 enabled; per-satellite Kepler fallback retained)
+2. Propagator switch contract: `VITE_ORBIT_PROPAGATOR=sgp4` enables true SGP4; default `kepler` remains deterministic baseline for fast reproducible runs
 3. `starlink-like` and `oneweb-like` profiles in benchmark runs
 
 ---
@@ -344,7 +392,11 @@ Performance rules:
 Three test levels:
 1. Unit tests (SimCore modules)
 2. Integration tests (10-100 tick deterministic scenarios)
-3. Paper trend validation (see `sdd/beamHO-bench-validation-matrix.md`)
+3. Paper trend validation (see `sdd/completed/beamHO-bench-validation-matrix.md`)
+4. Academic-rigor compliance checks (constant traceability + fidelity-mode policy)
+5. Validation-suite replay determinism check (same profile/seed/overrides -> identical KPI+timeseries fingerprint)
+6. Repository policy compliance check (`validate:repo-policy` for FR-024)
+7. Module-structure guard (`validate:structure`): warning at `>500` LOC, hard fail at `>650` LOC for `src/sim`, `src/hooks`, `src/config/paper-profiles`; scenario helper duplication is always fail
 
 Minimum deterministic guarantee:
 1. Same `(profileId, seed, overrides)` -> same outputs.
@@ -360,14 +412,20 @@ Experiment identity:
 
 Run artifacts shall include:
 1. resolved profile JSON
-2. run metadata (`scenario_id`, `seed`, git commit hash, profile checksum)
+2. run metadata (`scenario_id`, `seed`, `playback_rate`, git commit hash, profile checksum)
+   includes optional `validation_gate` summary (`pass`, `total_cases`, `failed_cases`)
 3. final KPI summary
 4. optional per-tick timeseries
 5. optional TLE snapshot timestamp for `real-trace` runs
 6. source trace snapshot (`source-trace.json`)
+7. validation gate summary (`validation-gate-summary.json`, including blocking failures and non-blocking warnings with check-level pass-rate stats)
+8. SimCore test summary (`sim-test-summary.json`, unit/integration pass-rate evidence for CI artifact and appendix citation)
+9. runtime parameter audit snapshot (`parameter-audit_*.json`, FR-028 full configured RLF/HO parameter-set consumption evidence)
+10. runtime parameter audit aggregate summary (`runtime-parameter-audit-summary.json`, validation-suite level pass/fail and key coverage)
+11. validation suite full artifacts (`validation-suite.json`, `validation-suite.csv`, including case-level checks and trend-policy provenance)
 
 Detailed protocol is specified in:
-- `sdd/beamHO-bench-experiment-protocol.md`
+- `sdd/completed/beamHO-bench-experiment-protocol.md`
 
 ---
 
@@ -384,6 +442,9 @@ Mitigation: schema validation + immutable run manifests.
 
 4. Risk: inconsistent KPI definitions  
 Mitigation: single KPI accumulator and explicit state-aware definitions.
+
+5. Risk: simplified path accidentally used as benchmark baseline  
+Mitigation: enforce fidelity-mode metadata and benchmark-default `full` path checks.
 
 ---
 
@@ -466,7 +527,7 @@ Each run shall export `source-trace.json` containing:
 5. canonical source links (`sourceId` -> URL)
 
 Details are specified in:
-1. `sdd/beamHO-bench-paper-traceability.md`
+1. `sdd/completed/beamHO-bench-paper-traceability.md`
 
 ### 15.6 Copyright and Public-Repo Safety
 

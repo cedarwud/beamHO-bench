@@ -1,8 +1,8 @@
 # beamHO-bench — Validation Matrix
 
-**Version:** 0.5.0  
-**Date:** 2026-02-28  
-**Status:** Draft
+**Version:** 0.7.0  
+**Date:** 2026-03-01  
+**Status:** Active (CI-enforced validation suite)
 
 ---
 
@@ -12,7 +12,7 @@ This matrix defines how simulation outputs are validated against baseline papers
 Target is **trend and ordering consistency**, not exact numeric replication.
 
 All profile conformance checks in this document assume:
-1. canonical profile IDs from `sdd/beamHO-bench-profile-baseline.md`
+1. canonical profile IDs from `sdd/completed/beamHO-bench-profile-baseline.md`
 2. no hidden runtime defaults outside resolved profile + explicit overrides
 
 ---
@@ -45,14 +45,20 @@ All profile conformance checks in this document assume:
 ## 4. KPI Acceptance Rules
 
 Global rules for pass:
-1. Directional consistency: metric trends follow paper-reported direction.
-2. Rank consistency: top/bottom strategy ordering is stable for tested sweep points.
-3. Magnitude sanity: values fall into realistic range (no physically impossible spikes).
+1. Determinism consistency: replay with identical profile + seed + overrides yields identical KPI/timeseries fingerprint.
+2. Directional consistency: metric trends follow paper-reported direction.
+3. Rank consistency: top/bottom strategy ordering is stable for tested sweep points.
+4. Magnitude sanity: values fall into realistic range (no physically impossible spikes).
 
 State-aware KPI checks:
 1. `rlf.state1` and `rlf.state2` both present and non-negative.
 2. `hof.state2` and `hof.state3` both present and non-negative.
 3. `hopp <= uho` always holds.
+
+Academic-rigor checks:
+1. no undocumented KPI-impacting hardcoded constants are present in active code path.
+2. all engineering assumptions used in active path resolve to `ASSUME-*` source IDs.
+3. benchmark-claim runs are marked `algorithm_fidelity=full`.
 
 ---
 
@@ -65,6 +71,12 @@ Minimum run set for CI/nightly:
 4. `VAL-MC-OVERLAP-SWEEP`
 5. `VAL-STARLINK-TRACE-SMOKE`
 6. `VAL-ONEWEB-TRACE-SMOKE`
+7. `VAL-REALTRACE-MULTI-BASELINE-SMOKE`
+8. `VAL-ONEWEB-MULTI-BASELINE-SMOKE`
+9. `VAL-CONSTANT-TRACE-LINT`
+10. `VAL-FR018-PARAM-COVERAGE`
+11. `VAL-CHO-MCHO-FULLMODE-SMOKE`
+12. `VAL-REPO-POLICY`
 
 Each run must vary one factor only while keeping profile and seed policy controlled.
 
@@ -82,10 +94,39 @@ For each validation run, store:
 7. KPI summary JSON
 8. optional timeseries CSV
 9. `source-trace.json`
+10. `validation-gate-summary.json` (includes case-level pass/fail counts and check-level pass-rate stats)
+11. `algorithm_fidelity` (`full` or `simplified`)
+12. `playback_rate`
+13. resolved `ASSUME-*` IDs used by active code path (empty if none)
+14. `parameter-audit_*.json` (FR-028 runtime parameter audit payload)
+15. `runtime-parameter-audit-summary.json` (suite-level FR-028 coverage aggregate for CI and appendix)
+16. `validation-suite_*.json` case-level `trendPolicy` (`metric`, `direction`, optional `tolerance`) for directional-check provenance
+17. `validation-suite.csv` (compact table for appendix and quick regression diff)
+
+Validation gate policy:
+1. blocking checks (`determinism`, `fidelity-mode`, `kpi-sanity`, `runtime-parameter-audit`, `link-state-consistency`) can fail the gate.
+2. non-blocking diagnostic checks (`trend-directional`, `rank-consistency`) are reported in `warnings` and check pass-rate stats, but do not fail stage gate.
+3. `trend-directional` is applied only to validation groups with explicit directional expectation; flat outcomes are acceptable if they do not violate configured direction.
+4. directional expectation and metric are configured in `src/sim/bench/validation-definitions.ts` via `trendPolicy`.
 
 ---
 
-## 7. Review Workflow
+## 7. Academic-Rigor Compliance Workflow
+
+1. Run static constant trace lint against SimCore modules used in the scenario.
+2. Verify deterministic replay check passes for all validation cases.
+3. Verify every flagged constant has profile-path source or `ASSUME-*` mapping.
+4. Verify trend-directional and rank-consistency checks are reported and pass for applicable groups.
+5. Verify FR-018 parameter coverage report includes all configured HO/RLF fields.
+6. Verify benchmark runs are `algorithm_fidelity=full`.
+7. Verify runtime parameter audit check passes and has zero missing FR-028 keys.
+8. Verify CHO/MC-HO cases pass link-state consistency (`prepared/secondary/event` coherence).
+9. Verify repository policy check blocks forbidden tracked binaries under `papers/`.
+10. Mark compliance as `PASS` only when all checks pass.
+
+---
+
+## 8. Review Workflow
 
 1. Execute validation suite.
 2. Compare outputs against expected trend statements in Section 2.
