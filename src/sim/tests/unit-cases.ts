@@ -6,6 +6,7 @@ import { resolveCoupledHandoverConflicts } from '@/sim/scheduler/coupled-resolve
 import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
 import type { BeamState } from '@/sim/types';
 import { assertCondition, createBaseUe, createInvisibleSatellite } from './helpers';
+import { buildTimerChoUnitCases } from './unit-cases-timer-cho';
 import type { SimTestCase } from './types';
 
 export function buildUnitTestCases(): SimTestCase[] {
@@ -404,5 +405,6 @@ export function buildUnitTestCases(): SimTestCase[] {
         );
       },
     },
+    ...buildTimerChoUnitCases(),
   ];
 }

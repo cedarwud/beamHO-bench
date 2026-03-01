@@ -150,6 +150,108 @@ export function buildIntegrationTestCases(): SimTestCase[] {
       },
     },
     {
+      name: 'integration: timer-cho countdown and geometry fields are replay deterministic',
+      kind: 'integration',
+      run: () => {
+        const profile = loadPaperProfile('case9-default');
+        const execute = (seed: number) =>
+          runBaselineBatch({
+            profile,
+            seed,
+            baselines: ['cho'],
+            tickCount: 120,
+            captureSnapshots: true,
+          });
+
+        const projectChoHudPayload = (batch: ReturnType<typeof execute>) =>
+          (batch.runs[0].snapshots ?? []).flatMap((snapshot) =>
+            snapshot.ues.map((ue) => ({
+              tick: snapshot.tick,
+              ueId: ue.id,
+              satId: ue.choPreparedSatId,
+              beamId: ue.choPreparedBeamId,
+              elapsedMs: ue.choPreparedElapsedMs,
+              targetMs: ue.choPreparedTargetMs,
+              remainingMs: ue.choPreparedRemainingMs,
+              distanceKm: ue.choGeometryDistanceKm,
+              elevationDeg: ue.choGeometryElevationDeg,
+              timeToThresholdSec: ue.choGeometryTimeToThresholdSec,
+            })),
+          );
+
+        const assertChoHudContract = (
+          payload: ReturnType<typeof projectChoHudPayload>,
+          seed: number,
+        ) => {
+          for (const entry of payload) {
+            const prepared =
+              entry.satId !== null ||
+              entry.beamId !== null ||
+              entry.elapsedMs !== null ||
+              entry.targetMs !== null ||
+              entry.remainingMs !== null ||
+              entry.distanceKm !== null ||
+              entry.elevationDeg !== null ||
+              entry.timeToThresholdSec !== null;
+
+            if (!prepared) {
+              continue;
+            }
+
+            assertCondition(
+              entry.satId !== null && entry.beamId !== null,
+              `Expected cho prepared sat/beam identity for seed=${seed}, ue=${entry.ueId}, tick=${entry.tick}.`,
+            );
+            assertCondition(
+              Number.isFinite(entry.elapsedMs) && (entry.elapsedMs ?? -1) >= 0,
+              `Expected finite choPreparedElapsedMs for seed=${seed}, ue=${entry.ueId}, tick=${entry.tick}.`,
+            );
+            assertCondition(
+              Number.isFinite(entry.targetMs) && (entry.targetMs ?? -1) > 0,
+              `Expected finite choPreparedTargetMs for seed=${seed}, ue=${entry.ueId}, tick=${entry.tick}.`,
+            );
+            assertCondition(
+              Number.isFinite(entry.remainingMs) && (entry.remainingMs ?? -1) >= 0,
+              `Expected finite choPreparedRemainingMs for seed=${seed}, ue=${entry.ueId}, tick=${entry.tick}.`,
+            );
+            assertCondition(
+              Number.isFinite(entry.distanceKm) && (entry.distanceKm ?? -1) >= 0,
+              `Expected finite choGeometryDistanceKm for seed=${seed}, ue=${entry.ueId}, tick=${entry.tick}.`,
+            );
+            assertCondition(
+              Number.isFinite(entry.elevationDeg) &&
+                (entry.elevationDeg ?? -Infinity) >= -90 &&
+                (entry.elevationDeg ?? Infinity) <= 90,
+              `Expected bounded choGeometryElevationDeg for seed=${seed}, ue=${entry.ueId}, tick=${entry.tick}.`,
+            );
+            assertCondition(
+              Number.isFinite(entry.timeToThresholdSec) &&
+                (entry.timeToThresholdSec ?? -1) >= 0,
+              `Expected finite choGeometryTimeToThresholdSec for seed=${seed}, ue=${entry.ueId}, tick=${entry.tick}.`,
+            );
+          }
+        };
+
+        const seed = 23;
+        const first = execute(seed);
+        const firstPayload = projectChoHudPayload(first);
+        assertCondition(
+          firstPayload.length > 0,
+          'Expected CHO HUD projection payload to include at least one snapshot entry.',
+        );
+        assertChoHudContract(firstPayload, seed);
+
+        const second = execute(seed);
+        const secondPayload = projectChoHudPayload(second);
+        assertChoHudContract(secondPayload, seed);
+
+        assertCondition(
+          JSON.stringify(firstPayload) === JSON.stringify(secondPayload),
+          'Expected deterministic replay for CHO HUD countdown and geometry payload.',
+        );
+      },
+    },
+    {
       name: 'integration: starlink-like real-trace smoke has satellites in snapshot',
       kind: 'integration',
       run: () => {
