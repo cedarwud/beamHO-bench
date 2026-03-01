@@ -165,5 +165,68 @@ export function buildValidationDefinitions(): ValidationSuiteDefinition[] {
         },
       ],
     },
+    {
+      validationId: 'VAL-RL-POLICY-OFF-PARITY',
+      profileId: 'case9-default',
+      requiresFullFidelity: true,
+      cases: [
+        {
+          caseId: 'policy-off-parity-smoke',
+          baselines: ['max-rsrp'],
+          tickCount: 90,
+          policyRuntime: {
+            mode: 'off',
+          },
+        },
+      ],
+    },
+    {
+      validationId: 'VAL-RL-DETERMINISM-ON',
+      profileId: 'case9-default',
+      requiresFullFidelity: true,
+      cases: [
+        {
+          caseId: 'policy-greedy-sinr-determinism',
+          baselines: ['max-rsrp'],
+          tickCount: 90,
+          policyRuntime: {
+            mode: 'on',
+            pluginId: 'greedy-sinr',
+          },
+        },
+      ],
+    },
+    {
+      validationId: 'VAL-RL-INVALID-ACTION-SAFETY',
+      profileId: 'case9-default',
+      requiresFullFidelity: true,
+      cases: [
+        {
+          caseId: 'policy-invalid-action-safety',
+          baselines: ['max-rsrp'],
+          tickCount: 90,
+          policyRuntime: {
+            mode: 'on',
+            pluginId: 'invalid-action-probe',
+          },
+        },
+      ],
+    },
+    {
+      validationId: 'VAL-RL-REALTRACE-SMOKE',
+      profileId: 'starlink-like',
+      requiresFullFidelity: true,
+      cases: [
+        {
+          caseId: 'realtrace-policy-greedy-sinr',
+          baselines: ['max-rsrp'],
+          tickCount: 60,
+          policyRuntime: {
+            mode: 'on',
+            pluginId: 'greedy-sinr',
+          },
+        },
+      ],
+    },
   ];
 }

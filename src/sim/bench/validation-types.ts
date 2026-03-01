@@ -1,6 +1,7 @@
 import type { CanonicalProfileId, DeepPartial } from '@/config/paper-profiles/loader';
 import type { PaperProfile } from '@/config/paper-profiles/types';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
+import type { PolicyMode } from '@/sim/policy/types';
 import type { BaselineBatchResult } from './runner';
 
 export interface ValidationSuiteCaseDefinition {
@@ -8,6 +9,10 @@ export interface ValidationSuiteCaseDefinition {
   baselines: RuntimeBaseline[];
   tickCount: number;
   runtimeOverrides?: DeepPartial<PaperProfile>;
+  policyRuntime?: {
+    mode?: PolicyMode;
+    pluginId?: 'noop' | 'greedy-sinr' | 'invalid-action-probe';
+  };
 }
 
 export type ValidationTrendMetric = 'handover-rate' | 'hopp' | 'failure-total';

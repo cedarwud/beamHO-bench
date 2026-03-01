@@ -290,6 +290,82 @@ export function checkLinkStateConsistency(
   };
 }
 
+export function checkPolicyActionSafety(
+  batch: BaselineBatchResult,
+): ValidationCheckResult {
+  const policyEnabledRuns = batch.runs.filter(
+    (run) => run.result.metadata.policyRuntime.policyMode === 'on',
+  );
+
+  if (policyEnabledRuns.length === 0) {
+    return {
+      checkId: 'policy-action-safety',
+      pass: true,
+      detail: 'No policy-enabled run in this case; check not applicable.',
+      blocking: false,
+    };
+  }
+
+  const missingMetadataRun = policyEnabledRuns.find((run) => {
+    const policy = run.result.metadata.policyRuntime;
+    return (
+      !policy.policyId ||
+      !policy.policyVersion ||
+      !policy.checkpointHash ||
+      !policy.runtimeConfigHash
+    );
+  });
+  if (missingMetadataRun) {
+    return {
+      checkId: 'policy-action-safety',
+      pass: false,
+      detail: `Policy metadata incomplete for baseline '${missingMetadataRun.baseline}'.`,
+    };
+  }
+
+  const noDecisionRun = policyEnabledRuns.find(
+    (run) => run.result.metadata.policyRuntime.decisionCount <= 0,
+  );
+  if (noDecisionRun) {
+    return {
+      checkId: 'policy-action-safety',
+      pass: false,
+      detail: `Policy run '${noDecisionRun.baseline}' has non-positive decisionCount.`,
+    };
+  }
+
+  const invalidProbeRuns = policyEnabledRuns.filter(
+    (run) => run.result.metadata.policyRuntime.policyId === 'policy-invalid-action-probe',
+  );
+  for (const run of invalidProbeRuns) {
+    const policy = run.result.metadata.policyRuntime;
+    if (policy.rejectionCount <= 0) {
+      return {
+        checkId: 'policy-action-safety',
+        pass: false,
+        detail: `Invalid-action probe run '${run.baseline}' produced no policy rejection.`,
+      };
+    }
+
+    const hasRejectionEvent = (run.snapshots ?? []).some((snapshot) =>
+      snapshot.hoEvents.some((event) => event.reason.startsWith('policy-reject:')),
+    );
+    if (!hasRejectionEvent) {
+      return {
+        checkId: 'policy-action-safety',
+        pass: false,
+        detail: `Invalid-action probe run '${run.baseline}' has no policy-reject event.`,
+      };
+    }
+  }
+
+  return {
+    checkId: 'policy-action-safety',
+    pass: true,
+    detail: `Policy metadata and guardrail checks passed for ${policyEnabledRuns.length} run(s).`,
+  };
+}
+
 function fingerprintBatch(batch: BaselineBatchResult): string {
   const normalized = {
     profileId: batch.profileId,
@@ -306,6 +382,7 @@ function fingerprintBatch(batch: BaselineBatchResult): string {
         playbackRate: run.result.metadata.playbackRate,
         resolvedAssumptionIds: [...run.result.metadata.resolvedAssumptionIds].sort(),
         runtimeParameterAudit: run.result.metadata.runtimeParameterAudit,
+        policyRuntime: run.result.metadata.policyRuntime,
       },
       summary: run.result.summary,
       timeseriesCsv: run.timeseriesCsv,

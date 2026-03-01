@@ -63,6 +63,7 @@ export function normalizeBatchForDeterminism(batch: BaselineBatchResult) {
         playbackRate: run.result.metadata.playbackRate,
         resolvedAssumptionIds: [...run.result.metadata.resolvedAssumptionIds].sort(),
         runtimeParameterAudit: run.result.metadata.runtimeParameterAudit,
+        policyRuntime: run.result.metadata.policyRuntime,
       },
       summary: run.result.summary,
       timeseriesCsv: run.timeseriesCsv,

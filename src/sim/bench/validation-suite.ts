@@ -1,4 +1,9 @@
 import { loadPaperProfile } from '@/config/paper-profiles/loader';
+import {
+  createGreedySinrPolicyPlugin,
+  createInvalidActionProbePolicyPlugin,
+  createNoOpPolicyPlugin,
+} from '@/sim/policy/builtin-plugins';
 import { buildValidationDefinitions } from './validation-definitions';
 import { runBaselineBatch } from './runner';
 import {
@@ -6,10 +11,12 @@ import {
   checkFidelity,
   checkKpiSanity,
   checkLinkStateConsistency,
+  checkPolicyActionSafety,
   checkRuntimeParameterAudit,
 } from './validation-checks';
 import type {
   ValidationCheckResult,
+  ValidationSuiteCaseDefinition,
   ValidationSuiteCaseResult,
   ValidationSuiteOptions,
   ValidationSuiteResult,
@@ -248,6 +255,7 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
       'check_kpi_sanity',
       'check_runtime_parameter_audit',
       'check_link_state_consistency',
+      'check_policy_action_safety',
       'check_trend_directional',
       'check_rank_consistency',
       'trend_metric',
@@ -280,6 +288,9 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
     const linkStatePass = result.checks.find(
       (check) => check.checkId === 'link-state-consistency',
     )?.pass;
+    const policyActionSafetyPass = result.checks.find(
+      (check) => check.checkId === 'policy-action-safety',
+    )?.pass;
     const determinismPass = result.checks.find(
       (check) => check.checkId === 'determinism',
     )?.pass;
@@ -309,6 +320,7 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
           kpiPass ? 'PASS' : 'FAIL',
           runtimeParameterAuditPass ? 'PASS' : 'FAIL',
           linkStatePass ? 'PASS' : 'FAIL',
+          policyActionSafetyPass ? 'PASS' : 'FAIL',
           trendDirectionalPass ? 'PASS' : 'FAIL',
           rankConsistencyPass ? 'PASS' : 'FAIL',
           trendMetric,
@@ -344,15 +356,43 @@ export function runCoreValidationSuite(
   const definitions = buildValidationDefinitions();
   const results: ValidationSuiteCaseResult[] = [];
 
+  function resolvePolicyRuntimeForCase(
+    suiteCase: ValidationSuiteCaseDefinition,
+  ) {
+    const mode = suiteCase.policyRuntime?.mode ?? 'off';
+    if (mode !== 'on') {
+      return { mode: 'off' as const };
+    }
+
+    const pluginFactory = () => {
+      switch (suiteCase.policyRuntime?.pluginId) {
+        case 'invalid-action-probe':
+          return createInvalidActionProbePolicyPlugin();
+        case 'noop':
+          return createNoOpPolicyPlugin();
+        case 'greedy-sinr':
+        default:
+          return createGreedySinrPolicyPlugin();
+      }
+    };
+
+    return {
+      mode: 'on' as const,
+      pluginFactory,
+    };
+  }
+
   for (const definition of definitions) {
     for (const suiteCase of definition.cases) {
       const profile = loadPaperProfile(definition.profileId, suiteCase.runtimeOverrides ?? {});
+      const policyRuntime = resolvePolicyRuntimeForCase(suiteCase);
       const batch = runBaselineBatch({
         profile,
         seed,
         baselines: suiteCase.baselines,
         tickCount: suiteCase.tickCount,
         captureSnapshots: true,
+        policyRuntime,
       });
       const replayBatch = runBaselineBatch({
         profile,
@@ -360,6 +400,7 @@ export function runCoreValidationSuite(
         baselines: suiteCase.baselines,
         tickCount: suiteCase.tickCount,
         captureSnapshots: false,
+        policyRuntime,
       });
 
       const checks: ValidationCheckResult[] = [
@@ -368,6 +409,7 @@ export function runCoreValidationSuite(
         checkKpiSanity(batch),
         checkRuntimeParameterAudit(batch),
         checkLinkStateConsistency(batch),
+        checkPolicyActionSafety(batch),
       ];
 
       results.push({

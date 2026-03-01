@@ -47,6 +47,10 @@ const CRITICAL_PROVENANCE_FILES = [
   'src/sim/scenarios/case9-static.ts',
   'src/sim/kpi/accumulator.ts',
   'src/sim/kpi/reporter.ts',
+  'src/sim/policy/types.ts',
+  'src/sim/policy/noop-plugin.ts',
+  'src/sim/policy/runtime-adapter.ts',
+  'src/sim/policy/runtime-session.ts',
   'src/sim/reporting/source-trace.ts',
   'src/sim/reporting/manifest.ts',
   'src/sim/engine.ts',
@@ -333,6 +337,10 @@ async function validateArtifactsContract(errors) {
     'resolvedAssumptionIds',
     'resolvedParameterSources',
     'resolvedSourceLinks',
+    'policy_mode',
+    'policy_runtime_config_hash',
+    'policy_state_feature_sources',
+    'policy_reward_source_ids',
   ];
 
   for (const token of requiredSourceTraceTokens) {
@@ -361,6 +369,10 @@ async function validateArtifactsContract(errors) {
     'source_catalog_checksum_sha256',
     'algorithm_fidelity',
     'runtime_parameter_audit',
+    'policy_mode',
+    'policy_runtime_config_hash',
+    'policy_decision_count',
+    'policy_rejection_count',
   ];
   for (const token of requiredManifestTokens) {
     if (!manifest.includes(token)) {
