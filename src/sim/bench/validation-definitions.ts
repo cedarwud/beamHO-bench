@@ -228,5 +228,56 @@ export function buildValidationDefinitions(): ValidationSuiteDefinition[] {
         },
       ],
     },
+    {
+      validationId: 'VAL-JBH-UNCOUPLED-PARITY',
+      profileId: 'case9-default',
+      requiresFullFidelity: true,
+      cases: [
+        {
+          caseId: 'scheduler-uncoupled-parity',
+          baselines: ['max-rsrp'],
+          tickCount: 90,
+          runtimeOverrides: {
+            scheduler: {
+              mode: 'uncoupled',
+            },
+          },
+        },
+      ],
+    },
+    {
+      validationId: 'VAL-JBH-COUPLED-DETERMINISM',
+      profileId: 'case9-default',
+      requiresFullFidelity: true,
+      cases: [
+        {
+          caseId: 'scheduler-coupled-determinism',
+          baselines: ['max-rsrp'],
+          tickCount: 90,
+          runtimeOverrides: {
+            scheduler: {
+              mode: 'coupled',
+            },
+          },
+        },
+      ],
+    },
+    {
+      validationId: 'VAL-JBH-REALTRACE-COUPLED-SMOKE',
+      profileId: 'starlink-like',
+      requiresFullFidelity: true,
+      cases: [
+        {
+          caseId: 'scheduler-realtrace-coupled-smoke',
+          baselines: ['max-rsrp'],
+          tickCount: 60,
+          runtimeOverrides: {
+            scheduler: {
+              mode: 'coupled',
+            },
+          },
+        },
+      ],
+    },
   ];
 }

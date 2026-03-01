@@ -64,6 +64,7 @@ export function normalizeBatchForDeterminism(batch: BaselineBatchResult) {
         resolvedAssumptionIds: [...run.result.metadata.resolvedAssumptionIds].sort(),
         runtimeParameterAudit: run.result.metadata.runtimeParameterAudit,
         policyRuntime: run.result.metadata.policyRuntime,
+        beamScheduler: run.result.metadata.beamScheduler,
       },
       summary: run.result.summary,
       timeseriesCsv: run.timeseriesCsv,

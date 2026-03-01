@@ -13,6 +13,7 @@ import {
   checkLinkStateConsistency,
   checkPolicyActionSafety,
   checkRuntimeParameterAudit,
+  checkSchedulerStateSanity,
 } from './validation-checks';
 import type {
   ValidationCheckResult,
@@ -256,6 +257,7 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
       'check_runtime_parameter_audit',
       'check_link_state_consistency',
       'check_policy_action_safety',
+      'check_scheduler_state_sanity',
       'check_trend_directional',
       'check_rank_consistency',
       'trend_metric',
@@ -291,6 +293,9 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
     const policyActionSafetyPass = result.checks.find(
       (check) => check.checkId === 'policy-action-safety',
     )?.pass;
+    const schedulerStateSanityPass = result.checks.find(
+      (check) => check.checkId === 'scheduler-state-sanity',
+    )?.pass;
     const determinismPass = result.checks.find(
       (check) => check.checkId === 'determinism',
     )?.pass;
@@ -321,6 +326,7 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
           runtimeParameterAuditPass ? 'PASS' : 'FAIL',
           linkStatePass ? 'PASS' : 'FAIL',
           policyActionSafetyPass ? 'PASS' : 'FAIL',
+          schedulerStateSanityPass ? 'PASS' : 'FAIL',
           trendDirectionalPass ? 'PASS' : 'FAIL',
           rankConsistencyPass ? 'PASS' : 'FAIL',
           trendMetric,
@@ -410,6 +416,7 @@ export function runCoreValidationSuite(
         checkRuntimeParameterAudit(batch),
         checkLinkStateConsistency(batch),
         checkPolicyActionSafety(batch),
+        checkSchedulerStateSanity(batch),
       ];
 
       results.push({

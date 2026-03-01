@@ -22,6 +22,12 @@ const REQUIRED_SOURCE_PATHS = [
   'handover.params.a4ThresholdDbm',
   'handover.params.homDb',
   'handover.params.timerAlphaOptions',
+  'scheduler.mode',
+  'scheduler.windowPeriodSec',
+  'scheduler.activeWindowFraction',
+  'scheduler.minActiveBeamsPerSatellite',
+  'scheduler.maxActiveBeamsPerSatellite',
+  'scheduler.frequencyBlockCount',
   'rlfStateMachine.qOutDb',
   'rlfStateMachine.qInDb',
   'rlfStateMachine.t310Ms',
@@ -51,6 +57,8 @@ const CRITICAL_PROVENANCE_FILES = [
   'src/sim/policy/noop-plugin.ts',
   'src/sim/policy/runtime-adapter.ts',
   'src/sim/policy/runtime-session.ts',
+  'src/sim/scheduler/types.ts',
+  'src/sim/scheduler/window-engine.ts',
   'src/sim/reporting/source-trace.ts',
   'src/sim/reporting/manifest.ts',
   'src/sim/engine.ts',
@@ -89,6 +97,15 @@ const SMALL_SCALE_REQUIRED_REFERENCES = [
   'profile.channel.smallScaleModel',
   'profile.channel.smallScaleParams?.shadowedRician',
   'profile.channel.smallScaleParams?.loo',
+];
+
+const SCHEDULER_REQUIRED_REFERENCES = [
+  'profile.scheduler.mode',
+  'profile.scheduler.windowPeriodSec',
+  'profile.scheduler.activeWindowFraction',
+  'profile.scheduler.minActiveBeamsPerSatellite',
+  'profile.scheduler.maxActiveBeamsPerSatellite',
+  'profile.scheduler.frequencyBlockCount',
 ];
 
 const LINK_BUDGET_FORBIDDEN_PATTERNS = [
@@ -325,6 +342,16 @@ async function validateParameterConsumption(errors) {
       );
     }
   }
+
+  const scheduler = await readText('src/sim/scheduler/window-engine.ts');
+  for (const reference of SCHEDULER_REQUIRED_REFERENCES) {
+    if (!scheduler.includes(reference)) {
+      pushError(
+        errors,
+        `scheduler/window-engine.ts does not consume required scheduler reference '${reference}'.`,
+      );
+    }
+  }
 }
 
 async function validateArtifactsContract(errors) {
@@ -341,6 +368,8 @@ async function validateArtifactsContract(errors) {
     'policy_runtime_config_hash',
     'policy_state_feature_sources',
     'policy_reward_source_ids',
+    'scheduler_mode',
+    'scheduler_state_hash',
   ];
 
   for (const token of requiredSourceTraceTokens) {
@@ -373,6 +402,10 @@ async function validateArtifactsContract(errors) {
     'policy_runtime_config_hash',
     'policy_decision_count',
     'policy_rejection_count',
+    'scheduler_mode',
+    'scheduler_window_id',
+    'scheduler_utilization_ratio',
+    'scheduler_state_hash',
   ];
   for (const token of requiredManifestTokens) {
     if (!manifest.includes(token)) {

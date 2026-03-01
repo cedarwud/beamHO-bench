@@ -366,6 +366,56 @@ export function checkPolicyActionSafety(
   };
 }
 
+export function checkSchedulerStateSanity(
+  batch: BaselineBatchResult,
+): ValidationCheckResult {
+  const invalid = batch.runs.find((run) => {
+    const scheduler = run.result.metadata.beamScheduler;
+    const ratiosFinite =
+      Number.isFinite(scheduler.utilizationRatio) &&
+      Number.isFinite(scheduler.fairnessIndex);
+    const rangesOk =
+      scheduler.totalBeamCount >= 0 &&
+      scheduler.activeBeamCount >= 0 &&
+      scheduler.activeBeamCount <= scheduler.totalBeamCount &&
+      scheduler.utilizationRatio >= 0 &&
+      scheduler.utilizationRatio <= 1 &&
+      scheduler.fairnessIndex > 0 &&
+      scheduler.fairnessIndex <= 1;
+    const hashOk =
+      typeof scheduler.scheduleStateHash === 'string' &&
+      scheduler.scheduleStateHash.length > 0;
+
+    if (!ratiosFinite || !rangesOk || !hashOk) {
+      return true;
+    }
+
+    if (
+      scheduler.mode === 'uncoupled' &&
+      scheduler.totalBeamCount > 0 &&
+      scheduler.activeBeamCount !== scheduler.totalBeamCount
+    ) {
+      return true;
+    }
+
+    return false;
+  });
+
+  if (invalid) {
+    return {
+      checkId: 'scheduler-state-sanity',
+      pass: false,
+      detail: `Scheduler metadata sanity failed on baseline '${invalid.baseline}'.`,
+    };
+  }
+
+  return {
+    checkId: 'scheduler-state-sanity',
+    pass: true,
+    detail: 'All runs satisfy scheduler state sanity checks.',
+  };
+}
+
 function fingerprintBatch(batch: BaselineBatchResult): string {
   const normalized = {
     profileId: batch.profileId,
@@ -383,6 +433,7 @@ function fingerprintBatch(batch: BaselineBatchResult): string {
         resolvedAssumptionIds: [...run.result.metadata.resolvedAssumptionIds].sort(),
         runtimeParameterAudit: run.result.metadata.runtimeParameterAudit,
         policyRuntime: run.result.metadata.policyRuntime,
+        beamScheduler: run.result.metadata.beamScheduler,
       },
       summary: run.result.summary,
       timeseriesCsv: run.timeseriesCsv,

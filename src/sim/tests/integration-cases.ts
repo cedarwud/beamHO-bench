@@ -1,14 +1,11 @@
 import { loadPaperProfile } from '@/config/paper-profiles/loader';
 import { runBaselineBatch } from '@/sim/bench/runner';
-import {
-  createGreedySinrPolicyPlugin,
-  createInvalidActionProbePolicyPlugin,
-} from '@/sim/policy/builtin-plugins';
 import { runCoreValidationSuite } from '@/sim/bench/validation-suite';
 import { buildRunManifest } from '@/sim/reporting/manifest';
 import { createSourceTraceArtifact } from '@/sim/reporting/source-trace';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import { assertAlmostEqual, assertCondition, normalizeBatchForDeterminism } from './helpers';
+import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy-scheduler';
 import type { SimTestCase } from './types';
 
 export function buildIntegrationTestCases(): SimTestCase[] {
@@ -115,105 +112,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
         assertCondition(Number.isFinite(throughput), 'Throughput must be finite in integration test.');
       },
     },
-    {
-      name: 'integration: policy-off batch path keeps deterministic parity with baseline path',
-      kind: 'integration',
-      run: () => {
-        const profile = loadPaperProfile('case9-default');
-        const baseBatch = runBaselineBatch({
-          profile,
-          seed: 17,
-          baselines: ['a4'],
-          tickCount: 30,
-        });
-        const policyOffBatch = runBaselineBatch({
-          profile,
-          seed: 17,
-          baselines: ['a4'],
-          tickCount: 30,
-          policyRuntime: {
-            mode: 'off',
-          },
-        });
-
-        assertCondition(
-          JSON.stringify(normalizeBatchForDeterminism(baseBatch)) ===
-            JSON.stringify(normalizeBatchForDeterminism(policyOffBatch)),
-          'Policy-off path must match baseline batch output for identical input tuple.',
-        );
-      },
-    },
-    {
-      name: 'integration: policy-on greedy plugin is deterministic for same seed/profile/metadata',
-      kind: 'integration',
-      run: () => {
-        const profile = loadPaperProfile('case9-default');
-        const execute = () =>
-          runBaselineBatch({
-            profile,
-            seed: 23,
-            baselines: ['max-rsrp'],
-            tickCount: 40,
-            policyRuntime: {
-              mode: 'on',
-              pluginFactory: createGreedySinrPolicyPlugin,
-            },
-          });
-
-        const first = execute();
-        const second = execute();
-        assertCondition(
-          JSON.stringify(normalizeBatchForDeterminism(first)) ===
-            JSON.stringify(normalizeBatchForDeterminism(second)),
-          'Policy-on deterministic replay mismatch for identical input tuple.',
-        );
-      },
-    },
-    {
-      name: 'integration: invalid policy action is rejected with deterministic hold fallback and audit event',
-      kind: 'integration',
-      run: () => {
-        const profile = loadPaperProfile('case9-default');
-        const batch = runBaselineBatch({
-          profile,
-          seed: 29,
-          baselines: ['max-rsrp'],
-          tickCount: 20,
-          captureSnapshots: true,
-          policyRuntime: {
-            mode: 'on',
-            pluginFactory: createInvalidActionProbePolicyPlugin,
-          },
-        });
-
-        const run = batch.runs[0];
-        assertCondition(Boolean(run), 'Expected one run for invalid-action policy test.');
-
-        const policyRuntime = run.result.metadata.policyRuntime;
-        assertCondition(policyRuntime.policyMode === 'on', 'Expected policy mode on.');
-        assertCondition(
-          policyRuntime.policyId === 'policy-invalid-action-probe',
-          'Expected invalid-action probe policy metadata.',
-        );
-        assertCondition(
-          policyRuntime.rejectionCount > 0,
-          'Expected rejectionCount > 0 for invalid-action policy run.',
-        );
-        assertCondition(
-          policyRuntime.decisionCount > 0,
-          'Expected decisionCount > 0 for policy-on run.',
-        );
-
-        const snapshots = run.snapshots ?? [];
-        const rejectionEvents = snapshots.flatMap((snapshot) =>
-          snapshot.hoEvents.filter((event) => event.reason.startsWith('policy-reject:')),
-        );
-        assertCondition(
-          rejectionEvents.length > 0,
-          'Expected policy-reject events when invalid action is emitted.',
-        );
-      },
-    },
+    ...buildPolicySchedulerIntegrationCases(),
     {
       name: 'integration: real-trace multi-baseline batch comparison works on starlink-like profile',
       kind: 'integration',
@@ -248,34 +147,6 @@ export function buildIntegrationTestCases(): SimTestCase[] {
             batch.summaryCsv.includes('max-elevation') &&
             batch.summaryCsv.includes('max-remaining-time'),
           'Expected real-trace summary CSV to contain all requested baselines.',
-        );
-      },
-    },
-    {
-      name: 'integration: policy-on run works in real-trace mode with metadata populated',
-      kind: 'integration',
-      run: () => {
-        const profile = loadPaperProfile('starlink-like');
-        const batch = runBaselineBatch({
-          profile,
-          seed: 31,
-          baselines: ['max-rsrp'],
-          tickCount: 12,
-          policyRuntime: {
-            mode: 'on',
-            pluginFactory: createGreedySinrPolicyPlugin,
-          },
-        });
-
-        const run = batch.runs[0];
-        assertCondition(Boolean(run), 'Expected one policy-on real-trace run.');
-        assertCondition(
-          run.result.summary.satelliteCount > 0,
-          'Expected satellites in real-trace policy-on run.',
-        );
-        assertCondition(
-          run.result.metadata.policyRuntime.policyMode === 'on',
-          'Expected policy mode on in real-trace run metadata.',
         );
       },
     },
@@ -372,68 +243,6 @@ export function buildIntegrationTestCases(): SimTestCase[] {
         assertCondition(
           typeof manifest.tle_snapshot_utc === 'string' && manifest.tle_snapshot_utc.length > 0,
           'Expected real-trace manifest to include tle_snapshot_utc.',
-        );
-      },
-    },
-    {
-      name: 'integration: policy metadata is exported to source-trace and manifest artifacts',
-      kind: 'integration',
-      run: async () => {
-        const profile = loadPaperProfile('case9-default');
-        const batch = runBaselineBatch({
-          profile,
-          seed: 37,
-          baselines: ['max-rsrp'],
-          tickCount: 10,
-          policyRuntime: {
-            mode: 'on',
-            pluginFactory: createGreedySinrPolicyPlugin,
-          },
-        });
-        const run = batch.runs[0];
-        const policyRuntime = run.result.metadata.policyRuntime;
-
-        const sourceTrace = await createSourceTraceArtifact({
-          scenarioId: run.result.metadata.scenarioId,
-          profileId: 'case9-default',
-          baseline: run.baseline,
-          algorithmFidelity: profile.handover.algorithmFidelity,
-          seed: 37,
-          playbackRate: 1,
-          policyRuntime,
-        });
-
-        const manifest = buildRunManifest({
-          scenarioId: run.result.metadata.scenarioId,
-          profile,
-          baseline: run.baseline,
-          seed: 37,
-          playbackRate: 1,
-          profileChecksumSha256: 'test-profile-checksum',
-          sourceCatalogChecksumSha256: 'test-source-catalog-checksum',
-          resolvedAssumptionIds: run.result.metadata.resolvedAssumptionIds,
-          runtimeParameterAudit: run.result.metadata.runtimeParameterAudit,
-          policyRuntime,
-          validationGate: {
-            pass: true,
-            totalCases: 1,
-            failedCases: 0,
-          },
-        });
-
-        assertCondition(sourceTrace.policy_mode === 'on', 'Expected source-trace policy_mode=on.');
-        assertCondition(
-          sourceTrace.policy_id === 'policy-greedy-sinr',
-          'Expected source-trace policy_id to match runtime plugin.',
-        );
-        assertCondition(
-          Object.keys(sourceTrace.policy_state_feature_sources).length > 0,
-          'Expected policy state feature source map in source-trace.',
-        );
-        assertCondition(manifest.policy_mode === 'on', 'Expected manifest policy_mode=on.');
-        assertCondition(
-          manifest.policy_runtime_config_hash.length > 0,
-          'Expected non-empty policy_runtime_config_hash in manifest.',
         );
       },
     },
