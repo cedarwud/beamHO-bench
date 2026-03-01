@@ -58,6 +58,30 @@ export function buildUnitTestCases(): SimTestCase[] {
       },
     },
     {
+      name: 'unit: mcs-mapped throughput is non-decreasing with SINR',
+      kind: 'unit',
+      run: () => {
+        const profile = loadPaperProfile('case9-default', {
+          channel: {
+            throughputModel: {
+              model: 'mcs-mapped',
+              mcsTable: [
+                { minSinrDb: -5, spectralEfficiencyBpsHz: 0.2 },
+                { minSinrDb: 0, spectralEfficiencyBpsHz: 0.6 },
+                { minSinrDb: 5, spectralEfficiencyBpsHz: 1.2 },
+              ],
+            },
+          },
+        });
+
+        const low = computeThroughputMbps(profile, -6);
+        const mid = computeThroughputMbps(profile, 0);
+        const high = computeThroughputMbps(profile, 8);
+
+        assertCondition(low <= mid && mid <= high, 'MCS-mapped throughput must be non-decreasing.');
+      },
+    },
+    {
       name: 'unit: selectBestLink picks max-RSRP sample',
       kind: 'unit',
       run: () => {

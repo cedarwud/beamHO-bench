@@ -10,6 +10,8 @@ const PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
 const REQUIRED_SOURCE_PATHS = [
   'channel.sfClSource',
   'channel.smallScaleModel',
+  'channel.throughputModel.model',
+  'channel.throughputModel.mcsTable',
   'channel.smallScaleParams.shadowedRician.kFactorMinDb',
   'channel.smallScaleParams.shadowedRician.kFactorMaxDb',
   'channel.smallScaleParams.shadowedRician.shadowingStdDevDb',
@@ -93,6 +95,8 @@ const LINK_BUDGET_REQUIRED_REFERENCES = [
   'profile.channel.noiseTemperatureK',
   'profile.channel.noiseFigureDb',
   'profile.channel.systemLossDb',
+  'profile.channel.throughputModel.model',
+  'profile.channel.throughputModel.mcsTable',
   'profile.beam.eirpDensityDbwPerMHz',
 ];
 
@@ -369,6 +373,7 @@ async function validateArtifactsContract(errors) {
 
   const requiredSourceTraceTokens = [
     'algorithm_fidelity',
+    'throughput_model',
     'resolvedAssumptionIds',
     'resolvedParameterSources',
     'resolvedSourceLinks',
@@ -390,6 +395,7 @@ async function validateArtifactsContract(errors) {
 
   const requiredReporterTokens = [
     'algorithmFidelity',
+    'throughputModel',
     'resolvedAssumptionIds',
     'runtimeParameterAudit',
   ];
@@ -407,6 +413,7 @@ async function validateArtifactsContract(errors) {
     'profile_checksum_sha256',
     'source_catalog_checksum_sha256',
     'algorithm_fidelity',
+    'throughput_model',
     'runtime_parameter_audit',
     'policy_mode',
     'policy_runtime_config_hash',

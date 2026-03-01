@@ -233,6 +233,14 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
             manifest.scheduler_state_hash.length > 0,
           'Expected non-empty scheduler_state_hash in artifacts.',
         );
+        assertCondition(
+          sourceTrace.throughput_model === profile.channel.throughputModel.model,
+          'Expected source-trace throughput_model to match profile throughput model.',
+        );
+        assertCondition(
+          manifest.throughput_model === profile.channel.throughputModel.model,
+          'Expected manifest throughput_model to match profile throughput model.',
+        );
       },
     },
     {
@@ -421,6 +429,14 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
         assertCondition(
           manifest.policy_runtime_config_hash.length > 0,
           'Expected non-empty policy_runtime_config_hash in manifest.',
+        );
+        assertCondition(
+          sourceTrace.throughput_model === profile.channel.throughputModel.model,
+          'Expected source-trace throughput_model to match profile throughput model.',
+        );
+        assertCondition(
+          manifest.throughput_model === profile.channel.throughputModel.model,
+          'Expected manifest throughput_model to match profile throughput model.',
         );
       },
     },
