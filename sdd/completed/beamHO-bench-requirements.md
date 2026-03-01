@@ -108,7 +108,7 @@ This document defines functional and non-functional requirements derived from th
 
 1. Full RL plugin lifecycle management as production feature.
 2. Coupled beam-hopping and HO optimization.
-3. Multi-orbit unified control (LEO+MEO+GEO).
+3. Multi-orbit unified control (LEO+MEO+GEO), which is explicitly excluded from current LEO-only research scope.
 
 ---
 

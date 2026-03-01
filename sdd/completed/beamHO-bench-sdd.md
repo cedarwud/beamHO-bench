@@ -35,7 +35,7 @@ This SDD defines the target software architecture of **beamHO-bench**: a reprodu
 
 1. Layer-D RL policy plugins (as first-class runtime plugins)
 2. Beam hopping + HO tightly coupled optimization in v1
-3. Multi-orbit LEO+MEO+GEO unified scheduler
+3. Multi-orbit LEO+MEO+GEO unified scheduler (long-term backlog only; explicitly out of current LEO-only research scope)
 
 ---
 

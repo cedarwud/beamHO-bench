@@ -2,13 +2,17 @@
 
 **Version:** 0.1.0  
 **Date:** 2026-03-01  
-**Status:** Pending / Not Implemented
+**Status:** Backlog Only / Not Implemented / Out of current LEO-only scope
 
 ---
 
 ## 1. Goal
 
 Extend simulation from LEO-only to unified LEO/MEO/GEO candidate management and scheduling.
+
+Current scope note:
+1. This document is archived as a long-term extension reference.
+2. Do not treat it as an active implementation target unless research scope is explicitly expanded beyond LEO.
 
 ---
 

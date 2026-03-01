@@ -17,7 +17,7 @@ v1-complete means:
 Deferred items remain out of v1 scope:
 1. Layer-D RL policy plugins as first-class runtime modules.
 2. Beam hopping + HO joint optimization.
-3. Multi-orbit unified scheduler (LEO/MEO/GEO).
+3. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
 
 ---
 

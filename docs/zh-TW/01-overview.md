@@ -20,7 +20,7 @@
 
 1. RL plugin
 2. Beam hopping + HO 聯合優化
-3. LEO/MEO/GEO 多軌道統一排程
+3. LEO/MEO/GEO 多軌道統一排程（長期備選，非目前 LEO-only 研究範圍）
 
 ## 3. 系統分層
 
