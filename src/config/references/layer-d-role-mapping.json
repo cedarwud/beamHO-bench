@@ -1,0 +1,56 @@
+{
+  "version": "0.1.0",
+  "generatedAtUtc": "2026-03-01T16:40:00Z",
+  "entries": [
+    {
+      "roleId": "morl",
+      "roleName": "MORL Policy Contract",
+      "functionalScope": "Policy plugin state/action/reward contract for learning-enabled HO decisions.",
+      "contractAnchors": [
+        "policy plugin runtime adapter",
+        "deterministic replay metadata",
+        "state feature source mapping"
+      ],
+      "sourceIds": [
+        "PAP-2024-MADRL-CORE"
+      ],
+      "notes": [
+        "Role tracks MORL-type research integration via plugin interface, not end-to-end training stack."
+      ]
+    },
+    {
+      "roleId": "c-ucgm",
+      "roleName": "C-UCGM Scaling and Clustering Reference",
+      "functionalScope": "Scenario scaling and clustered control behavior reference for large-constellation studies.",
+      "contractAnchors": [
+        "profile-driven satellite/beam scaling",
+        "real-trace constellation controls",
+        "baseline comparability across seeds"
+      ],
+      "sourceIds": [
+        "PAP-2022-SEAMLESSNTN-CORE",
+        "PAP-2024-MADRL-CORE"
+      ],
+      "notes": [
+        "Role captures framework-level scale/control references without locking runtime to a single paper script."
+      ]
+    },
+    {
+      "roleId": "ldaps-daps",
+      "roleName": "LDAPS and DAPS Multistage Decision Flow",
+      "functionalScope": "Multistage HO decision flow and transition constraints reference.",
+      "contractAnchors": [
+        "scheduler-coupled conflict guards",
+        "overlap and fairness constraints",
+        "auditable rejection reason codes"
+      ],
+      "sourceIds": [
+        "PAP-2025-DAPS-CORE",
+        "PAP-2024-MCCHO-CORE"
+      ],
+      "notes": [
+        "Role maps LDAPS and DAPS class requirements to deterministic baseline-friendly contracts."
+      ]
+    }
+  ]
+}
