@@ -2,6 +2,7 @@ import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { KpiResult, SimSnapshot } from '@/sim/types';
 import type { AlgorithmFidelity } from '@/config/paper-profiles/types';
 import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-parameter-audit';
+import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
 
 /**
  * Provenance:
@@ -18,6 +19,7 @@ export interface RunMetadata {
   playbackRate: number;
   resolvedAssumptionIds: string[];
   runtimeParameterAudit: RuntimeParameterAuditSnapshot | null;
+  policyRuntime: PolicyRuntimeSnapshot;
   generatedAtUtc: string;
 }
 
@@ -32,6 +34,60 @@ export interface ResultSummary {
 export interface KpiResultArtifact {
   metadata: RunMetadata;
   summary: ResultSummary;
+}
+
+export interface BuildKpiResultMetadata {
+  scenarioId: string;
+  profileId: string;
+  baseline: RuntimeBaseline;
+  algorithmFidelity: AlgorithmFidelity;
+  seed: number;
+  playbackRate: number;
+  resolvedAssumptionIds: string[];
+  runtimeParameterAudit: RuntimeParameterAuditSnapshot | null;
+  policyRuntime?: PolicyRuntimeSnapshot | null;
+}
+
+const POLICY_OFF_RUNTIME: PolicyRuntimeSnapshot = {
+  policyMode: 'off',
+  policyId: null,
+  policyVersion: null,
+  checkpointHash: null,
+  runtimeConfigHash: 'policy-off',
+  decisionCount: 0,
+  rejectionCount: 0,
+  rejectionReasons: {},
+  stateFeatureSourceMap: {},
+  rewardSourceIds: [],
+};
+
+function clonePolicyRuntime(
+  runtime: PolicyRuntimeSnapshot | null | undefined,
+): PolicyRuntimeSnapshot {
+  const value = runtime ?? POLICY_OFF_RUNTIME;
+  const rejectionReasons = Object.fromEntries(
+    Object.entries(value.rejectionReasons).sort((left, right) =>
+      left[0].localeCompare(right[0]),
+    ),
+  );
+  const stateFeatureSourceMap = Object.fromEntries(
+    Object.entries(value.stateFeatureSourceMap)
+      .sort((left, right) => left[0].localeCompare(right[0]))
+      .map(([featureId, sourceIds]) => [featureId, [...sourceIds].sort()]),
+  );
+
+  return {
+    policyMode: value.policyMode,
+    policyId: value.policyId,
+    policyVersion: value.policyVersion,
+    checkpointHash: value.checkpointHash,
+    runtimeConfigHash: value.runtimeConfigHash,
+    decisionCount: value.decisionCount,
+    rejectionCount: value.rejectionCount,
+    rejectionReasons,
+    stateFeatureSourceMap,
+    rewardSourceIds: [...value.rewardSourceIds].sort(),
+  };
 }
 
 function cloneKpi(kpi: KpiResult): KpiResult {
@@ -55,11 +111,12 @@ function cloneKpi(kpi: KpiResult): KpiResult {
 
 export function buildKpiResultArtifact(
   snapshot: SimSnapshot,
-  metadata: Omit<RunMetadata, 'generatedAtUtc'>,
+  metadata: BuildKpiResultMetadata,
 ): KpiResultArtifact {
   return {
     metadata: {
       ...metadata,
+      policyRuntime: clonePolicyRuntime(metadata.policyRuntime),
       generatedAtUtc: new Date().toISOString(),
     },
     summary: {

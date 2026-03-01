@@ -3,6 +3,7 @@ import starlinkFixtureJson from '@/data/tle/starlink-sample.json';
 import onewebFixtureJson from '@/data/tle/oneweb-sample.json';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-parameter-audit';
+import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
 
 /**
  * Provenance:
@@ -34,6 +35,14 @@ export interface RunManifest {
   source_catalog_checksum_sha256: string;
   algorithm_fidelity: 'full' | 'simplified';
   resolved_assumption_ids: string[];
+  policy_mode: 'off' | 'on';
+  policy_id?: string;
+  policy_version?: string;
+  checkpoint_hash?: string;
+  policy_runtime_config_hash: string;
+  policy_decision_count: number;
+  policy_rejection_count: number;
+  policy_rejection_reasons: Record<string, number>;
   validation_gate?: {
     pass: boolean;
     total_cases: number;
@@ -61,6 +70,7 @@ export interface RunManifestOptions {
   engineVersion?: string;
   profileSchemaVersion?: string;
   resolvedAssumptionIds?: string[];
+  policyRuntime?: PolicyRuntimeSnapshot | null;
   runtimeParameterAudit?: RuntimeParameterAuditSnapshot | null;
   validationGate?: {
     pass: boolean;
@@ -71,6 +81,46 @@ export interface RunManifestOptions {
 
 const STARLINK_FIXTURE = starlinkFixtureJson as TleFixtureMeta;
 const ONEWEB_FIXTURE = onewebFixtureJson as TleFixtureMeta;
+
+const POLICY_OFF_RUNTIME: PolicyRuntimeSnapshot = {
+  policyMode: 'off',
+  policyId: null,
+  policyVersion: null,
+  checkpointHash: null,
+  runtimeConfigHash: 'policy-off',
+  decisionCount: 0,
+  rejectionCount: 0,
+  rejectionReasons: {},
+  stateFeatureSourceMap: {},
+  rewardSourceIds: [],
+};
+
+function clonePolicyRuntime(
+  value: PolicyRuntimeSnapshot | null | undefined,
+): PolicyRuntimeSnapshot {
+  const resolved = value ?? POLICY_OFF_RUNTIME;
+  return {
+    policyMode: resolved.policyMode,
+    policyId: resolved.policyId,
+    policyVersion: resolved.policyVersion,
+    checkpointHash: resolved.checkpointHash,
+    runtimeConfigHash: resolved.runtimeConfigHash,
+    decisionCount: resolved.decisionCount,
+    rejectionCount: resolved.rejectionCount,
+    rejectionReasons: Object.fromEntries(
+      Object.entries(resolved.rejectionReasons).sort((left, right) =>
+        left[0].localeCompare(right[0]),
+      ),
+    ),
+    stateFeatureSourceMap: Object.fromEntries(
+      Object.entries(resolved.stateFeatureSourceMap).map(([featureId, sourceIds]) => [
+        featureId,
+        [...sourceIds].sort(),
+      ]),
+    ),
+    rewardSourceIds: [...resolved.rewardSourceIds].sort(),
+  };
+}
 
 function resolveTleSnapshotUtc(profile: PaperProfile): string | undefined {
   if (profile.mode !== 'real-trace') {
@@ -89,6 +139,7 @@ function resolveTleSnapshotUtc(profile: PaperProfile): string | undefined {
 
 export function buildRunManifest(options: RunManifestOptions): RunManifest {
   const generatedAtUtc = options.generatedAtUtc ?? new Date().toISOString();
+  const policyRuntime = clonePolicyRuntime(options.policyRuntime);
 
   const manifest: RunManifest = {
     scenario_id: options.scenarioId,
@@ -107,7 +158,23 @@ export function buildRunManifest(options: RunManifestOptions): RunManifest {
     source_catalog_checksum_sha256: options.sourceCatalogChecksumSha256,
     algorithm_fidelity: options.profile.handover.algorithmFidelity,
     resolved_assumption_ids: [...(options.resolvedAssumptionIds ?? [])].sort(),
+    policy_mode: policyRuntime.policyMode,
+    policy_runtime_config_hash: policyRuntime.runtimeConfigHash,
+    policy_decision_count: policyRuntime.decisionCount,
+    policy_rejection_count: policyRuntime.rejectionCount,
+    policy_rejection_reasons: policyRuntime.rejectionReasons,
   };
+
+  if (
+    policyRuntime.policyMode === 'on' &&
+    policyRuntime.policyId &&
+    policyRuntime.policyVersion &&
+    policyRuntime.checkpointHash
+  ) {
+    manifest.policy_id = policyRuntime.policyId;
+    manifest.policy_version = policyRuntime.policyVersion;
+    manifest.checkpoint_hash = policyRuntime.checkpointHash;
+  }
 
   const tleSnapshotUtc = resolveTleSnapshotUtc(options.profile);
   if (tleSnapshotUtc) {

@@ -28,12 +28,14 @@ export type { RuntimeBaseline, TriggerMemoryStore, HandoverDecisionResult };
 export function runHandoverBaseline(context: DecisionContext): HandoverDecisionResult {
   const {
     tick,
+    timeSec,
     timeStepSec,
     profile,
     satellites,
     ues,
     baseline,
     triggerMemory,
+    policyRuntime,
   } = context;
 
   const satById = new Map<number, SatelliteState>(
@@ -56,33 +58,71 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
     const links = evaluateLinksForUe(profile, ue, satellites);
     const servingSample = findServingSample(links, ue);
     const ueMemory = nextTriggerMemory.get(ue.id) ?? {};
+    const policyResolution = policyRuntime?.isEnabled()
+      ? policyRuntime.resolveDecision({
+          tick,
+          timeSec,
+          baseline,
+          ue,
+          links,
+          servingSample,
+          satById,
+          beamByKey,
+        })
+      : null;
 
-    const decision = selectCandidate({
-      baseline,
-      profile,
-      ue,
-      links,
-      servingSample,
-      satById,
-      beamByKey,
-      memory: ueMemory,
-      timeStepSec,
-    });
+    const decision = policyResolution
+      ? {
+          selected: policyResolution.selected,
+          triggerEvent: policyResolution.triggerEvent,
+          reasonSuffix: policyResolution.actionReasonCode,
+          secondary: policyResolution.secondary,
+          prepared: policyResolution.prepared,
+        }
+      : selectCandidate({
+          baseline,
+          profile,
+          ue,
+          links,
+          servingSample,
+          satById,
+          beamByKey,
+          memory: ueMemory,
+          timeStepSec,
+        });
 
-    if (baseline !== 'a3') {
+    if (policyResolution) {
       delete ueMemory.a3;
-    }
-    if (baseline !== 'a4') {
       delete ueMemory.a4;
-    }
-    if (baseline !== 'cho') {
       delete ueMemory.cho;
+    } else {
+      if (baseline !== 'a3') {
+        delete ueMemory.a3;
+      }
+      if (baseline !== 'a4') {
+        delete ueMemory.a4;
+      }
+      if (baseline !== 'cho') {
+        delete ueMemory.cho;
+      }
     }
 
     if (ueMemory.a3 || ueMemory.a4 || ueMemory.cho) {
       nextTriggerMemory.set(ue.id, ueMemory);
     } else {
       nextTriggerMemory.delete(ue.id);
+    }
+
+    if (policyResolution?.rejectionReason) {
+      events.push({
+        tick,
+        ueId: ue.id,
+        fromSatId: ue.servingSatId,
+        toSatId: policyResolution.requestedTargetSatId,
+        fromBeamId: ue.servingBeamId,
+        toBeamId: policyResolution.requestedTargetBeamId,
+        reason: `policy-reject:${policyResolution.rejectionReason}`,
+      });
     }
 
     const selected = decision.selected;
@@ -110,6 +150,9 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
       (ue.servingSatId !== selected.satId || ue.servingBeamId !== selected.beamId);
 
     if (changedServing && decision.triggerEvent) {
+      const reasonPrefix = policyResolution
+        ? `policy-${policyResolution.decisionType}`
+        : baseline;
       const reasonSuffix = decision.reasonSuffix ? `-${decision.reasonSuffix}` : '';
       events.push({
         tick,
@@ -118,7 +161,7 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
         toSatId: selected.satId,
         fromBeamId: ue.servingBeamId,
         toBeamId: selected.beamId,
-        reason: `${baseline}${reasonSuffix}`,
+        reason: `${reasonPrefix}${reasonSuffix}`,
       });
     }
 

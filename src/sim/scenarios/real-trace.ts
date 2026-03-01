@@ -7,6 +7,8 @@ import {
 } from '@/sim/handover/baselines';
 import { applyHandoverStateMachine } from '@/sim/handover/state-machine';
 import { computeJainFairness, updateKpiAccumulator } from '@/sim/kpi/accumulator';
+import { PolicyRuntimeSession } from '@/sim/policy/runtime-session';
+import type { PolicyMode, PolicyPlugin } from '@/sim/policy/types';
 import {
   computeTopocentricPoint,
   createObserverContext,
@@ -38,6 +40,10 @@ interface RealTraceScenarioOptions {
   profile: PaperProfile;
   seed: number;
   baseline?: RuntimeBaseline;
+  policyRuntime?: {
+    mode?: PolicyMode;
+    plugin?: PolicyPlugin;
+  };
   scenarioId?: string;
   kmToWorldScale?: number;
   observerLat?: number;
@@ -117,6 +123,13 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
   const observerLon = options.observerLon ?? DEFAULT_OBSERVER.lon;
   const runtimeParameterAudit = createRuntimeParameterAuditSession({
     profileId: profile.profileId,
+    scenarioId,
+  });
+  const policyRuntime = new PolicyRuntimeSession({
+    mode: options.policyRuntime?.mode ?? 'off',
+    plugin: options.policyRuntime?.plugin,
+    profile,
+    seed: options.seed,
     scenarioId,
   });
   const observer = createObserverContext(observerLat, observerLon, 0);
@@ -226,6 +239,7 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
     hoEvents: [],
     kpiCumulative: { ...EMPTY_KPI },
     runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
+    policyRuntime: policyRuntime.snapshot(),
   };
 
   function nextSnapshot(previous: SimSnapshot, context: SimTickContext): SimSnapshot {
@@ -242,12 +256,14 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
     const satellitesAtTime = buildSatellitesAt(timeSec);
     const decision = runHandoverBaseline({
       tick: previous.tick + 1,
+      timeSec,
       timeStepSec: context.timeStepSec,
       profile,
       satellites: satellitesAtTime,
       ues: movedUes,
       baseline,
       triggerMemory,
+      policyRuntime,
     });
     triggerMemory = decision.nextTriggerMemory;
 
@@ -286,6 +302,7 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
       hoEvents: decision.events,
       kpiCumulative,
       runtimeParameterAudit: runtimeParameterAudit.snapshot(previous.tick + 1),
+      policyRuntime: policyRuntime.snapshot(),
     };
   }
 
@@ -295,6 +312,7 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
     createInitialSnapshot: () => {
       triggerMemory = new Map();
       runtimeParameterAudit.reset();
+      policyRuntime.reset();
       return {
         ...initialSnapshot,
         satellites: initialSatellites,
@@ -302,6 +320,7 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
         hoEvents: [],
         kpiCumulative: { ...EMPTY_KPI },
         runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
+        policyRuntime: policyRuntime.snapshot(),
       };
     },
     nextSnapshot,

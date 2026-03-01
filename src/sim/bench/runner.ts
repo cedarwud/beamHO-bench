@@ -11,6 +11,8 @@ import {
   buildTimeseriesCsv,
   type KpiResultArtifact,
 } from '@/sim/kpi/reporter';
+import { createNoOpPolicyPlugin } from '@/sim/policy/builtin-plugins';
+import type { PolicyMode, PolicyPlugin } from '@/sim/policy/types';
 import { createCase9AnalyticScenario } from '@/sim/scenarios/case9-analytic';
 import { createRealTraceScenario } from '@/sim/scenarios/real-trace';
 import type { SimSnapshot } from '@/sim/types';
@@ -28,6 +30,10 @@ export interface BaselineBatchOptions {
   baselines: RuntimeBaseline[];
   tickCount: number;
   captureSnapshots?: boolean;
+  policyRuntime?: {
+    mode?: PolicyMode;
+    pluginFactory?: () => PolicyPlugin;
+  };
 }
 
 export interface BaselineBatchRun {
@@ -73,10 +79,18 @@ function cloneSnapshot(value: SimSnapshot): SimSnapshot {
   return JSON.parse(JSON.stringify(value)) as SimSnapshot;
 }
 
-function createScenario(profile: PaperProfile, seed: number, baseline: RuntimeBaseline) {
+function createScenario(
+  profile: PaperProfile,
+  seed: number,
+  baseline: RuntimeBaseline,
+  policyRuntime: {
+    mode?: PolicyMode;
+    plugin?: PolicyPlugin;
+  },
+) {
   return profile.mode === 'real-trace'
-    ? createRealTraceScenario({ profile, seed, baseline })
-    : createCase9AnalyticScenario({ profile, seed, baseline });
+    ? createRealTraceScenario({ profile, seed, baseline, policyRuntime })
+    : createCase9AnalyticScenario({ profile, seed, baseline, policyRuntime });
 }
 
 function buildSummaryCsv(runs: BaselineBatchRun[]): string {
@@ -86,6 +100,13 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
       'algorithm_fidelity',
       'runtime_parameter_audit_pass',
       'runtime_parameter_audit_missing_keys',
+      'policy_mode',
+      'policy_id',
+      'policy_version',
+      'policy_checkpoint_hash',
+      'policy_runtime_config_hash',
+      'policy_decision_count',
+      'policy_rejection_count',
       'playback_rate',
       'resolved_assumption_ids',
       'scenario_id',
@@ -114,6 +135,13 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
         metadata.algorithmFidelity,
         metadata.runtimeParameterAudit?.pass ? 'PASS' : 'FAIL',
         metadata.runtimeParameterAudit?.missingKeys.join('|') ?? '',
+        metadata.policyRuntime.policyMode,
+        metadata.policyRuntime.policyId ?? '',
+        metadata.policyRuntime.policyVersion ?? '',
+        metadata.policyRuntime.checkpointHash ?? '',
+        metadata.policyRuntime.runtimeConfigHash,
+        metadata.policyRuntime.decisionCount,
+        metadata.policyRuntime.rejectionCount,
         metadata.playbackRate.toFixed(2),
         metadata.resolvedAssumptionIds.join('|'),
         metadata.scenarioId,
@@ -142,6 +170,7 @@ export function runBaselineBatch(options: BaselineBatchOptions): BaselineBatchRe
   const { profile, seed } = options;
   const baselines = normalizeBaselines(options.baselines);
   const tickCount = clampTickCount(options.tickCount);
+  const policyMode: PolicyMode = options.policyRuntime?.mode ?? 'off';
   const resolvedAssumptionIds =
     isCanonicalProfileId(profile.profileId)
       ? extractAssumptionIdsFromSourceMap(loadProfileSourceMap(profile.profileId))
@@ -152,7 +181,14 @@ export function runBaselineBatch(options: BaselineBatchOptions): BaselineBatchRe
   }
 
   const runs: BaselineBatchRun[] = baselines.map((baseline) => {
-    const scenario = createScenario(profile, seed, baseline);
+    const scenarioPolicyRuntime = {
+      mode: policyMode,
+      plugin:
+        policyMode === 'on'
+          ? options.policyRuntime?.pluginFactory?.() ?? createNoOpPolicyPlugin()
+          : undefined,
+    };
+    const scenario = createScenario(profile, seed, baseline, scenarioPolicyRuntime);
     const engine = new SimEngine({
       scenario,
       timeStepSec: profile.timeStepSec,
@@ -174,6 +210,7 @@ export function runBaselineBatch(options: BaselineBatchOptions): BaselineBatchRe
       playbackRate: 1,
       resolvedAssumptionIds,
       runtimeParameterAudit: finalSnapshot.runtimeParameterAudit ?? null,
+      policyRuntime: finalSnapshot.policyRuntime ?? null,
     });
 
     return {

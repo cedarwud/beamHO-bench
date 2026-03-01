@@ -60,6 +60,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
   const { setup, profileId, baseline, seed, runtimeOverrides, historyRef } = deps;
 
   const exportSourceTrace = async () => {
+    const latestSnapshot = setup.engine.getSnapshot();
     const assumptionMode =
       setup.profile.mode === 'real-trace'
         ? setup.scenario.id.includes('sgp4-satellitejs')
@@ -81,6 +82,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       playbackRate: setup.engine.getPlaybackRate(),
       runtimeOverrides,
       assumptionIds: setup.resolvedAssumptionIds,
+      policyRuntime: latestSnapshot.policyRuntime ?? null,
       assumptions: [assumptionMode, fidelityNote],
     });
 
@@ -100,6 +102,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       playbackRate: setup.engine.getPlaybackRate(),
       resolvedAssumptionIds: setup.resolvedAssumptionIds,
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
+      policyRuntime: latestSnapshot.policyRuntime ?? null,
     });
 
     const runTag = `${setup.scenario.id}_${profileId}_${seed}_${baseline}`;
@@ -220,6 +223,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       playbackRate: setup.engine.getPlaybackRate(),
       runtimeOverrides,
       assumptionIds: setup.resolvedAssumptionIds,
+      policyRuntime: latestSnapshot.policyRuntime ?? null,
       assumptions: [
         setup.profile.mode === 'real-trace'
           ? 'real-trace mode run bundle export'
@@ -236,6 +240,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       playbackRate: setup.engine.getPlaybackRate(),
       resolvedAssumptionIds: setup.resolvedAssumptionIds,
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
+      policyRuntime: latestSnapshot.policyRuntime ?? null,
     });
     const timeseriesCsv = buildTimeseriesCsv(historyRef.current);
 
@@ -249,6 +254,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       sourceCatalogChecksumSha256,
       generatedAtUtc,
       resolvedAssumptionIds: setup.resolvedAssumptionIds,
+      policyRuntime: latestSnapshot.policyRuntime ?? null,
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
       validationGate: {
         pass: validationGateSummary.pass,

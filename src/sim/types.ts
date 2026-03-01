@@ -8,6 +8,7 @@
  */
 
 import type { RuntimeParameterAuditSnapshot } from './audit/runtime-parameter-audit';
+import type { PolicyRuntimeSnapshot } from './policy/types';
 
 export type HandoverState = 1 | 2 | 3;
 
@@ -98,6 +99,7 @@ export interface SimSnapshot {
   hoEvents: HOEvent[];
   kpiCumulative: KpiResult;
   runtimeParameterAudit?: RuntimeParameterAuditSnapshot;
+  policyRuntime?: PolicyRuntimeSnapshot;
 }
 
 export interface SimTickContext {
