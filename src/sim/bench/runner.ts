@@ -114,6 +114,9 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
       'scheduler_utilization_ratio',
       'scheduler_fairness_index',
       'scheduler_state_hash',
+      'coupled_blocked_handover_count',
+      'coupled_interruption_sec',
+      'coupled_blocked_reasons',
       'playback_rate',
       'resolved_assumption_ids',
       'scenario_id',
@@ -156,6 +159,12 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
         metadata.beamScheduler.utilizationRatio.toFixed(6),
         metadata.beamScheduler.fairnessIndex.toFixed(6),
         metadata.beamScheduler.scheduleStateHash,
+        metadata.coupledDecisionStats.blockedByScheduleHandoverCount,
+        metadata.coupledDecisionStats.schedulerInducedInterruptionSec.toFixed(6),
+        Object.entries(metadata.coupledDecisionStats.blockedReasons)
+          .sort((left, right) => left[0].localeCompare(right[0]))
+          .map(([reason, count]) => `${reason}:${count}`)
+          .join('|'),
         metadata.playbackRate.toFixed(2),
         metadata.resolvedAssumptionIds.join('|'),
         metadata.scenarioId,
@@ -226,6 +235,7 @@ export function runBaselineBatch(options: BaselineBatchOptions): BaselineBatchRe
       runtimeParameterAudit: finalSnapshot.runtimeParameterAudit ?? null,
       policyRuntime: finalSnapshot.policyRuntime ?? null,
       beamScheduler: finalSnapshot.beamScheduler ?? null,
+      coupledDecisionStats: finalSnapshot.coupledDecisionStats ?? null,
     });
 
     return {

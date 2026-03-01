@@ -244,6 +244,12 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
     runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
     policyRuntime: policyRuntime.snapshot(),
     beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatellites),
+    coupledDecisionStats: {
+      mode: profile.scheduler.mode,
+      blockedByScheduleHandoverCount: 0,
+      schedulerInducedInterruptionSec: 0,
+      blockedReasons: {},
+    },
   };
 
   function nextSnapshot(previous: SimSnapshot, context: SimTickContext): SimSnapshot {
@@ -326,6 +332,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       runtimeParameterAudit: runtimeParameterAudit.snapshot(previous.tick + 1),
       policyRuntime: policyRuntime.snapshot(),
       beamScheduler: beamSchedulerSnapshot,
+      coupledDecisionStats: decision.coupledDecisionStats,
     };
   }
 
@@ -346,6 +353,12 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
         runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
         policyRuntime: policyRuntime.snapshot(),
         beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatellites),
+        coupledDecisionStats: {
+          mode: profile.scheduler.mode,
+          blockedByScheduleHandoverCount: 0,
+          schedulerInducedInterruptionSec: 0,
+          blockedReasons: {},
+        },
       };
     },
     nextSnapshot,

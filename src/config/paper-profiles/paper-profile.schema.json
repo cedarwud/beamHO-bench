@@ -264,7 +264,9 @@
         "activeWindowFraction",
         "minActiveBeamsPerSatellite",
         "maxActiveBeamsPerSatellite",
-        "frequencyBlockCount"
+        "frequencyBlockCount",
+        "maxUsersPerActiveBeam",
+        "fairnessTargetJain"
       ],
       "properties": {
         "mode": {
@@ -275,7 +277,9 @@
         "activeWindowFraction": { "type": "number", "minimum": 0, "maximum": 1 },
         "minActiveBeamsPerSatellite": { "type": "integer", "minimum": 0 },
         "maxActiveBeamsPerSatellite": { "type": "integer", "minimum": 1 },
-        "frequencyBlockCount": { "type": "integer", "minimum": 1 }
+        "frequencyBlockCount": { "type": "integer", "minimum": 1 },
+        "maxUsersPerActiveBeam": { "type": "integer", "minimum": 1 },
+        "fairnessTargetJain": { "type": "number", "minimum": 0, "maximum": 1 }
       }
     },
     "handover": {

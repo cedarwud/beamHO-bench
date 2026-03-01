@@ -48,3 +48,10 @@ export interface BeamSchedulerSnapshot {
   states: BeamScheduleState[];
   events: BeamSchedulerEvent[];
 }
+
+export interface CoupledDecisionStats {
+  mode: BeamSchedulerMode;
+  blockedByScheduleHandoverCount: number;
+  schedulerInducedInterruptionSec: number;
+  blockedReasons: Record<string, number>;
+}

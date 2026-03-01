@@ -81,6 +81,12 @@
     "scheduler.frequencyBlockCount": [
       "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
     ],
+    "scheduler.maxUsersPerActiveBeam": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
+    "scheduler.fairnessTargetJain": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
     "rlfStateMachine.qOutDb": [
       "PAP-2022-A4EVENT-CORE",
       "STD-3GPP-TS38.331-RRC"

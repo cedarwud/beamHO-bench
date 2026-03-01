@@ -5,6 +5,7 @@ import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-parameter-audit';
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
 import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
+import type { CoupledDecisionStats } from '@/sim/scheduler/types';
 
 /**
  * Provenance:
@@ -49,6 +50,9 @@ export interface RunManifest {
   scheduler_utilization_ratio: number;
   scheduler_fairness_index: number;
   scheduler_state_hash: string;
+  scheduler_blocked_handover_count: number;
+  scheduler_induced_interruption_sec: number;
+  scheduler_blocked_reasons: Record<string, number>;
   validation_gate?: {
     pass: boolean;
     total_cases: number;
@@ -78,6 +82,7 @@ export interface RunManifestOptions {
   resolvedAssumptionIds?: string[];
   policyRuntime?: PolicyRuntimeSnapshot | null;
   beamScheduler?: BeamSchedulerSnapshot | null;
+  coupledDecisionStats?: CoupledDecisionStats | null;
   runtimeParameterAudit?: RuntimeParameterAuditSnapshot | null;
   validationGate?: {
     pass: boolean;
@@ -157,6 +162,30 @@ function cloneBeamSchedulerSummary(
   };
 }
 
+function cloneCoupledDecisionStats(
+  value: CoupledDecisionStats | null | undefined,
+): CoupledDecisionStats {
+  if (!value) {
+    return {
+      mode: 'uncoupled',
+      blockedByScheduleHandoverCount: 0,
+      schedulerInducedInterruptionSec: 0,
+      blockedReasons: {},
+    };
+  }
+
+  return {
+    mode: value.mode,
+    blockedByScheduleHandoverCount: value.blockedByScheduleHandoverCount,
+    schedulerInducedInterruptionSec: value.schedulerInducedInterruptionSec,
+    blockedReasons: Object.fromEntries(
+      Object.entries(value.blockedReasons).sort((left, right) =>
+        left[0].localeCompare(right[0]),
+      ),
+    ),
+  };
+}
+
 function resolveTleSnapshotUtc(profile: PaperProfile): string | undefined {
   if (profile.mode !== 'real-trace') {
     return undefined;
@@ -176,6 +205,7 @@ export function buildRunManifest(options: RunManifestOptions): RunManifest {
   const generatedAtUtc = options.generatedAtUtc ?? new Date().toISOString();
   const policyRuntime = clonePolicyRuntime(options.policyRuntime);
   const beamScheduler = cloneBeamSchedulerSummary(options.beamScheduler);
+  const coupledDecisionStats = cloneCoupledDecisionStats(options.coupledDecisionStats);
 
   const manifest: RunManifest = {
     scenario_id: options.scenarioId,
@@ -204,6 +234,11 @@ export function buildRunManifest(options: RunManifestOptions): RunManifest {
     scheduler_utilization_ratio: beamScheduler.utilizationRatio,
     scheduler_fairness_index: beamScheduler.fairnessIndex,
     scheduler_state_hash: beamScheduler.scheduleStateHash,
+    scheduler_blocked_handover_count:
+      coupledDecisionStats.blockedByScheduleHandoverCount,
+    scheduler_induced_interruption_sec:
+      coupledDecisionStats.schedulerInducedInterruptionSec,
+    scheduler_blocked_reasons: coupledDecisionStats.blockedReasons,
   };
 
   if (

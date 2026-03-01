@@ -8,6 +8,7 @@ import {
 import type { AlgorithmFidelity, PaperProfile } from '@/config/paper-profiles/types';
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
 import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
+import type { CoupledDecisionStats } from '@/sim/scheduler/types';
 
 /**
  * Provenance:
@@ -46,6 +47,9 @@ export interface SourceTraceArtifact {
   scheduler_utilization_ratio: number;
   scheduler_fairness_index: number;
   scheduler_state_hash: string;
+  scheduler_blocked_handover_count: number;
+  scheduler_induced_interruption_sec: number;
+  scheduler_blocked_reasons: Record<string, number>;
   assumptions: string[];
 }
 
@@ -61,6 +65,7 @@ export interface SourceTraceOptions {
   assumptions?: string[];
   policyRuntime?: PolicyRuntimeSnapshot | null;
   beamScheduler?: BeamSchedulerSnapshot | null;
+  coupledDecisionStats?: CoupledDecisionStats | null;
 }
 
 const POLICY_OFF_RUNTIME: PolicyRuntimeSnapshot = {
@@ -130,6 +135,30 @@ function cloneBeamSchedulerSummary(
   };
 }
 
+function cloneCoupledDecisionStats(
+  value: CoupledDecisionStats | null | undefined,
+): CoupledDecisionStats {
+  if (!value) {
+    return {
+      mode: 'uncoupled',
+      blockedByScheduleHandoverCount: 0,
+      schedulerInducedInterruptionSec: 0,
+      blockedReasons: {},
+    };
+  }
+
+  return {
+    mode: value.mode,
+    blockedByScheduleHandoverCount: value.blockedByScheduleHandoverCount,
+    schedulerInducedInterruptionSec: value.schedulerInducedInterruptionSec,
+    blockedReasons: Object.fromEntries(
+      Object.entries(value.blockedReasons).sort((left, right) =>
+        left[0].localeCompare(right[0]),
+      ),
+    ),
+  };
+}
+
 export async function createSourceTraceArtifact(
   options: SourceTraceOptions,
 ): Promise<SourceTraceArtifact> {
@@ -138,6 +167,7 @@ export async function createSourceTraceArtifact(
   const assumptions = options.assumptions ?? [];
   const policyRuntime = clonePolicyRuntime(options.policyRuntime);
   const beamScheduler = cloneBeamSchedulerSummary(options.beamScheduler);
+  const coupledDecisionStats = cloneCoupledDecisionStats(options.coupledDecisionStats);
 
   const profile = loadPaperProfile(options.profileId, runtimeOverrides);
   const tracePayload = await buildSourceTracePayload(options.profileId, runtimeOverrides);
@@ -172,6 +202,11 @@ export async function createSourceTraceArtifact(
     scheduler_utilization_ratio: beamScheduler.utilizationRatio,
     scheduler_fairness_index: beamScheduler.fairnessIndex,
     scheduler_state_hash: beamScheduler.scheduleStateHash,
+    scheduler_blocked_handover_count:
+      coupledDecisionStats.blockedByScheduleHandoverCount,
+    scheduler_induced_interruption_sec:
+      coupledDecisionStats.schedulerInducedInterruptionSec,
+    scheduler_blocked_reasons: coupledDecisionStats.blockedReasons,
     assumptions,
   };
 }

@@ -84,6 +84,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       assumptionIds: setup.resolvedAssumptionIds,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
       beamScheduler: latestSnapshot.beamScheduler ?? null,
+      coupledDecisionStats: latestSnapshot.coupledDecisionStats ?? null,
       assumptions: [assumptionMode, fidelityNote],
     });
 
@@ -105,6 +106,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
       beamScheduler: latestSnapshot.beamScheduler ?? null,
+      coupledDecisionStats: latestSnapshot.coupledDecisionStats ?? null,
     });
 
     const runTag = `${setup.scenario.id}_${profileId}_${seed}_${baseline}`;
@@ -227,6 +229,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       assumptionIds: setup.resolvedAssumptionIds,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
       beamScheduler: latestSnapshot.beamScheduler ?? null,
+      coupledDecisionStats: latestSnapshot.coupledDecisionStats ?? null,
       assumptions: [
         setup.profile.mode === 'real-trace'
           ? 'real-trace mode run bundle export'
@@ -245,6 +248,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
       beamScheduler: latestSnapshot.beamScheduler ?? null,
+      coupledDecisionStats: latestSnapshot.coupledDecisionStats ?? null,
     });
     const timeseriesCsv = buildTimeseriesCsv(historyRef.current);
 
@@ -260,6 +264,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       resolvedAssumptionIds: setup.resolvedAssumptionIds,
       policyRuntime: latestSnapshot.policyRuntime ?? null,
       beamScheduler: latestSnapshot.beamScheduler ?? null,
+      coupledDecisionStats: latestSnapshot.coupledDecisionStats ?? null,
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
       validationGate: {
         pass: validationGateSummary.pass,

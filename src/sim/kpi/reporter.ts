@@ -4,6 +4,7 @@ import type { AlgorithmFidelity } from '@/config/paper-profiles/types';
 import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-parameter-audit';
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
 import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
+import type { CoupledDecisionStats } from '@/sim/scheduler/types';
 
 /**
  * Provenance:
@@ -31,6 +32,7 @@ export interface RunMetadata {
     scheduleStateHash: string;
     eventCount: number;
   };
+  coupledDecisionStats: CoupledDecisionStats;
   generatedAtUtc: string;
 }
 
@@ -58,6 +60,7 @@ export interface BuildKpiResultMetadata {
   runtimeParameterAudit: RuntimeParameterAuditSnapshot | null;
   policyRuntime?: PolicyRuntimeSnapshot | null;
   beamScheduler?: BeamSchedulerSnapshot | null;
+  coupledDecisionStats?: CoupledDecisionStats | null;
 }
 
 const POLICY_OFF_RUNTIME: PolicyRuntimeSnapshot = {
@@ -130,6 +133,30 @@ function cloneBeamSchedulerSummary(
   };
 }
 
+function cloneCoupledDecisionStats(
+  value: CoupledDecisionStats | null | undefined,
+): CoupledDecisionStats {
+  if (!value) {
+    return {
+      mode: 'uncoupled',
+      blockedByScheduleHandoverCount: 0,
+      schedulerInducedInterruptionSec: 0,
+      blockedReasons: {},
+    };
+  }
+
+  return {
+    mode: value.mode,
+    blockedByScheduleHandoverCount: value.blockedByScheduleHandoverCount,
+    schedulerInducedInterruptionSec: value.schedulerInducedInterruptionSec,
+    blockedReasons: Object.fromEntries(
+      Object.entries(value.blockedReasons).sort((left, right) =>
+        left[0].localeCompare(right[0]),
+      ),
+    ),
+  };
+}
+
 function cloneKpi(kpi: KpiResult): KpiResult {
   return {
     throughput: kpi.throughput,
@@ -158,6 +185,7 @@ export function buildKpiResultArtifact(
       ...metadata,
       policyRuntime: clonePolicyRuntime(metadata.policyRuntime),
       beamScheduler: cloneBeamSchedulerSummary(metadata.beamScheduler),
+      coupledDecisionStats: cloneCoupledDecisionStats(metadata.coupledDecisionStats),
       generatedAtUtc: new Date().toISOString(),
     },
     summary: {

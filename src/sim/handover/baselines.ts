@@ -1,4 +1,6 @@
 import { computeThroughputMbps, evaluateLinksForUe } from '@/sim/channel/link-budget';
+import { resolveCoupledHandoverConflicts } from '@/sim/scheduler/coupled-resolver';
+import type { CoupledDecisionStats } from '@/sim/scheduler/types';
 import type { BeamState, SatelliteState } from '@/sim/types';
 import { selectCandidate } from './baseline-decisions';
 import {
@@ -24,6 +26,40 @@ import type {
  */
 
 export type { RuntimeBaseline, TriggerMemoryStore, HandoverDecisionResult };
+
+interface UeDecisionDraft {
+  ue: DecisionContext['ues'][number];
+  servingSample: ReturnType<typeof findServingSample>;
+  decision: {
+    selected: ReturnType<typeof findServingSample>;
+    triggerEvent: boolean;
+    reasonSuffix?: string;
+    secondary?: ReturnType<typeof findServingSample>;
+    prepared?: {
+      satId: number;
+      beamId: number;
+      elapsedMs: number;
+      targetMs?: number;
+    } | null;
+  };
+  policyResolution: {
+    rejectionReason: string | null;
+    requestedTargetSatId: number | null;
+    requestedTargetBeamId: number | null;
+    decisionType: string;
+  } | null;
+}
+
+function buildDefaultCoupledDecisionStats(
+  mode: 'uncoupled' | 'coupled',
+): CoupledDecisionStats {
+  return {
+    mode,
+    blockedByScheduleHandoverCount: 0,
+    schedulerInducedInterruptionSec: 0,
+    blockedReasons: {},
+  };
+}
 
 function filterLinksByScheduler(
   links: ReturnType<typeof evaluateLinksForUe>,
@@ -66,6 +102,7 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
   const nextTriggerMemory: TriggerMemoryStore = triggerMemory ?? new Map();
   const events: HandoverDecisionResult['events'] = [];
   const nextUes: HandoverDecisionResult['nextUes'] = [];
+  const drafts: UeDecisionDraft[] = [];
   const schedulerMode = beamScheduler?.summary.mode;
   const activeBeamKeys =
     schedulerMode === 'coupled'
@@ -141,19 +178,79 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
       nextTriggerMemory.delete(ue.id);
     }
 
-    if (policyResolution?.rejectionReason) {
+    drafts.push({
+      ue,
+      servingSample,
+      decision,
+      policyResolution: policyResolution
+        ? {
+            rejectionReason: policyResolution.rejectionReason,
+            requestedTargetSatId: policyResolution.requestedTargetSatId,
+            requestedTargetBeamId: policyResolution.requestedTargetBeamId,
+            decisionType: policyResolution.decisionType,
+          }
+        : null,
+    });
+  }
+
+  const coupledResolution = resolveCoupledHandoverConflicts({
+    profile,
+    beamScheduler,
+    beamByKey,
+    currentUes: ues,
+    timeStepSec,
+    proposals: drafts.map((draft) => ({
+      ueId: draft.ue.id,
+      servingSatId: draft.ue.servingSatId,
+      servingBeamId: draft.ue.servingBeamId,
+      servingRsrpDbm: draft.servingSample?.rsrpDbm ?? DEFAULT_NO_LINK_RSRP_DBM,
+      targetSatId: draft.decision.selected?.satId ?? null,
+      targetBeamId: draft.decision.selected?.beamId ?? null,
+      targetRsrpDbm: draft.decision.selected?.rsrpDbm ?? DEFAULT_NO_LINK_RSRP_DBM,
+      targetSinrDb: draft.decision.selected?.sinrDb ?? DEFAULT_NO_LINK_SINR_DB,
+      triggerEvent: draft.decision.triggerEvent,
+    })),
+  });
+
+  for (const draft of drafts) {
+    const ue = draft.ue;
+
+    if (draft.policyResolution?.rejectionReason) {
       events.push({
         tick,
         ueId: ue.id,
         fromSatId: ue.servingSatId,
-        toSatId: policyResolution.requestedTargetSatId,
+        toSatId: draft.policyResolution.requestedTargetSatId,
         fromBeamId: ue.servingBeamId,
-        toBeamId: policyResolution.requestedTargetBeamId,
-        reason: `policy-reject:${policyResolution.rejectionReason}`,
+        toBeamId: draft.policyResolution.requestedTargetBeamId,
+        reason: `policy-reject:${draft.policyResolution.rejectionReason}`,
       });
     }
 
-    const selected = decision.selected;
+    const schedulerRejection = coupledResolution.rejectedByUeId.get(ue.id) ?? null;
+    const effectiveDecision = schedulerRejection
+      ? {
+          selected: draft.servingSample,
+          triggerEvent: false,
+          reasonSuffix: schedulerRejection,
+          secondary: null,
+          prepared: null,
+        }
+      : draft.decision;
+
+    if (schedulerRejection) {
+      events.push({
+        tick,
+        ueId: ue.id,
+        fromSatId: ue.servingSatId,
+        toSatId: draft.decision.selected?.satId ?? null,
+        fromBeamId: ue.servingBeamId,
+        toBeamId: draft.decision.selected?.beamId ?? null,
+        reason: `scheduler-block:${schedulerRejection}`,
+      });
+    }
+
+    const selected = effectiveDecision.selected;
     if (!selected) {
       nextUes.push({
         ...ue,
@@ -177,11 +274,13 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
       hasServing &&
       (ue.servingSatId !== selected.satId || ue.servingBeamId !== selected.beamId);
 
-    if (changedServing && decision.triggerEvent) {
-      const reasonPrefix = policyResolution
-        ? `policy-${policyResolution.decisionType}`
+    if (changedServing && effectiveDecision.triggerEvent) {
+      const reasonPrefix = draft.policyResolution
+        ? `policy-${draft.policyResolution.decisionType}`
         : baseline;
-      const reasonSuffix = decision.reasonSuffix ? `-${decision.reasonSuffix}` : '';
+      const reasonSuffix = effectiveDecision.reasonSuffix
+        ? `-${effectiveDecision.reasonSuffix}`
+        : '';
       events.push({
         tick,
         ueId: ue.id,
@@ -196,8 +295,8 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
     const effectiveSinrDb =
       baseline === 'mc-ho' &&
       isFullAlgorithmFidelity(profile) &&
-      decision.secondary
-        ? Math.max(selected.sinrDb, decision.secondary.sinrDb)
+      effectiveDecision.secondary
+        ? Math.max(selected.sinrDb, effectiveDecision.secondary.sinrDb)
         : selected.sinrDb;
     const throughputMbps = computeThroughputMbps(profile, effectiveSinrDb);
     throughputSum += throughputMbps;
@@ -208,18 +307,28 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
       servingSatId: selected.satId,
       servingBeamId: selected.beamId,
       secondarySatId:
-        baseline === 'mc-ho' && decision.secondary ? decision.secondary.satId : null,
+        baseline === 'mc-ho' && effectiveDecision.secondary
+          ? effectiveDecision.secondary.satId
+          : null,
       secondaryBeamId:
-        baseline === 'mc-ho' && decision.secondary ? decision.secondary.beamId : null,
+        baseline === 'mc-ho' && effectiveDecision.secondary
+          ? effectiveDecision.secondary.beamId
+          : null,
       choPreparedSatId:
-        baseline === 'cho' && decision.prepared ? decision.prepared.satId : null,
+        baseline === 'cho' && effectiveDecision.prepared
+          ? effectiveDecision.prepared.satId
+          : null,
       choPreparedBeamId:
-        baseline === 'cho' && decision.prepared ? decision.prepared.beamId : null,
+        baseline === 'cho' && effectiveDecision.prepared
+          ? effectiveDecision.prepared.beamId
+          : null,
       choPreparedElapsedMs:
-        baseline === 'cho' && decision.prepared ? decision.prepared.elapsedMs : null,
+        baseline === 'cho' && effectiveDecision.prepared
+          ? effectiveDecision.prepared.elapsedMs
+          : null,
       choPreparedTargetMs:
-        baseline === 'cho' && decision.prepared
-          ? (decision.prepared.targetMs ?? null)
+        baseline === 'cho' && effectiveDecision.prepared
+          ? (effectiveDecision.prepared.targetMs ?? null)
           : null,
       rsrpDbm: selected.rsrpDbm,
       sinrDb: effectiveSinrDb,
@@ -234,5 +343,16 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
     meanSinrDb: sinrSum / ueCount,
     meanThroughputMbps: throughputSum / ueCount,
     nextTriggerMemory,
+    coupledDecisionStats:
+      schedulerMode === 'coupled'
+        ? {
+            mode: 'coupled',
+            blockedByScheduleHandoverCount:
+              coupledResolution.stats.blockedByScheduleHandoverCount,
+            schedulerInducedInterruptionSec:
+              coupledResolution.stats.schedulerInducedInterruptionSec,
+            blockedReasons: coupledResolution.stats.blockedReasons,
+          }
+        : buildDefaultCoupledDecisionStats('uncoupled'),
   };
 }

@@ -81,6 +81,12 @@
     "scheduler.frequencyBlockCount": [
       "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
     ],
+    "scheduler.maxUsersPerActiveBeam": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
+    "scheduler.fairnessTargetJain": [
+      "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
     "beam.overlapRatio": [
       "PAP-2025-DAPS-CORE"
     ],

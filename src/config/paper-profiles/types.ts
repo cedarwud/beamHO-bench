@@ -133,6 +133,8 @@ export interface PaperProfile {
     minActiveBeamsPerSatellite: number;
     maxActiveBeamsPerSatellite: number;
     frequencyBlockCount: number;
+    maxUsersPerActiveBeam: number;
+    fairnessTargetJain: number;
   };
   handover: {
     algorithmFidelity: AlgorithmFidelity;

@@ -90,7 +90,9 @@
     "activeWindowFraction": 0.5,
     "minActiveBeamsPerSatellite": 1,
     "maxActiveBeamsPerSatellite": 8,
-    "frequencyBlockCount": 4
+    "frequencyBlockCount": 4,
+    "maxUsersPerActiveBeam": 14,
+    "fairnessTargetJain": 0.7
   },
   "handover": {
     "algorithmFidelity": "full",
