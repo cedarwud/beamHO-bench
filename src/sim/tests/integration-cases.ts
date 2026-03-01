@@ -56,6 +56,29 @@ export function buildIntegrationTestCases(): SimTestCase[] {
             );
           }
         }
+
+        const jbhSweepValidationIds = new Set([
+          'VAL-JBH-HOPPING-PERIOD-SWEEP',
+          'VAL-JBH-OVERLAP-SWEEP',
+        ]);
+        const jbhSweepCases = suite.results.filter((result) =>
+          jbhSweepValidationIds.has(result.validationId),
+        );
+        assertCondition(
+          jbhSweepCases.length === 6,
+          `Expected 6 JBH sweep cases, got ${jbhSweepCases.length}.`,
+        );
+
+        for (const result of jbhSweepCases) {
+          const trendCheck = result.checks.find(
+            (check) => check.checkId === 'trend-directional',
+          );
+          assertCondition(Boolean(trendCheck), 'Expected trend-directional check in JBH sweep case.');
+          assertCondition(
+            trendCheck?.pass === true,
+            `Expected trend-directional pass for ${result.validationId}/${result.caseId}.`,
+          );
+        }
       },
     },
     {
