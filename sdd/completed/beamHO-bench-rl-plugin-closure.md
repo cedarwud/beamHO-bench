@@ -53,7 +53,19 @@ This report records closure evidence for:
 
 ---
 
-## 5. Verification Snapshot
+## 5. Architecture Review Notes
+
+Pre-merge review actions:
+1. Kept policy orchestration and action-safety enforcement separated (`runtime-session` vs `runtime-adapter`) to avoid coupling decision logic with scenario execution loops.
+2. Kept plugin contracts and implementations isolated in `src/sim/policy/types.ts` and `src/sim/policy/builtin-plugins.ts` so SimCore orbit/channel/state-machine modules remain policy-agnostic.
+
+Post-merge structure checks:
+1. RL core files remain below project size thresholds (`runtime-session.ts` 371 lines, `runtime-adapter.ts` 346 lines).
+2. `npm run validate:structure` remains green with no warnings.
+
+---
+
+## 6. Verification Snapshot
 
 Latest local verification (2026-03-01):
 1. `npm run validate:stage` passed.
@@ -69,7 +81,7 @@ Latest local verification (2026-03-01):
 
 ---
 
-## 6. References
+## 7. References
 
 1. `sdd/completed/beamHO-bench-implementation-status.md`
 2. `sdd/completed/beamHO-bench-validation-matrix.md`

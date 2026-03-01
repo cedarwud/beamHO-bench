@@ -42,6 +42,7 @@ Roadmap exit criteria status:
 5. No scope drift to multi-orbit components: PASS.
 6. Required CI artifacts generated and valid: PASS.
 7. Pending-gap checklist covered by completed references: PASS.
+8. architecture review evidence recorded for V2-A/V2-B/V2-D closure reports: PASS.
 
 ---
 

@@ -54,7 +54,19 @@ This report records closure evidence for:
 
 ---
 
-## 5. Verification Snapshot
+## 5. Architecture Review Notes
+
+Pre-merge review actions:
+1. kept scheduler state evolution in `window-engine` and HO conflict arbitration in `coupled-resolver` to avoid overloading one module with mixed responsibilities.
+2. kept scheduler contracts in `src/sim/scheduler/types.ts` so handover/runtime/reporting layers consume a stable interface without cross-import cycles.
+
+Post-merge structure checks:
+1. coupled scheduler files remain below project size thresholds (`window-engine.ts` 248 lines, `coupled-resolver.ts` 231 lines, `types.ts` 57 lines).
+2. `npm run validate:structure` remains green with no warnings.
+
+---
+
+## 6. Verification Snapshot
 
 Latest local verification (2026-03-01):
 1. `npm run validate:stage` passed.
@@ -72,7 +84,7 @@ Latest local verification (2026-03-01):
 
 ---
 
-## 6. References
+## 7. References
 
 1. `sdd/completed/beamHO-bench-implementation-status.md`
 2. `sdd/completed/beamHO-bench-validation-matrix.md`
