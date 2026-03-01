@@ -37,15 +37,22 @@
 
 1. 開發需持續對齊 SDD，不偏離成單一論文客製實作。
 2. 每完成一個階段要主動做驗證，不等待額外提醒。
-3. 單一檔案過大時必須進行「有意義拆分」，不是只切行數：
+3. `sdd/pending/` 需區分兩類：
+   - `active pending`：本期 roadmap 明確納入實作範圍，需納入完成率與 gate。
+   - `backlog pending`：長期議題（如 multi-orbit），不納入本期完成率，不得以「未實作」視為違規。
+4. pending SDD 完成後，必須同一階段完成文件生命週期收斂：
+   - pending 文件狀態標註為 implemented/closure-tracked。
+   - 至少有一份對應 `sdd/completed/*-closure.md` 並回鏈原 pending 條目。
+   - roadmap/implementation status 需同步更新 phase 狀態。
+5. 單一檔案過大時必須進行「有意義拆分」，不是只切行數：
    - 依責任邊界拆分（例如：types/helpers/runner/checks 分離）
    - 拆分後命名與目錄要能反映模組責任
    - 不可製造循環依賴或把核心流程分散到難追蹤
-4. 結構需可維護，避免單檔過大；目前規則為：
+6. 結構需可維護，避免單檔過大；目前規則為：
    - `<= 500` 行：正常
    - `501-650` 行：警告
    - `> 650` 行：必須拆分
-5. 需定期檢視整體專案架構是否要調整（至少每個 milestone 一次，或大型功能合併前後）：
+7. 需定期檢視整體專案架構是否要調整（至少每個 milestone 一次，或大型功能合併前後）：
    - 檢查目錄分層是否仍清楚（sim/core/viz/config/reporting）
    - 檢查是否出現模組責任重疊或過度耦合
    - 若有結構性風險，先重構再繼續堆新功能
@@ -55,3 +62,32 @@
 1. 需可重現（同 profile + seed + overrides 產出一致）。
 2. 需持續通過 stage gate（`validate:stage`）。
 3. 關鍵輸出（如 `sim-test-summary`, `validation-suite`, `validation-gate-summary`）要可供 CI 與論文附錄引用。
+4. 關鍵輸出不只要「存在」，還需是當輪驗證新鮮產物：
+   - `dist/sim-test-summary.json`
+   - `dist/validation-suite.json`
+   - `dist/validation-gate-summary.json`
+   - 檔案修改時間需晚於當輪 `validate:stage` 開始時間。
+
+## 8. 來源假設治理（ASSUME-*）
+
+1. 任何新增 `ASSUME-*` 都必須在同一個變更集中同時完成：
+   - source catalog 登錄（含 rationale）。
+   - profile/source map 或 artifact traceability 路徑可追溯。
+   - 至少一個 validation case 或檢查邏輯覆蓋新假設。
+2. 不得以未登錄 `ASSUME-*` 或臨時常數直接進入 KPI 相關路徑。
+
+## 9. 約束-執行對照（Constraint-to-Enforcement）
+
+1. 每條硬性約束需有對應的自動化 gate、腳本或可稽核輸出；禁止只有口頭規範。
+2. 目前基準對照如下：
+   - 學術追溯、profile/source map、full-fidelity 預設、KPI 常數來源：`scripts/validate-academic-rigor.mjs`
+   - 模組拆分與檔案大小門檻：`scripts/validate-module-structure.mjs`
+   - 版權/.gitignore 與 deferred scope（RSMA/soft-HO/large-scale DRL）守門：`scripts/validate-repo-policy.mjs`
+   - validation suite 完整性與 gate summary：`scripts/validate-validation-suite.mjs`
+   - 階段整合 gate：`npm run validate:stage`
+3. 新增硬性約束時，必須在同一階段補上對應 enforcement（腳本或可機器檢查的 artifact）。
+
+## 10. 文件與驗證定義一致性
+
+1. `sdd/completed/beamHO-bench-validation-matrix.md` 的必跑 validation IDs，必須可在 `src/sim/bench/validation-definitions.ts` 找到對應定義。
+2. 若兩者不一致，視為流程違規，需先修正一致性再合併功能變更。
