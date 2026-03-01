@@ -95,7 +95,10 @@ function createScenario(
     : createCase9AnalyticScenario({ profile, seed, baseline, policyRuntime, scenarioId });
 }
 
-function buildSummaryCsv(runs: BaselineBatchRun[]): string {
+function buildSummaryCsv(
+  runs: BaselineBatchRun[],
+  profile: Pick<PaperProfile, 'beam'>,
+): string {
   const lines = [
     [
       'baseline',
@@ -113,6 +116,8 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
       'scheduler_mode',
       'scheduler_window_id',
       'scheduler_total_beams',
+      'profile_beams_per_satellite',
+      'profile_beam_layout',
       'scheduler_active_beams',
       'scheduler_utilization_ratio',
       'scheduler_fairness_index',
@@ -120,6 +125,8 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
       'coupled_blocked_handover_count',
       'coupled_interruption_sec',
       'coupled_blocked_reasons',
+      'normalized_throughput_per_total_beam_mbps',
+      'normalized_handover_rate_per_total_beam',
       'playback_rate',
       'resolved_assumption_ids',
       'scenario_id',
@@ -142,6 +149,11 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
 
   for (const run of runs) {
     const { summary, metadata } = run.result;
+    // Source: sdd/pending/beamHO-bench-baseline-generalization-sdd.md (BG-5)
+    // Normalize KPI by total beam count for cross-profile beam-count comparability output.
+    const normalizationDivisor = Math.max(metadata.beamScheduler.totalBeamCount, 1);
+    const normalizedThroughputPerTotalBeam = summary.kpi.throughput / normalizationDivisor;
+    const normalizedHandoverRatePerTotalBeam = summary.kpi.handoverRate / normalizationDivisor;
     lines.push(
       [
         run.baseline,
@@ -159,6 +171,8 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
         metadata.beamScheduler.mode,
         metadata.beamScheduler.windowId,
         metadata.beamScheduler.totalBeamCount,
+        profile.beam.beamsPerSatellite,
+        profile.beam.layout,
         metadata.beamScheduler.activeBeamCount,
         metadata.beamScheduler.utilizationRatio.toFixed(6),
         metadata.beamScheduler.fairnessIndex.toFixed(6),
@@ -169,6 +183,8 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
           .sort((left, right) => left[0].localeCompare(right[0]))
           .map(([reason, count]) => `${reason}:${count}`)
           .join('|'),
+        normalizedThroughputPerTotalBeam.toFixed(6),
+        normalizedHandoverRatePerTotalBeam.toFixed(6),
         metadata.playbackRate.toFixed(2),
         metadata.resolvedAssumptionIds.join('|'),
         metadata.scenarioId,
@@ -263,6 +279,6 @@ export function runBaselineBatch(options: BaselineBatchOptions): BaselineBatchRe
     tickCount,
     generatedAtUtc: new Date().toISOString(),
     runs,
-    summaryCsv: buildSummaryCsv(runs),
+    summaryCsv: buildSummaryCsv(runs, profile),
   };
 }
