@@ -7,6 +7,7 @@ This folder contains SDD documents not implemented yet.
 1. `beamHO-bench-sdd-v2-roadmap.md` (execution order and gates)
 2. `beamHO-bench-rl-plugin-sdd.md` (RL decision plugin contract)
 3. `beamHO-bench-joint-beamho-sdd.md` (beam scheduler + HO coupled mode)
+4. `beamHO-bench-baseline-generalization-sdd.md` (cross-paper reproduction standardization and deferred-scope governance)
 
 ## 2. Long-Term Backlog (Out of current scope)
 

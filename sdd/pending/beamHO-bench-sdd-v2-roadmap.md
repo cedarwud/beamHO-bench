@@ -13,6 +13,7 @@ Define the next implementation stage after v1 (M0-M4), with executable order and
 Active target items:
 1. RL policy plugin framework.
 2. Joint beam hopping + HO optimization.
+3. Baseline generalization closure for cross-paper reproduction workflows.
 
 ---
 
@@ -22,6 +23,7 @@ In scope:
 1. decision plugin contracts and lifecycle integration.
 2. scheduler/HO coupling within existing LEO SimCore.
 3. reproducible artifacts and validation gates for new features.
+4. pending-gap closure for throughput model policy, rerun contract, Timer-CHO visualization acceptance, and beam-count benchmark comparability.
 
 Out of scope:
 1. multi-orbit (LEO/MEO/GEO) unified scheduling.
@@ -58,8 +60,13 @@ Phase V2-C:
 1. refresh requirements/validation matrix and implementation status docs.
 2. ensure all new KPI-impacting fields have traceability mapping.
 
+Phase V2-D:
+1. implement baseline generalization SDD items (`MORL/C-UCGM/LDAPS` role mapping policy, throughput model metadata, one-click rerun, Timer-CHO ToS visualization acceptance, 7/16/50 beam benchmark templates, deferred RSMA/DRL governance).
+2. merge only when BG validation gates are green.
+
 Dependency rule:
 1. V2-B depends on V2-A artifact extensions and validation harness.
+2. V2-D depends on V2-A/V2-B metadata and validation infrastructure.
 
 ---
 
@@ -67,9 +74,10 @@ Dependency rule:
 
 1. `beamHO-bench-rl-plugin-sdd.md` implemented in code.
 2. `beamHO-bench-joint-beamho-sdd.md` implemented in code.
-3. validation suite extensions for RL and joint scheduling.
-4. updated requirements and validation matrix references under `sdd/completed/`.
-5. optional long-term reference only: `beamHO-bench-multiorbit-sdd.md` (not part of roadmap exit).
+3. `beamHO-bench-baseline-generalization-sdd.md` implemented in code/process artifacts.
+4. validation suite extensions for RL, joint scheduling, and baseline-generalization gates.
+5. updated requirements and validation matrix references under `sdd/completed/`.
+6. optional long-term reference only: `beamHO-bench-multiorbit-sdd.md` (not part of roadmap exit).
 
 ---
 
@@ -84,3 +92,4 @@ Dependency rule:
 7. `dist/sim-test-summary.json`
 8. `dist/validation-suite.json`
 9. `dist/validation-gate-summary.json`
+10. pending-gap six-point checklist is fully covered by completed SDD references.
