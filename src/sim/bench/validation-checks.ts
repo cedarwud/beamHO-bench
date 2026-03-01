@@ -1,6 +1,5 @@
 import type { BaselineBatchResult } from './runner';
 import type { ValidationCheckResult } from './validation-types';
-
 /**
  * Provenance:
  * - sdd/completed/beamHO-bench-validation-matrix.md
@@ -440,6 +439,7 @@ function fingerprintBatch(batch: BaselineBatchResult): string {
         profileId: run.result.metadata.profileId,
         baseline: run.result.metadata.baseline,
         algorithmFidelity: run.result.metadata.algorithmFidelity,
+        throughputModel: run.result.metadata.throughputModel,
         seed: run.result.metadata.seed,
         playbackRate: run.result.metadata.playbackRate,
         resolvedAssumptionIds: [...run.result.metadata.resolvedAssumptionIds].sort(),

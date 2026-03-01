@@ -41,6 +41,19 @@
     "bandwidthMHz": 20,
     "largeScaleModel": "3gpp-tr-38.811",
     "smallScaleModel": "none",
+    "throughputModel": {
+      "model": "shannon",
+      "mcsTable": [
+        { "minSinrDb": -6, "spectralEfficiencyBpsHz": 0.1523 },
+        { "minSinrDb": -3, "spectralEfficiencyBpsHz": 0.377 },
+        { "minSinrDb": 1, "spectralEfficiencyBpsHz": 0.877 },
+        { "minSinrDb": 5, "spectralEfficiencyBpsHz": 1.4766 },
+        { "minSinrDb": 9, "spectralEfficiencyBpsHz": 2.4063 },
+        { "minSinrDb": 13, "spectralEfficiencyBpsHz": 3.3223 },
+        { "minSinrDb": 18, "spectralEfficiencyBpsHz": 4.5234 },
+        { "minSinrDb": 22, "spectralEfficiencyBpsHz": 5.5547 }
+      ]
+    },
     "smallScaleParams": {
       "shadowedRician": {
         "kFactorMinDb": -2,

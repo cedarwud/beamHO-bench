@@ -98,6 +98,7 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
     [
       'baseline',
       'algorithm_fidelity',
+      'throughput_model',
       'runtime_parameter_audit_pass',
       'runtime_parameter_audit_missing_keys',
       'policy_mode',
@@ -143,6 +144,7 @@ function buildSummaryCsv(runs: BaselineBatchRun[]): string {
       [
         run.baseline,
         metadata.algorithmFidelity,
+        metadata.throughputModel,
         metadata.runtimeParameterAudit?.pass ? 'PASS' : 'FAIL',
         metadata.runtimeParameterAudit?.missingKeys.join('|') ?? '',
         metadata.policyRuntime.policyMode,
@@ -229,6 +231,7 @@ export function runBaselineBatch(options: BaselineBatchOptions): BaselineBatchRe
       profileId: profile.profileId,
       baseline,
       algorithmFidelity: profile.handover.algorithmFidelity,
+      throughputModel: profile.channel.throughputModel.model,
       seed,
       playbackRate: 1,
       resolvedAssumptionIds,

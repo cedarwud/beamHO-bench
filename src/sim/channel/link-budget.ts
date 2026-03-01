@@ -120,7 +120,40 @@ export function selectBestLink(samples: LinkSample[]): LinkSample | null {
   return best;
 }
 
+function computeMcsMappedThroughputMbps(profile: PaperProfile, sinrDb: number): number {
+  const sortedTable = [...profile.channel.throughputModel.mcsTable].sort((left, right) => {
+    if (left.minSinrDb !== right.minSinrDb) {
+      return left.minSinrDb - right.minSinrDb;
+    }
+    return left.spectralEfficiencyBpsHz - right.spectralEfficiencyBpsHz;
+  });
+  if (sortedTable.length === 0) {
+    return 0;
+  }
+
+  let selectedEfficiency = sortedTable[0].spectralEfficiencyBpsHz;
+  for (const row of sortedTable) {
+    if (sinrDb + 1e-9 >= row.minSinrDb) {
+      selectedEfficiency = row.spectralEfficiencyBpsHz;
+      continue;
+    }
+    break;
+  }
+
+  const bandwidthHz = profile.channel.bandwidthMHz * 1e6;
+  const throughputBps = bandwidthHz * Math.max(selectedEfficiency, 0);
+  return throughputBps / 1e6;
+}
+
 export function computeThroughputMbps(profile: PaperProfile, sinrDb: number): number {
+  // Source: ASSUME-THROUGHPUT-MODEL-POLICY
+  // Throughput model is explicit and profile-scoped for cross-paper reproducibility.
+  if (profile.channel.throughputModel.model === 'mcs-mapped') {
+    // Source: ASSUME-MCS-SPECTRAL-EFFICIENCY-TABLE
+    // Optional MCS mode consumes profile-defined SINR-to-efficiency table.
+    return computeMcsMappedThroughputMbps(profile, sinrDb);
+  }
+
   const sinrLinear = Math.pow(10, sinrDb / 10);
   const bandwidthHz = profile.channel.bandwidthMHz * 1e6;
   const capacityBps = bandwidthHz * Math.log2(1 + Math.max(sinrLinear, 1e-9));

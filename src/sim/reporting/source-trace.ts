@@ -25,6 +25,7 @@ export interface SourceTraceArtifact {
   profile_id: CanonicalProfileId;
   baseline: string;
   algorithm_fidelity: AlgorithmFidelity;
+  throughput_model: 'shannon' | 'mcs-mapped';
   seed: number;
   playback_rate: number;
   profile_checksum_sha256: string;
@@ -180,6 +181,7 @@ export async function createSourceTraceArtifact(
     profile_id: options.profileId,
     baseline: options.baseline,
     algorithm_fidelity: options.algorithmFidelity,
+    throughput_model: profile.channel.throughputModel.model,
     seed: options.seed,
     playback_rate: options.playbackRate,
     profile_checksum_sha256: await computeProfileChecksum(profile),

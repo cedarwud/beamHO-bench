@@ -7,6 +7,12 @@
     "channel.smallScaleModel": [
       "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
     ],
+    "channel.throughputModel.model": [
+      "ASSUME-THROUGHPUT-MODEL-POLICY"
+    ],
+    "channel.throughputModel.mcsTable": [
+      "ASSUME-MCS-SPECTRAL-EFFICIENCY-TABLE"
+    ],
     "channel.smallScaleParams.shadowedRician.kFactorMinDb": [
       "PAP-2024-MADRL-CORE",
       "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"

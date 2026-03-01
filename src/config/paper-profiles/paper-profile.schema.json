@@ -151,6 +151,7 @@
         "bandwidthMHz",
         "largeScaleModel",
         "smallScaleModel",
+        "throughputModel",
         "sfClSource",
         "ueGTdBPerK",
         "ueAntennaGainDbi",
@@ -168,6 +169,30 @@
         "smallScaleModel": {
           "type": "string",
           "enum": ["none", "shadowed-rician", "loo", "custom"]
+        },
+        "throughputModel": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["model", "mcsTable"],
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": ["shannon", "mcs-mapped"]
+            },
+            "mcsTable": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["minSinrDb", "spectralEfficiencyBpsHz"],
+                "properties": {
+                  "minSinrDb": { "type": "number" },
+                  "spectralEfficiencyBpsHz": { "type": "number", "minimum": 0 }
+                }
+              }
+            }
+          }
         },
         "smallScaleParams": {
           "type": "object",

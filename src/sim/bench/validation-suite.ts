@@ -23,7 +23,6 @@ import type {
   ValidationSuiteResult,
   ValidationTrendPolicy,
 } from './validation-types';
-
 /**
  * Provenance:
  * - sdd/completed/beamHO-bench-validation-matrix.md
@@ -320,6 +319,7 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
       'trend_tolerance',
       'baseline',
       'algorithm_fidelity',
+      'throughput_model',
       'playback_rate',
       'tick',
       'time_sec',
@@ -389,6 +389,7 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
           trendTolerance,
           run.baseline,
           run.result.metadata.algorithmFidelity,
+          run.result.metadata.throughputModel,
           run.result.metadata.playbackRate.toFixed(2),
           run.result.summary.tick,
           run.result.summary.timeSec.toFixed(3),

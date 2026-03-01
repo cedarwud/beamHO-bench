@@ -36,6 +36,7 @@ export interface RunManifest {
   tle_snapshot_utc?: string;
   source_catalog_checksum_sha256: string;
   algorithm_fidelity: 'full' | 'simplified';
+  throughput_model: 'shannon' | 'mcs-mapped';
   resolved_assumption_ids: string[];
   policy_mode: 'off' | 'on';
   policy_id?: string;
@@ -223,6 +224,7 @@ export function buildRunManifest(options: RunManifestOptions): RunManifest {
     mode: options.profile.mode,
     source_catalog_checksum_sha256: options.sourceCatalogChecksumSha256,
     algorithm_fidelity: options.profile.handover.algorithmFidelity,
+    throughput_model: options.profile.channel.throughputModel.model,
     resolved_assumption_ids: [...(options.resolvedAssumptionIds ?? [])].sort(),
     policy_mode: policyRuntime.policyMode,
     policy_runtime_config_hash: policyRuntime.runtimeConfigHash,

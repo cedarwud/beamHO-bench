@@ -1,6 +1,6 @@
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { KpiResult, SimSnapshot } from '@/sim/types';
-import type { AlgorithmFidelity } from '@/config/paper-profiles/types';
+import type { AlgorithmFidelity, ThroughputModel } from '@/config/paper-profiles/types';
 import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-parameter-audit';
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
 import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
@@ -17,6 +17,7 @@ export interface RunMetadata {
   profileId: string;
   baseline: RuntimeBaseline;
   algorithmFidelity: AlgorithmFidelity;
+  throughputModel: ThroughputModel;
   seed: number;
   playbackRate: number;
   resolvedAssumptionIds: string[];
@@ -54,6 +55,7 @@ export interface BuildKpiResultMetadata {
   profileId: string;
   baseline: RuntimeBaseline;
   algorithmFidelity: AlgorithmFidelity;
+  throughputModel: ThroughputModel;
   seed: number;
   playbackRate: number;
   resolvedAssumptionIds: string[];

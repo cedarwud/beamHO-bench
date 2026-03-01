@@ -23,6 +23,8 @@ export type SmallScaleModel = "none" | "shadowed-rician" | "loo" | "custom";
 
 export type AlgorithmFidelity = "full" | "simplified";
 
+export type ThroughputModel = "shannon" | "mcs-mapped";
+
 export type HandoverBaseline =
   | "max-rsrp"
   | "max-elevation"
@@ -89,6 +91,13 @@ export interface PaperProfile {
     bandwidthMHz: number;
     largeScaleModel: "3gpp-tr-38.811" | "custom";
     smallScaleModel: SmallScaleModel;
+    throughputModel: {
+      model: ThroughputModel;
+      mcsTable: Array<{
+        minSinrDb: number;
+        spectralEfficiencyBpsHz: number;
+      }>;
+    };
     smallScaleParams?: {
       shadowedRician?: {
         kFactorMinDb: number;

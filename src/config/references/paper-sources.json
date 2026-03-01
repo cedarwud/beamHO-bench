@@ -112,6 +112,26 @@
       "note": "Default beam-hopping window parameters for deterministic scheduler A/B studies."
     },
     {
+      "sourceId": "ASSUME-THROUGHPUT-MODEL-POLICY",
+      "type": "assumption",
+      "title": "Throughput Model Policy",
+      "locator": "channel.throughputModel.model",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:throughput-model-policy",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Default benchmark path uses Shannon throughput; MCS-mapped mode is explicit opt-in."
+    },
+    {
+      "sourceId": "ASSUME-MCS-SPECTRAL-EFFICIENCY-TABLE",
+      "type": "assumption",
+      "title": "MCS Spectral Efficiency Mapping Table",
+      "locator": "channel.throughputModel.mcsTable",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:mcs-spectral-efficiency-table",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Profile-scoped SINR-to-spectral-efficiency table for optional mcs-mapped throughput mode."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",
