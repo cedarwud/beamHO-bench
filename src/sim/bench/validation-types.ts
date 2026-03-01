@@ -15,7 +15,12 @@ export interface ValidationSuiteCaseDefinition {
   };
 }
 
-export type ValidationTrendMetric = 'handover-rate' | 'hopp' | 'failure-total';
+export type ValidationTrendMetric =
+  | 'handover-rate'
+  | 'hopp'
+  | 'failure-total'
+  | 'scheduler-window-transition-count'
+  | 'scheduler-overlap-blocked-count';
 export type ValidationTrendDirection = 'non-increasing' | 'non-decreasing';
 
 export interface ValidationTrendPolicy {

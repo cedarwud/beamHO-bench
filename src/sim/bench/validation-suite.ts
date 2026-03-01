@@ -54,6 +54,57 @@ function totalFailureCount(kpi: {
   return kpi.rlf.state1 + kpi.rlf.state2 + kpi.hof.state2 + kpi.hof.state3;
 }
 
+function countWindowTransitions(result: ValidationSuiteCaseResult): number {
+  const firstRun = result.batch.runs[0];
+  if (!firstRun) {
+    return Number.NaN;
+  }
+
+  const snapshots = firstRun.snapshots ?? [];
+  if (snapshots.length <= 1) {
+    return 0;
+  }
+
+  if (snapshots.some((snapshot) => !snapshot.beamScheduler)) {
+    return Number.NaN;
+  }
+
+  let transitions = 0;
+  let previousWindowId = snapshots[0]?.beamScheduler?.summary.windowId ?? null;
+
+  for (let index = 1; index < snapshots.length; index += 1) {
+    const currentWindowId = snapshots[index]?.beamScheduler?.summary.windowId ?? null;
+    if (previousWindowId === null || currentWindowId === null) {
+      return Number.NaN;
+    }
+    if (currentWindowId !== previousWindowId) {
+      transitions += 1;
+    }
+    previousWindowId = currentWindowId;
+  }
+
+  return transitions;
+}
+
+function countOverlapBlockedEvents(result: ValidationSuiteCaseResult): number {
+  const firstRun = result.batch.runs[0];
+  if (!firstRun) {
+    return Number.NaN;
+  }
+
+  const snapshots = firstRun.snapshots ?? [];
+  let blockedCount = 0;
+  for (const snapshot of snapshots) {
+    blockedCount += snapshot.hoEvents.filter(
+      (event) =>
+        event.reason ===
+        'scheduler-block:blocked-by-schedule-overlap-constraint',
+    ).length;
+  }
+
+  return blockedCount;
+}
+
 function pickTrendMetric(
   result: ValidationSuiteCaseResult,
   metric: ValidationTrendPolicy['metric'],
@@ -71,6 +122,10 @@ function pickTrendMetric(
       return kpi.handoverRate;
     case 'hopp':
       return kpi.hopp;
+    case 'scheduler-window-transition-count':
+      return countWindowTransitions(result);
+    case 'scheduler-overlap-blocked-count':
+      return countOverlapBlockedEvents(result);
     default:
       return kpi.handoverRate;
   }

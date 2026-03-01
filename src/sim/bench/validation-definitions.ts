@@ -299,5 +299,51 @@ export function buildValidationDefinitions(): ValidationSuiteDefinition[] {
         },
       ],
     },
+    {
+      validationId: 'VAL-JBH-HOPPING-PERIOD-SWEEP',
+      profileId: 'case9-default',
+      requiresFullFidelity: true,
+      trendPolicy: {
+        metric: 'scheduler-window-transition-count',
+        direction: 'non-increasing',
+      },
+      cases: [2, 4, 8].map((windowPeriodSec) => ({
+        caseId: `scheduler-window-period-${windowPeriodSec}`,
+        baselines: ['max-rsrp'],
+        tickCount: 120,
+        runtimeOverrides: {
+          scheduler: {
+            mode: 'coupled',
+            windowPeriodSec,
+            activeWindowFraction: 0.35,
+          },
+        },
+      })),
+    },
+    {
+      validationId: 'VAL-JBH-OVERLAP-SWEEP',
+      profileId: 'case9-default',
+      requiresFullFidelity: true,
+      trendPolicy: {
+        metric: 'scheduler-overlap-blocked-count',
+        direction: 'non-increasing',
+      },
+      cases: [0.05, 0.15, 0.35].map((overlapRatio) => ({
+        caseId: `scheduler-overlap-${overlapRatio}`,
+        baselines: ['max-rsrp'],
+        tickCount: 120,
+        runtimeOverrides: {
+          beam: {
+            overlapRatio,
+          },
+          scheduler: {
+            mode: 'coupled',
+            activeWindowFraction: 1,
+            maxUsersPerActiveBeam: 64,
+            fairnessTargetJain: 0,
+          },
+        },
+      })),
+    },
   ];
 }
