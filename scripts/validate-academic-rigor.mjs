@@ -6,6 +6,7 @@ import path from 'node:path';
 const ROOT = process.cwd();
 
 const PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
+const REQUIRED_LAYER_D_ROLE_IDS = ['morl', 'c-ucgm', 'ldaps-daps'];
 
 const REQUIRED_SOURCE_PATHS = [
   'channel.sfClSource',
@@ -72,6 +73,7 @@ const CRITICAL_PROVENANCE_FILES = [
   'src/sim/util/rng.ts',
   'src/config/paper-profiles/loader.ts',
   'src/config/paper-profiles/types.ts',
+  'src/config/references/layer-d-role-mapping.ts',
   'src/config/ntpu.config.ts',
 ];
 
@@ -202,6 +204,70 @@ function validateSourceCatalog(sourceCatalog, errors) {
   }
 
   return byId;
+}
+
+function validateLayerDRoleMapping(layerDRoleMapping, sourceCatalogById, errors) {
+  if (!layerDRoleMapping || typeof layerDRoleMapping !== 'object') {
+    pushError(errors, 'layer-d-role-mapping.json is missing or invalid.');
+    return;
+  }
+
+  const entries = layerDRoleMapping.entries;
+  if (!Array.isArray(entries) || entries.length === 0) {
+    pushError(errors, 'layer-d-role-mapping.json must include non-empty entries array.');
+    return;
+  }
+
+  const seenRoles = new Set();
+  for (const entry of entries) {
+    if (!entry || typeof entry !== 'object') {
+      pushError(errors, 'layer-d-role-mapping.json entry must be an object.');
+      continue;
+    }
+
+    if (!entry.roleId || typeof entry.roleId !== 'string') {
+      pushError(errors, 'layer-d-role-mapping.json entry missing roleId.');
+      continue;
+    }
+
+    if (seenRoles.has(entry.roleId)) {
+      pushError(
+        errors,
+        `layer-d-role-mapping.json contains duplicate roleId '${entry.roleId}'.`,
+      );
+    }
+    seenRoles.add(entry.roleId);
+
+    if (!Array.isArray(entry.sourceIds) || entry.sourceIds.length === 0) {
+      pushError(
+        errors,
+        `layer-d-role-mapping.json role '${entry.roleId}' must include at least one sourceId.`,
+      );
+      continue;
+    }
+
+    if (!entry.sourceIds.some((sourceId) => sourceId.startsWith('PAP-'))) {
+      pushError(
+        errors,
+        `layer-d-role-mapping.json role '${entry.roleId}' must include at least one PAP-* sourceId.`,
+      );
+    }
+
+    for (const sourceId of entry.sourceIds) {
+      if (!sourceCatalogById.has(sourceId)) {
+        pushError(
+          errors,
+          `layer-d-role-mapping.json role '${entry.roleId}' references unknown sourceId '${sourceId}'.`,
+        );
+      }
+    }
+  }
+
+  for (const roleId of REQUIRED_LAYER_D_ROLE_IDS) {
+    if (!seenRoles.has(roleId)) {
+      pushError(errors, `layer-d-role-mapping.json missing required role '${roleId}'.`);
+    }
+  }
 }
 
 function validateProfilesAndSourceMaps(sourceCatalogById, profiles, sourceMaps, errors, warnings) {
@@ -439,6 +505,8 @@ async function main() {
 
   const sourceCatalog = await readJson('src/config/references/paper-sources.json');
   const sourceCatalogById = validateSourceCatalog(sourceCatalog, errors);
+  const layerDRoleMapping = await readJson('src/config/references/layer-d-role-mapping.json');
+  validateLayerDRoleMapping(layerDRoleMapping, sourceCatalogById, errors);
 
   const profiles = {};
   const sourceMaps = {};

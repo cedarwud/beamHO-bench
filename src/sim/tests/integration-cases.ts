@@ -1,4 +1,9 @@
 import { loadPaperProfile } from '@/config/paper-profiles/loader';
+import { getSourceCatalog } from '@/config/paper-profiles/loader';
+import {
+  loadLayerDRoleMapping,
+  validateLayerDRoleMapping,
+} from '@/config/references/layer-d-role-mapping';
 import { runBaselineBatch } from '@/sim/bench/runner';
 import { runCoreValidationSuite } from '@/sim/bench/validation-suite';
 import { buildRunManifest } from '@/sim/reporting/manifest';
@@ -79,6 +84,23 @@ export function buildIntegrationTestCases(): SimTestCase[] {
             `Expected trend-directional pass for ${result.validationId}/${result.caseId}.`,
           );
         }
+      },
+    },
+    {
+      name: 'integration: layer-d role mapping table is complete and source-registered',
+      kind: 'integration',
+      run: () => {
+        const mapping = loadLayerDRoleMapping();
+        const sourceCatalog = getSourceCatalog();
+        const issues = validateLayerDRoleMapping(mapping, sourceCatalog);
+
+        assertCondition(
+          issues.length === 0,
+          `Layer-D role mapping validation failed: ${issues
+            .slice(0, 2)
+            .map((issue) => `${issue.path} ${issue.message}`)
+            .join(' | ')}`,
+        );
       },
     },
     {
