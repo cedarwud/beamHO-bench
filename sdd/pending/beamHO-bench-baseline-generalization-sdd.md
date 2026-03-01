@@ -1,8 +1,11 @@
-# beamHO-bench — Baseline Generalization and Reproduction SDD (Pending)
+# beamHO-bench — Baseline Generalization and Reproduction SDD (Implemented)
 
-**Version:** 0.1.0  
+**Version:** 1.0.0  
 **Date:** 2026-03-01  
-**Status:** Pending / Implementation-ready spec
+**Status:** Implemented / Historical pending spec (closure-tracked)
+
+Closure reference:
+1. `sdd/completed/beamHO-bench-baseline-generalization-closure.md`
 
 ---
 
@@ -95,4 +98,3 @@ This document standardizes six pending items:
 4. D4: Timer-CHO visualization data contract + tests.
 5. D5: 7/16/50 profile benchmark templates and validation-suite cases.
 6. D6: deferred-policy checklist integration in roadmap and pending README.
-

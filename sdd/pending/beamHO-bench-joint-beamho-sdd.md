@@ -1,8 +1,11 @@
-# beamHO-bench — Joint Beam Hopping + HO SDD (Pending)
+# beamHO-bench — Joint Beam Hopping + HO SDD (Implemented)
 
-**Version:** 0.2.0  
+**Version:** 1.0.0  
 **Date:** 2026-03-01  
-**Status:** Pending / Implementation-ready spec
+**Status:** Implemented / Historical pending spec (closure-tracked)
+
+Closure reference:
+1. `sdd/completed/beamHO-bench-joint-beamho-closure.md`
 
 ---
 
