@@ -2,11 +2,11 @@
 
 This folder contains SDD documents not implemented yet.
 
-## 1. Active Pending Topics (LEO-only)
+## 1. v2 Topics (LEO-only, Implementation Complete)
 
 1. `beamHO-bench-sdd-v2-roadmap.md` (execution order and gates)
-2. `beamHO-bench-rl-plugin-sdd.md` (RL decision plugin contract)
-3. `beamHO-bench-joint-beamho-sdd.md` (beam scheduler + HO coupled mode)
+2. `beamHO-bench-rl-plugin-sdd.md` (implemented; closure evidence in `sdd/completed/beamHO-bench-rl-plugin-closure.md`)
+3. `beamHO-bench-joint-beamho-sdd.md` (implemented; closure evidence in `sdd/completed/beamHO-bench-joint-beamho-closure.md`)
 4. `beamHO-bench-baseline-generalization-sdd.md` (implemented; closure evidence in `sdd/completed/beamHO-bench-baseline-generalization-closure.md`)
 
 ## 2. Long-Term Backlog (Out of current scope)

@@ -2,7 +2,7 @@
 
 **Version:** 0.2.0  
 **Date:** 2026-03-01  
-**Status:** Pending / Execution roadmap
+**Status:** Implemented / Closure-tracked roadmap
 
 ---
 
@@ -98,3 +98,12 @@ Dependency rule:
 12. no RSMA/soft-HO runtime code paths in `src/`.
 13. no broad large-scale/multi-paper DRL fusion runtime path in `src/`.
 14. any reactivation must originate from explicit pending SDD entry.
+
+---
+
+## 6. Closure References
+
+1. `sdd/completed/beamHO-bench-rl-plugin-closure.md`
+2. `sdd/completed/beamHO-bench-joint-beamho-closure.md`
+3. `sdd/completed/beamHO-bench-baseline-generalization-closure.md`
+4. `sdd/completed/beamHO-bench-implementation-status.md`
