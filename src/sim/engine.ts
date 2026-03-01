@@ -1,8 +1,17 @@
 import type { SimScenario, SimSnapshot, SimTickContext } from './types';
 
+/**
+ * Provenance:
+ * - sdd/completed/beamHO-bench-sdd.md
+ *
+ * Notes:
+ * - Snapshot-driven tick loop is the canonical simulation execution model.
+ */
+
 export interface SimEngineOptions {
   scenario: SimScenario;
   timeStepSec?: number;
+  playbackRate?: number;
 }
 
 type SnapshotListener = (snapshot: SimSnapshot) => void;
@@ -13,10 +22,12 @@ export class SimEngine {
   private readonly tickContext: SimTickContext;
   private snapshot: SimSnapshot;
   private timer: ReturnType<typeof setInterval> | null = null;
+  private playbackRate = 1;
 
   constructor(options: SimEngineOptions) {
     this.scenario = options.scenario;
     this.tickContext = { timeStepSec: options.timeStepSec ?? 1 };
+    this.playbackRate = this.normalizePlaybackRate(options.playbackRate ?? 1);
     this.snapshot = this.scenario.createInitialSnapshot();
   }
 
@@ -37,6 +48,24 @@ export class SimEngine {
     };
   }
 
+  getPlaybackRate(): number {
+    return this.playbackRate;
+  }
+
+  setPlaybackRate(nextRate: number): void {
+    const normalized = this.normalizePlaybackRate(nextRate);
+    if (normalized === this.playbackRate) {
+      return;
+    }
+
+    this.playbackRate = normalized;
+
+    if (this.timer) {
+      this.stop();
+      this.start();
+    }
+  }
+
   start(): void {
     if (this.timer) {
       return;
@@ -44,7 +73,7 @@ export class SimEngine {
 
     this.timer = setInterval(() => {
       this.step();
-    }, this.tickContext.timeStepSec * 1000);
+    }, this.resolveIntervalMs());
   }
 
   stop(): void {
@@ -71,5 +100,18 @@ export class SimEngine {
     for (const listener of this.listeners) {
       listener(this.snapshot);
     }
+  }
+
+  private normalizePlaybackRate(value: number): number {
+    if (!Number.isFinite(value)) {
+      return 1;
+    }
+    return Math.min(Math.max(value, 0.25), 8);
+  }
+
+  private resolveIntervalMs(): number {
+    const baseMs = this.tickContext.timeStepSec * 1000;
+    const scaledMs = baseMs / this.playbackRate;
+    return Math.max(16, Math.round(scaledMs));
   }
 }

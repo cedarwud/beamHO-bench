@@ -1,3 +1,11 @@
+/**
+ * Provenance:
+ * - sdd/completed/beamHO-bench-experiment-protocol.md
+ *
+ * Notes:
+ * - Deterministic RNG is required for repeatable seed-controlled experiments.
+ */
+
 export class SeededRng {
   private state: number;
 

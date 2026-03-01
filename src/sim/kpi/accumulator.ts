@@ -1,5 +1,15 @@
 import type { KpiResult } from '@/sim/types';
 
+/**
+ * Provenance:
+ * - PAP-2022-A4EVENT-CORE
+ * - PAP-2024-MCCHO-CORE
+ *
+ * Notes:
+ * - KPI field semantics (HOF/RLF by HO state) follow paper baseline definitions.
+ * - Jain fairness index is used as the load-balance KPI in baseline comparisons.
+ */
+
 interface TickKpiInput {
   previous: KpiResult;
   previousTick: number;

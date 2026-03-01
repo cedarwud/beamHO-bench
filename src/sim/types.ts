@@ -1,3 +1,14 @@
+/**
+ * Provenance:
+ * - sdd/completed/beamHO-bench-sdd.md
+ * - sdd/completed/beamHO-bench-requirements.md
+ *
+ * Notes:
+ * - This file defines the canonical runtime data contract for SimCore.
+ */
+
+import type { RuntimeParameterAuditSnapshot } from './audit/runtime-parameter-audit';
+
 export type HandoverState = 1 | 2 | 3;
 
 export interface GeoPosition {
@@ -42,8 +53,12 @@ export interface UEState {
   choPreparedTargetMs?: number | null;
   rsrpDbm: number;
   sinrDb: number;
+  l3SinrDb?: number;
+  qOutCounter?: number;
+  qInCounter?: number;
   hoState: HandoverState;
   rlfTimerMs: number | null;
+  rlfRecoveryBudgetMs?: number | null;
 }
 
 export interface HOEvent {
@@ -82,6 +97,7 @@ export interface SimSnapshot {
   ues: UEState[];
   hoEvents: HOEvent[];
   kpiCumulative: KpiResult;
+  runtimeParameterAudit?: RuntimeParameterAuditSnapshot;
 }
 
 export interface SimTickContext {

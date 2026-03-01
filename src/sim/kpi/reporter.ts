@@ -1,5 +1,7 @@
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { KpiResult, SimSnapshot } from '@/sim/types';
+import type { AlgorithmFidelity } from '@/config/paper-profiles/types';
+import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-parameter-audit';
 
 /**
  * Provenance:
@@ -11,7 +13,11 @@ export interface RunMetadata {
   scenarioId: string;
   profileId: string;
   baseline: RuntimeBaseline;
+  algorithmFidelity: AlgorithmFidelity;
   seed: number;
+  playbackRate: number;
+  resolvedAssumptionIds: string[];
+  runtimeParameterAudit: RuntimeParameterAuditSnapshot | null;
   generatedAtUtc: string;
 }
 

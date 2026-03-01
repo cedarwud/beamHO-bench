@@ -1,9 +1,20 @@
 import type { PaperProfile } from '@/config/paper-profiles/types';
 import type { SatelliteState, UEState } from '@/sim/types';
+import {
+  beamContainsUe,
+  computeNoiseDbm,
+  computeRsrpDbm,
+  estimateRangeKm,
+} from './large-scale';
+import { computeSmallScaleFadingDb } from './small-scale';
 
 /**
  * Provenance:
  * - STD-3GPP-TR38.811-6.6.2-1
+ * - PAP-2024-MADRL-CORE
+ * - ASSUME-LINK-SYSTEM-LOSS-DB
+ * - ASSUME-RX-NOISE-FIGURE-DB
+ * - ASSUME-SMALL-SCALE-PARAMS-DEFAULT
  */
 
 export interface LinkSample {
@@ -18,48 +29,8 @@ interface DbEntry {
   signalMw: number;
 }
 
-const SYSTEM_LOSS_DB = 70; // Engineering assumption for v1 calibration.
-
 function dbmToMw(dbm: number): number {
   return Math.pow(10, dbm / 10);
-}
-
-function mwToDbm(mw: number): number {
-  return 10 * Math.log10(Math.max(mw, 1e-15));
-}
-
-function computeFsplDb(rangeKm: number, frequencyGHz: number): number {
-  return 92.45 + 20 * Math.log10(Math.max(rangeKm, 0.001)) + 20 * Math.log10(frequencyGHz);
-}
-
-function computeNoiseDbm(profile: PaperProfile): number {
-  const bandwidthHz = profile.channel.bandwidthMHz * 1e6;
-  const thermalNoiseDbm = -174 + 10 * Math.log10(bandwidthHz);
-  const noiseFigureDb = 5;
-  return thermalNoiseDbm + noiseFigureDb;
-}
-
-function estimateRangeKm(ue: UEState, satellite: SatelliteState): number {
-  const dx = satellite.positionWorld[0] - ue.positionWorld[0];
-  const dy = satellite.positionWorld[1] - ue.positionWorld[1];
-  const dz = satellite.positionWorld[2] - ue.positionWorld[2];
-  const rangeWorld = Math.hypot(dx, dy, dz);
-
-  // Keep world-to-km conversion aligned with scenario scaling (0.6 world unit per km by default).
-  const WORLD_PER_KM = 0.6;
-  return rangeWorld / WORLD_PER_KM;
-}
-
-function beamContainsUe(ue: UEState, beamCenter: [number, number, number], radiusWorld: number): boolean {
-  const dx = ue.positionWorld[0] - beamCenter[0];
-  const dz = ue.positionWorld[2] - beamCenter[2];
-  return Math.hypot(dx, dz) <= radiusWorld;
-}
-
-function computeRsrpDbm(profile: PaperProfile, rangeKm: number): number {
-  const eirpDbm = profile.beam.eirpDensityDbwPerMHz + 30;
-  const fsplDb = computeFsplDb(rangeKm, profile.channel.carrierFrequencyGHz);
-  return eirpDbm + profile.channel.ueAntennaGainDbi - fsplDb - SYSTEM_LOSS_DB;
 }
 
 export function evaluateLinksForUe(
@@ -67,7 +38,13 @@ export function evaluateLinksForUe(
   ue: UEState,
   satellites: SatelliteState[],
 ): LinkSample[] {
-  const noiseMw = dbmToMw(computeNoiseDbm(profile));
+  const noiseMw = dbmToMw(
+    computeNoiseDbm({
+      bandwidthMHz: profile.channel.bandwidthMHz,
+      noiseTemperatureK: profile.channel.noiseTemperatureK,
+      noiseFigureDb: profile.channel.noiseFigureDb,
+    }),
+  );
   const entries: DbEntry[] = [];
 
   for (const satellite of satellites) {
@@ -82,7 +59,22 @@ export function evaluateLinksForUe(
         continue;
       }
 
-      const rsrpDbm = computeRsrpDbm(profile, rangeKm);
+      const smallScaleFadingDb = computeSmallScaleFadingDb(profile, {
+        ueId: ue.id,
+        satId: satellite.id,
+        beamId: beam.beamId,
+        rangeKm,
+        elevationDeg: satellite.elevationDeg,
+      });
+      const rsrpDbm =
+        computeRsrpDbm({
+          eirpDensityDbwPerMHz: profile.beam.eirpDensityDbwPerMHz,
+          bandwidthMHz: profile.channel.bandwidthMHz,
+          carrierFrequencyGHz: profile.channel.carrierFrequencyGHz,
+          ueAntennaGainDbi: profile.channel.ueAntennaGainDbi,
+          systemLossDb: profile.channel.systemLossDb,
+          rangeKm,
+        }) + smallScaleFadingDb;
       entries.push({
         sample: {
           satId: satellite.id,

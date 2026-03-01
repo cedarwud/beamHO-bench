@@ -1,13 +1,12 @@
 import type { PaperProfile } from '@/config/paper-profiles/types';
-import type {
-  BeamState,
-  KpiResult,
-  SatelliteState,
-  SimScenario,
-  SimSnapshot,
-  UEState,
-} from '@/sim/types';
+import type { KpiResult, SatelliteState, SimScenario, SimSnapshot, UEState } from '@/sim/types';
 import { SeededRng } from '@/sim/util/rng';
+import {
+  buildBeamsForSatellite,
+  buildSatelliteGroundCenters,
+  computeBeamSpacingWorld,
+} from './common/beam-layout';
+import { worldToLatLon } from './common/geo';
 
 /**
  * Provenance:
@@ -48,125 +47,6 @@ const EMPTY_KPI: KpiResult = {
   jainFairness: 0,
 };
 
-function degToRad(deg: number): number {
-  return (deg * Math.PI) / 180;
-}
-
-function worldToLatLon(
-  worldX: number,
-  worldZ: number,
-  kmToWorldScale: number,
-  baseLat: number,
-  baseLon: number,
-): [number, number] {
-  const kmEast = worldX / kmToWorldScale;
-  const kmNorth = worldZ / kmToWorldScale;
-  const lat = baseLat + kmNorth / 110.574;
-  const lon = baseLon + kmEast / (111.32 * Math.cos(degToRad(baseLat)));
-  return [lat, lon];
-}
-
-function buildHexOffsets(count: number): Array<[number, number]> {
-  if (count <= 0) {
-    return [];
-  }
-
-  const offsets: Array<[number, number]> = [[0, 0]];
-
-  for (let radius = 1; offsets.length < count; radius += 1) {
-    let q = radius;
-    let r = 0;
-
-    const directions: Array<[number, number]> = [
-      [-1, 1],
-      [-1, 0],
-      [0, -1],
-      [1, -1],
-      [1, 0],
-      [0, 1],
-    ];
-
-    for (const [dq, dr] of directions) {
-      for (let step = 0; step < radius; step += 1) {
-        if (offsets.length >= count) {
-          return offsets;
-        }
-        offsets.push([q, r]);
-        q += dq;
-        r += dr;
-      }
-    }
-  }
-
-  return offsets;
-}
-
-function axialToWorld(q: number, r: number, spacing: number): [number, number] {
-  const x = spacing * Math.sqrt(3) * (q + r / 2);
-  const z = spacing * 1.5 * r;
-  return [x, z];
-}
-
-function buildSatelliteGroundCenters(satCount: number, radiusWorld: number): Array<[number, number]> {
-  if (satCount <= 0) {
-    return [];
-  }
-
-  if (satCount === 1) {
-    return [[0, 0]];
-  }
-
-  if (satCount === 7) {
-    const centers: Array<[number, number]> = [[0, 0]];
-
-    for (let i = 0; i < 6; i += 1) {
-      const angle = (Math.PI / 3) * i;
-      centers.push([Math.cos(angle) * radiusWorld, Math.sin(angle) * radiusWorld]);
-    }
-
-    return centers;
-  }
-
-  const centers: Array<[number, number]> = [[0, 0]];
-
-  for (let i = 1; i < satCount; i += 1) {
-    const angle = (Math.PI * 2 * (i - 1)) / (satCount - 1);
-    centers.push([Math.cos(angle) * radiusWorld, Math.sin(angle) * radiusWorld]);
-  }
-
-  return centers;
-}
-
-function buildBeamsForSatellite(
-  satelliteId: number,
-  centerWorld: [number, number],
-  beamCount: number,
-  beamRadiusKm: number,
-  beamRadiusWorld: number,
-  spacingWorld: number,
-  kmToWorldScale: number,
-  observerLat: number,
-  observerLon: number,
-): BeamState[] {
-  const offsets = buildHexOffsets(beamCount);
-
-  return offsets.map(([q, r], index) => {
-    const [dx, dz] = axialToWorld(q, r, spacingWorld);
-    const centerX = centerWorld[0] + dx;
-    const centerZ = centerWorld[1] + dz;
-    const [lat, lon] = worldToLatLon(centerX, centerZ, kmToWorldScale, observerLat, observerLon);
-
-    return {
-      beamId: satelliteId * 100 + index,
-      centerLatLon: [lat, lon],
-      centerWorld: [centerX, 0.25, centerZ],
-      radiusKm: beamRadiusKm,
-      radiusWorld: beamRadiusWorld,
-      connectedUeIds: [],
-    };
-  });
-}
-
 function buildSatellites(options: {
   profile: PaperProfile;
   kmToWorldScale: number;
@@ -180,11 +60,7 @@ function buildSatellites(options: {
   const beamCount = profile.beam.beamsPerSatellite;
   const beamRadiusKm = profile.beam.footprintDiameterKm / 2;
   const beamRadiusWorld = beamRadiusKm * kmToWorldScale;
-  const overlapRatio = profile.beam.overlapRatio ?? 0;
-
-  // Source: PAP-2024-MCCHO-CORE
-  // Apply overlap ratio to beam spacing so overlap visualization follows profile assumptions.
-  const spacingWorld = beamRadiusWorld * Math.max(0.8, 2 - overlapRatio);
+  const spacingWorld = computeBeamSpacingWorld(beamRadiusWorld, profile.beam.overlapRatio);
   const groundCenters = buildSatelliteGroundCenters(satCount, beamRadiusWorld * 6.8);
 
   return groundCenters.map(([gx, gz], satIndex) => {
@@ -215,9 +91,10 @@ function buildSatellites(options: {
       elevationDeg,
       rangeKm,
       visible: elevationDeg >= profile.constellation.minElevationDeg,
-      beams: buildBeamsForSatellite(
-        satIndex,
-        [gx, gz],
+      beams: buildBeamsForSatellite({
+        satelliteId: satIndex,
+        beamIdMultiplier: 100,
+        centerWorld: [gx, gz],
         beamCount,
         beamRadiusKm,
         beamRadiusWorld,
@@ -225,7 +102,7 @@ function buildSatellites(options: {
         kmToWorldScale,
         observerLat,
         observerLon,
-      ),
+      }),
     };
   });
 }
@@ -258,8 +135,12 @@ function buildUEs(options: {
       servingBeamId: null,
       rsrpDbm: -140,
       sinrDb: -20,
+      l3SinrDb: -20,
+      qOutCounter: 0,
+      qInCounter: 0,
       hoState: 1,
       rlfTimerMs: null,
+      rlfRecoveryBudgetMs: null,
     };
   });
 }
