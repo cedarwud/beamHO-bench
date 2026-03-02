@@ -6,7 +6,7 @@ import type { PolicyAction, PolicyDecisionType } from './types';
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-rl-plugin-sdd.md
+ * - sdd/completed/beamHO-bench-rl-plugin-sdd.md
  * - PAP-2024-MCCHO-CORE
  * - STD-3GPP-TS38.331-RRC
  * - STD-3GPP-TR38.811-6.6.2-1
@@ -172,7 +172,7 @@ function fallbackHoldResolution(
   action: PolicyAction,
   rejectionReason: string | null,
 ): PolicyDecisionResolution {
-  // Source: sdd/pending/beamHO-bench-rl-plugin-sdd.md
+  // Source: sdd/completed/beamHO-bench-rl-plugin-sdd.md
   // Invalid actions deterministically fallback to hold in the current tick.
   return {
     selected: request.servingSample,

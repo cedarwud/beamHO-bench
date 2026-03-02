@@ -8,6 +8,8 @@ import type {
 import type { RunManifest } from '@/sim/reporting/manifest';
 import type { SourceTraceArtifact } from '@/sim/reporting/source-trace';
 import type { BaselineBatchResult } from '@/sim/bench/runner';
+import type { BaselineComparisonChartArtifact } from '@/sim/bench/comparison-chart-artifact';
+import type { SmallScaleComparisonTemplateArtifact } from '@/sim/bench/small-scale-comparison-template';
 import type { ValidationGateSummary, ValidationSuiteResult } from '@/sim/bench/validation-suite';
 import type { SimSnapshot } from '@/sim/types';
 
@@ -27,6 +29,10 @@ export interface KpiExportArtifact {
 
 export interface BaselineComparisonExportArtifact {
   batch: BaselineBatchResult;
+  chartArtifact: BaselineComparisonChartArtifact;
+  chartFileName: string;
+  smallScaleTemplateArtifact: SmallScaleComparisonTemplateArtifact;
+  smallScaleTemplateFileName: string;
 }
 
 export interface ValidationSuiteExportArtifact {

@@ -27,10 +27,40 @@ export interface LinkSample {
 interface DbEntry {
   sample: LinkSample;
   signalMw: number;
+  reuseGroupId: number;
 }
 
 function dbmToMw(dbm: number): number {
   return Math.pow(10, dbm / 10);
+}
+
+function positiveModulo(value: number, divisor: number): number {
+  const remainder = value % divisor;
+  return remainder < 0 ? remainder + divisor : remainder;
+}
+
+function resolveReuseGroupCount(frequencyReuse: PaperProfile['beam']['frequencyReuse']): number {
+  if (frequencyReuse === 'FR1') {
+    return 1;
+  }
+  if (frequencyReuse.startsWith('reuse-')) {
+    const count = Number.parseInt(frequencyReuse.slice('reuse-'.length), 10);
+    if (Number.isFinite(count) && count > 1) {
+      return count;
+    }
+  }
+  return 1;
+}
+
+function resolveReuseGroupId(
+  profile: PaperProfile,
+  sample: Pick<LinkSample, 'beamId'>,
+): number {
+  const groupCount = resolveReuseGroupCount(profile.beam.frequencyReuse);
+  if (groupCount <= 1) {
+    return 0;
+  }
+  return positiveModulo(sample.beamId, groupCount);
 }
 
 export function evaluateLinksForUe(
@@ -83,6 +113,7 @@ export function evaluateLinksForUe(
           sinrDb: -Infinity,
         },
         signalMw: dbmToMw(rsrpDbm),
+        reuseGroupId: resolveReuseGroupId(profile, { beamId: beam.beamId }),
       });
     }
   }
@@ -91,10 +122,18 @@ export function evaluateLinksForUe(
     return [];
   }
 
-  const totalSignalMw = entries.reduce((sum, entry) => sum + entry.signalMw, 0);
-
-  return entries.map((entry) => {
-    const interferenceMw = Math.max(totalSignalMw - entry.signalMw, 0);
+  return entries.map((entry, index) => {
+    let interferenceMw = 0;
+    for (let otherIndex = 0; otherIndex < entries.length; otherIndex += 1) {
+      if (otherIndex === index) {
+        continue;
+      }
+      const other = entries[otherIndex];
+      if (other.reuseGroupId !== entry.reuseGroupId) {
+        continue;
+      }
+      interferenceMw += other.signalMw;
+    }
     const sinrMw = entry.signalMw / (interferenceMw + noiseMw);
     const sinrDb = 10 * Math.log10(Math.max(sinrMw, 1e-12));
 

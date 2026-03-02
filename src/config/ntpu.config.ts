@@ -39,6 +39,11 @@ interface SceneConfig {
       position: Vec3;
     };
   };
+  satellite: {
+    renderMode: 'primitive' | 'glb';
+    modelPath: string;
+    modelScale: number;
+  };
   camera: {
     initialPosition: Vec3;
     target: Vec3;
@@ -109,6 +114,12 @@ export const NTPU_CONFIG: SceneConfig = {
       color: '#ffffff',
       position: [0, 2, 0],
     },
+  },
+  satellite: {
+    // Keep primitive as default for deterministic and lightweight benchmark runs.
+    renderMode: 'primitive',
+    modelPath: '/models/uav.glb',
+    modelScale: 2.4,
   },
   camera: {
     initialPosition: [0, 400, 500],

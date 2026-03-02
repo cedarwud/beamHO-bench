@@ -15,6 +15,7 @@ import {
   checkRuntimeParameterAudit,
   checkSchedulerStateSanity,
 } from './validation-checks';
+import { appendValidationGroupChecks } from './validation-group-checks';
 import type {
   ValidationCheckResult,
   ValidationSuiteCaseDefinition,
@@ -43,261 +44,6 @@ export type {
   ValidationSuiteOptions,
 } from './validation-types';
 
-const EPSILON = 1e-9;
-const TREND_DIRECTION_TOLERANCE = 1e-6;
-
-function totalFailureCount(kpi: {
-  rlf: { state1: number; state2: number };
-  hof: { state2: number; state3: number };
-}): number {
-  return kpi.rlf.state1 + kpi.rlf.state2 + kpi.hof.state2 + kpi.hof.state3;
-}
-
-function countWindowTransitions(result: ValidationSuiteCaseResult): number {
-  const firstRun = result.batch.runs[0];
-  if (!firstRun) {
-    return Number.NaN;
-  }
-
-  const snapshots = firstRun.snapshots ?? [];
-  if (snapshots.length <= 1) {
-    return 0;
-  }
-
-  if (snapshots.some((snapshot) => !snapshot.beamScheduler)) {
-    return Number.NaN;
-  }
-
-  let transitions = 0;
-  let previousWindowId = snapshots[0]?.beamScheduler?.summary.windowId ?? null;
-
-  for (let index = 1; index < snapshots.length; index += 1) {
-    const currentWindowId = snapshots[index]?.beamScheduler?.summary.windowId ?? null;
-    if (previousWindowId === null || currentWindowId === null) {
-      return Number.NaN;
-    }
-    if (currentWindowId !== previousWindowId) {
-      transitions += 1;
-    }
-    previousWindowId = currentWindowId;
-  }
-
-  return transitions;
-}
-
-function countOverlapBlockedEvents(result: ValidationSuiteCaseResult): number {
-  const firstRun = result.batch.runs[0];
-  if (!firstRun) {
-    return Number.NaN;
-  }
-
-  const snapshots = firstRun.snapshots ?? [];
-  let blockedCount = 0;
-  for (const snapshot of snapshots) {
-    blockedCount += snapshot.hoEvents.filter(
-      (event) =>
-        event.reason ===
-        'scheduler-block:blocked-by-schedule-overlap-constraint',
-    ).length;
-  }
-
-  return blockedCount;
-}
-
-function pickTrendMetric(
-  result: ValidationSuiteCaseResult,
-  metric: ValidationTrendPolicy['metric'],
-): number {
-  const firstRun = result.batch.runs[0];
-  if (!firstRun) {
-    return Number.NaN;
-  }
-  const kpi = firstRun.result.summary.kpi;
-
-  switch (metric) {
-    case 'failure-total':
-      return totalFailureCount(kpi);
-    case 'handover-rate':
-      return kpi.handoverRate;
-    case 'hopp':
-      return kpi.hopp;
-    case 'scheduler-window-transition-count':
-      return countWindowTransitions(result);
-    case 'scheduler-overlap-blocked-count':
-      return countOverlapBlockedEvents(result);
-    default:
-      return kpi.handoverRate;
-  }
-}
-
-function computeDirectionalCheck(
-  group: ValidationSuiteCaseResult[],
-  trendPolicy: ValidationTrendPolicy | undefined,
-): ValidationCheckResult {
-  if (group.length <= 1) {
-    return {
-      checkId: 'trend-directional',
-      pass: true,
-      detail: 'N/A (single-case validation group).',
-      blocking: false,
-    };
-  }
-
-  if (!trendPolicy) {
-    return {
-      checkId: 'trend-directional',
-      pass: true,
-      detail: 'N/A (no directional trend policy configured for this validation group).',
-      blocking: false,
-    };
-  }
-
-  const singleBaselineGroup = group.every((result) => result.batch.runs.length === 1);
-  if (!singleBaselineGroup) {
-    return {
-      checkId: 'trend-directional',
-      pass: true,
-      detail: 'N/A (group has multi-baseline cases; directional sweep not evaluated).',
-      blocking: false,
-    };
-  }
-
-  const metrics = group.map((result) => pickTrendMetric(result, trendPolicy.metric));
-  const allFinite = metrics.every((value) => Number.isFinite(value));
-  if (!allFinite) {
-    return {
-      checkId: 'trend-directional',
-      pass: false,
-      detail: 'Directional trend metric contains non-finite values.',
-      blocking: false,
-    };
-  }
-
-  const minValue = Math.min(...metrics);
-  const maxValue = Math.max(...metrics);
-  const variation = maxValue - minValue;
-
-  const violations: string[] = [];
-  for (let index = 1; index < metrics.length; index += 1) {
-    const previous = metrics[index - 1];
-    const current = metrics[index];
-    const delta = current - previous;
-    const tolerance = trendPolicy.tolerance ?? TREND_DIRECTION_TOLERANCE;
-
-    const violates =
-      trendPolicy.direction === 'non-increasing'
-        ? delta > tolerance
-        : delta < -tolerance;
-
-    if (violates) {
-      const previousCase = group[index - 1];
-      const currentCase = group[index];
-      violations.push(
-        `${previousCase.caseId}(${previous.toFixed(6)}) -> ${currentCase.caseId}(${current.toFixed(6)})`,
-      );
-    }
-  }
-
-  return {
-    checkId: 'trend-directional',
-    pass: violations.length === 0,
-    detail:
-      violations.length === 0
-        ? `Directional trend satisfied (${trendPolicy.direction}, metric=${trendPolicy.metric}); variation min=${minValue.toFixed(6)}, max=${maxValue.toFixed(6)}.`
-        : `Directional trend violated (${trendPolicy.direction}, metric=${trendPolicy.metric}): ${violations.slice(0, 2).join(' | ')}.`,
-    blocking: false,
-  };
-}
-
-function compareBaselineRanking(
-  left: ValidationSuiteCaseResult['batch']['runs'][number],
-  right: ValidationSuiteCaseResult['batch']['runs'][number],
-): number {
-  const leftKpi = left.result.summary.kpi;
-  const rightKpi = right.result.summary.kpi;
-
-  if (Math.abs(leftKpi.throughput - rightKpi.throughput) > EPSILON) {
-    return rightKpi.throughput - leftKpi.throughput;
-  }
-
-  const leftFailures = totalFailureCount(leftKpi);
-  const rightFailures = totalFailureCount(rightKpi);
-  if (leftFailures !== rightFailures) {
-    return leftFailures - rightFailures;
-  }
-
-  if (Math.abs(leftKpi.handoverRate - rightKpi.handoverRate) > EPSILON) {
-    return leftKpi.handoverRate - rightKpi.handoverRate;
-  }
-
-  return left.baseline.localeCompare(right.baseline);
-}
-
-function computeRankCheck(group: ValidationSuiteCaseResult[]): ValidationCheckResult {
-  const comparableCases = group.filter((result) => result.batch.runs.length >= 2);
-  if (comparableCases.length === 0) {
-    return {
-      checkId: 'rank-consistency',
-      pass: true,
-      detail: 'N/A (no multi-baseline case in validation group).',
-      blocking: false,
-    };
-  }
-
-  const winners = new Set<string>();
-  for (const result of comparableCases) {
-    const sortedRuns = [...result.batch.runs].sort(compareBaselineRanking);
-    const winner = sortedRuns[0];
-    if (!winner) {
-      return {
-        checkId: 'rank-consistency',
-        pass: false,
-        detail: `Unable to derive ranking winner for ${result.validationId}/${result.caseId}.`,
-        blocking: false,
-      };
-    }
-    winners.add(winner.baseline);
-  }
-
-  return {
-    checkId: 'rank-consistency',
-    pass: winners.size <= 1,
-    detail:
-      winners.size <= 1
-        ? `Ranking winner is consistent across comparable cases: ${[...winners][0] ?? 'N/A'}.`
-        : `Ranking winner drift detected: ${[...winners].join(', ')}.`,
-    blocking: false,
-  };
-}
-
-function appendTrendAndRankChecks(results: ValidationSuiteCaseResult[]): void {
-  const grouped = new Map<string, ValidationSuiteCaseResult[]>();
-
-  for (const result of results) {
-    const group = grouped.get(result.validationId) ?? [];
-    group.push(result);
-    grouped.set(result.validationId, group);
-  }
-
-  for (const group of grouped.values()) {
-    const directionalCheck = computeDirectionalCheck(group, group[0]?.trendPolicy ?? undefined);
-    const rankCheck = computeRankCheck(group);
-
-    for (const result of group) {
-      result.checks.push(
-        {
-          ...directionalCheck,
-          detail: `${directionalCheck.detail} [group=${result.validationId}]`,
-        },
-        {
-          ...rankCheck,
-          detail: `${rankCheck.detail} [group=${result.validationId}]`,
-        },
-      );
-    }
-  }
-}
-
 function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
   const lines = [
     [
@@ -314,12 +60,14 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
       'check_scheduler_state_sanity',
       'check_trend_directional',
       'check_rank_consistency',
+      'check_small_scale_effect',
       'trend_metric',
       'trend_direction',
       'trend_tolerance',
       'baseline',
       'algorithm_fidelity',
       'throughput_model',
+      'small_scale_model',
       'playback_rate',
       'tick',
       'time_sec',
@@ -360,6 +108,9 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
     const rankConsistencyPass = result.checks.find(
       (check) => check.checkId === 'rank-consistency',
     )?.pass;
+    const smallScaleEffectPass = result.checks.find(
+      (check) => check.checkId === 'small-scale-effect',
+    )?.pass;
     const trendMetric = result.trendPolicy?.metric ?? '';
     const trendDirection = result.trendPolicy?.direction ?? '';
     const trendTolerance =
@@ -384,12 +135,14 @@ function buildSuiteSummaryCsv(results: ValidationSuiteCaseResult[]): string {
           schedulerStateSanityPass ? 'PASS' : 'FAIL',
           trendDirectionalPass ? 'PASS' : 'FAIL',
           rankConsistencyPass ? 'PASS' : 'FAIL',
+          smallScaleEffectPass ? 'PASS' : 'FAIL',
           trendMetric,
           trendDirection,
           trendTolerance,
           run.baseline,
           run.result.metadata.algorithmFidelity,
           run.result.metadata.throughputModel,
+          run.result.metadata.smallScaleModel,
           run.result.metadata.playbackRate.toFixed(2),
           run.result.summary.tick,
           run.result.summary.timeSec.toFixed(3),
@@ -488,7 +241,7 @@ export function runCoreValidationSuite(
     }
   }
 
-  appendTrendAndRankChecks(results);
+  appendValidationGroupChecks(results);
 
   return {
     generatedAtUtc: new Date().toISOString(),

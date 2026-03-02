@@ -37,6 +37,19 @@ export interface RunManifest {
   source_catalog_checksum_sha256: string;
   algorithm_fidelity: 'full' | 'simplified';
   throughput_model: 'shannon' | 'mcs-mapped';
+  small_scale_model: PaperProfile['channel']['smallScaleModel'];
+  small_scale_params: {
+    shadowed_rician?: {
+      k_factor_min_db: number;
+      k_factor_max_db: number;
+      shadowing_std_dev_db: number;
+      multipath_std_dev_db: number;
+    };
+    loo?: {
+      shadowing_std_dev_db: number;
+      rayleigh_scale_db: number;
+    };
+  } | null;
   resolved_assumption_ids: string[];
   policy_mode: 'off' | 'on';
   policy_id?: string;
@@ -187,6 +200,31 @@ function cloneCoupledDecisionStats(
   };
 }
 
+function cloneSmallScaleParams(
+  value: PaperProfile['channel']['smallScaleParams'] | null | undefined,
+): RunManifest['small_scale_params'] {
+  if (!value) {
+    return null;
+  }
+
+  return {
+    shadowed_rician: value.shadowedRician
+      ? {
+          k_factor_min_db: value.shadowedRician.kFactorMinDb,
+          k_factor_max_db: value.shadowedRician.kFactorMaxDb,
+          shadowing_std_dev_db: value.shadowedRician.shadowingStdDevDb,
+          multipath_std_dev_db: value.shadowedRician.multipathStdDevDb,
+        }
+      : undefined,
+    loo: value.loo
+      ? {
+          shadowing_std_dev_db: value.loo.shadowingStdDevDb,
+          rayleigh_scale_db: value.loo.rayleighScaleDb,
+        }
+      : undefined,
+  };
+}
+
 function resolveTleSnapshotUtc(profile: PaperProfile): string | undefined {
   if (profile.mode !== 'real-trace') {
     return undefined;
@@ -225,6 +263,8 @@ export function buildRunManifest(options: RunManifestOptions): RunManifest {
     source_catalog_checksum_sha256: options.sourceCatalogChecksumSha256,
     algorithm_fidelity: options.profile.handover.algorithmFidelity,
     throughput_model: options.profile.channel.throughputModel.model,
+    small_scale_model: options.profile.channel.smallScaleModel,
+    small_scale_params: cloneSmallScaleParams(options.profile.channel.smallScaleParams),
     resolved_assumption_ids: [...(options.resolvedAssumptionIds ?? [])].sort(),
     policy_mode: policyRuntime.policyMode,
     policy_runtime_config_hash: policyRuntime.runtimeConfigHash,

@@ -3,7 +3,7 @@ import type { SourceCatalogEntry } from '@/config/paper-profiles/source-map-util
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-baseline-generalization-sdd.md
+ * - sdd/completed/beamHO-bench-baseline-generalization-sdd.md
  * - PAP-2024-MADRL-CORE
  * - PAP-2025-DAPS-CORE
  * - PAP-2022-SEAMLESSNTN-CORE

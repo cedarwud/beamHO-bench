@@ -1,6 +1,11 @@
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { KpiResult, SimSnapshot } from '@/sim/types';
-import type { AlgorithmFidelity, ThroughputModel } from '@/config/paper-profiles/types';
+import type {
+  AlgorithmFidelity,
+  PaperProfile,
+  SmallScaleModel,
+  ThroughputModel,
+} from '@/config/paper-profiles/types';
 import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-parameter-audit';
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
 import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
@@ -18,6 +23,8 @@ export interface RunMetadata {
   baseline: RuntimeBaseline;
   algorithmFidelity: AlgorithmFidelity;
   throughputModel: ThroughputModel;
+  smallScaleModel: SmallScaleModel;
+  smallScaleParams: PaperProfile['channel']['smallScaleParams'] | null;
   seed: number;
   playbackRate: number;
   resolvedAssumptionIds: string[];
@@ -56,6 +63,8 @@ export interface BuildKpiResultMetadata {
   baseline: RuntimeBaseline;
   algorithmFidelity: AlgorithmFidelity;
   throughputModel: ThroughputModel;
+  smallScaleModel: SmallScaleModel;
+  smallScaleParams: PaperProfile['channel']['smallScaleParams'] | null;
   seed: number;
   playbackRate: number;
   resolvedAssumptionIds: string[];
@@ -178,6 +187,31 @@ function cloneKpi(kpi: KpiResult): KpiResult {
   };
 }
 
+function cloneSmallScaleParams(
+  value: PaperProfile['channel']['smallScaleParams'] | null | undefined,
+): PaperProfile['channel']['smallScaleParams'] | null {
+  if (!value) {
+    return null;
+  }
+
+  return {
+    shadowedRician: value.shadowedRician
+      ? {
+          kFactorMinDb: value.shadowedRician.kFactorMinDb,
+          kFactorMaxDb: value.shadowedRician.kFactorMaxDb,
+          shadowingStdDevDb: value.shadowedRician.shadowingStdDevDb,
+          multipathStdDevDb: value.shadowedRician.multipathStdDevDb,
+        }
+      : undefined,
+    loo: value.loo
+      ? {
+          shadowingStdDevDb: value.loo.shadowingStdDevDb,
+          rayleighScaleDb: value.loo.rayleighScaleDb,
+        }
+      : undefined,
+  };
+}
+
 export function buildKpiResultArtifact(
   snapshot: SimSnapshot,
   metadata: BuildKpiResultMetadata,
@@ -188,6 +222,7 @@ export function buildKpiResultArtifact(
       policyRuntime: clonePolicyRuntime(metadata.policyRuntime),
       beamScheduler: cloneBeamSchedulerSummary(metadata.beamScheduler),
       coupledDecisionStats: cloneCoupledDecisionStats(metadata.coupledDecisionStats),
+      smallScaleParams: cloneSmallScaleParams(metadata.smallScaleParams),
       generatedAtUtc: new Date().toISOString(),
     },
     summary: {

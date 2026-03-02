@@ -3,7 +3,7 @@ import { createNoOpPolicyPlugin } from './noop-plugin';
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-rl-plugin-sdd.md
+ * - sdd/completed/beamHO-bench-rl-plugin-sdd.md
  * - PAP-2024-MADRL-CORE
  *
  * Notes:

@@ -26,6 +26,19 @@ export interface SourceTraceArtifact {
   baseline: string;
   algorithm_fidelity: AlgorithmFidelity;
   throughput_model: 'shannon' | 'mcs-mapped';
+  small_scale_model: PaperProfile['channel']['smallScaleModel'];
+  small_scale_params: {
+    shadowed_rician?: {
+      k_factor_min_db: number;
+      k_factor_max_db: number;
+      shadowing_std_dev_db: number;
+      multipath_std_dev_db: number;
+    };
+    loo?: {
+      shadowing_std_dev_db: number;
+      rayleigh_scale_db: number;
+    };
+  } | null;
   seed: number;
   playback_rate: number;
   profile_checksum_sha256: string;
@@ -160,6 +173,31 @@ function cloneCoupledDecisionStats(
   };
 }
 
+function cloneSmallScaleParams(
+  value: PaperProfile['channel']['smallScaleParams'] | null | undefined,
+): SourceTraceArtifact['small_scale_params'] {
+  if (!value) {
+    return null;
+  }
+
+  return {
+    shadowed_rician: value.shadowedRician
+      ? {
+          k_factor_min_db: value.shadowedRician.kFactorMinDb,
+          k_factor_max_db: value.shadowedRician.kFactorMaxDb,
+          shadowing_std_dev_db: value.shadowedRician.shadowingStdDevDb,
+          multipath_std_dev_db: value.shadowedRician.multipathStdDevDb,
+        }
+      : undefined,
+    loo: value.loo
+      ? {
+          shadowing_std_dev_db: value.loo.shadowingStdDevDb,
+          rayleigh_scale_db: value.loo.rayleighScaleDb,
+        }
+      : undefined,
+  };
+}
+
 export async function createSourceTraceArtifact(
   options: SourceTraceOptions,
 ): Promise<SourceTraceArtifact> {
@@ -182,6 +220,8 @@ export async function createSourceTraceArtifact(
     baseline: options.baseline,
     algorithm_fidelity: options.algorithmFidelity,
     throughput_model: profile.channel.throughputModel.model,
+    small_scale_model: profile.channel.smallScaleModel,
+    small_scale_params: cloneSmallScaleParams(profile.channel.smallScaleParams),
     seed: options.seed,
     playback_rate: options.playbackRate,
     profile_checksum_sha256: await computeProfileChecksum(profile),

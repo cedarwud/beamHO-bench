@@ -1,6 +1,6 @@
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-joint-beamho-sdd.md
+ * - sdd/completed/beamHO-bench-joint-beamho-sdd.md
  * - PAP-2025-DAPS-CORE
  * - ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG
  *

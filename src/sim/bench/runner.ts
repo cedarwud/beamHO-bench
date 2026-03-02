@@ -99,11 +99,37 @@ function buildSummaryCsv(
   runs: BaselineBatchRun[],
   profile: Pick<PaperProfile, 'beam'>,
 ): string {
+  const formatShadowedRician = (
+    params: PaperProfile['channel']['smallScaleParams'] | null | undefined,
+  ) => {
+    const shadowed = params?.shadowedRician;
+    if (!shadowed) {
+      return '';
+    }
+    return [
+      `kmin:${shadowed.kFactorMinDb}`,
+      `kmax:${shadowed.kFactorMaxDb}`,
+      `shadowStd:${shadowed.shadowingStdDevDb}`,
+      `multiStd:${shadowed.multipathStdDevDb}`,
+    ].join('|');
+  };
+
+  const formatLoo = (params: PaperProfile['channel']['smallScaleParams'] | null | undefined) => {
+    const loo = params?.loo;
+    if (!loo) {
+      return '';
+    }
+    return [`shadowStd:${loo.shadowingStdDevDb}`, `rayleigh:${loo.rayleighScaleDb}`].join('|');
+  };
+
   const lines = [
     [
       'baseline',
       'algorithm_fidelity',
       'throughput_model',
+      'small_scale_model',
+      'small_scale_shadowed_rician_params',
+      'small_scale_loo_params',
       'runtime_parameter_audit_pass',
       'runtime_parameter_audit_missing_keys',
       'policy_mode',
@@ -149,7 +175,7 @@ function buildSummaryCsv(
 
   for (const run of runs) {
     const { summary, metadata } = run.result;
-    // Source: sdd/pending/beamHO-bench-baseline-generalization-sdd.md (BG-5)
+    // Source: sdd/completed/beamHO-bench-baseline-generalization-sdd.md (BG-5)
     // Normalize KPI by total beam count for cross-profile beam-count comparability output.
     const normalizationDivisor = Math.max(metadata.beamScheduler.totalBeamCount, 1);
     const normalizedThroughputPerTotalBeam = summary.kpi.throughput / normalizationDivisor;
@@ -159,6 +185,9 @@ function buildSummaryCsv(
         run.baseline,
         metadata.algorithmFidelity,
         metadata.throughputModel,
+        metadata.smallScaleModel,
+        formatShadowedRician(metadata.smallScaleParams),
+        formatLoo(metadata.smallScaleParams),
         metadata.runtimeParameterAudit?.pass ? 'PASS' : 'FAIL',
         metadata.runtimeParameterAudit?.missingKeys.join('|') ?? '',
         metadata.policyRuntime.policyMode,
@@ -256,6 +285,8 @@ export function runBaselineBatch(options: BaselineBatchOptions): BaselineBatchRe
       baseline,
       algorithmFidelity: profile.handover.algorithmFidelity,
       throughputModel: profile.channel.throughputModel.model,
+      smallScaleModel: profile.channel.smallScaleModel,
+      smallScaleParams: profile.channel.smallScaleParams ?? null,
       seed,
       playbackRate: 1,
       resolvedAssumptionIds,

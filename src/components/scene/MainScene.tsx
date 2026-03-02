@@ -20,6 +20,7 @@ import { useSimulation } from '@/hooks/useSimulation';
 import type { CanonicalProfileId } from '@/config/paper-profiles/loader';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { BaselineBatchResult } from '@/sim/bench/runner';
+import type { SatelliteRenderMode } from '../sim/satellite-render-mode';
 
 const SHOW_DEBUG =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_SCENE_DEBUG === 'true';
@@ -43,6 +44,9 @@ export function MainScene() {
     useState<CanonicalProfileId>('case9-default');
   const [selectedBaseline, setSelectedBaseline] =
     useState<RuntimeBaseline>('max-rsrp');
+  const [satelliteRenderMode, setSatelliteRenderMode] = useState<SatelliteRenderMode>(
+    NTPU_CONFIG.satellite.renderMode,
+  );
   const [comparisonBatch, setComparisonBatch] = useState<BaselineBatchResult | null>(null);
   const [validationSuiteStatus, setValidationSuiteStatus] = useState<string | null>(null);
   const [linkVisibility, setLinkVisibility] = useState<LinkVisibility>({
@@ -100,6 +104,8 @@ export function MainScene() {
           <strong>
             {snapshot.satellites.reduce((sum, satellite) => sum + satellite.beams.length, 0)}
           </strong>{' '}
+          | gain: <strong>{profile.beam.gainModel}</strong>{' '}
+          | sat-render: <strong>{satelliteRenderMode}</strong>{' '}
           | ue: <strong>{snapshot.ues.length}</strong>
         </div>
         <div className="sim-hud__actions">
@@ -132,6 +138,18 @@ export function MainScene() {
               <option value="a4">a4</option>
               <option value="cho">cho</option>
               <option value="mc-ho">mc-ho</option>
+            </select>
+          </label>
+          <label className="sim-hud__select">
+            Satellite
+            <select
+              value={satelliteRenderMode}
+              onChange={(event) =>
+                setSatelliteRenderMode(event.target.value as SatelliteRenderMode)
+              }
+            >
+              <option value="primitive">primitive</option>
+              <option value="glb">glb</option>
             </select>
           </label>
           <TimelineControls
@@ -168,7 +186,7 @@ export function MainScene() {
               const artifact = exportBaselineComparison();
               setComparisonBatch(artifact.batch);
             }}
-            title="Export summary CSV/JSON and per-baseline timeseries CSV files."
+            title="Export summary CSV/JSON, chart artifact JSON, small-scale comparison template JSON, and per-baseline timeseries CSV files."
           >
             Export Baseline Comparison
           </button>
@@ -268,7 +286,10 @@ export function MainScene() {
           <Suspense fallback={<SceneLoader label="Loading NTPU Scene..." />}>
             <NTPUScene />
             <UAV position={NTPU_CONFIG.uav.position} scale={NTPU_CONFIG.uav.scale} />
-            <BeamFootprint satellites={snapshot.satellites} />
+            <BeamFootprint
+              satellites={snapshot.satellites}
+              gainModel={profile.beam.gainModel}
+            />
             <UEMarkers ues={snapshot.ues} />
             <ConnectionLines
               satellites={snapshot.satellites}
@@ -277,7 +298,12 @@ export function MainScene() {
               showSecondary={linkVisibility.secondary}
               showPrepared={linkVisibility.prepared}
             />
-            <SatelliteModel satellites={snapshot.satellites} />
+            <SatelliteModel
+              satellites={snapshot.satellites}
+              renderMode={satelliteRenderMode}
+              glbModelPath={NTPU_CONFIG.satellite.modelPath}
+              glbModelScale={NTPU_CONFIG.satellite.modelScale}
+            />
           </Suspense>
 
           {/* 動態 DPR 調整 */}

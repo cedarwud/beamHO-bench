@@ -266,6 +266,8 @@ function fingerprintBatch(batch: BaselineBatchResult): string {
         baseline: run.result.metadata.baseline,
         algorithmFidelity: run.result.metadata.algorithmFidelity,
         throughputModel: run.result.metadata.throughputModel,
+        smallScaleModel: run.result.metadata.smallScaleModel,
+        smallScaleParams: run.result.metadata.smallScaleParams,
         seed: run.result.metadata.seed,
         playbackRate: run.result.metadata.playbackRate,
         resolvedAssumptionIds: [...run.result.metadata.resolvedAssumptionIds].sort(),

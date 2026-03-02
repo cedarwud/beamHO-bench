@@ -4,7 +4,7 @@ import { runRerunContract, type RerunContractInput, type RerunContractResult } f
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-baseline-generalization-sdd.md
+ * - sdd/completed/beamHO-bench-baseline-generalization-sdd.md
  *
  * Notes:
  * - CLI adapter for one-click rerun contract execution.

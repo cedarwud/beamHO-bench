@@ -6,6 +6,14 @@ import {
   type DeepPartial,
 } from '@/config/paper-profiles/loader';
 import type { PaperProfile } from '@/config/paper-profiles/types';
+import {
+  buildBaselineComparisonChartArtifact,
+  buildBaselineComparisonChartFileName,
+} from '@/sim/bench/comparison-chart-artifact';
+import {
+  buildSmallScaleComparisonTemplateArtifact,
+  buildSmallScaleComparisonTemplateFileName,
+} from '@/sim/bench/small-scale-comparison-template';
 import { runBaselineBatch } from '@/sim/bench/runner';
 import { runCoreValidationSuite } from '@/sim/bench/validation-suite';
 import { buildValidationGateSummary } from '@/sim/bench/validation-gate';
@@ -101,6 +109,8 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       baseline,
       algorithmFidelity: setup.profile.handover.algorithmFidelity,
       throughputModel: setup.profile.channel.throughputModel.model,
+      smallScaleModel: setup.profile.channel.smallScaleModel,
+      smallScaleParams: setup.profile.channel.smallScaleParams ?? null,
       seed,
       playbackRate: setup.engine.getPlaybackRate(),
       resolvedAssumptionIds: setup.resolvedAssumptionIds,
@@ -162,6 +172,34 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       'application/json',
     );
 
+    const chartArtifact = buildBaselineComparisonChartArtifact(batch);
+    const chartFileName = buildBaselineComparisonChartFileName(batch);
+    downloadTextArtifact(
+      JSON.stringify(chartArtifact, null, 2),
+      chartFileName,
+      'application/json',
+    );
+
+    const scenarioId = batch.runs[0]?.result.metadata.scenarioId ?? setup.scenario.id;
+    const smallScaleTemplateArtifact = buildSmallScaleComparisonTemplateArtifact({
+      profileId,
+      seed: batch.seed,
+      tickCount: batch.tickCount,
+      baselines,
+      scenarioId,
+      generatedAtUtc: batch.generatedAtUtc,
+    });
+    const smallScaleTemplateFileName = buildSmallScaleComparisonTemplateFileName({
+      profileId,
+      seed: batch.seed,
+      tickCount: batch.tickCount,
+    });
+    downloadTextArtifact(
+      JSON.stringify(smallScaleTemplateArtifact, null, 2),
+      smallScaleTemplateFileName,
+      'application/json',
+    );
+
     for (const run of batch.runs) {
       downloadTextArtifact(
         run.timeseriesCsv,
@@ -170,7 +208,13 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       );
     }
 
-    return { batch };
+    return {
+      batch,
+      chartArtifact,
+      chartFileName,
+      smallScaleTemplateArtifact,
+      smallScaleTemplateFileName,
+    };
   };
 
   const exportValidationSuite = (): ValidationSuiteExportArtifact => {
@@ -244,6 +288,8 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       baseline,
       algorithmFidelity: setup.profile.handover.algorithmFidelity,
       throughputModel: setup.profile.channel.throughputModel.model,
+      smallScaleModel: setup.profile.channel.smallScaleModel,
+      smallScaleParams: setup.profile.channel.smallScaleParams ?? null,
       seed,
       playbackRate: setup.engine.getPlaybackRate(),
       resolvedAssumptionIds: setup.resolvedAssumptionIds,

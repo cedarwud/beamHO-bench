@@ -5,7 +5,7 @@ import type { BeamSchedulerSnapshot } from './types';
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-joint-beamho-sdd.md
+ * - sdd/completed/beamHO-bench-joint-beamho-sdd.md
  * - PAP-2025-DAPS-CORE
  * - PAP-2024-MCCHO-CORE
  * - ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG

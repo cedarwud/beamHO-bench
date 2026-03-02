@@ -23,7 +23,7 @@ import { createSourceTraceArtifact } from '@/sim/reporting/source-trace';
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-baseline-generalization-sdd.md
+ * - sdd/completed/beamHO-bench-baseline-generalization-sdd.md
  * - sdd/completed/beamHO-bench-experiment-protocol.md
  * - ASSUME-THROUGHPUT-MODEL-POLICY
  *

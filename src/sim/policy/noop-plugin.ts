@@ -2,7 +2,7 @@ import type { PolicyPlugin } from './types';
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-rl-plugin-sdd.md
+ * - sdd/completed/beamHO-bench-rl-plugin-sdd.md
  * - ASSUME-HANDOVER-FIDELITY-FULL
  *
  * Notes:
