@@ -4,8 +4,11 @@ import { applyHandoverStateMachine } from '@/sim/handover/state-machine';
 import { sampleKey } from '@/sim/handover/baseline-helpers';
 import { resolveCoupledHandoverConflicts } from '@/sim/scheduler/coupled-resolver';
 import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
-import type { BeamState } from '@/sim/types';
+import type { BeamState, SatelliteState } from '@/sim/types';
 import { assertCondition, createBaseUe, createInvisibleSatellite } from './helpers';
+import { buildGainModelUnitCases } from './unit-cases-gain-model';
+import { buildSatelliteRenderUnitCases } from './unit-cases-satellite-render';
+import { buildSmallScaleUnitCases } from './unit-cases-small-scale';
 import { buildTimerChoUnitCases } from './unit-cases-timer-cho';
 import type { SimTestCase } from './types';
 
@@ -22,6 +25,22 @@ export function buildUnitTestCases(): SimTestCase[] {
     radiusKm: 10,
     radiusWorld,
     connectedUeIds: [],
+  });
+
+  const createVisibleSatellite = (
+    id: number,
+    beam: BeamState,
+    positionWorld: [number, number, number] = [0, 120, 0],
+  ): SatelliteState => ({
+    id,
+    positionEcef: [0, 0, 0],
+    positionWorld,
+    positionLla: { lat: 0, lon: 0, altKm: 600 },
+    azimuthDeg: 0,
+    elevationDeg: 60,
+    rangeKm: 120,
+    visible: true,
+    beams: [beam],
   });
 
   const createSchedulerSnapshot = (
@@ -107,6 +126,58 @@ export function buildUnitTestCases(): SimTestCase[] {
         const ue = createBaseUe();
         const samples = evaluateLinksForUe(profile, ue, [createInvisibleSatellite()]);
         assertCondition(samples.length === 0, 'No visible beam should produce no link samples.');
+      },
+    },
+    {
+      name: 'unit: reuse-4 link-budget partitions cross-color interference',
+      kind: 'unit',
+      run: () => {
+        const fr1Profile = loadPaperProfile('case9-default', {
+          beam: {
+            frequencyReuse: 'FR1',
+          },
+        });
+        const reuse4Profile = loadPaperProfile('case9-default', {
+          beam: {
+            frequencyReuse: 'reuse-4',
+          },
+        });
+
+        const ue = createBaseUe({
+          id: 99,
+          servingSatId: 1,
+          servingBeamId: 100,
+          positionWorld: [0, 0, 0],
+          positionLatLon: [0, 0],
+        });
+        const satellites = [
+          createVisibleSatellite(1, createBeam(100, 0, 0, 40), [0, 120, 0]),
+          createVisibleSatellite(2, createBeam(101, 0, 0, 40), [1, 120, 0]),
+        ];
+
+        const fr1Samples = evaluateLinksForUe(fr1Profile, ue, satellites);
+        const reuse4Samples = evaluateLinksForUe(reuse4Profile, ue, satellites);
+
+        const fr1Target = fr1Samples.find((sample) => sample.satId === 1 && sample.beamId === 100);
+        const reuse4Target = reuse4Samples.find(
+          (sample) => sample.satId === 1 && sample.beamId === 100,
+        );
+
+        assertCondition(fr1Samples.length === 2, 'Expected two candidate links in FR1 test setup.');
+        assertCondition(
+          reuse4Samples.length === 2,
+          'Expected two candidate links in reuse-4 test setup.',
+        );
+        if (!fr1Target) {
+          throw new Error('Missing FR1 target sample for sat=1/beam=100.');
+        }
+        if (!reuse4Target) {
+          throw new Error('Missing reuse-4 target sample for sat=1/beam=100.');
+        }
+        assertCondition(
+          reuse4Target.sinrDb > fr1Target.sinrDb,
+          'reuse-4 should reduce cross-color interference and improve SINR.',
+        );
       },
     },
     {
@@ -405,6 +476,9 @@ export function buildUnitTestCases(): SimTestCase[] {
         );
       },
     },
+    ...buildGainModelUnitCases(),
+    ...buildSatelliteRenderUnitCases(),
+    ...buildSmallScaleUnitCases(),
     ...buildTimerChoUnitCases(),
   ];
 }

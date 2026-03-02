@@ -2,7 +2,7 @@
 
 import path from 'node:path';
 import { execSync } from 'node:child_process';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 
 const ROOT = process.cwd();
 
@@ -97,7 +97,7 @@ async function validateGitignorePolicy(errors) {
 }
 
 async function validateDeferredScopePolicy(files, errors) {
-  // Source: sdd/pending/beamHO-bench-baseline-generalization-sdd.md (BG-6)
+  // Source: sdd/completed/beamHO-bench-baseline-generalization-sdd.md (BG-6)
   // Active runtime code must not introduce RSMA/large-scale DRL paths before scope reactivation.
   const runtimeCodeFiles = files.filter(
     (file) =>
@@ -118,12 +118,88 @@ async function validateDeferredScopePolicy(files, errors) {
   }
 }
 
+async function listMarkdownFiles(directoryPath) {
+  const entries = await readdir(directoryPath, { withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.md'))
+    .map((entry) => entry.name);
+}
+
+function readMarkdownStatus(content) {
+  const match = content.match(/^\*\*Status:\*\*\s*(.+)$/im);
+  return match ? match[1].trim() : null;
+}
+
+async function validateSddPendingBacklogSeparation(errors) {
+  // Source: PROJECT_CONSTRAINTS.md §6.3
+  // Active pending and long-term backlog SDD documents must remain separated by directory role.
+  const pendingDir = path.join(ROOT, 'sdd', 'pending');
+  const backlogDir = path.join(ROOT, 'sdd', 'backlog');
+
+  let pendingMarkdownFiles = [];
+  let backlogMarkdownFiles = [];
+  try {
+    pendingMarkdownFiles = await listMarkdownFiles(pendingDir);
+  } catch {
+    errors.push('Missing required SDD directory: sdd/pending');
+    return;
+  }
+  try {
+    backlogMarkdownFiles = await listMarkdownFiles(backlogDir);
+  } catch {
+    errors.push('Missing required SDD directory: sdd/backlog');
+    return;
+  }
+
+  const pendingSpecs = pendingMarkdownFiles.filter((name) => name.toLowerCase() !== 'readme.md');
+  const backlogSpecs = backlogMarkdownFiles.filter((name) => name.toLowerCase() !== 'readme.md');
+
+  if (pendingSpecs.length === 0) {
+    errors.push('sdd/pending must contain at least one active pending SDD spec (*.md, excluding README).');
+  }
+  if (backlogSpecs.length === 0) {
+    errors.push('sdd/backlog must contain at least one backlog SDD spec (*.md, excluding README).');
+  }
+
+  for (const pendingSpec of pendingSpecs) {
+    const pendingName = pendingSpec.toLowerCase();
+    if (pendingName.includes('backlog') || pendingName.includes('multiorbit')) {
+      errors.push(`Backlog-scoped SDD must not stay under pending/: sdd/pending/${pendingSpec}`);
+    }
+    const content = await readFile(path.join(pendingDir, pendingSpec), 'utf8');
+    const status = readMarkdownStatus(content);
+    if (!status) {
+      errors.push(`Pending SDD must declare **Status:** line: sdd/pending/${pendingSpec}`);
+      continue;
+    }
+    if (/\bbacklog\b/i.test(status)) {
+      errors.push(`Pending SDD marked as backlog-only: sdd/pending/${pendingSpec}`);
+    }
+  }
+
+  for (const backlogSpec of backlogSpecs) {
+    const content = await readFile(path.join(backlogDir, backlogSpec), 'utf8');
+    const status = readMarkdownStatus(content);
+    if (!status) {
+      errors.push(`Backlog SDD must declare **Status:** line: sdd/backlog/${backlogSpec}`);
+      continue;
+    }
+    if (/\bactive pending\b/i.test(status)) {
+      errors.push(`Backlog SDD must not be marked as active pending: sdd/backlog/${backlogSpec}`);
+    }
+    if (!/\bbacklog\b/i.test(status)) {
+      errors.push(`Backlog SDD status must include 'Backlog': sdd/backlog/${backlogSpec}`);
+    }
+  }
+}
+
 async function main() {
   const errors = [];
   const trackedFiles = listTrackedFiles();
   validateTrackedPaperFiles(trackedFiles, errors);
   await validateGitignorePolicy(errors);
   await validateDeferredScopePolicy(trackedFiles, errors);
+  await validateSddPendingBacklogSeparation(errors);
 
   if (errors.length > 0) {
     console.error('Repository policy validation failed:');

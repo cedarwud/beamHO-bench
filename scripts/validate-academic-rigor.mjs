@@ -442,6 +442,8 @@ async function validateArtifactsContract(errors) {
   const requiredSourceTraceTokens = [
     'algorithm_fidelity',
     'throughput_model',
+    'small_scale_model',
+    'small_scale_params',
     'resolvedAssumptionIds',
     'resolvedParameterSources',
     'resolvedSourceLinks',
@@ -464,6 +466,8 @@ async function validateArtifactsContract(errors) {
   const requiredReporterTokens = [
     'algorithmFidelity',
     'throughputModel',
+    'smallScaleModel',
+    'smallScaleParams',
     'resolvedAssumptionIds',
     'runtimeParameterAudit',
   ];
@@ -482,6 +486,8 @@ async function validateArtifactsContract(errors) {
     'source_catalog_checksum_sha256',
     'algorithm_fidelity',
     'throughput_model',
+    'small_scale_model',
+    'small_scale_params',
     'runtime_parameter_audit',
     'policy_mode',
     'policy_runtime_config_hash',

@@ -1,5 +1,7 @@
 import { loadPaperProfile } from '@/config/paper-profiles/loader';
 import { getSourceCatalog } from '@/config/paper-profiles/loader';
+import { resolveBeamFootprintBands } from '@/components/sim/beam-footprint-gain';
+import { resolveSatelliteRenderDecision } from '@/components/sim/satellite-render-mode';
 import {
   loadLayerDRoleMapping,
   validateLayerDRoleMapping,
@@ -13,7 +15,9 @@ import { createSourceTraceArtifact } from '@/sim/reporting/source-trace';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import { assertAlmostEqual, assertCondition, normalizeBatchForDeterminism } from './helpers';
 import { buildBaselineGeneralizationIntegrationCases } from './integration-cases-baseline-generalization';
+import { buildComparisonChartIntegrationCases } from './integration-cases-comparison-chart';
 import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy-scheduler';
+import { buildSmallScaleIntegrationCases } from './integration-cases-small-scale';
 import type { SimTestCase } from './types';
 
 export function buildIntegrationTestCases(): SimTestCase[] {
@@ -291,6 +295,52 @@ export function buildIntegrationTestCases(): SimTestCase[] {
       },
     },
     {
+      name: 'integration: gain-model visualization route is profile-driven and deterministic',
+      kind: 'integration',
+      run: () => {
+        const besselProfile = loadPaperProfile('case9-default');
+        const flatProfile = loadPaperProfile('case9-default', {
+          beam: {
+            gainModel: 'flat',
+          },
+        });
+
+        const besselBands = resolveBeamFootprintBands(besselProfile.beam.gainModel, true);
+        const flatBands = resolveBeamFootprintBands(flatProfile.beam.gainModel, true);
+        const besselBandsReplay = resolveBeamFootprintBands(besselProfile.beam.gainModel, true);
+
+        assertCondition(
+          JSON.stringify(besselBands) !== JSON.stringify(flatBands),
+          'Expected beam footprint visualization bands to differ between bessel-j1 and flat gain models.',
+        );
+        assertCondition(
+          JSON.stringify(besselBands) === JSON.stringify(besselBandsReplay),
+          'Expected deterministic visualization bands for fixed gain model input.',
+        );
+      },
+    },
+    {
+      name: 'integration: satellite glb render mode degrades gracefully on load error state',
+      kind: 'integration',
+      run: () => {
+        const fallbackDecision = resolveSatelliteRenderDecision('glb', 'error');
+        const replayDecision = resolveSatelliteRenderDecision('glb', 'error');
+
+        assertCondition(
+          fallbackDecision.effectiveMode === 'primitive',
+          'Expected glb error state to fallback to primitive render mode.',
+        );
+        assertCondition(
+          fallbackDecision.reason === 'glb-error-fallback',
+          'Expected glb error state to emit glb-error-fallback reason.',
+        );
+        assertCondition(
+          JSON.stringify(fallbackDecision) === JSON.stringify(replayDecision),
+          'Expected deterministic fallback decision for fixed render-mode/load-state tuple.',
+        );
+      },
+    },
+    {
       name: 'integration: deterministic throughput summary value is stable',
       kind: 'integration',
       run: () => {
@@ -307,7 +357,9 @@ export function buildIntegrationTestCases(): SimTestCase[] {
       },
     },
     ...buildBaselineGeneralizationIntegrationCases(),
+    ...buildComparisonChartIntegrationCases(),
     ...buildPolicySchedulerIntegrationCases(),
+    ...buildSmallScaleIntegrationCases(),
     {
       name: 'integration: real-trace multi-baseline batch comparison works on starlink-like profile',
       kind: 'integration',
