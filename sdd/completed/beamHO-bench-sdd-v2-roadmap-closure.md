@@ -9,7 +9,7 @@
 ## 1. Purpose
 
 This document is the single closure index for:
-1. `sdd/pending/beamHO-bench-sdd-v2-roadmap.md`
+1. `sdd/completed/beamHO-bench-sdd-v2-roadmap.md`
 2. V2 feature phases and related gate evidence.
 
 ---
@@ -31,7 +31,7 @@ All roadmap-specified active phases are implemented in code and validation gates
 Latest verification snapshot (2026-03-01):
 1. `npm run validate:stage` passed.
 2. `test:sim`: 33/33 passed.
-3. `validate:val-suite`: 34/34 passed, warnings=0.
+3. `validate:val-suite`: 37/37 passed, warnings=0.
 4. validation gate summary: `pass=true`, blocking failures=0, non-blocking failures=0.
 
 Roadmap exit criteria status:

@@ -34,7 +34,7 @@ baseline 決策（max-RSRP/A3/A4/CHO/MC-HO）與 state machine。
 KPI 累積與輸出格式化。
 
 7. `src/sim/bench/`  
-validation suite、gate、比較批次執行。
+validation suite、gate、比較批次執行（含 small-scale comparison template 匯出）。
 
 ## 4. Handover baseline
 

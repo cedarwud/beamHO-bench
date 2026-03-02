@@ -1,7 +1,7 @@
 # beamHO-bench — Validation Matrix
 
-**Version:** 0.8.0  
-**Date:** 2026-03-01  
+**Version:** 0.9.0  
+**Date:** 2026-03-02  
 **Status:** Active (CI-enforced validation suite)
 
 ---
@@ -49,6 +49,7 @@ Global rules for pass:
 2. Directional consistency: metric trends follow paper-reported direction.
 3. Rank consistency: top/bottom strategy ordering is stable for tested sweep points.
 4. Magnitude sanity: values fall into realistic range (no physically impossible spikes).
+5. small-scale effect consistency: `none` vs non-`none` sweep shows at least one reproducible KPI/SINR delta.
 
 State-aware KPI checks:
 1. `rlf.state1` and `rlf.state2` both present and non-negative.
@@ -85,6 +86,7 @@ Minimum run set for CI/nightly:
 18. `VAL-JBH-HOPPING-PERIOD-SWEEP`
 19. `VAL-JBH-OVERLAP-SWEEP`
 20. `VAL-BG-BEAM-COUNT-SWEEP`
+21. `VAL-SMALL-SCALE-MODEL-SWEEP`
 
 Each run must vary one factor only while keeping profile and seed policy controlled.
 
@@ -114,9 +116,11 @@ For each validation run, store:
 19. normalized KPI columns in batch summary CSV:
 20. `normalized_throughput_per_total_beam_mbps`
 21. `normalized_handover_rate_per_total_beam`
+22. `small_scale_model`
+23. `small_scale_params` (where applicable for selected model)
 
 Validation gate policy:
-1. blocking checks (`determinism`, `fidelity-mode`, `kpi-sanity`, `runtime-parameter-audit`, `link-state-consistency`) can fail the gate.
+1. blocking checks (`determinism`, `fidelity-mode`, `kpi-sanity`, `runtime-parameter-audit`, `link-state-consistency`, `small-scale-effect`) can fail the gate.
 2. non-blocking diagnostic checks (`trend-directional`, `rank-consistency`) are reported in `warnings` and check pass-rate stats, but do not fail stage gate.
 3. `trend-directional` is applied only to validation groups with explicit directional expectation; flat outcomes are acceptable if they do not violate configured direction.
 4. directional expectation and metric are configured in `src/sim/bench/validation-definitions.ts` via `trendPolicy`.

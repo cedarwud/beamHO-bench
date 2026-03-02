@@ -78,7 +78,7 @@ Dependency rule:
 3. `beamHO-bench-baseline-generalization-sdd.md` implemented in code/process artifacts.
 4. validation suite extensions for RL, joint scheduling, and baseline-generalization gates.
 5. updated requirements and validation matrix references under `sdd/completed/`.
-6. optional long-term reference only: `beamHO-bench-multiorbit-sdd.md` (not part of roadmap exit).
+6. optional long-term reference only: `sdd/backlog/beamHO-bench-multiorbit-backlog.md` (not part of roadmap exit).
 
 ---
 

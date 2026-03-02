@@ -30,5 +30,7 @@
 ## 與 SDD 的關係
 
 1. 已完成 SDD：`sdd/completed/`
-2. 待開發 SDD：`sdd/pending/`
-3. 實作完成度總覽：`sdd/completed/beamHO-bench-implementation-status.md`
+2. 本期待開發/closure-tracked SDD：`sdd/pending/`
+3. 長期 backlog：`sdd/backlog/`
+4. 實作完成度總覽：`sdd/completed/beamHO-bench-implementation-status.md`
+5. TODO gap closure closure report：`sdd/completed/beamHO-bench-gap-closure-closure.md`

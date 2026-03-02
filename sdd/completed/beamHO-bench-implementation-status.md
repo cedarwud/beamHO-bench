@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
-**Date:** 2026-03-01  
-**Status:** v2 Active Scope Complete (V2-A/V2-B/V2-D merged)  
+**Date:** 2026-03-02  
+**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4)  
 
 ---
 
@@ -12,8 +12,11 @@ This status document records whether the active roadmap scope is implemented and
 v2-complete means:
 1. v1 M0-M4 core requirements are implemented in code.
 2. v2 feature phases (RL plugin, joint beam-scheduler + HO coupling, baseline-generalization closure) are implemented in code.
-2. Stage gate validation is green (`validate:stage`).
-3. Artifacts required by SDD/requirements/validation matrix are generated.
+3. Pending closure packages are implemented and closure-tracked:
+   - `sdd/pending/beamHO-bench-gap-closure-sdd.md`
+   - `sdd/pending/beamHO-bench-small-scale-validation-sdd.md`
+4. Stage gate validation is green (`validate:stage`).
+5. Artifacts required by SDD/requirements/validation matrix are generated.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
@@ -33,6 +36,8 @@ Deferred items remain out of active scope:
 | V2-A | Complete | RL policy runtime adapter + plugin metadata + determinism/safety validation gates |
 | V2-B | Complete | Joint beam hopping + HO coupling + coupled scheduler guards + sweep validations |
 | V2-D | Complete | Layer-D role mapping, throughput model policy traceability, rerun contract, Timer-CHO HUD acceptance, 7/16/50 beam comparability, deferred-scope governance |
+| GC (D1~D5) | Complete | frequency reuse runtime + gain-model visualization + satellite `primitive/glb` fallback + comparison chart artifact + todo/README/status sync |
+| SS (D1~D5) | Complete | small-scale branch tests + validation sweep/effect check + metadata/source-trace/manifest fields + small-scale comparison template export |
 
 ---
 
@@ -61,10 +66,10 @@ Required artifacts:
 
 ## 4. Verification Snapshot (Latest)
 
-Latest local verification (2026-03-01):
+Latest local verification (2026-03-02):
 1. `validate:stage` passed.
-2. `test:sim`: 33/33 passed (unit 10/10, integration 23/23).
-3. `validate:val-suite`: 34/34 passed, warnings=0.
+2. `test:sim`: 47/47 passed (unit 17/17, integration 30/30).
+3. `validate:val-suite`: 37/37 passed, warnings=0.
 4. Validation artifacts are compact and generated under `dist/`.
 
 ---
@@ -80,6 +85,8 @@ Primary references:
 6. `sdd/completed/beamHO-bench-rl-plugin-closure.md`
 7. `sdd/completed/beamHO-bench-joint-beamho-closure.md`
 8. `sdd/completed/beamHO-bench-baseline-generalization-closure.md`
+9. `sdd/completed/beamHO-bench-gap-closure-closure.md`
+10. `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
@@ -89,3 +96,9 @@ Code points for v2 closure evidence:
 5. `src/components/sim/KpiHUD.tsx` + CHO geometry/runtime fields (V2-D BG-4 timer-CHO visualization acceptance)
 6. `src/sim/bench/validation-definitions.ts` (`VAL-BG-BEAM-COUNT-SWEEP`) + `src/sim/bench/runner.ts` normalized KPI CSV output (V2-D BG-5)
 7. `scripts/validate-repo-policy.mjs` + BG-6 test guard (V2-D deferred policy enforcement)
+8. `src/sim/bench/comparison-chart-artifact.ts` + `src/hooks/useSimulation.exporters.ts` (GC chart artifact export with filename metadata)
+9. `src/components/sim/beam-footprint-gain.ts` + `src/components/sim/BeamFootprint.tsx` (GC gain-model visualization route)
+10. `src/components/sim/satellite-render-mode.ts` + `src/components/sim/SatelliteModel.tsx` (GC satellite render fallback compatibility)
+11. `src/sim/tests/unit-cases-small-scale.ts` + `src/sim/tests/integration-cases-small-scale.ts` (SS branch coverage + deterministic/effect checks)
+12. `src/sim/reporting/source-trace.ts` + `src/sim/reporting/manifest.ts` + `src/sim/kpi/reporter.ts` (SS metadata/source-trace completeness)
+13. `src/sim/bench/small-scale-comparison-template.ts` + `src/hooks/useSimulation.exporters.ts` (SS reproducible comparison template export)

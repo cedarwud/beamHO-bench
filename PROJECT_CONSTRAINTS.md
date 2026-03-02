@@ -37,9 +37,9 @@
 
 1. 開發需持續對齊 SDD，不偏離成單一論文客製實作。
 2. 每完成一個階段要主動做驗證，不等待額外提醒。
-3. `sdd/pending/` 需區分兩類：
-   - `active pending`：本期 roadmap 明確納入實作範圍，需納入完成率與 gate。
-   - `backlog pending`：長期議題（如 multi-orbit），不納入本期完成率，不得以「未實作」視為違規。
+3. SDD 目錄責任需清楚分離：
+   - `sdd/pending/`：`active pending`，本期 roadmap 明確納入實作範圍，需納入完成率與 gate。
+   - `sdd/backlog/`：長期議題（如 multi-orbit），不納入本期完成率，不得以「未實作」視為違規。
 4. pending SDD 完成後，必須同一階段完成文件生命週期收斂：
    - pending 文件狀態標註為 implemented/closure-tracked。
    - 至少有一份對應 `sdd/completed/*-closure.md` 並回鏈原 pending 條目。

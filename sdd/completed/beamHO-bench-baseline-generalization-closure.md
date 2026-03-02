@@ -9,8 +9,8 @@
 ## 1. Purpose
 
 This report records closure evidence for:
-1. `sdd/pending/beamHO-bench-baseline-generalization-sdd.md`
-2. V2-D scope in `sdd/pending/beamHO-bench-sdd-v2-roadmap.md`
+1. `sdd/completed/beamHO-bench-baseline-generalization-sdd.md`
+2. V2-D scope in `sdd/completed/beamHO-bench-sdd-v2-roadmap.md`
 
 ---
 
@@ -70,7 +70,7 @@ Result:
 Latest stage verification (2026-03-01):
 1. command: `npm run validate:stage`
 2. `test:sim`: 33/33 passed (unit 10/10, integration 23/23)
-3. `validate:val-suite`: 34/34 passed, warnings=0
+3. `validate:val-suite`: 37/37 passed, warnings=0
 4. required CI artifacts present:
 5. `dist/sim-test-summary.json`
 6. `dist/validation-suite.json`
@@ -82,5 +82,5 @@ Latest stage verification (2026-03-01):
 
 1. `sdd/completed/beamHO-bench-implementation-status.md`
 2. `sdd/completed/beamHO-bench-validation-matrix.md`
-3. `sdd/pending/beamHO-bench-baseline-generalization-sdd.md` (original pending spec)
-4. `sdd/pending/beamHO-bench-sdd-v2-roadmap.md` (roadmap contract)
+3. `sdd/completed/beamHO-bench-baseline-generalization-sdd.md` (original pending spec)
+4. `sdd/completed/beamHO-bench-sdd-v2-roadmap.md` (roadmap contract)

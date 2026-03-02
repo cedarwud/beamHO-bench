@@ -27,6 +27,7 @@
 3. `dist/validation-suite.csv`
 4. `dist/validation-gate-summary.json`
 5. `dist/runtime-parameter-audit-summary.json`
+6. （UI comparison 匯出）`small-scale-template_<profile>_seed-<seed>_ticks-<tick>.json`
 
 這些輸出也是 CI artifact 與論文附錄可引用來源。
 

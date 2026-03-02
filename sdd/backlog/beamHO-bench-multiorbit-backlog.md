@@ -1,4 +1,4 @@
-# beamHO-bench — Multi-Orbit Scheduler SDD (Backlog)
+# beamHO-bench — Multi-Orbit Scheduler Backlog
 
 **Version:** 0.2.0  
 **Date:** 2026-03-01  
@@ -46,4 +46,3 @@ This backlog item can be promoted to active pending only when all are true:
 2. roadmap document is updated and approved.
 3. requirements and validation matrix are revised for multi-orbit gates.
 4. compatibility plan proves no regression for existing LEO-only baselines.
-

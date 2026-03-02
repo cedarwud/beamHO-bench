@@ -3,8 +3,10 @@
 ## 1. 先對齊哪份規格
 
 1. 已完成範圍：`sdd/completed/`
-2. 待開發範圍：`sdd/pending/`
-3. 基本約束：`PROJECT_CONSTRAINTS.md`
+2. 本期待開發範圍：`sdd/pending/`
+3. 長期 backlog：`sdd/backlog/`
+4. 基本約束：`PROJECT_CONSTRAINTS.md`
+5. TODO 對齊與 closure 追蹤：`sdd/completed/beamHO-bench-gap-closure-closure.md`
 
 原則是先對齊 SDD，再開發，不直接跳過規格。
 

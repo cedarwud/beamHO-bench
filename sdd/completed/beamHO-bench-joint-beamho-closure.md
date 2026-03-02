@@ -9,7 +9,7 @@
 ## 1. Purpose
 
 This report records closure evidence for:
-1. `sdd/pending/beamHO-bench-joint-beamho-sdd.md`
+1. `sdd/completed/beamHO-bench-joint-beamho-sdd.md`
 
 ---
 
@@ -88,4 +88,4 @@ Latest local verification (2026-03-01):
 
 1. `sdd/completed/beamHO-bench-implementation-status.md`
 2. `sdd/completed/beamHO-bench-validation-matrix.md`
-3. `sdd/pending/beamHO-bench-joint-beamho-sdd.md`
+3. `sdd/completed/beamHO-bench-joint-beamho-sdd.md`
