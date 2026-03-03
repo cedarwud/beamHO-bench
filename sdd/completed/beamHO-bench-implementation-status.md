@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-03  
-**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4 + CR D1~D5 + CMR D1~D5 + BPE D1~D5)
+**Status:** v2 Active Scope Complete + Active Pending RB1 + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4 + CR D1~D5 + CMR D1~D5 + BPE D1~D5)
 
 ---
 
@@ -22,6 +22,7 @@ v2-complete means:
 8. Closure-tracked pending package `sdd/pending/beamHO-bench-complexity-reduction-sdd.md` has D1~D5 implemented with closure evidence.
 9. Closure-tracked pending package `sdd/pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` has D1~D5 implemented with closure evidence.
 10. Closure-tracked pending package `sdd/pending/beamHO-bench-baseline-parameter-envelope-sdd.md` has D1~D5 implemented with closure evidence.
+11. Active pending package `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md` defines reproducibility-bundle deliveries (D1~D5).
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
@@ -48,6 +49,7 @@ Deferred items remain out of active scope:
 | CR (D1~D5) | Complete | behavior-preserving complexity reduction package; `integration-cases` and validation-definition decomposition + `validate:daily` workflow + SDD status authority cleanup + closure report |
 | CMR (D1~D5) | Complete | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`) with deterministic plan/run contract, validation-suite guard, workflow command, and closure report |
 | BPE (D1~D5) | Complete | baseline parameter envelope pack (elevation/load/mobility tiers) with deterministic artifact/validation contracts, documentation synchronization, and closure report |
+| RB1 (D1~D5) | In Progress | repro bundle v1 package for deterministic one-command packaging of canonical cross-mode and baseline-envelope artifacts; SDD established, implementation pending |
 
 ---
 
@@ -112,6 +114,7 @@ Primary references:
 17. `sdd/completed/beamHO-bench-cross-mode-reproducible-benchmark-closure.md`
 18. `sdd/pending/beamHO-bench-baseline-parameter-envelope-sdd.md`
 19. `sdd/completed/beamHO-bench-baseline-parameter-envelope-closure.md`
+20. `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
