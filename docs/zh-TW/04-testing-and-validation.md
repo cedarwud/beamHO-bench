@@ -21,7 +21,10 @@
 3. `npm run bench:cross-mode`  
 執行 cross-mode reproducible benchmark pack（`case9-default` + `starlink-like` + `oneweb-like`），預設輸出到 `dist/cross-mode-benchmark/`。
 
-4. `npm run validate:stage`  
+4. `npm run bundle:repro-v1`  
+輸出 Repro Bundle v1（cross-mode + baseline-parameter-envelope）到 `dist/repro-bundle-v1/`。
+
+5. `npm run validate:stage`  
 一鍵跑完整 gate（lint/build/test/validate 系列）。
 
 ## 3. 主要 artifact
@@ -34,7 +37,9 @@
 6. `dist/cross-mode-benchmark/cross-mode-plan_<tupleDigest>.json`
 7. `dist/cross-mode-benchmark/cross-mode-run_<artifactDigest>.json`
 8. `dist/cross-mode-benchmark/cross-mode-summary_<artifactDigest>.json`
-9. （UI comparison 匯出）`small-scale-template_<profile>_seed-<seed>_ticks-<tick>.json`
+9. `dist/repro-bundle-v1/repro-bundle-v1_<artifactDigest>.json`
+10. `dist/repro-bundle-v1/repro-bundle-v1-manifest_<artifactDigest>.json`
+11. （UI comparison 匯出）`small-scale-template_<profile>_seed-<seed>_ticks-<tick>.json`
 
 這些輸出也是 CI artifact 與論文附錄可引用來源。
 

@@ -107,5 +107,5 @@ As of 2026-03-03:
 | D1 repro bundle module + export script | Implemented | `src/sim/bench/repro-bundle-v1.ts`, `scripts/run-repro-bundle-v1.mjs`, `package.json` (`bundle:repro-v1`) |
 | D2 deterministic/coverage integration tests | Implemented | `src/sim/tests/integration-cases-repro-bundle-v1.ts`, integration registry wiring |
 | D3 validation-suite contract guard | Implemented | `scripts/validate-validation-suite.mjs` now validates deterministic repro-bundle-v1 digest/component/profile contract |
-| D4 docs/status/index sync | Pending | - |
+| D4 docs/status/index sync | Implemented | `README.md`, `docs/zh-TW/04-testing-and-validation.md`, `sdd/README.md`, `sdd/pending/README.md`, implementation-status sync |
 | D5 closure and lifecycle convergence | Pending | - |

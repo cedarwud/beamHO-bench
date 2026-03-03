@@ -8,7 +8,7 @@ Status ownership:
 
 ## 1. Active Pending Specs
 
-1. `beamHO-bench-repro-bundle-v1-sdd.md` (active pending on 2026-03-03)
+1. `beamHO-bench-repro-bundle-v1-sdd.md` (active pending on 2026-03-03; D1-D3 implemented, D4-D5 pending)
 
 ## 2. Closure-Tracked Pending Specs
 
