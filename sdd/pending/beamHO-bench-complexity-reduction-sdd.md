@@ -110,3 +110,16 @@ This package SHALL maintain:
 5. stage-gate enforceability and artifact freshness requirements.
 6. deferred-scope governance remains active (`RSMA`/soft-HO/multi-orbit/large-scale DRL inactive).
 
+---
+
+## 8. Implementation Progress Backfill
+
+As of 2026-03-03:
+
+| Delivery | Status | Evidence |
+|---|---|---|
+| D1 decompose integration test entry assembly | Implemented | extracted real-trace artifact trio into `src/sim/tests/integration-cases-real-trace-artifacts.ts`, and slimmed `src/sim/tests/integration-cases.ts` to registry assembly (`368` lines) |
+| D2 validation-definition coupling simplification | Pending | - |
+| D3 day-to-day vs milestone validation workflow guidance | Pending | - |
+| D4 SDD/status consolidation cleanup | Pending | - |
+| D5 closure + architecture review note | Pending | - |
