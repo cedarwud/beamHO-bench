@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-03  
-**Status:** v2 Active Scope Complete + Active Pending CB2 (D1~D3) + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7)
+**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4)
 
 ---
 
@@ -16,7 +16,7 @@ v2-complete means:
    - `sdd/pending/beamHO-bench-gap-closure-sdd.md`
    - `sdd/pending/beamHO-bench-small-scale-validation-sdd.md`
 4. Closure-tracked pending package `sdd/pending/beamHO-bench-common-benchmark-v1-sdd.md` has D1~D7 implemented with finalized closure evidence.
-5. Active pending package `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md` has D1~D3 implemented and stage-gated; D4 closure sync remains pending.
+5. Closure-tracked pending package `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md` has D1~D4 implemented with closure evidence.
 6. Stage gate validation is green (`validate:stage`).
 7. Artifacts required by SDD/requirements/validation matrix are generated.
 
@@ -41,7 +41,7 @@ Deferred items remain out of active scope:
 | GC (D1~D5) | Complete | frequency reuse runtime + gain-model visualization + satellite `primitive/glb` fallback + comparison chart artifact + todo/README/status sync |
 | SS (D1~D5) | Complete | small-scale branch tests + validation sweep/effect check + metadata/source-trace/manifest fields + small-scale comparison template export |
 | CB-v1 (D1~D7) | Complete | multi-seed benchmark + scenario matrix + temporal/doppler realism + paper-ready reporting + replay/timeline/state overlay UI + assumption governance + architecture review closure |
-| CB2 (D1~D4) | In Progress | common baseline v2 validation pack implemented for D1~D3; pending closure sync D4 |
+| CB2 (D1~D4) | Complete | common baseline v2 validation pack + matrix/alignment guard updates + closure synchronization |
 
 ---
 
@@ -93,6 +93,7 @@ Primary references:
 10. `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
 11. `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
 12. `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md`
+13. `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)

@@ -4,16 +4,18 @@ This folder contains active-pending or closure-tracked pending SDD documents.
 
 ## 1. Active Pending Specs
 
-1. `beamHO-bench-common-baseline-v2-sdd.md` (active pending on 2026-03-03; D1~D3 implemented, D4 pending)
+1. currently none.
 
 ## 2. Closure-Tracked Pending Specs
 
-1. `beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
-2. `beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked on 2026-03-02)
-3. `beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked on 2026-03-02)
-4. closure report: `sdd/completed/beamHO-bench-gap-closure-closure.md`
-5. closure report: `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
-6. closure report: `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
+1. `beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked on 2026-03-03)
+2. `beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
+3. `beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked on 2026-03-02)
+4. `beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked on 2026-03-02)
+5. closure report: `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
+6. closure report: `sdd/completed/beamHO-bench-gap-closure-closure.md`
+7. closure report: `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
+8. closure report: `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
 
 ## 3. Backlog Location
 

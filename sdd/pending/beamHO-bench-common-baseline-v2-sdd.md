@@ -1,8 +1,8 @@
-# beamHO-bench — Common Baseline v2 Validation Pack SDD (Active Pending)
+# beamHO-bench — Common Baseline v2 Validation Pack SDD (Closure-Tracked Pending)
 
 **Version:** 0.1.0  
 **Date:** 2026-03-03  
-**Status:** Active Pending (D1~D3 implemented, D4 pending closure sync)
+**Status:** Implemented / Closure-Tracked
 
 ---
 
@@ -86,7 +86,7 @@ As of 2026-03-03:
 | D1 common baseline v2 definition pack | Implemented | `0fceba1` | `src/sim/bench/common-baseline-pack.ts` |
 | D2 suite wiring + integration coverage | Implemented | `0fceba1` | `src/sim/bench/validation-definitions.ts`, `src/sim/tests/integration-cases-common-baseline-pack.ts`, `src/sim/tests/integration-cases.ts` |
 | D3 matrix/alignment-gate sync | Implemented | `0fceba1` | `sdd/completed/beamHO-bench-validation-matrix.md`, `scripts/validate-validation-suite.mjs` |
-| D4 closure/report synchronization | Pending | - | to be finalized after next milestone package decision |
+| D4 closure/report synchronization | Implemented | docs sync change set | `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`, SDD index/status synchronization |
 
 ---
 
@@ -101,3 +101,8 @@ This package SHALL maintain:
 6. no deferred-scope runtime activation (`RSMA`/soft-HO/multi-orbit/large-scale DRL).
 7. stage-gate enforceability (`validate:stage`) and matrix-definition consistency checks.
 
+---
+
+## 8. Closure Reference
+
+1. `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
