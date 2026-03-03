@@ -16,6 +16,7 @@ import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import { assertAlmostEqual, assertCondition, normalizeBatchForDeterminism } from './helpers';
 import { buildBaselineGeneralizationIntegrationCases } from './integration-cases-baseline-generalization';
 import { buildComparisonChartIntegrationCases } from './integration-cases-comparison-chart';
+import { buildMultiSeedBenchmarkIntegrationCases } from './integration-cases-multi-seed-benchmark';
 import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy-scheduler';
 import { buildSmallScaleIntegrationCases } from './integration-cases-small-scale';
 import type { SimTestCase } from './types';
@@ -358,6 +359,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
     },
     ...buildBaselineGeneralizationIntegrationCases(),
     ...buildComparisonChartIntegrationCases(),
+    ...buildMultiSeedBenchmarkIntegrationCases(),
     ...buildPolicySchedulerIntegrationCases(),
     ...buildSmallScaleIntegrationCases(),
     {
