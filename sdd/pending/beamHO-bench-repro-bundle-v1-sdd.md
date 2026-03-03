@@ -104,7 +104,7 @@ As of 2026-03-03:
 
 | Delivery | Status | Evidence |
 |---|---|---|
-| D1 repro bundle module + export script | Pending | - |
+| D1 repro bundle module + export script | Implemented | `src/sim/bench/repro-bundle-v1.ts`, `scripts/run-repro-bundle-v1.mjs`, `package.json` (`bundle:repro-v1`) |
 | D2 deterministic/coverage integration tests | Pending | - |
 | D3 validation-suite contract guard | Pending | - |
 | D4 docs/status/index sync | Pending | - |
