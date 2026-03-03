@@ -9,6 +9,7 @@ import { runCoreValidationSuite } from '@/sim/bench/validation-suite';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import { assertAlmostEqual, assertCondition, normalizeBatchForDeterminism } from './helpers';
 import { buildBaselineGeneralizationIntegrationCases } from './integration-cases-baseline-generalization';
+import { buildBaselineParameterEnvelopeIntegrationCases } from './integration-cases-baseline-parameter-envelope';
 import { buildCommonBaselinePackIntegrationCases } from './integration-cases-common-baseline-pack';
 import { buildComparisonChartIntegrationCases } from './integration-cases-comparison-chart';
 import { buildCrossModeBenchmarkIntegrationCases } from './integration-cases-cross-mode-benchmark';
@@ -357,6 +358,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
       },
     },
     ...buildBaselineGeneralizationIntegrationCases(),
+    ...buildBaselineParameterEnvelopeIntegrationCases(),
     ...buildCommonBaselinePackIntegrationCases(),
     ...buildComparisonChartIntegrationCases(),
     ...buildCrossModeBenchmarkIntegrationCases(),

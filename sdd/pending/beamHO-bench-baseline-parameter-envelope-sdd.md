@@ -104,7 +104,7 @@ As of 2026-03-03:
 | Delivery | Status | Evidence |
 |---|---|---|
 | D1 baseline envelope definition module | Implemented | `src/sim/bench/baseline-parameter-envelope.ts` |
-| D2 deterministic/coverage integration tests | Pending | - |
+| D2 deterministic/coverage integration tests | Implemented | `src/sim/tests/integration-cases-baseline-parameter-envelope.ts`, integration registry wiring |
 | D3 validation-suite envelope contract | Pending | - |
 | D4 docs/status/index sync | Pending | - |
 | D5 closure and lifecycle convergence | Pending | - |

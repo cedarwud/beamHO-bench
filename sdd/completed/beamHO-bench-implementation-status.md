@@ -47,7 +47,7 @@ Deferred items remain out of active scope:
 | CB2 (D1~D4) | Complete | common baseline v2 validation pack + matrix/alignment guard updates + closure synchronization |
 | CR (D1~D5) | Complete | behavior-preserving complexity reduction package; `integration-cases` and validation-definition decomposition + `validate:daily` workflow + SDD status authority cleanup + closure report |
 | CMR (D1~D5) | Complete | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`) with deterministic plan/run contract, validation-suite guard, workflow command, and closure report |
-| BPE (D1~D5) | In Progress | baseline parameter envelope pack (elevation/load/mobility tiers) for common baseline sensitivity governance; D1 completed (deterministic envelope module), D2~D5 pending |
+| BPE (D1~D5) | In Progress | baseline parameter envelope pack (elevation/load/mobility tiers) for common baseline sensitivity governance; D1-D2 completed (module + integration), D3~D5 pending |
 
 ---
 
