@@ -118,7 +118,7 @@ export const NTPU_CONFIG: SceneConfig = {
   satellite: {
     // Keep primitive as default for deterministic and lightweight benchmark runs.
     renderMode: 'primitive',
-    modelPath: '/models/uav.glb',
+    modelPath: '/models/sat.glb',
     modelScale: 2.4,
   },
   camera: {
