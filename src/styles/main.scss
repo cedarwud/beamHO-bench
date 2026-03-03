@@ -76,26 +76,27 @@ canvas {
 .sim-sidebar__toggle {
   position: absolute;
   top: 14px;
-  right: -13px;
+  right: -20px;
   z-index: 4;
-  width: 26px;
-  height: 26px;
-  border: 1px solid rgba(125, 211, 252, 0.45);
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(186, 230, 253, 0.9);
   border-radius: 999px;
   padding: 0;
-  background: rgba(8, 16, 28, 0.86);
-  color: #e2e8f0;
+  background: rgba(2, 132, 199, 0.86);
+  color: #f8fafc;
   backdrop-filter: blur(4px);
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   line-height: 1;
   display: grid;
   place-items: center;
   cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(2, 6, 23, 0.4), 0 8px 18px rgba(2, 6, 23, 0.5);
 }
 
 .sim-sidebar__toggle:hover {
-  background: rgba(14, 116, 144, 0.35);
+  background: rgba(3, 105, 161, 0.94);
 }
 
 .sim-hud {
@@ -104,7 +105,8 @@ canvas {
   width: 100%;
   max-width: none;
   max-height: calc(100vh - 28px);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   border: 1px solid rgba(125, 211, 252, 0.35);
   border-radius: 10px;
   padding: 10px 12px;
@@ -364,11 +366,12 @@ canvas {
 }
 
 .sim-compare__table-wrap {
-  overflow-x: auto;
+  overflow: hidden;
 }
 
 .sim-compare__table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 11px;
   color: #cbd5e1;
@@ -378,8 +381,10 @@ canvas {
 .sim-compare__table td {
   padding: 4px 6px;
   border-bottom: 1px solid rgba(148, 163, 184, 0.16);
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   text-align: right;
+  vertical-align: top;
 }
 
 .sim-compare__table th:first-child,
@@ -411,9 +416,10 @@ canvas {
 
   .sim-sidebar__toggle {
     top: 10px;
-    right: -12px;
-    width: 24px;
-    height: 24px;
+    right: -17px;
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
   }
 
   .sim-hud {
