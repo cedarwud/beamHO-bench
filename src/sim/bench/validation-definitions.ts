@@ -1,4 +1,5 @@
 import type { ValidationSuiteDefinition } from './validation-types';
+import { buildCommonBaselineV2ValidationDefinitions } from './common-baseline-pack';
 
 export function buildValidationDefinitions(): ValidationSuiteDefinition[] {
   return [
@@ -386,5 +387,6 @@ export function buildValidationDefinitions(): ValidationSuiteDefinition[] {
         },
       })),
     },
+    ...buildCommonBaselineV2ValidationDefinitions(),
   ];
 }

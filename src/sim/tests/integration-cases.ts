@@ -11,6 +11,7 @@ import { createSourceTraceArtifact } from '@/sim/reporting/source-trace';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import { assertAlmostEqual, assertCondition, normalizeBatchForDeterminism } from './helpers';
 import { buildBaselineGeneralizationIntegrationCases } from './integration-cases-baseline-generalization';
+import { buildCommonBaselinePackIntegrationCases } from './integration-cases-common-baseline-pack';
 import { buildComparisonChartIntegrationCases } from './integration-cases-comparison-chart';
 import { buildMultiSeedBenchmarkIntegrationCases } from './integration-cases-multi-seed-benchmark';
 import { buildMultiSeedReportingIntegrationCases } from './integration-cases-multi-seed-reporting';
@@ -356,6 +357,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
       },
     },
     ...buildBaselineGeneralizationIntegrationCases(),
+    ...buildCommonBaselinePackIntegrationCases(),
     ...buildComparisonChartIntegrationCases(),
     ...buildMultiSeedBenchmarkIntegrationCases(),
     ...buildMultiSeedReportingIntegrationCases(),

@@ -1,7 +1,7 @@
 # beamHO-bench — Validation Matrix
 
-**Version:** 0.9.0  
-**Date:** 2026-03-02  
+**Version:** 0.9.1  
+**Date:** 2026-03-03  
 **Status:** Active (CI-enforced validation suite)
 
 ---
@@ -87,6 +87,10 @@ Minimum run set for CI/nightly:
 19. `VAL-JBH-OVERLAP-SWEEP`
 20. `VAL-BG-BEAM-COUNT-SWEEP`
 21. `VAL-SMALL-SCALE-MODEL-SWEEP`
+22. `VAL-CB2-PROPAGATION-REALISM-SWEEP`
+23. `VAL-CB2-PROTOCOL-RLF-TIMING-SWEEP`
+24. `VAL-CB2-CHO-MC-GEOMETRY-SWEEP`
+25. `VAL-CB2-STRESS-LOAD-SWEEP`
 
 Each run must vary one factor only while keeping profile and seed policy controlled.
 

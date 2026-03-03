@@ -2,7 +2,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import { mkdir, readFile, rm, writeFile } from 'fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'fs/promises';
 import { pathToFileURL } from 'url';
 import { build } from 'esbuild';
 
@@ -24,12 +24,11 @@ const VALIDATION_MATRIX_PATH = path.join(
   'completed',
   'beamHO-bench-validation-matrix.md',
 );
-const VALIDATION_DEFINITIONS_PATH = path.join(
+const VALIDATION_DEFINITIONS_DIR = path.join(
   ROOT,
   'src',
   'sim',
   'bench',
-  'validation-definitions.ts',
 );
 
 function unique(values) {
@@ -58,10 +57,33 @@ function extractDefinedValidationIdsFromDefinitions(sourceText) {
   return unique([...matches].map((match) => match[1]));
 }
 
+async function collectTypeScriptFiles(dirPath) {
+  const entries = await readdir(dirPath, { withFileTypes: true });
+  const nested = await Promise.all(
+    entries.map(async (entry) => {
+      const fullPath = path.join(dirPath, entry.name);
+      if (entry.isDirectory()) {
+        return collectTypeScriptFiles(fullPath);
+      }
+      if (entry.isFile() && fullPath.endsWith('.ts')) {
+        return [fullPath];
+      }
+      return [];
+    }),
+  );
+  return nested.flat().sort();
+}
+
+async function readValidationDefinitionSources() {
+  const definitionFiles = await collectTypeScriptFiles(VALIDATION_DEFINITIONS_DIR);
+  const contents = await Promise.all(definitionFiles.map((filePath) => readFile(filePath, 'utf8')));
+  return contents.join('\n');
+}
+
 async function validateMatrixDefinitionAlignment() {
   const [matrixMarkdown, definitionsSource] = await Promise.all([
     readFile(VALIDATION_MATRIX_PATH, 'utf8'),
-    readFile(VALIDATION_DEFINITIONS_PATH, 'utf8'),
+    readValidationDefinitionSources(),
   ]);
 
   const requiredIds = extractRequiredValidationIdsFromMatrix(matrixMarkdown);
