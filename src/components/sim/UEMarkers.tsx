@@ -51,8 +51,13 @@ export function UEMarkers({ ues, failureOverlayEnabled = false }: UEMarkersProps
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
-      <sphereGeometry args={[1.1, 8, 8]} />
-      <meshStandardMaterial roughness={0.45} metalness={0.1} vertexColors />
+      <sphereGeometry args={[0.9, 7, 7]} />
+      <meshBasicMaterial
+        vertexColors
+        toneMapped={false}
+        transparent
+        opacity={0.95}
+      />
     </instancedMesh>
   );
 }
