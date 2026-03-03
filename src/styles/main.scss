@@ -122,10 +122,27 @@ canvas {
   gap: 6px;
 }
 
+.sim-timeline__scrubber {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.sim-timeline__scrubber input[type='range'] {
+  width: 130px;
+  accent-color: #38bdf8;
+}
+
 .sim-timeline__meta {
   font-size: 11px;
   color: #94a3b8;
   white-space: nowrap;
+}
+
+.sim-hud__select input[type='checkbox'] {
+  accent-color: #38bdf8;
 }
 
 .sim-link-legend {
@@ -193,6 +210,82 @@ canvas {
   font-size: 12px;
   color: #f8fafc;
   font-weight: 700;
+}
+
+.sim-failure-overlay {
+  margin-top: 8px;
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: rgba(127, 29, 29, 0.2);
+}
+
+.sim-failure-overlay__header {
+  font-size: 11px;
+  color: #fecaca;
+}
+
+.sim-failure-overlay__stats {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #e5e7eb;
+}
+
+.sim-failure-overlay__stats strong {
+  color: #fca5a5;
+}
+
+.sim-ho-timeline {
+  margin-top: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.sim-ho-timeline__header {
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.sim-ho-timeline__empty {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.sim-ho-timeline__list {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.sim-ho-timeline__row {
+  display: grid;
+  grid-template-columns: auto auto auto auto 1fr;
+  gap: 6px;
+  font-size: 10px;
+  color: #cbd5e1;
+}
+
+.sim-ho-timeline__time,
+.sim-ho-timeline__tick,
+.sim-ho-timeline__ue {
+  color: #94a3b8;
+}
+
+.sim-ho-timeline__path {
+  color: #7dd3fc;
+}
+
+.sim-ho-timeline__reason {
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sim-compare {

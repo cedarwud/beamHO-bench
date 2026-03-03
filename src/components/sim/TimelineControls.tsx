@@ -13,10 +13,14 @@ export interface TimelineControlsProps {
   timeSec: number;
   isRunning: boolean;
   playbackRate: number;
+  replayTick: number | null;
+  replayMaxTick: number;
   onToggleRun: () => void;
   onStep: () => void;
   onReset: () => void;
   onPlaybackRateChange: (value: number) => void;
+  onReplayTickChange: (tick: number) => void;
+  onReplayLive: () => void;
 }
 
 function formatRate(rate: number): string {
@@ -31,11 +35,16 @@ export function TimelineControls({
   timeSec,
   isRunning,
   playbackRate,
+  replayTick,
+  replayMaxTick,
   onToggleRun,
   onStep,
   onReset,
   onPlaybackRateChange,
+  onReplayTickChange,
+  onReplayLive,
 }: TimelineControlsProps) {
+  const replayValue = replayTick ?? replayMaxTick;
   return (
     <div className="sim-timeline">
       <button type="button" onClick={onToggleRun}>
@@ -60,8 +69,22 @@ export function TimelineControls({
           ))}
         </select>
       </label>
+      <label className="sim-timeline__scrubber">
+        Replay
+        <input
+          type="range"
+          min={0}
+          max={Math.max(replayMaxTick, 0)}
+          value={Math.min(Math.max(replayValue, 0), Math.max(replayMaxTick, 0))}
+          onChange={(event) => onReplayTickChange(Math.round(Number(event.target.value)))}
+          disabled={isRunning || replayMaxTick <= 0}
+        />
+      </label>
+      <button type="button" onClick={onReplayLive} disabled={replayTick === null}>
+        Live
+      </button>
       <span className="sim-timeline__meta">
-        t={timeSec.toFixed(1)}s | tick={tick}
+        t={timeSec.toFixed(1)}s | tick={tick} | view={replayTick === null ? 'live' : `replay@${replayTick}`}
       </span>
     </div>
   );
