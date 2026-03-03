@@ -49,7 +49,7 @@ Deferred items remain out of active scope:
 | CR (D1~D5) | Complete | behavior-preserving complexity reduction package; `integration-cases` and validation-definition decomposition + `validate:daily` workflow + SDD status authority cleanup + closure report |
 | CMR (D1~D5) | Complete | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`) with deterministic plan/run contract, validation-suite guard, workflow command, and closure report |
 | BPE (D1~D5) | Complete | baseline parameter envelope pack (elevation/load/mobility tiers) with deterministic artifact/validation contracts, documentation synchronization, and closure report |
-| RB1 (D1~D5) | In Progress | repro bundle v1 package for deterministic one-command packaging of canonical cross-mode and baseline-envelope artifacts; D1-D2 completed (module/export + integration), D3~D5 pending |
+| RB1 (D1~D5) | In Progress | repro bundle v1 package for deterministic one-command packaging of canonical cross-mode and baseline-envelope artifacts; D1-D3 completed (module/export + integration + val-suite contract), D4~D5 pending |
 
 ---
 

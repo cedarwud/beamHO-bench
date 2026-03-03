@@ -11,6 +11,7 @@ const TMP_DIR = path.join(ROOT, '.tmp', 'validation-suite');
 const BUNDLE_PATH = path.join(TMP_DIR, 'validation-suite-cli.mjs');
 const CROSS_MODE_BUNDLE_PATH = path.join(TMP_DIR, 'cross-mode-benchmark.mjs');
 const BPE_BUNDLE_PATH = path.join(TMP_DIR, 'baseline-parameter-envelope-pack.mjs');
+const REPRO_BUNDLE_PATH = path.join(TMP_DIR, 'repro-bundle-v1.mjs');
 const ENTRY_POINT = path.join(ROOT, 'src/sim/bench/cli-validation-suite.ts');
 const CROSS_MODE_ENTRY_POINT = path.join(ROOT, 'src/sim/bench/cross-mode-benchmark.ts');
 const BPE_ENTRY_POINT = path.join(
@@ -20,6 +21,7 @@ const BPE_ENTRY_POINT = path.join(
   'bench',
   'baseline-parameter-envelope-pack.ts',
 );
+const REPRO_BUNDLE_ENTRY_POINT = path.join(ROOT, 'src', 'sim', 'bench', 'repro-bundle-v1.ts');
 const ARTIFACT_DIR = path.join(ROOT, 'dist');
 const GATE_SUMMARY_PATH = path.join(ARTIFACT_DIR, 'validation-gate-summary.json');
 const SUITE_JSON_PATH = path.join(ARTIFACT_DIR, 'validation-suite.json');
@@ -42,6 +44,7 @@ const VALIDATION_DEFINITIONS_DIR = path.join(
 );
 const REQUIRED_CROSS_MODE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
 const REQUIRED_BPE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
+const REQUIRED_RB1_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
 const REQUIRED_BPE_VALIDATION_CASE_COUNTS = {
   'VAL-BPE-ELEVATION-THRESH-SWEEP': 3,
   'VAL-BPE-LOAD-MOBILITY-SWEEP': 4,
@@ -322,6 +325,94 @@ async function validateBaselineParameterEnvelopeContract() {
   );
 }
 
+async function validateReproBundleV1Contract() {
+  await mkdir(TMP_DIR, { recursive: true });
+  await build({
+    entryPoints: [REPRO_BUNDLE_ENTRY_POINT],
+    outfile: REPRO_BUNDLE_PATH,
+    bundle: true,
+    platform: 'node',
+    format: 'esm',
+    target: ['node20'],
+    sourcemap: false,
+    plugins: [
+      {
+        name: 'alias-at',
+        setup(pluginBuild) {
+          pluginBuild.onResolve({ filter: /^@\// }, (args) => ({
+            path: resolveAliasPath(args.path),
+          }));
+        },
+      },
+    ],
+  });
+
+  const moduleUrl = `${pathToFileURL(REPRO_BUNDLE_PATH).href}?t=${Date.now()}`;
+  const moduleNamespace = await import(moduleUrl);
+  if (typeof moduleNamespace.buildReproBundleV1Artifact !== 'function') {
+    throw new Error('Repro bundle module does not export buildReproBundleV1Artifact().');
+  }
+
+  const first = moduleNamespace.buildReproBundleV1Artifact();
+  const replay = moduleNamespace.buildReproBundleV1Artifact();
+  if (JSON.stringify(first) !== JSON.stringify(replay)) {
+    throw new Error(
+      'Repro bundle v1 artifact must be deterministic for identical tuple options.',
+    );
+  }
+
+  if (
+    !first.components ||
+    !first.components.crossMode ||
+    !first.components.baselineParameterEnvelope
+  ) {
+    throw new Error('Repro bundle v1 artifact missing required component payloads.');
+  }
+
+  if (
+    first.componentDigests.crossModeArtifactDigest !== first.components.crossMode.artifactDigest
+  ) {
+    throw new Error('Repro bundle v1 cross-mode digest mismatch.');
+  }
+  if (
+    first.componentDigests.crossModePlanTupleDigest !== first.components.crossMode.plan.tupleDigest
+  ) {
+    throw new Error('Repro bundle v1 cross-mode plan tuple digest mismatch.');
+  }
+  if (
+    first.componentDigests.baselineEnvelopeTupleDigest !==
+    first.components.baselineParameterEnvelope.tupleDigest
+  ) {
+    throw new Error('Repro bundle v1 baseline-envelope digest mismatch.');
+  }
+  if (
+    first.componentDigests.baselineEnvelopeCaseCount !==
+    first.components.baselineParameterEnvelope.caseCount
+  ) {
+    throw new Error('Repro bundle v1 baseline-envelope case-count mismatch.');
+  }
+
+  const missingProfileIds = REQUIRED_RB1_PROFILE_IDS.filter(
+    (id) => !first.profileCoverage.includes(id),
+  );
+  if (missingProfileIds.length > 0) {
+    throw new Error(
+      `Repro bundle v1 missing canonical profile coverage: ${missingProfileIds.join(', ')}`,
+    );
+  }
+
+  if (typeof first.tupleDigest !== 'string' || first.tupleDigest.length === 0) {
+    throw new Error('Repro bundle v1 tupleDigest must be non-empty.');
+  }
+  if (typeof first.artifactDigest !== 'string' || first.artifactDigest.length === 0) {
+    throw new Error('Repro bundle v1 artifactDigest must be non-empty.');
+  }
+
+  console.log(
+    `[validation-suite] rb1 contract pass profiles=${REQUIRED_RB1_PROFILE_IDS.join('|')}`,
+  );
+}
+
 async function executeGate() {
   const moduleUrl = `${pathToFileURL(BUNDLE_PATH).href}?t=${Date.now()}`;
   const moduleNamespace = await import(moduleUrl);
@@ -433,6 +524,7 @@ async function main() {
     await validateMatrixDefinitionAlignment();
     await validateBaselineParameterEnvelopeContract();
     await validateCrossModeBenchmarkContract();
+    await validateReproBundleV1Contract();
     await bundleCli();
     const gateResult = await executeGate();
     printGateSummary(gateResult.summary);
