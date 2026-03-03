@@ -54,7 +54,7 @@ export function MainScene() {
     secondary: true,
     prepared: true,
   });
-  const [isHudCollapsed, setIsHudCollapsed] = useState(false);
+  const [isHudCollapsed, setIsHudCollapsed] = useState(true);
   const [replaySnapshots, setReplaySnapshots] = useState<SimSnapshot[]>([]);
   const [replayTick, setReplayTick] = useState<number | null>(null);
 
