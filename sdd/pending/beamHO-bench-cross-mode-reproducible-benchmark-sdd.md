@@ -106,6 +106,6 @@ As of 2026-03-03:
 |---|---|---|
 | D1 cross-mode benchmark plan/run module | Implemented | `src/sim/bench/cross-mode-benchmark.ts` |
 | D2 deterministic/coverage integration tests | Implemented | `src/sim/tests/integration-cases-cross-mode-benchmark.ts`, integration registry wiring |
-| D3 validation-suite contract extension | Pending | - |
+| D3 validation-suite contract extension | Implemented | `scripts/validate-validation-suite.mjs` now executes cross-mode benchmark contract checks (determinism, canonical profile coverage, unique case IDs, tuple digest sanity) |
 | D4 docs/status/index sync for benchmark workflow | Pending | - |
 | D5 closure report and lifecycle convergence | Pending | - |

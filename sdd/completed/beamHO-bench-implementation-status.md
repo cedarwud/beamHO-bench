@@ -45,7 +45,7 @@ Deferred items remain out of active scope:
 | CB-v1 (D1~D7) | Complete | multi-seed benchmark + scenario matrix + temporal/doppler realism + paper-ready reporting + replay/timeline/state overlay UI + assumption governance + architecture review closure |
 | CB2 (D1~D4) | Complete | common baseline v2 validation pack + matrix/alignment guard updates + closure synchronization |
 | CR (D1~D5) | Complete | behavior-preserving complexity reduction package; `integration-cases` and validation-definition decomposition + `validate:daily` workflow + SDD status authority cleanup + closure report |
-| CMR (D1~D5) | In Progress | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`); D1-D2 completed, D3~D5 pending |
+| CMR (D1~D5) | In Progress | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`); D1-D3 completed (plan/run + integration + val-suite contract guard), D4~D5 pending |
 
 ---
 

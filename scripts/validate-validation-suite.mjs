@@ -9,7 +9,9 @@ import { build } from 'esbuild';
 const ROOT = process.cwd();
 const TMP_DIR = path.join(ROOT, '.tmp', 'validation-suite');
 const BUNDLE_PATH = path.join(TMP_DIR, 'validation-suite-cli.mjs');
+const CROSS_MODE_BUNDLE_PATH = path.join(TMP_DIR, 'cross-mode-benchmark.mjs');
 const ENTRY_POINT = path.join(ROOT, 'src/sim/bench/cli-validation-suite.ts');
+const CROSS_MODE_ENTRY_POINT = path.join(ROOT, 'src/sim/bench/cross-mode-benchmark.ts');
 const ARTIFACT_DIR = path.join(ROOT, 'dist');
 const GATE_SUMMARY_PATH = path.join(ARTIFACT_DIR, 'validation-gate-summary.json');
 const SUITE_JSON_PATH = path.join(ARTIFACT_DIR, 'validation-suite.json');
@@ -30,9 +32,33 @@ const VALIDATION_DEFINITIONS_DIR = path.join(
   'sim',
   'bench',
 );
+const REQUIRED_CROSS_MODE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
 
 function unique(values) {
   return [...new Set(values)];
+}
+
+function resolveAliasPath(importPath) {
+  const basePath = path.join(ROOT, 'src', importPath.slice(2));
+  const candidates = [
+    basePath,
+    `${basePath}.ts`,
+    `${basePath}.tsx`,
+    `${basePath}.js`,
+    `${basePath}.json`,
+    path.join(basePath, 'index.ts'),
+    path.join(basePath, 'index.tsx'),
+    path.join(basePath, 'index.js'),
+    path.join(basePath, 'index.json'),
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  return basePath;
 }
 
 function extractRequiredValidationIdsFromMatrix(markdown) {
@@ -110,29 +136,6 @@ async function validateMatrixDefinitionAlignment() {
 async function bundleCli() {
   await mkdir(TMP_DIR, { recursive: true });
 
-  const resolveAliasPath = (importPath) => {
-    const basePath = path.join(ROOT, 'src', importPath.slice(2));
-    const candidates = [
-      basePath,
-      `${basePath}.ts`,
-      `${basePath}.tsx`,
-      `${basePath}.js`,
-      `${basePath}.json`,
-      path.join(basePath, 'index.ts'),
-      path.join(basePath, 'index.tsx'),
-      path.join(basePath, 'index.js'),
-      path.join(basePath, 'index.json'),
-    ];
-
-    for (const candidate of candidates) {
-      if (fs.existsSync(candidate)) {
-        return candidate;
-      }
-    }
-
-    return basePath;
-  };
-
   await build({
     entryPoints: [ENTRY_POINT],
     outfile: BUNDLE_PATH,
@@ -152,6 +155,78 @@ async function bundleCli() {
       },
     ],
   });
+}
+
+async function validateCrossModeBenchmarkContract() {
+  await mkdir(TMP_DIR, { recursive: true });
+  await build({
+    entryPoints: [CROSS_MODE_ENTRY_POINT],
+    outfile: CROSS_MODE_BUNDLE_PATH,
+    bundle: true,
+    platform: 'node',
+    format: 'esm',
+    target: ['node20'],
+    sourcemap: false,
+    plugins: [
+      {
+        name: 'alias-at',
+        setup(pluginBuild) {
+          pluginBuild.onResolve({ filter: /^@\// }, (args) => ({
+            path: resolveAliasPath(args.path),
+          }));
+        },
+      },
+    ],
+  });
+
+  const moduleUrl = `${pathToFileURL(CROSS_MODE_BUNDLE_PATH).href}?t=${Date.now()}`;
+  const moduleNamespace = await import(moduleUrl);
+  if (typeof moduleNamespace.buildCrossModeBenchmarkPlan !== 'function') {
+    throw new Error(
+      'Cross-mode benchmark module does not export buildCrossModeBenchmarkPlan().',
+    );
+  }
+
+  const first = moduleNamespace.buildCrossModeBenchmarkPlan();
+  const replay = moduleNamespace.buildCrossModeBenchmarkPlan();
+  if (JSON.stringify(first) !== JSON.stringify(replay)) {
+    throw new Error(
+      'Cross-mode benchmark plan must be deterministic for identical tuple options.',
+    );
+  }
+
+  if (!Number.isFinite(first.caseCount) || first.caseCount !== first.cases.length) {
+    throw new Error(
+      `Cross-mode benchmark plan has invalid caseCount (${first.caseCount}) vs cases.length (${first.cases.length}).`,
+    );
+  }
+
+  const profileIds = new Set(first.cases.map((suiteCase) => suiteCase.profileId));
+  const missingProfileIds = REQUIRED_CROSS_MODE_PROFILE_IDS.filter((id) => !profileIds.has(id));
+  if (missingProfileIds.length > 0) {
+    throw new Error(
+      `Cross-mode benchmark plan missing canonical profile IDs: ${missingProfileIds.join(', ')}`,
+    );
+  }
+
+  const matrixCaseIds = first.cases.map((suiteCase) => suiteCase.matrixCaseId);
+  if (new Set(matrixCaseIds).size !== matrixCaseIds.length) {
+    throw new Error('Cross-mode benchmark plan matrixCaseId values must be unique.');
+  }
+
+  const invalidTupleDigestCase = first.cases.find(
+    (suiteCase) =>
+      typeof suiteCase.tupleDigest !== 'string' || suiteCase.tupleDigest.length === 0,
+  );
+  if (invalidTupleDigestCase) {
+    throw new Error(
+      `Cross-mode benchmark plan case '${invalidTupleDigestCase.matrixCaseId}' has invalid tupleDigest.`,
+    );
+  }
+
+  console.log(
+    `[validation-suite] cross-mode contract pass cases=${first.caseCount} profiles=${REQUIRED_CROSS_MODE_PROFILE_IDS.join('|')}`,
+  );
 }
 
 async function executeGate() {
@@ -263,6 +338,7 @@ async function cleanup() {
 async function main() {
   try {
     await validateMatrixDefinitionAlignment();
+    await validateCrossModeBenchmarkContract();
     await bundleCli();
     const gateResult = await executeGate();
     printGateSummary(gateResult.summary);
