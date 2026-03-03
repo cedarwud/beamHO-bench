@@ -34,10 +34,11 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 13. `completed/beamHO-bench-small-scale-validation-closure.md`
 14. `completed/beamHO-bench-common-benchmark-v1-closure.md`
 15. `completed/beamHO-bench-common-baseline-v2-closure.md`
+16. `completed/beamHO-bench-complexity-reduction-closure.md`
 
-## Pending (Active + Closure-Tracked Specs)
+## Pending (Closure-Tracked Specs)
 
-1. `pending/beamHO-bench-complexity-reduction-sdd.md` (active pending package)
+1. `pending/beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked pending package)
 2. `pending/beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked pending package)
 3. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked pending spec)
 4. `pending/beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked pending package)

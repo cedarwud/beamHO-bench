@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-03  
-**Status:** v2 Active Scope Complete + Active Pending CR + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4)
+**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4 + CR D1~D5)
 
 ---
 
@@ -19,7 +19,7 @@ v2-complete means:
 5. Closure-tracked pending package `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md` has D1~D4 implemented with closure evidence.
 6. Stage gate validation is green (`validate:stage`).
 7. Artifacts required by SDD/requirements/validation matrix are generated.
-8. Active pending package `sdd/pending/beamHO-bench-complexity-reduction-sdd.md` defines behavior-preserving complexity reduction deliveries (D1~D5).
+8. Closure-tracked pending package `sdd/pending/beamHO-bench-complexity-reduction-sdd.md` has D1~D5 implemented with closure evidence.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
@@ -43,7 +43,7 @@ Deferred items remain out of active scope:
 | SS (D1~D5) | Complete | small-scale branch tests + validation sweep/effect check + metadata/source-trace/manifest fields + small-scale comparison template export |
 | CB-v1 (D1~D7) | Complete | multi-seed benchmark + scenario matrix + temporal/doppler realism + paper-ready reporting + replay/timeline/state overlay UI + assumption governance + architecture review closure |
 | CB2 (D1~D4) | Complete | common baseline v2 validation pack + matrix/alignment guard updates + closure synchronization |
-| CR (D1~D5) | In Progress | behavior-preserving complexity reduction package; D1-D4 completed (`integration-cases`/validation-definition decomposition + `validate:daily` workflow + SDD status authority cleanup), D5 pending |
+| CR (D1~D5) | Complete | behavior-preserving complexity reduction package; `integration-cases` and validation-definition decomposition + `validate:daily` workflow + SDD status authority cleanup + closure report |
 
 ---
 
@@ -103,6 +103,7 @@ Primary references:
 12. `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md`
 13. `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
 14. `sdd/pending/beamHO-bench-complexity-reduction-sdd.md`
+15. `sdd/completed/beamHO-bench-complexity-reduction-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
@@ -119,3 +120,4 @@ Code points for v2 closure evidence:
 12. `src/sim/reporting/source-trace.ts` + `src/sim/reporting/manifest.ts` + `src/sim/kpi/reporter.ts` (SS metadata/source-trace completeness)
 13. `src/sim/bench/small-scale-comparison-template.ts` + `src/hooks/useSimulation.exporters.ts` (SS reproducible comparison template export)
 14. `src/sim/bench/common-baseline-pack.ts` + `src/sim/tests/integration-cases-common-baseline-pack.ts` + `scripts/validate-validation-suite.mjs` (CB2 pack coverage + modular matrix-definition alignment guard)
+15. `src/sim/tests/integration-cases-real-trace-artifacts.ts` + `src/sim/bench/validation-definitions-*.ts` + `package.json` (`validate:daily`) (CR maintainability and workflow-ergonomics package evidence)

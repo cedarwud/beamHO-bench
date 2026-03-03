@@ -1,8 +1,8 @@
-# beamHO-bench — Complexity Reduction & Maintainability SDD (Active Pending)
+# beamHO-bench — Complexity Reduction & Maintainability SDD (Closure-Tracked Pending)
 
 **Version:** 0.1.0  
 **Date:** 2026-03-03  
-**Status:** Active Pending
+**Status:** Implemented / Closure-Tracked
 
 ---
 
@@ -122,4 +122,10 @@ As of 2026-03-03:
 | D2 validation-definition coupling simplification | Implemented | split validation definitions by responsibility into `validation-definitions-core.ts`, `validation-definitions-policy-scheduler.ts`, `validation-definitions-model-sweeps.ts`, with `validation-definitions.ts` as ordered assembly entry |
 | D3 day-to-day vs milestone validation workflow guidance | Implemented | added `npm run validate:daily` (local iteration command) while preserving `npm run validate:stage` as hard merge gate in `package.json` and implementation-status governance note |
 | D4 SDD/status consolidation cleanup | Implemented | aligned `sdd/README.md` and `sdd/pending/README.md` to single status authority (`beamHO-bench-implementation-status.md`) and removed stale duplicated status section(s) |
-| D5 closure + architecture review note | Pending | - |
+| D5 closure + architecture review note | Implemented | `sdd/completed/beamHO-bench-complexity-reduction-closure.md` |
+
+---
+
+## 9. Closure Reference
+
+1. `sdd/completed/beamHO-bench-complexity-reduction-closure.md`
