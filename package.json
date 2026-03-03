@@ -15,6 +15,7 @@
     "validate:structure": "node scripts/validate-module-structure.mjs",
     "validate:repo-policy": "node scripts/validate-repo-policy.mjs",
     "validate:val-suite": "node scripts/validate-validation-suite.mjs",
+    "validate:daily": "npm run lint && npm run test:sim && npm run validate:structure && npm run validate:val-suite",
     "validate:stage": "npm run lint && npm run build && npm run test:sim && npm run validate:rigor && npm run validate:structure && npm run validate:repo-policy && npm run validate:val-suite"
   },
   "keywords": [

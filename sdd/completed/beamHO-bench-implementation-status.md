@@ -43,7 +43,7 @@ Deferred items remain out of active scope:
 | SS (D1~D5) | Complete | small-scale branch tests + validation sweep/effect check + metadata/source-trace/manifest fields + small-scale comparison template export |
 | CB-v1 (D1~D7) | Complete | multi-seed benchmark + scenario matrix + temporal/doppler realism + paper-ready reporting + replay/timeline/state overlay UI + assumption governance + architecture review closure |
 | CB2 (D1~D4) | Complete | common baseline v2 validation pack + matrix/alignment guard updates + closure synchronization |
-| CR (D1~D5) | In Progress | behavior-preserving complexity reduction package; D1-D2 completed (`integration-cases` and validation-definition assembly decomposition), D3~D5 pending |
+| CR (D1~D5) | In Progress | behavior-preserving complexity reduction package; D1-D3 completed (`integration-cases` decomposition + validation-definition decomposition + `validate:daily` workflow), D4~D5 pending |
 
 ---
 
@@ -51,6 +51,12 @@ Deferred items remain out of active scope:
 
 Mandatory command:
 1. `npm run validate:stage`
+
+Advisory day-to-day command (non-gating shortcut):
+1. `npm run validate:daily`
+
+Governance rule:
+1. `validate:daily` is for local iteration only and does not replace `validate:stage`.
 
 This gate includes:
 1. `npm run lint`
