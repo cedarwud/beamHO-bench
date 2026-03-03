@@ -2,6 +2,10 @@
 
 This folder contains active-pending or closure-tracked pending SDD documents.
 
+Status ownership:
+1. milestone completion truth is maintained in `sdd/completed/beamHO-bench-implementation-status.md`.
+2. this file is restricted to pending/closure-tracked index information.
+
 ## 1. Active Pending Specs
 
 1. `beamHO-bench-complexity-reduction-sdd.md` (active pending on 2026-03-03)
@@ -22,14 +26,7 @@ This folder contains active-pending or closure-tracked pending SDD documents.
 1. long-term backlog documents are moved to `sdd/backlog/`.
 2. current backlog item: `sdd/backlog/beamHO-bench-multiorbit-backlog.md`.
 
-## 4. Recently Promoted to Completed
-
-1. `sdd/completed/beamHO-bench-sdd-v2-roadmap.md`
-2. `sdd/completed/beamHO-bench-rl-plugin-sdd.md`
-3. `sdd/completed/beamHO-bench-joint-beamho-sdd.md`
-4. `sdd/completed/beamHO-bench-baseline-generalization-sdd.md`
-
-## 5. Quality Bar for Pending Specs
+## 4. Quality Bar for Pending Specs
 
 A pending SDD is considered implementation-ready only if it includes:
 1. explicit scope boundary.
@@ -40,7 +37,7 @@ A pending SDD is considered implementation-ready only if it includes:
 6. delivery breakdown with dependency order.
 7. explicit binding to `PROJECT_CONSTRAINTS.md` guardrails.
 
-## 6. Constraint Binding (Required)
+## 5. Constraint Binding (Required)
 
 All active pending items must keep compliance with:
 1. `LEO-only` active scope and fixed NTPU default coordinate.
@@ -52,7 +49,7 @@ All active pending items must keep compliance with:
 7. meaningful file splitting and periodic architecture review per milestone.
 8. required CI artifacts (`sim-test-summary`, `validation-suite`, `validation-gate-summary`).
 
-## 7. Promotion Rule (pending -> completed)
+## 6. Promotion Rule (pending -> completed)
 
 Promotion requires all conditions:
 1. implementation merged.
@@ -60,7 +57,7 @@ Promotion requires all conditions:
 3. source-trace and artifact fields are complete.
 4. completed SDD documents are updated to reflect actual code paths.
 
-## 8. Deferred-Scope Checklist (BG-6)
+## 7. Deferred-Scope Checklist (BG-6)
 
 For active v2 milestones, all pending implementations must keep:
 1. no `RSMA` / `soft-HO` runtime path in `src/`.

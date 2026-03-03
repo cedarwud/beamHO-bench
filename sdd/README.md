@@ -2,6 +2,12 @@
 
 This folder is explicitly split into implemented, pending (active or closure-tracked), and backlog SDD documents.
 
+## Status Authority
+
+1. The authoritative implementation status document is:
+   - `completed/beamHO-bench-implementation-status.md`
+2. This index is for document location/navigation, not milestone truth ownership.
+
 ## Folder Structure
 
 1. `completed/`
