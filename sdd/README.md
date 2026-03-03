@@ -1,13 +1,13 @@
 # SDD Document Set
 
-This folder is explicitly split into implemented, active-pending, and backlog SDD documents.
+This folder is explicitly split into implemented, pending (active or closure-tracked), and backlog SDD documents.
 
 ## Folder Structure
 
 1. `completed/`
    - SDDs implemented in code and closure-tracked with stage-gate evidence.
 2. `pending/`
-   - active-pending SDDs for the current implementation roadmap.
+   - pending SDDs (active implementation roadmap items or closure-tracked historical pending specs).
 3. `backlog/`
    - long-term SDD/backlog items out of the current active implementation scope.
 
@@ -26,14 +26,13 @@ This folder is explicitly split into implemented, active-pending, and backlog SD
 11. `completed/beamHO-bench-baseline-generalization-sdd.md`
 12. `completed/beamHO-bench-gap-closure-closure.md`
 13. `completed/beamHO-bench-small-scale-validation-closure.md`
-14. `completed/beamHO-bench-common-benchmark-v1-closure-draft.md` (draft; pending promotion not finalized)
+14. `completed/beamHO-bench-common-benchmark-v1-closure.md`
 
-## Pending (Active Roadmap)
+## Pending (Closure-Tracked Specs)
 
-1. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (active pending package; D1~D5 implemented, draft closure published)
+1. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked pending spec)
 2. `pending/beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked pending package)
 3. `pending/beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked pending package)
-4. active pending: `pending/beamHO-bench-common-benchmark-v1-sdd.md`
 
 ## Backlog (Out of Active Scope)
 

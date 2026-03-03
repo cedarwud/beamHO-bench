@@ -1,8 +1,8 @@
-# beamHO-bench — Common Benchmark Environment v1 SDD (Active Pending)
+# beamHO-bench — Common Benchmark Environment v1 SDD (Closure-Tracked Pending)
 
 **Version:** 0.2.0  
 **Date:** 2026-03-03  
-**Status:** Active Pending / Implemented D1~D5 (Closure Draft Ready)
+**Status:** Implemented / Closure-Tracked
 
 ---
 
@@ -135,7 +135,7 @@ Target gaps:
 
 ---
 
-## 6. Implementation Progress Backfill (D1~D5)
+## 6. Implementation Progress Backfill (D1~D7)
 
 As of 2026-03-03:
 
@@ -146,13 +146,11 @@ As of 2026-03-03:
 | D3 temporal correlation + Doppler-aware options | Implemented | `a39dd7e` | `src/sim/channel/small-scale.ts`, `src/sim/channel/link-budget.ts`, profile/source updates and deterministic small-scale tests |
 | D4 paper-ready report artifacts | Implemented | `2aa121e` | `src/sim/bench/multi-seed-reporting.ts`, `src/sim/tests/integration-cases-multi-seed-reporting.ts` |
 | D5 research UI workflow | Implemented | `4755310` | `src/components/sim/TimelineControls.tsx`, `src/components/sim/HOEventTimeline.tsx`, `src/components/sim/UEMarkers.tsx`, `src/components/scene/MainScene.tsx` |
+| D6 traceability + `ASSUME-*` governance closure | Implemented | `a39dd7e` + closure | `ASSUME-SMALL-SCALE-REALISM-OPTIONS` registry/source-map/validation coverage + closure audit section |
+| D7 architecture review + final closure sign-off | Implemented | `14e41d8` | architecture review notes + gate snapshot finalized in closure report |
 
-Open items before pending -> completed promotion:
-1. D6: finalize this package-level traceability/`ASSUME-*` delta audit snapshot and closure evidence bundle.
-2. D7: finalize milestone architecture review note and closure sign-off package.
-
-Closure draft reference:
-1. `sdd/completed/beamHO-bench-common-benchmark-v1-closure-draft.md`
+Closure reference:
+1. `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
 
 ---
 
