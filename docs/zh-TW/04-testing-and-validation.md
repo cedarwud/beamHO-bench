@@ -16,6 +16,7 @@
 
 2. `npm run validate:val-suite`  
 執行 `VAL-*` 套件並輸出 validation artifact。
+目前包含 baseline parameter envelope 驗證組（`VAL-BPE-ELEVATION-THRESH-SWEEP`、`VAL-BPE-LOAD-MOBILITY-SWEEP`、`VAL-BPE-ONEWEB-PARAM-SMOKE`）。
 
 3. `npm run bench:cross-mode`  
 執行 cross-mode reproducible benchmark pack（`case9-default` + `starlink-like` + `oneweb-like`），預設輸出到 `dist/cross-mode-benchmark/`。
