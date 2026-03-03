@@ -36,10 +36,11 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 15. `completed/beamHO-bench-common-baseline-v2-closure.md`
 16. `completed/beamHO-bench-complexity-reduction-closure.md`
 17. `completed/beamHO-bench-cross-mode-reproducible-benchmark-closure.md`
+18. `completed/beamHO-bench-baseline-parameter-envelope-closure.md`
 
 ## Pending (Active + Closure-Tracked Specs)
 
-1. `pending/beamHO-bench-baseline-parameter-envelope-sdd.md` (active pending package; D1-D3 implemented, D4-D5 pending)
+1. `pending/beamHO-bench-baseline-parameter-envelope-sdd.md` (implemented/closure-tracked pending package)
 2. `pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (implemented/closure-tracked pending package)
 3. `pending/beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked pending package)
 4. `pending/beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked pending package)

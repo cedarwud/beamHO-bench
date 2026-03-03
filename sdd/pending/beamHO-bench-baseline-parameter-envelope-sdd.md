@@ -1,8 +1,8 @@
-# beamHO-bench — Baseline Parameter Envelope SDD (Active Pending)
+# beamHO-bench — Baseline Parameter Envelope SDD (Closure-Tracked Pending)
 
 **Version:** 0.1.0  
 **Date:** 2026-03-03  
-**Status:** Active Pending
+**Status:** Implemented / Closure-Tracked
 
 ---
 
@@ -107,4 +107,10 @@ As of 2026-03-03:
 | D2 deterministic/coverage integration tests | Implemented | `src/sim/tests/integration-cases-baseline-parameter-envelope.ts`, integration registry wiring |
 | D3 validation-suite envelope contract | Implemented | `src/sim/bench/baseline-parameter-envelope-pack.ts`, `src/sim/bench/validation-definitions.ts`, `scripts/validate-validation-suite.mjs`, `sdd/completed/beamHO-bench-validation-matrix.md` |
 | D4 docs/status/index sync | Implemented | `README.md`, `docs/zh-TW/04-testing-and-validation.md`, `sdd/README.md`, `sdd/pending/README.md`, implementation-status sync |
-| D5 closure and lifecycle convergence | Pending | - |
+| D5 closure and lifecycle convergence | Implemented | `sdd/completed/beamHO-bench-baseline-parameter-envelope-closure.md`, pending/completed index and implementation-status lifecycle sync |
+
+---
+
+## 8. Closure Reference
+
+1. `sdd/completed/beamHO-bench-baseline-parameter-envelope-closure.md`
