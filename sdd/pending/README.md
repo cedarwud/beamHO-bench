@@ -4,7 +4,7 @@ This folder contains active-pending or closure-tracked pending SDD documents.
 
 ## 1. Active Pending Specs
 
-1. currently none.
+1. `beamHO-bench-complexity-reduction-sdd.md` (active pending on 2026-03-03)
 
 ## 2. Closure-Tracked Pending Specs
 

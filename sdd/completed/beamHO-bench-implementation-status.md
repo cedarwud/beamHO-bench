@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-03  
-**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4)
+**Status:** v2 Active Scope Complete + Active Pending CR + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4)
 
 ---
 
@@ -19,6 +19,7 @@ v2-complete means:
 5. Closure-tracked pending package `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md` has D1~D4 implemented with closure evidence.
 6. Stage gate validation is green (`validate:stage`).
 7. Artifacts required by SDD/requirements/validation matrix are generated.
+8. Active pending package `sdd/pending/beamHO-bench-complexity-reduction-sdd.md` defines behavior-preserving complexity reduction deliveries (D1~D5).
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
@@ -42,6 +43,7 @@ Deferred items remain out of active scope:
 | SS (D1~D5) | Complete | small-scale branch tests + validation sweep/effect check + metadata/source-trace/manifest fields + small-scale comparison template export |
 | CB-v1 (D1~D7) | Complete | multi-seed benchmark + scenario matrix + temporal/doppler realism + paper-ready reporting + replay/timeline/state overlay UI + assumption governance + architecture review closure |
 | CB2 (D1~D4) | Complete | common baseline v2 validation pack + matrix/alignment guard updates + closure synchronization |
+| CR (D1~D5) | In Progress | behavior-preserving complexity reduction package (structure/docs/workflow ergonomics only) |
 
 ---
 
@@ -94,6 +96,7 @@ Primary references:
 11. `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
 12. `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md`
 13. `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
+14. `sdd/pending/beamHO-bench-complexity-reduction-sdd.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
