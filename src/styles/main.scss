@@ -80,12 +80,12 @@ canvas {
   z-index: 4;
   width: 40px;
   height: 40px;
-  border: 1px solid rgba(186, 230, 253, 0.9);
+  border: 1px solid rgba(125, 211, 252, 0.45);
   border-radius: 999px;
   padding: 0;
-  background: rgba(2, 132, 199, 0.86);
-  color: #f8fafc;
-  backdrop-filter: blur(4px);
+  background: transparent;
+  color: #e2e8f0;
+  backdrop-filter: none;
   font-size: 18px;
   font-weight: 800;
   line-height: 1;
@@ -96,7 +96,9 @@ canvas {
 }
 
 .sim-sidebar__toggle:hover {
-  background: rgba(3, 105, 161, 0.94);
+  background: transparent;
+  border-color: rgba(125, 211, 252, 0.72);
+  color: #f8fafc;
 }
 
 .sim-hud {
@@ -112,11 +114,15 @@ canvas {
   padding: 10px 12px;
   background: rgba(8, 16, 28, 0.78);
   color: #e2e8f0;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   backdrop-filter: blur(6px);
 }
 
 .sim-hud__title {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: #7dd3fc;
@@ -124,8 +130,8 @@ canvas {
 
 .sim-hud__meta {
   margin-top: 6px;
-  font-size: 12px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.55;
   color: #cbd5e1;
 }
 
@@ -148,7 +154,9 @@ canvas {
   padding: 6px 10px;
   background: rgba(14, 116, 144, 0.2);
   color: #e2e8f0;
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: normal;
   cursor: pointer;
 }
 
@@ -165,8 +173,9 @@ canvas {
 .sim-hud__select {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
-  font-size: 12px;
+  font-size: 14px;
   color: #cbd5e1;
 }
 
@@ -176,7 +185,7 @@ canvas {
   padding: 6px 8px;
   background: rgba(14, 116, 144, 0.2);
   color: #e2e8f0;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .sim-timeline {
@@ -189,7 +198,7 @@ canvas {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 13px;
   color: #cbd5e1;
 }
 
@@ -199,9 +208,9 @@ canvas {
 }
 
 .sim-timeline__meta {
-  font-size: 11px;
+  font-size: 13px;
   color: #94a3b8;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .sim-hud__select input[type='checkbox'] {
@@ -219,7 +228,7 @@ canvas {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 13px;
   color: #cbd5e1;
 }
 
@@ -262,7 +271,7 @@ canvas {
 
 .sim-kpi-card__label {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   color: #94a3b8;
   letter-spacing: 0.02em;
 }
@@ -270,7 +279,7 @@ canvas {
 .sim-kpi-card__value {
   display: block;
   margin-top: 2px;
-  font-size: 12px;
+  font-size: 14px;
   color: #f8fafc;
   font-weight: 700;
 }
@@ -284,13 +293,13 @@ canvas {
 }
 
 .sim-failure-overlay__header {
-  font-size: 11px;
+  font-size: 13px;
   color: #fecaca;
 }
 
 .sim-failure-overlay__stats {
   margin-top: 2px;
-  font-size: 11px;
+  font-size: 13px;
   color: #e5e7eb;
 }
 
@@ -307,13 +316,13 @@ canvas {
 }
 
 .sim-ho-timeline__header {
-  font-size: 11px;
+  font-size: 13px;
   color: #cbd5e1;
 }
 
 .sim-ho-timeline__empty {
   margin-top: 4px;
-  font-size: 11px;
+  font-size: 13px;
   color: #94a3b8;
 }
 
@@ -328,9 +337,9 @@ canvas {
 
 .sim-ho-timeline__row {
   display: grid;
-  grid-template-columns: auto auto auto auto 1fr;
+  grid-template-columns: minmax(0, 68px) minmax(0, 60px) minmax(0, 56px) minmax(0, 84px) minmax(0, 1fr);
   gap: 6px;
-  font-size: 10px;
+  font-size: 12px;
   color: #cbd5e1;
 }
 
@@ -346,9 +355,7 @@ canvas {
 
 .sim-ho-timeline__reason {
   color: #f8fafc;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .sim-compare {
@@ -360,7 +367,7 @@ canvas {
 }
 
 .sim-compare__header {
-  font-size: 11px;
+  font-size: 13px;
   color: #cbd5e1;
   margin-bottom: 6px;
 }
@@ -373,7 +380,7 @@ canvas {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  font-size: 11px;
+  font-size: 12px;
   color: #cbd5e1;
 }
 
