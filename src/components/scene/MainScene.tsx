@@ -4,7 +4,6 @@ import { AdaptiveDpr, OrbitControls, PerspectiveCamera, Stats } from '@react-thr
 import { NTPUScene } from './NTPUScene';
 import { UAV } from './UAV';
 import { SatelliteModel } from '../sim/SatelliteModel';
-import { BeamFootprint } from '../sim/BeamFootprint';
 import { UEMarkers } from '../sim/UEMarkers';
 import { ConnectionLines } from '../sim/ConnectionLines';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
@@ -408,10 +407,6 @@ export function MainScene() {
           <Suspense fallback={<SceneLoader label="Loading NTPU Scene..." />}>
             <NTPUScene />
             <UAV position={NTPU_CONFIG.uav.position} scale={NTPU_CONFIG.uav.scale} />
-            <BeamFootprint
-              satellites={displayedSnapshot.satellites}
-              gainModel={profile.beam.gainModel}
-            />
             <UEMarkers
               ues={displayedSnapshot.ues}
               failureOverlayEnabled={failureOverlayEnabled}
