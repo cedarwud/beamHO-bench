@@ -2,7 +2,11 @@
 
 This folder contains active-pending or closure-tracked pending SDD documents.
 
-## 1. Closure-Tracked Pending Specs
+## 1. Active Pending Specs
+
+1. `beamHO-bench-common-baseline-v2-sdd.md` (active pending on 2026-03-03; D1~D3 implemented, D4 pending)
+
+## 2. Closure-Tracked Pending Specs
 
 1. `beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
 2. `beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked on 2026-03-02)
@@ -11,19 +15,19 @@ This folder contains active-pending or closure-tracked pending SDD documents.
 5. closure report: `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
 6. closure report: `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
 
-## 2. Backlog Location
+## 3. Backlog Location
 
 1. long-term backlog documents are moved to `sdd/backlog/`.
 2. current backlog item: `sdd/backlog/beamHO-bench-multiorbit-backlog.md`.
 
-## 3. Recently Promoted to Completed
+## 4. Recently Promoted to Completed
 
 1. `sdd/completed/beamHO-bench-sdd-v2-roadmap.md`
 2. `sdd/completed/beamHO-bench-rl-plugin-sdd.md`
 3. `sdd/completed/beamHO-bench-joint-beamho-sdd.md`
 4. `sdd/completed/beamHO-bench-baseline-generalization-sdd.md`
 
-## 4. Quality Bar for Pending Specs
+## 5. Quality Bar for Pending Specs
 
 A pending SDD is considered implementation-ready only if it includes:
 1. explicit scope boundary.
@@ -34,7 +38,7 @@ A pending SDD is considered implementation-ready only if it includes:
 6. delivery breakdown with dependency order.
 7. explicit binding to `PROJECT_CONSTRAINTS.md` guardrails.
 
-## 5. Constraint Binding (Required)
+## 6. Constraint Binding (Required)
 
 All active pending items must keep compliance with:
 1. `LEO-only` active scope and fixed NTPU default coordinate.
@@ -46,7 +50,7 @@ All active pending items must keep compliance with:
 7. meaningful file splitting and periodic architecture review per milestone.
 8. required CI artifacts (`sim-test-summary`, `validation-suite`, `validation-gate-summary`).
 
-## 6. Promotion Rule (pending -> completed)
+## 7. Promotion Rule (pending -> completed)
 
 Promotion requires all conditions:
 1. implementation merged.
@@ -54,7 +58,7 @@ Promotion requires all conditions:
 3. source-trace and artifact fields are complete.
 4. completed SDD documents are updated to reflect actual code paths.
 
-## 7. Deferred-Scope Checklist (BG-6)
+## 8. Deferred-Scope Checklist (BG-6)
 
 For active v2 milestones, all pending implementations must keep:
 1. no `RSMA` / `soft-HO` runtime path in `src/`.
