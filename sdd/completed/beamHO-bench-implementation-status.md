@@ -43,7 +43,7 @@ Deferred items remain out of active scope:
 | SS (D1~D5) | Complete | small-scale branch tests + validation sweep/effect check + metadata/source-trace/manifest fields + small-scale comparison template export |
 | CB-v1 (D1~D7) | Complete | multi-seed benchmark + scenario matrix + temporal/doppler realism + paper-ready reporting + replay/timeline/state overlay UI + assumption governance + architecture review closure |
 | CB2 (D1~D4) | Complete | common baseline v2 validation pack + matrix/alignment guard updates + closure synchronization |
-| CR (D1~D5) | In Progress | behavior-preserving complexity reduction package; D1 completed (`integration-cases` assembly decomposition), D2~D5 pending |
+| CR (D1~D5) | In Progress | behavior-preserving complexity reduction package; D1-D2 completed (`integration-cases` and validation-definition assembly decomposition), D3~D5 pending |
 
 ---
 

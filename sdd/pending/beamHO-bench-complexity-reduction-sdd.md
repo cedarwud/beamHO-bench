@@ -119,7 +119,7 @@ As of 2026-03-03:
 | Delivery | Status | Evidence |
 |---|---|---|
 | D1 decompose integration test entry assembly | Implemented | extracted real-trace artifact trio into `src/sim/tests/integration-cases-real-trace-artifacts.ts`, and slimmed `src/sim/tests/integration-cases.ts` to registry assembly (`368` lines) |
-| D2 validation-definition coupling simplification | Pending | - |
+| D2 validation-definition coupling simplification | Implemented | split validation definitions by responsibility into `validation-definitions-core.ts`, `validation-definitions-policy-scheduler.ts`, `validation-definitions-model-sweeps.ts`, with `validation-definitions.ts` as ordered assembly entry |
 | D3 day-to-day vs milestone validation workflow guidance | Pending | - |
 | D4 SDD/status consolidation cleanup | Pending | - |
 | D5 closure + architecture review note | Pending | - |
