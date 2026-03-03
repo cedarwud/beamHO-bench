@@ -116,8 +116,8 @@ export const NTPU_CONFIG: SceneConfig = {
     },
   },
   satellite: {
-    // Keep primitive as default for deterministic and lightweight benchmark runs.
-    renderMode: 'primitive',
+    // Default to GLB satellite model; runtime still falls back to primitive on load failure.
+    renderMode: 'glb',
     modelPath: '/models/sat.glb',
     modelScale: 2.4,
   },
