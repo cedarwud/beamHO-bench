@@ -1,10 +1,7 @@
 import { getSourceCatalog, loadPaperProfile } from '@/config/paper-profiles/loader';
 import { resolveBeamFootprintBands } from '@/components/sim/beam-footprint-gain';
 import { resolveSatelliteRenderDecision } from '@/components/sim/satellite-render-mode';
-import {
-  loadLayerDRoleMapping,
-  validateLayerDRoleMapping,
-} from '@/config/references/layer-d-role-mapping';
+import { loadLayerDRoleMapping, validateLayerDRoleMapping } from '@/config/references/layer-d-role-mapping';
 import { runBaselineBatch } from '@/sim/bench/runner';
 import { runRerunContract } from '@/sim/bench/rerun-contract';
 import { runRerunContractCli } from '@/sim/bench/cli-rerun-contract';
@@ -16,6 +13,7 @@ import { assertAlmostEqual, assertCondition, normalizeBatchForDeterminism } from
 import { buildBaselineGeneralizationIntegrationCases } from './integration-cases-baseline-generalization';
 import { buildComparisonChartIntegrationCases } from './integration-cases-comparison-chart';
 import { buildMultiSeedBenchmarkIntegrationCases } from './integration-cases-multi-seed-benchmark';
+import { buildMultiSeedReportingIntegrationCases } from './integration-cases-multi-seed-reporting';
 import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy-scheduler';
 import { buildScenarioMatrixIntegrationCases } from './integration-cases-scenario-matrix';
 import { buildSmallScaleIntegrationCases } from './integration-cases-small-scale';
@@ -360,6 +358,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
     ...buildBaselineGeneralizationIntegrationCases(),
     ...buildComparisonChartIntegrationCases(),
     ...buildMultiSeedBenchmarkIntegrationCases(),
+    ...buildMultiSeedReportingIntegrationCases(),
     ...buildPolicySchedulerIntegrationCases(),
     ...buildScenarioMatrixIntegrationCases(),
     ...buildSmallScaleIntegrationCases(),
