@@ -121,7 +121,11 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
 
   for (const ue of ues) {
     const links = filterLinksByScheduler(
-      evaluateLinksForUe(profile, ue, satellites),
+      evaluateLinksForUe(profile, ue, satellites, {
+        tick,
+        timeSec,
+        timeStepSec,
+      }),
       schedulerMode,
       activeBeamKeys,
     );

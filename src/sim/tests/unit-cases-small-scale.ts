@@ -61,5 +61,95 @@ export function buildSmallScaleUnitCases(): SimTestCase[] {
         assertAlmostEqual(first, second, 1e-12);
       },
     },
+    {
+      name: 'unit: small-scale realism options keep legacy-compatible output when disabled',
+      kind: 'unit',
+      run: () => {
+        const profile = loadPaperProfile('case9-default', {
+          channel: {
+            smallScaleModel: 'shadowed-rician',
+            smallScaleParams: {
+              temporalCorrelation: {
+                enabled: false,
+                coefficient: 0.85,
+              },
+              dopplerAware: {
+                enabled: false,
+                velocityScale: 1,
+                speedOfLightMps: 299792458,
+              },
+            },
+          },
+        });
+
+        const first = computeSmallScaleFadingDb(profile, {
+          ...FIXED_CONTEXT,
+          ueSpeedKmph: 60,
+          tick: 0,
+          timeSec: 0,
+          timeStepSec: 1,
+        });
+        const second = computeSmallScaleFadingDb(profile, {
+          ...FIXED_CONTEXT,
+          ueSpeedKmph: 60,
+          tick: 100,
+          timeSec: 100,
+          timeStepSec: 1,
+        });
+
+        assertAlmostEqual(first, second, 1e-12);
+      },
+    },
+    {
+      name: 'unit: temporal correlation and doppler-aware options are deterministic and time-varying when enabled',
+      kind: 'unit',
+      run: () => {
+        const profile = loadPaperProfile('case9-default', {
+          channel: {
+            smallScaleModel: 'shadowed-rician',
+            smallScaleParams: {
+              temporalCorrelation: {
+                enabled: true,
+                coefficient: 0.85,
+              },
+              dopplerAware: {
+                enabled: true,
+                velocityScale: 1,
+                speedOfLightMps: 299792458,
+              },
+            },
+          },
+        });
+
+        const atT20 = computeSmallScaleFadingDb(profile, {
+          ...FIXED_CONTEXT,
+          ueSpeedKmph: 60,
+          tick: 20,
+          timeSec: 20,
+          timeStepSec: 1,
+        });
+        const atT20Replay = computeSmallScaleFadingDb(profile, {
+          ...FIXED_CONTEXT,
+          ueSpeedKmph: 60,
+          tick: 20,
+          timeSec: 20,
+          timeStepSec: 1,
+        });
+        const atT21 = computeSmallScaleFadingDb(profile, {
+          ...FIXED_CONTEXT,
+          ueSpeedKmph: 60,
+          tick: 21,
+          timeSec: 21,
+          timeStepSec: 1,
+        });
+
+        assertCondition(Number.isFinite(atT20), 'Expected finite fading value at t=20.');
+        assertAlmostEqual(atT20, atT20Replay, 1e-12);
+        assertCondition(
+          atT20 !== atT21,
+          'Expected realism-enabled fading to vary with time index for fixed link tuple.',
+        );
+      },
+    },
   ];
 }

@@ -49,6 +49,15 @@ export interface RunManifest {
       shadowing_std_dev_db: number;
       rayleigh_scale_db: number;
     };
+    temporal_correlation?: {
+      enabled: boolean;
+      coefficient: number;
+    };
+    doppler_aware?: {
+      enabled: boolean;
+      velocity_scale: number;
+      speed_of_light_mps: number;
+    };
   } | null;
   resolved_assumption_ids: string[];
   policy_mode: 'off' | 'on';
@@ -220,6 +229,19 @@ function cloneSmallScaleParams(
       ? {
           shadowing_std_dev_db: value.loo.shadowingStdDevDb,
           rayleigh_scale_db: value.loo.rayleighScaleDb,
+        }
+      : undefined,
+    temporal_correlation: value.temporalCorrelation
+      ? {
+          enabled: value.temporalCorrelation.enabled,
+          coefficient: value.temporalCorrelation.coefficient,
+        }
+      : undefined,
+    doppler_aware: value.dopplerAware
+      ? {
+          enabled: value.dopplerAware.enabled,
+          velocity_scale: value.dopplerAware.velocityScale,
+          speed_of_light_mps: value.dopplerAware.speedOfLightMps,
         }
       : undefined,
   };

@@ -24,6 +24,12 @@ export interface LinkSample {
   sinrDb: number;
 }
 
+export interface LinkEvaluationContext {
+  tick?: number;
+  timeSec?: number;
+  timeStepSec?: number;
+}
+
 interface DbEntry {
   sample: LinkSample;
   signalMw: number;
@@ -67,6 +73,7 @@ export function evaluateLinksForUe(
   profile: PaperProfile,
   ue: UEState,
   satellites: SatelliteState[],
+  context: LinkEvaluationContext = {},
 ): LinkSample[] {
   const noiseMw = dbmToMw(
     computeNoiseDbm({
@@ -95,6 +102,10 @@ export function evaluateLinksForUe(
         beamId: beam.beamId,
         rangeKm,
         elevationDeg: satellite.elevationDeg,
+        ueSpeedKmph: ue.speedKmph,
+        tick: context.tick,
+        timeSec: context.timeSec,
+        timeStepSec: context.timeStepSec,
       });
       const rsrpDbm =
         computeRsrpDbm({

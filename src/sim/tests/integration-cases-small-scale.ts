@@ -119,6 +119,75 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
       },
     },
     {
+      name: 'integration: realism-enabled small-scale batch remains deterministic and diverges from disabled path',
+      kind: 'integration',
+      run: () => {
+        const disabledProfile = loadPaperProfile('case9-default', {
+          channel: {
+            smallScaleModel: 'shadowed-rician',
+            smallScaleParams: {
+              temporalCorrelation: {
+                enabled: false,
+                coefficient: 0.85,
+              },
+              dopplerAware: {
+                enabled: false,
+                velocityScale: 1,
+                speedOfLightMps: 299792458,
+              },
+            },
+          },
+        });
+        const enabledProfile = loadPaperProfile('case9-default', {
+          channel: {
+            smallScaleModel: 'shadowed-rician',
+            smallScaleParams: {
+              temporalCorrelation: {
+                enabled: true,
+                coefficient: 0.85,
+              },
+              dopplerAware: {
+                enabled: true,
+                velocityScale: 1,
+                speedOfLightMps: 299792458,
+              },
+            },
+          },
+        });
+
+        const runDeterministic = (profile: typeof disabledProfile) => {
+          const first = runBaselineBatch({
+            profile,
+            seed: 77,
+            baselines: ['max-rsrp'],
+            tickCount: 20,
+          });
+          const replay = runBaselineBatch({
+            profile,
+            seed: 77,
+            baselines: ['max-rsrp'],
+            tickCount: 20,
+          });
+          assertCondition(
+            JSON.stringify(normalizeBatchForDeterminism(first)) ===
+              JSON.stringify(normalizeBatchForDeterminism(replay)),
+            `Expected deterministic replay for realism toggle profile '${profile.profileId}'.`,
+          );
+          return first;
+        };
+
+        const disabledBatch = runDeterministic(disabledProfile);
+        const enabledBatch = runDeterministic(enabledProfile);
+        const disabledKpi = disabledBatch.runs[0].result.summary.kpi;
+        const enabledKpi = enabledBatch.runs[0].result.summary.kpi;
+
+        assertCondition(
+          JSON.stringify(disabledKpi) !== JSON.stringify(enabledKpi),
+          'Expected realism-enabled small-scale path to produce KPI difference vs disabled path.',
+        );
+      },
+    },
+    {
       name: 'integration: small-scale model and params are exported in metadata/source-trace/manifest',
       kind: 'integration',
       run: async () => {

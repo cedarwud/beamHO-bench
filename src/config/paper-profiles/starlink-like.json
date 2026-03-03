@@ -70,6 +70,15 @@
       "loo": {
         "shadowingStdDevDb": 2.5,
         "rayleighScaleDb": 0.8
+      },
+      "temporalCorrelation": {
+        "enabled": false,
+        "coefficient": 0.85
+      },
+      "dopplerAware": {
+        "enabled": false,
+        "velocityScale": 1,
+        "speedOfLightMps": 299792458
       }
     },
     "sfClSource": "3GPP TR 38.811 Table 6.6.2-1",

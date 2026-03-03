@@ -109,6 +109,15 @@ export interface PaperProfile {
         shadowingStdDevDb: number;
         rayleighScaleDb: number;
       };
+      temporalCorrelation?: {
+        enabled: boolean;
+        coefficient: number;
+      };
+      dopplerAware?: {
+        enabled: boolean;
+        velocityScale: number;
+        speedOfLightMps: number;
+      };
     };
     sfClSource: string;
     ueGTdBPerK: number;

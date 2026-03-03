@@ -222,6 +222,29 @@
                 "shadowingStdDevDb": { "type": "number", "minimum": 0 },
                 "rayleighScaleDb": { "type": "number", "minimum": 0 }
               }
+            },
+            "temporalCorrelation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["enabled", "coefficient"],
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "coefficient": {
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMaximum": 1
+                }
+              }
+            },
+            "dopplerAware": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["enabled", "velocityScale", "speedOfLightMps"],
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "velocityScale": { "type": "number", "minimum": 0 },
+                "speedOfLightMps": { "type": "number", "exclusiveMinimum": 0 }
+              }
             }
           }
         },

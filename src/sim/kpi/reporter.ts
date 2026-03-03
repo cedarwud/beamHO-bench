@@ -209,6 +209,19 @@ function cloneSmallScaleParams(
           rayleighScaleDb: value.loo.rayleighScaleDb,
         }
       : undefined,
+    temporalCorrelation: value.temporalCorrelation
+      ? {
+          enabled: value.temporalCorrelation.enabled,
+          coefficient: value.temporalCorrelation.coefficient,
+        }
+      : undefined,
+    dopplerAware: value.dopplerAware
+      ? {
+          enabled: value.dopplerAware.enabled,
+          velocityScale: value.dopplerAware.velocityScale,
+          speedOfLightMps: value.dopplerAware.speedOfLightMps,
+        }
+      : undefined,
   };
 }
 

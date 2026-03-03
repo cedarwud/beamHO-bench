@@ -46,6 +46,21 @@
       "PAP-2024-MADRL-CORE",
       "ASSUME-SMALL-SCALE-PARAMS-DEFAULT"
     ],
+    "channel.smallScaleParams.temporalCorrelation.enabled": [
+      "ASSUME-SMALL-SCALE-REALISM-OPTIONS"
+    ],
+    "channel.smallScaleParams.temporalCorrelation.coefficient": [
+      "ASSUME-SMALL-SCALE-REALISM-OPTIONS"
+    ],
+    "channel.smallScaleParams.dopplerAware.enabled": [
+      "ASSUME-SMALL-SCALE-REALISM-OPTIONS"
+    ],
+    "channel.smallScaleParams.dopplerAware.velocityScale": [
+      "ASSUME-SMALL-SCALE-REALISM-OPTIONS"
+    ],
+    "channel.smallScaleParams.dopplerAware.speedOfLightMps": [
+      "ASSUME-SMALL-SCALE-REALISM-OPTIONS"
+    ],
     "channel.sfClSource": [
       "STD-3GPP-TR38.811-6.6.2-1"
     ],

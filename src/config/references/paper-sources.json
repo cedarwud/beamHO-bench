@@ -82,6 +82,16 @@
       "note": "Fallback profile parameters used to instantiate deterministic shadowed-Rician and Loo fading plugins."
     },
     {
+      "sourceId": "ASSUME-SMALL-SCALE-REALISM-OPTIONS",
+      "type": "assumption",
+      "title": "Small-Scale Temporal/Doppler Realism Options",
+      "locator": "channel.smallScaleParams.temporalCorrelation|channel.smallScaleParams.dopplerAware",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:small-scale-realism-options",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Defines deterministic temporal-correlation and Doppler-aware option defaults used for common benchmark realism increments."
+    },
+    {
       "sourceId": "ASSUME-HANDOVER-FIDELITY-SIMPLIFIED",
       "type": "assumption",
       "title": "Handover Fidelity Set To Simplified",
