@@ -1,4 +1,7 @@
-import { buildReproBundleV1Artifact } from '@/sim/bench/repro-bundle-v1';
+import {
+  buildReproBundleV1Artifact,
+  type BuildReproBundleV1Options,
+} from '@/sim/bench/repro-bundle-v1';
 import { assertCondition } from './helpers';
 import type { SimTestCase } from './types';
 
@@ -51,7 +54,7 @@ export function buildReproBundleV1IntegrationCases(): SimTestCase[] {
       name: 'integration: repro-bundle v1 supports deterministic narrowed options',
       kind: 'integration',
       run: () => {
-        const options = {
+        const options: BuildReproBundleV1Options = {
           crossModeOptions: {
             baselines: ['max-rsrp'] as const,
             tickCount: 8,
