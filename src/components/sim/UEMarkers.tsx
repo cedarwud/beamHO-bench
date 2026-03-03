@@ -1,5 +1,5 @@
-import { useLayoutEffect, useMemo, useRef } from 'react';
-import { Color, InstancedMesh, Matrix4, Object3D } from 'three';
+import { useEffect, useMemo } from 'react';
+import { CanvasTexture, Color, LinearFilter } from 'three';
 import type { UEState } from '@/sim/types';
 
 interface UEMarkersProps {
@@ -13,51 +13,94 @@ const colorState1 = new Color('#38bdf8');
 const colorState2 = new Color('#f59e0b');
 const colorState3 = new Color('#ef4444');
 
-export function UEMarkers({ ues, failureOverlayEnabled = false }: UEMarkersProps) {
-  const meshRef = useRef<InstancedMesh>(null);
-  const dummy = useMemo(() => new Object3D(), []);
-  const tempMatrix = useMemo(() => new Matrix4(), []);
-  const count = Math.max(ues.length, 1);
+function createPointSpriteTexture() {
+  const size = 64;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
 
-  useLayoutEffect(() => {
-    const mesh = meshRef.current;
-    if (!mesh) {
-      return;
+  const context = canvas.getContext('2d');
+  if (!context) {
+    return null;
+  }
+
+  context.clearRect(0, 0, size, size);
+  context.fillStyle = '#ffffff';
+  context.beginPath();
+  context.arc(size / 2, size / 2, size / 2 - 1, 0, Math.PI * 2);
+  context.fill();
+
+  const texture = new CanvasTexture(canvas);
+  texture.minFilter = LinearFilter;
+  texture.magFilter = LinearFilter;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+export function UEMarkers({ ues, failureOverlayEnabled = false }: UEMarkersProps) {
+  const pointSprite = useMemo(
+    () => (typeof document === 'undefined' ? null : createPointSpriteTexture()),
+    [],
+  );
+
+  useEffect(
+    () => () => {
+      pointSprite?.dispose();
+    },
+    [pointSprite],
+  );
+
+  const { positions, colors } = useMemo(() => {
+    const markerCount = Math.max(ues.length, 1);
+    const positionBuffer = new Float32Array(markerCount * 3);
+    const colorBuffer = new Float32Array(markerCount * 3);
+
+    if (ues.length === 0) {
+      positionBuffer[0] = 0;
+      positionBuffer[1] = 0;
+      positionBuffer[2] = 0;
+      colorIdle.toArray(colorBuffer, 0);
+      return { positions: positionBuffer, colors: colorBuffer };
     }
 
     ues.forEach((ue, index) => {
-      dummy.position.set(ue.positionWorld[0], ue.positionWorld[1], ue.positionWorld[2]);
-      dummy.updateMatrix();
-      tempMatrix.copy(dummy.matrix);
-      mesh.setMatrixAt(index, tempMatrix);
-      if (failureOverlayEnabled) {
-        const color =
-          ue.hoState === 3
-            ? colorState3
-            : ue.hoState === 2
-              ? colorState2
-              : colorState1;
-        mesh.setColorAt(index, color);
-      } else {
-        mesh.setColorAt(index, ue.servingSatId === null ? colorIdle : colorConnected);
-      }
+      const offset = index * 3;
+      positionBuffer[offset] = ue.positionWorld[0];
+      positionBuffer[offset + 1] = ue.positionWorld[1] + 0.2;
+      positionBuffer[offset + 2] = ue.positionWorld[2];
+
+      const markerColor = failureOverlayEnabled
+        ? ue.hoState === 3
+          ? colorState3
+          : ue.hoState === 2
+            ? colorState2
+            : colorState1
+        : ue.servingSatId === null
+          ? colorIdle
+          : colorConnected;
+      markerColor.toArray(colorBuffer, offset);
     });
 
-    mesh.instanceMatrix.needsUpdate = true;
-    if (mesh.instanceColor) {
-      mesh.instanceColor.needsUpdate = true;
-    }
-  }, [ues, failureOverlayEnabled, dummy, tempMatrix]);
+    return { positions: positionBuffer, colors: colorBuffer };
+  }, [ues, failureOverlayEnabled]);
 
   return (
-    <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
-      <sphereGeometry args={[0.9, 7, 7]} />
-      <meshBasicMaterial
+    <points renderOrder={6}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={5}
+        sizeAttenuation
+        map={pointSprite ?? undefined}
+        alphaTest={0.35}
         vertexColors
         toneMapped={false}
         transparent
         opacity={0.95}
+        depthWrite={false}
       />
-    </instancedMesh>
+    </points>
   );
 }
