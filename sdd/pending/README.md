@@ -4,12 +4,12 @@ This folder contains active-pending or closure-tracked pending SDD documents.
 
 ## 1. Current Pending Package
 
-1. `beamHO-bench-common-benchmark-v1-sdd.md` (active pending on 2026-03-02)
+1. `beamHO-bench-common-benchmark-v1-sdd.md` (active pending; D1~D5 implemented on 2026-03-03, D6~D7 pending closure completion)
 2. `beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked on 2026-03-02)
 3. `beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked on 2026-03-02)
 4. closure report: `sdd/completed/beamHO-bench-gap-closure-closure.md`
 5. closure report: `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
-6. active pending: `beamHO-bench-common-benchmark-v1-sdd.md`
+6. closure draft: `sdd/completed/beamHO-bench-common-benchmark-v1-closure-draft.md`
 
 ## 2. Backlog Location
 

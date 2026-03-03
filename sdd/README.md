@@ -26,10 +26,11 @@ This folder is explicitly split into implemented, active-pending, and backlog SD
 11. `completed/beamHO-bench-baseline-generalization-sdd.md`
 12. `completed/beamHO-bench-gap-closure-closure.md`
 13. `completed/beamHO-bench-small-scale-validation-closure.md`
+14. `completed/beamHO-bench-common-benchmark-v1-closure-draft.md` (draft; pending promotion not finalized)
 
 ## Pending (Active Roadmap)
 
-1. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (active pending package)
+1. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (active pending package; D1~D5 implemented, draft closure published)
 2. `pending/beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked pending package)
 3. `pending/beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked pending package)
 4. active pending: `pending/beamHO-bench-common-benchmark-v1-sdd.md`

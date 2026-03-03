@@ -1,8 +1,8 @@
 # beamHO-bench — Common Benchmark Environment v1 SDD (Active Pending)
 
-**Version:** 0.1.0  
-**Date:** 2026-03-02  
-**Status:** Active Pending / Planned
+**Version:** 0.2.0  
+**Date:** 2026-03-03  
+**Status:** Active Pending / Implemented D1~D5 (Closure Draft Ready)
 
 ---
 
@@ -135,7 +135,28 @@ Target gaps:
 
 ---
 
-## 6. Constraint Binding (`PROJECT_CONSTRAINTS.md`)
+## 6. Implementation Progress Backfill (D1~D5)
+
+As of 2026-03-03:
+
+| Delivery | Status | Commit | Evidence |
+|---|---|---|---|
+| D1 multi-seed statistical runner | Implemented | `4109743` | `src/sim/bench/multi-seed-benchmark.ts`, `src/sim/tests/integration-cases-multi-seed-benchmark.ts` |
+| D2 scenario matrix v1 template | Implemented | `85a3eac` | `src/sim/bench/scenario-matrix.ts`, `src/sim/tests/integration-cases-scenario-matrix.ts` |
+| D3 temporal correlation + Doppler-aware options | Implemented | `a39dd7e` | `src/sim/channel/small-scale.ts`, `src/sim/channel/link-budget.ts`, profile/source updates and deterministic small-scale tests |
+| D4 paper-ready report artifacts | Implemented | `2aa121e` | `src/sim/bench/multi-seed-reporting.ts`, `src/sim/tests/integration-cases-multi-seed-reporting.ts` |
+| D5 research UI workflow | Implemented | `4755310` | `src/components/sim/TimelineControls.tsx`, `src/components/sim/HOEventTimeline.tsx`, `src/components/sim/UEMarkers.tsx`, `src/components/scene/MainScene.tsx` |
+
+Open items before pending -> completed promotion:
+1. D6: finalize this package-level traceability/`ASSUME-*` delta audit snapshot and closure evidence bundle.
+2. D7: finalize milestone architecture review note and closure sign-off package.
+
+Closure draft reference:
+1. `sdd/completed/beamHO-bench-common-benchmark-v1-closure-draft.md`
+
+---
+
+## 7. Constraint Binding (`PROJECT_CONSTRAINTS.md`)
 
 This pending package SHALL maintain:
 1. LEO-only active scope and fixed NTPU default coordinate.
@@ -159,7 +180,7 @@ This pending package SHALL maintain:
 
 ---
 
-## 7. TODO Mapping (from `/home/u24/papers/todo.md`)
+## 8. TODO Mapping (from `/home/u24/papers/todo.md`)
 
 This pending package maps to:
 1. Layer A/B common baseline comparison reproducibility requirements.
