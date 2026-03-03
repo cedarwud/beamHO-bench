@@ -4,7 +4,6 @@ import { AdaptiveDpr, OrbitControls, PerspectiveCamera, Stats } from '@react-thr
 import { NTPUScene } from './NTPUScene';
 import { UAV } from './UAV';
 import { SatelliteModel } from '../sim/SatelliteModel';
-import { UEMarkers } from '../sim/UEMarkers';
 import { ConnectionLines } from '../sim/ConnectionLines';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
@@ -55,7 +54,6 @@ export function MainScene() {
     secondary: true,
     prepared: true,
   });
-  const [failureOverlayEnabled, setFailureOverlayEnabled] = useState(true);
   const [replaySnapshots, setReplaySnapshots] = useState<SimSnapshot[]>([]);
   const [replayTick, setReplayTick] = useState<number | null>(null);
 
@@ -267,14 +265,6 @@ export function MainScene() {
             onReplayTickChange={(nextTick) => setReplayTick(nextTick)}
             onReplayLive={() => setReplayTick(null)}
           />
-          <label className="sim-hud__select">
-            Failure Overlay
-            <input
-              type="checkbox"
-              checked={failureOverlayEnabled}
-              onChange={(event) => setFailureOverlayEnabled(event.target.checked)}
-            />
-          </label>
           <button
             type="button"
             onClick={() => {
@@ -407,10 +397,6 @@ export function MainScene() {
           <Suspense fallback={<SceneLoader label="Loading NTPU Scene..." />}>
             <NTPUScene />
             <UAV position={NTPU_CONFIG.uav.position} scale={NTPU_CONFIG.uav.scale} />
-            <UEMarkers
-              ues={displayedSnapshot.ues}
-              failureOverlayEnabled={failureOverlayEnabled}
-            />
             <ConnectionLines
               satellites={displayedSnapshot.satellites}
               ues={displayedSnapshot.ues}
