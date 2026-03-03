@@ -8,7 +8,7 @@ Status ownership:
 
 ## 1. Active Pending Specs
 
-1. currently none.
+1. `beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (active pending on 2026-03-03)
 
 ## 2. Closure-Tracked Pending Specs
 

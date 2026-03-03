@@ -36,13 +36,14 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 15. `completed/beamHO-bench-common-baseline-v2-closure.md`
 16. `completed/beamHO-bench-complexity-reduction-closure.md`
 
-## Pending (Closure-Tracked Specs)
+## Pending (Active + Closure-Tracked Specs)
 
-1. `pending/beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked pending package)
-2. `pending/beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked pending package)
-3. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked pending spec)
-4. `pending/beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked pending package)
-5. `pending/beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked pending package)
+1. `pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (active pending package)
+2. `pending/beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked pending package)
+3. `pending/beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked pending package)
+4. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked pending spec)
+5. `pending/beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked pending package)
+6. `pending/beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked pending package)
 
 ## Backlog (Out of Active Scope)
 
