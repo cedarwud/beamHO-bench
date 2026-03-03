@@ -45,7 +45,7 @@ Deferred items remain out of active scope:
 | CB-v1 (D1~D7) | Complete | multi-seed benchmark + scenario matrix + temporal/doppler realism + paper-ready reporting + replay/timeline/state overlay UI + assumption governance + architecture review closure |
 | CB2 (D1~D4) | Complete | common baseline v2 validation pack + matrix/alignment guard updates + closure synchronization |
 | CR (D1~D5) | Complete | behavior-preserving complexity reduction package; `integration-cases` and validation-definition decomposition + `validate:daily` workflow + SDD status authority cleanup + closure report |
-| CMR (D1~D5) | In Progress | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`) |
+| CMR (D1~D5) | In Progress | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`); D1-D2 completed, D3~D5 pending |
 
 ---
 
@@ -82,7 +82,7 @@ Required artifacts:
 
 Latest local verification (2026-03-03):
 1. `validate:stage` passed.
-2. `test:sim`: 58/58 passed (unit 19/19, integration 39/39).
+2. `test:sim`: 60/60 passed (unit 19/19, integration 41/41).
 3. `validate:val-suite`: 50/50 passed, warnings=0.
 4. Validation artifacts are compact and generated under `dist/`.
 
@@ -124,3 +124,4 @@ Code points for v2 closure evidence:
 13. `src/sim/bench/small-scale-comparison-template.ts` + `src/hooks/useSimulation.exporters.ts` (SS reproducible comparison template export)
 14. `src/sim/bench/common-baseline-pack.ts` + `src/sim/tests/integration-cases-common-baseline-pack.ts` + `scripts/validate-validation-suite.mjs` (CB2 pack coverage + modular matrix-definition alignment guard)
 15. `src/sim/tests/integration-cases-real-trace-artifacts.ts` + `src/sim/bench/validation-definitions-*.ts` + `package.json` (`validate:daily`) (CR maintainability and workflow-ergonomics package evidence)
+16. `src/sim/bench/cross-mode-benchmark.ts` + `src/sim/tests/integration-cases-cross-mode-benchmark.ts` (CMR cross-mode tuple contract + deterministic benchmark-run coverage)

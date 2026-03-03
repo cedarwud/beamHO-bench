@@ -11,6 +11,7 @@ import { assertAlmostEqual, assertCondition, normalizeBatchForDeterminism } from
 import { buildBaselineGeneralizationIntegrationCases } from './integration-cases-baseline-generalization';
 import { buildCommonBaselinePackIntegrationCases } from './integration-cases-common-baseline-pack';
 import { buildComparisonChartIntegrationCases } from './integration-cases-comparison-chart';
+import { buildCrossModeBenchmarkIntegrationCases } from './integration-cases-cross-mode-benchmark';
 import { buildMultiSeedBenchmarkIntegrationCases } from './integration-cases-multi-seed-benchmark';
 import { buildMultiSeedReportingIntegrationCases } from './integration-cases-multi-seed-reporting';
 import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy-scheduler';
@@ -358,6 +359,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
     ...buildBaselineGeneralizationIntegrationCases(),
     ...buildCommonBaselinePackIntegrationCases(),
     ...buildComparisonChartIntegrationCases(),
+    ...buildCrossModeBenchmarkIntegrationCases(),
     ...buildMultiSeedBenchmarkIntegrationCases(),
     ...buildMultiSeedReportingIntegrationCases(),
     ...buildPolicySchedulerIntegrationCases(),

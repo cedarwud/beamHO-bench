@@ -95,3 +95,17 @@ This package SHALL maintain:
 4. no hidden KPI-impacting constants.
 5. reproducible artifacts and stage-gate enforceability.
 6. deferred-scope governance remains active.
+
+---
+
+## 7. Implementation Progress Backfill
+
+As of 2026-03-03:
+
+| Delivery | Status | Evidence |
+|---|---|---|
+| D1 cross-mode benchmark plan/run module | Implemented | `src/sim/bench/cross-mode-benchmark.ts` |
+| D2 deterministic/coverage integration tests | Implemented | `src/sim/tests/integration-cases-cross-mode-benchmark.ts`, integration registry wiring |
+| D3 validation-suite contract extension | Pending | - |
+| D4 docs/status/index sync for benchmark workflow | Pending | - |
+| D5 closure report and lifecycle convergence | Pending | - |
