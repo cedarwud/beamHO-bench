@@ -1,5 +1,4 @@
-import { loadPaperProfile } from '@/config/paper-profiles/loader';
-import { getSourceCatalog } from '@/config/paper-profiles/loader';
+import { getSourceCatalog, loadPaperProfile } from '@/config/paper-profiles/loader';
 import { resolveBeamFootprintBands } from '@/components/sim/beam-footprint-gain';
 import { resolveSatelliteRenderDecision } from '@/components/sim/satellite-render-mode';
 import {
@@ -18,6 +17,7 @@ import { buildBaselineGeneralizationIntegrationCases } from './integration-cases
 import { buildComparisonChartIntegrationCases } from './integration-cases-comparison-chart';
 import { buildMultiSeedBenchmarkIntegrationCases } from './integration-cases-multi-seed-benchmark';
 import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy-scheduler';
+import { buildScenarioMatrixIntegrationCases } from './integration-cases-scenario-matrix';
 import { buildSmallScaleIntegrationCases } from './integration-cases-small-scale';
 import type { SimTestCase } from './types';
 
@@ -361,6 +361,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
     ...buildComparisonChartIntegrationCases(),
     ...buildMultiSeedBenchmarkIntegrationCases(),
     ...buildPolicySchedulerIntegrationCases(),
+    ...buildScenarioMatrixIntegrationCases(),
     ...buildSmallScaleIntegrationCases(),
     {
       name: 'integration: real-trace multi-baseline batch comparison works on starlink-like profile',
