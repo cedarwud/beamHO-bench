@@ -8,20 +8,22 @@ Status ownership:
 
 ## 1. Active Pending Specs
 
-1. `beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (active pending on 2026-03-03; D1-D4 implemented, D5 pending)
+1. none (all current pending specs are closure-tracked as of 2026-03-03)
 
 ## 2. Closure-Tracked Pending Specs
 
-1. `beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked on 2026-03-03)
-2. `beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked on 2026-03-03)
-3. `beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
-4. `beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked on 2026-03-02)
-5. `beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked on 2026-03-02)
-6. closure report: `sdd/completed/beamHO-bench-complexity-reduction-closure.md`
-7. closure report: `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
-8. closure report: `sdd/completed/beamHO-bench-gap-closure-closure.md`
-9. closure report: `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
-10. closure report: `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
+1. `beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (implemented/closure-tracked on 2026-03-03)
+2. `beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked on 2026-03-03)
+3. `beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked on 2026-03-03)
+4. `beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
+5. `beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked on 2026-03-02)
+6. `beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked on 2026-03-02)
+7. closure report: `sdd/completed/beamHO-bench-cross-mode-reproducible-benchmark-closure.md`
+8. closure report: `sdd/completed/beamHO-bench-complexity-reduction-closure.md`
+9. closure report: `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
+10. closure report: `sdd/completed/beamHO-bench-gap-closure-closure.md`
+11. closure report: `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
+12. closure report: `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
 
 ## 3. Backlog Location
 
