@@ -94,6 +94,9 @@ Minimum run set for CI/nightly:
 26. `VAL-BPE-ELEVATION-THRESH-SWEEP`
 27. `VAL-BPE-LOAD-MOBILITY-SWEEP`
 28. `VAL-BPE-ONEWEB-PARAM-SMOKE`
+29. `VAL-SCB-STARLINK-SEAMLESS-SWEEP`
+30. `VAL-SCB-ONEWEB-DAPS-TIMING-SWEEP`
+31. `VAL-SCB-COUPLED-SCHEDULER-CONTINUITY-SWEEP`
 
 Each run must vary one factor only while keeping profile and seed policy controlled.
 

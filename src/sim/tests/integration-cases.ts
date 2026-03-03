@@ -19,6 +19,7 @@ import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy
 import { buildRealTraceArtifactIntegrationCases } from './integration-cases-real-trace-artifacts';
 import { buildReproBundleV1IntegrationCases } from './integration-cases-repro-bundle-v1';
 import { buildScenarioMatrixIntegrationCases } from './integration-cases-scenario-matrix';
+import { buildServiceContinuityPackIntegrationCases } from './integration-cases-service-continuity-pack';
 import { buildSmallScaleIntegrationCases } from './integration-cases-small-scale';
 import type { SimTestCase } from './types';
 
@@ -368,6 +369,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
     ...buildPolicySchedulerIntegrationCases(),
     ...buildReproBundleV1IntegrationCases(),
     ...buildScenarioMatrixIntegrationCases(),
+    ...buildServiceContinuityPackIntegrationCases(),
     ...buildSmallScaleIntegrationCases(),
     ...buildRealTraceArtifactIntegrationCases(),
   ];

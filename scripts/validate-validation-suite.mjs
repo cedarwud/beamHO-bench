@@ -11,6 +11,7 @@ const TMP_DIR = path.join(ROOT, '.tmp', 'validation-suite');
 const BUNDLE_PATH = path.join(TMP_DIR, 'validation-suite-cli.mjs');
 const CROSS_MODE_BUNDLE_PATH = path.join(TMP_DIR, 'cross-mode-benchmark.mjs');
 const BPE_BUNDLE_PATH = path.join(TMP_DIR, 'baseline-parameter-envelope-pack.mjs');
+const SCB_BUNDLE_PATH = path.join(TMP_DIR, 'service-continuity-baseline-pack.mjs');
 const REPRO_BUNDLE_PATH = path.join(TMP_DIR, 'repro-bundle-v1.mjs');
 const ENTRY_POINT = path.join(ROOT, 'src/sim/bench/cli-validation-suite.ts');
 const CROSS_MODE_ENTRY_POINT = path.join(ROOT, 'src/sim/bench/cross-mode-benchmark.ts');
@@ -20,6 +21,13 @@ const BPE_ENTRY_POINT = path.join(
   'sim',
   'bench',
   'baseline-parameter-envelope-pack.ts',
+);
+const SCB_ENTRY_POINT = path.join(
+  ROOT,
+  'src',
+  'sim',
+  'bench',
+  'service-continuity-baseline-pack.ts',
 );
 const REPRO_BUNDLE_ENTRY_POINT = path.join(ROOT, 'src', 'sim', 'bench', 'repro-bundle-v1.ts');
 const ARTIFACT_DIR = path.join(ROOT, 'dist');
@@ -44,11 +52,17 @@ const VALIDATION_DEFINITIONS_DIR = path.join(
 );
 const REQUIRED_CROSS_MODE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
 const REQUIRED_BPE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
+const REQUIRED_SCB_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
 const REQUIRED_RB1_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
 const REQUIRED_BPE_VALIDATION_CASE_COUNTS = {
   'VAL-BPE-ELEVATION-THRESH-SWEEP': 3,
   'VAL-BPE-LOAD-MOBILITY-SWEEP': 4,
   'VAL-BPE-ONEWEB-PARAM-SMOKE': 1,
+};
+const REQUIRED_SCB_VALIDATION_CASE_COUNTS = {
+  'VAL-SCB-STARLINK-SEAMLESS-SWEEP': 3,
+  'VAL-SCB-ONEWEB-DAPS-TIMING-SWEEP': 3,
+  'VAL-SCB-COUPLED-SCHEDULER-CONTINUITY-SWEEP': 3,
 };
 
 function unique(values) {
@@ -325,6 +339,87 @@ async function validateBaselineParameterEnvelopeContract() {
   );
 }
 
+async function validateServiceContinuityBaselineContract() {
+  await mkdir(TMP_DIR, { recursive: true });
+  await build({
+    entryPoints: [SCB_ENTRY_POINT],
+    outfile: SCB_BUNDLE_PATH,
+    bundle: true,
+    platform: 'node',
+    format: 'esm',
+    target: ['node20'],
+    sourcemap: false,
+    plugins: [
+      {
+        name: 'alias-at',
+        setup(pluginBuild) {
+          pluginBuild.onResolve({ filter: /^@\// }, (args) => ({
+            path: resolveAliasPath(args.path),
+          }));
+        },
+      },
+    ],
+  });
+
+  const moduleUrl = `${pathToFileURL(SCB_BUNDLE_PATH).href}?t=${Date.now()}`;
+  const moduleNamespace = await import(moduleUrl);
+  if (
+    typeof moduleNamespace.buildServiceContinuityBaselineValidationDefinitions !== 'function'
+  ) {
+    throw new Error(
+      'Service continuity baseline pack module does not export buildServiceContinuityBaselineValidationDefinitions().',
+    );
+  }
+
+  const first = moduleNamespace.buildServiceContinuityBaselineValidationDefinitions();
+  const replay = moduleNamespace.buildServiceContinuityBaselineValidationDefinitions();
+  if (JSON.stringify(first) !== JSON.stringify(replay)) {
+    throw new Error(
+      'Service continuity baseline validation definitions must be deterministic for fixed input.',
+    );
+  }
+
+  const byId = new Map(first.map((definition) => [definition.validationId, definition]));
+  for (const [id, expectedCaseCount] of Object.entries(REQUIRED_SCB_VALIDATION_CASE_COUNTS)) {
+    const definition = byId.get(id);
+    if (!definition) {
+      throw new Error(`Missing required service continuity validation ID: ${id}`);
+    }
+    if (definition.cases.length !== expectedCaseCount) {
+      throw new Error(
+        `Service continuity validation '${id}' expected case count=${expectedCaseCount}, got ${definition.cases.length}.`,
+      );
+    }
+    if (definition.requiresFullFidelity !== true) {
+      throw new Error(`Service continuity validation '${id}' must require full fidelity.`);
+    }
+    for (const suiteCase of definition.cases) {
+      if (!Array.isArray(suiteCase.baselines) || suiteCase.baselines.length === 0) {
+        throw new Error(
+          `Service continuity validation '${id}' has empty baseline list in case '${suiteCase.caseId}'.`,
+        );
+      }
+      if (!Number.isFinite(suiteCase.tickCount) || suiteCase.tickCount <= 0) {
+        throw new Error(
+          `Service continuity validation '${id}' has invalid tickCount in case '${suiteCase.caseId}'.`,
+        );
+      }
+    }
+  }
+
+  const profileIds = new Set(first.map((definition) => definition.profileId));
+  const missingProfileIds = REQUIRED_SCB_PROFILE_IDS.filter((id) => !profileIds.has(id));
+  if (missingProfileIds.length > 0) {
+    throw new Error(
+      `Service continuity validation pack missing canonical profile coverage: ${missingProfileIds.join(', ')}`,
+    );
+  }
+
+  console.log(
+    `[validation-suite] scb contract pass validations=${Object.keys(REQUIRED_SCB_VALIDATION_CASE_COUNTS).length} profiles=${REQUIRED_SCB_PROFILE_IDS.join('|')}`,
+  );
+}
+
 async function validateReproBundleV1Contract() {
   await mkdir(TMP_DIR, { recursive: true });
   await build({
@@ -523,6 +618,7 @@ async function main() {
   try {
     await validateMatrixDefinitionAlignment();
     await validateBaselineParameterEnvelopeContract();
+    await validateServiceContinuityBaselineContract();
     await validateCrossModeBenchmarkContract();
     await validateReproBundleV1Contract();
     await bundleCli();
