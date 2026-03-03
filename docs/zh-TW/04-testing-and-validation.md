@@ -5,7 +5,7 @@
 目前測試重點在 SimCore 與研究驗證層：
 
 1. Unit + Integration（`test:sim`）
-2. Validation suite（`validate:val-suite`）
+2. Validation suite（`validate:val-suite` / `validate:val-suite:all`）
 3. Academic rigor / structure / repo policy gate
 4. 全關卡整合（`validate:stage`）
 
@@ -15,17 +15,22 @@
 執行 SimCore 測試並輸出 `dist/sim-test-summary.json`。
 
 2. `npm run validate:val-suite`  
-執行 `VAL-*` 套件並輸出 validation artifact。
-目前包含 baseline parameter envelope 驗證組（`VAL-BPE-ELEVATION-THRESH-SWEEP`、`VAL-BPE-LOAD-MOBILITY-SWEEP`、`VAL-BPE-ONEWEB-PARAM-SMOKE`）。
+執行 `scope=core` 驗證套件（50 cases）並輸出 validation artifact；此命令是 `validate:stage` 的必跑範圍。
 
-3. `npm run bench:cross-mode`  
+3. `npm run validate:val-suite:all`  
+執行 `scope=all` 完整驗證套件（67 cases），包含 extension groups（`VAL-RL-*`/`VAL-JBH-*`/`VAL-BG-*`）與 cross-mode/BPE/repro-bundle/SCB contract checks。
+
+4. `npm run bench:cross-mode`  
 執行 cross-mode reproducible benchmark pack（`case9-default` + `starlink-like` + `oneweb-like`），預設輸出到 `dist/cross-mode-benchmark/`。
 
-4. `npm run bundle:repro-v1`  
+5. `npm run bundle:repro-v1`  
 輸出 Repro Bundle v1（cross-mode + baseline-parameter-envelope）到 `dist/repro-bundle-v1/`。
 
-5. `npm run validate:stage`  
-一鍵跑完整 gate（lint/build/test/validate 系列）。
+6. `npm run validate:stage`  
+一鍵跑 stage gate（lint/build/test/validate 系列），並強制檢查本次產出的 artifact freshness。
+
+7. `npm run validate:nightly`  
+執行 full gate（與 stage 同級），但驗證套件改跑 `validate:val-suite:all`。
 
 ## 3. 主要 artifact
 
