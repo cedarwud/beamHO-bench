@@ -4,6 +4,7 @@ import {
   buildRuntimeParameterAuditSummary,
   type RuntimeParameterAuditSummary,
 } from './runtime-parameter-audit-summary';
+import type { ValidationExecutionScope } from './validation-scope';
 import type { ValidationGateSummary, ValidationSuiteResult } from './validation-types';
 
 /**
@@ -31,6 +32,10 @@ function parseSeed(raw: string | undefined): number {
   return Math.round(parsed);
 }
 
+function parseScope(raw: string | undefined): ValidationExecutionScope {
+  return raw === 'core' ? 'core' : 'all';
+}
+
 export interface ValidationSuiteGateResult {
   suite: ValidationSuiteResult;
   summary: ValidationGateSummary;
@@ -40,8 +45,9 @@ export interface ValidationSuiteGateResult {
 
 export function runValidationSuiteGate(
   seed = parseSeed(process.env.VALIDATION_SEED),
+  scope: ValidationExecutionScope = parseScope(process.env.VALIDATION_SCOPE),
 ): ValidationSuiteGateResult {
-  const suite = runCoreValidationSuite({ seed });
+  const suite = runCoreValidationSuite({ seed, scope });
   const summary = buildValidationGateSummary(suite);
   const runtimeParameterAuditSummary = buildRuntimeParameterAuditSummary(suite);
 
@@ -53,12 +59,15 @@ export function runValidationSuiteGate(
   };
 }
 
-export function runValidationSuiteCli(seed = parseSeed(process.env.VALIDATION_SEED)): number {
-  const gate = runValidationSuiteGate(seed);
+export function runValidationSuiteCli(
+  seed = parseSeed(process.env.VALIDATION_SEED),
+  scope: ValidationExecutionScope = parseScope(process.env.VALIDATION_SCOPE),
+): number {
+  const gate = runValidationSuiteGate(seed, scope);
   const { suite, summary } = gate;
 
   console.log(
-    `[validation-suite] seed=${suite.seed} cases=${summary.totalCases} passed=${summary.passedCases} failed=${summary.failedCases} warnings=${summary.warningCases} checkPassRate=${summary.overallCheckPassRate}`,
+    `[validation-suite] scope=${scope} seed=${suite.seed} cases=${summary.totalCases} passed=${summary.passedCases} failed=${summary.failedCases} warnings=${summary.warningCases} checkPassRate=${summary.overallCheckPassRate}`,
   );
   for (const stat of summary.checkStats) {
     console.log(

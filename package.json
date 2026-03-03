@@ -16,9 +16,11 @@
     "rerun:contract": "node scripts/run-rerun-contract.mjs",
     "validate:structure": "node scripts/validate-module-structure.mjs",
     "validate:repo-policy": "node scripts/validate-repo-policy.mjs",
-    "validate:val-suite": "node scripts/validate-validation-suite.mjs",
+    "validate:val-suite": "node scripts/validate-validation-suite.mjs --scope=core",
+    "validate:val-suite:all": "node scripts/validate-validation-suite.mjs --scope=all",
     "validate:daily": "npm run lint && npm run test:sim && npm run validate:structure && npm run validate:val-suite",
-    "validate:stage": "npm run lint && npm run build && npm run test:sim && npm run validate:rigor && npm run validate:structure && npm run validate:repo-policy && npm run validate:val-suite"
+    "validate:stage": "node scripts/validate-stage-gate.mjs",
+    "validate:nightly": "npm run lint && npm run build && npm run test:sim && npm run validate:rigor && npm run validate:structure && npm run validate:repo-policy && npm run validate:val-suite:all"
   },
   "keywords": [
     "3d",

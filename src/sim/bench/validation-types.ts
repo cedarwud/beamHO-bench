@@ -3,6 +3,7 @@ import type { PaperProfile } from '@/config/paper-profiles/types';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { PolicyMode } from '@/sim/policy/types';
 import type { BaselineBatchResult } from './runner';
+import type { ValidationExecutionScope } from './validation-scope';
 
 export interface ValidationSuiteCaseDefinition {
   caseId: string;
@@ -64,6 +65,7 @@ export interface ValidationSuiteResult {
 
 export interface ValidationSuiteOptions {
   seed?: number;
+  scope?: ValidationExecutionScope;
 }
 
 export interface ValidationGateFailure {

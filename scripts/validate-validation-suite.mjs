@@ -50,6 +50,8 @@ const VALIDATION_DEFINITIONS_DIR = path.join(
   'sim',
   'bench',
 );
+const MATRIX_CORE_SUBSECTION_HEADING = '### 5.1 Core Stage Runs';
+const MATRIX_EXTENSION_SUBSECTION_HEADING = '### 5.2 Extension Runs (Nightly/Research)';
 const REQUIRED_CROSS_MODE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
 const REQUIRED_BPE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
 const REQUIRED_SCB_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
@@ -67,6 +69,26 @@ const REQUIRED_SCB_VALIDATION_CASE_COUNTS = {
 
 function unique(values) {
   return [...new Set(values)];
+}
+
+function parseScope(argv) {
+  const arg = argv.find((entry) => entry.startsWith('--scope='));
+  const value = arg ? arg.slice('--scope='.length) : null;
+  if (value === 'all') {
+    return 'all';
+  }
+  if (value === 'core') {
+    return 'core';
+  }
+  return 'core';
+}
+
+function isCoreValidationId(validationId) {
+  return (
+    !validationId.startsWith('VAL-RL-') &&
+    !validationId.startsWith('VAL-JBH-') &&
+    !validationId.startsWith('VAL-BG-')
+  );
 }
 
 function resolveAliasPath(importPath) {
@@ -92,19 +114,18 @@ function resolveAliasPath(importPath) {
   return basePath;
 }
 
-function extractRequiredValidationIdsFromMatrix(markdown) {
-  const sectionStart = markdown.indexOf('## 5. Required Validation Runs');
+function extractValidationIdsFromSubsection(markdown, subsectionHeading) {
+  const sectionStart = markdown.indexOf(subsectionHeading);
   if (sectionStart < 0) {
     throw new Error(
-      `Validation matrix is missing section '## 5. Required Validation Runs': ${path.relative(ROOT, VALIDATION_MATRIX_PATH)}`,
+      `Validation matrix is missing subsection '${subsectionHeading}': ${path.relative(ROOT, VALIDATION_MATRIX_PATH)}`,
     );
   }
 
-  const sectionTail = markdown.slice(sectionStart + '## 5. Required Validation Runs'.length);
-  const nextSectionIndex = sectionTail.search(/\n##\s+\d+\./);
+  const sectionTail = markdown.slice(sectionStart + subsectionHeading.length);
+  const nextSectionIndex = sectionTail.search(/\n###\s+5\.\d+/);
   const sectionBody =
     nextSectionIndex >= 0 ? sectionTail.slice(0, nextSectionIndex) : sectionTail;
-
   const matches = sectionBody.matchAll(/`(VAL-[A-Z0-9-]+)`/g);
   return unique([...matches].map((match) => match[1]));
 }
@@ -137,19 +158,31 @@ async function readValidationDefinitionSources() {
   return contents.join('\n');
 }
 
-async function validateMatrixDefinitionAlignment() {
+async function validateMatrixDefinitionAlignment(scope) {
   const [matrixMarkdown, definitionsSource] = await Promise.all([
     readFile(VALIDATION_MATRIX_PATH, 'utf8'),
     readValidationDefinitionSources(),
   ]);
 
-  const requiredIds = extractRequiredValidationIdsFromMatrix(matrixMarkdown);
+  const coreRequiredIds = extractValidationIdsFromSubsection(
+    matrixMarkdown,
+    MATRIX_CORE_SUBSECTION_HEADING,
+  );
+  const extensionRequiredIds = extractValidationIdsFromSubsection(
+    matrixMarkdown,
+    MATRIX_EXTENSION_SUBSECTION_HEADING,
+  );
+  const requiredIds =
+    scope === 'all'
+      ? unique([...coreRequiredIds, ...extensionRequiredIds])
+      : coreRequiredIds;
   const definedIds = extractDefinedValidationIdsFromDefinitions(definitionsSource);
-  const definedIdSet = new Set(definedIds);
+  const scopedDefinedIds = scope === 'all' ? definedIds : definedIds.filter(isCoreValidationId);
+  const definedIdSet = new Set(scopedDefinedIds);
   const requiredIdSet = new Set(requiredIds);
 
   const missingInDefinitions = requiredIds.filter((id) => !definedIdSet.has(id));
-  const extraInDefinitions = definedIds.filter((id) => !requiredIdSet.has(id));
+  const extraInDefinitions = scopedDefinedIds.filter((id) => !requiredIdSet.has(id));
 
   if (missingInDefinitions.length > 0) {
     throw new Error(
@@ -159,7 +192,7 @@ async function validateMatrixDefinitionAlignment() {
 
   if (extraInDefinitions.length > 0) {
     console.warn(
-      `[validation-suite] WARN validation definitions include IDs not listed in matrix section 5: ${extraInDefinitions.join(', ')}`,
+      `[validation-suite] WARN ${scope} validation definitions include IDs not listed in matrix section 5: ${extraInDefinitions.join(', ')}`,
     );
   }
 }
@@ -508,7 +541,7 @@ async function validateReproBundleV1Contract() {
   );
 }
 
-async function executeGate() {
+async function executeGate(scope) {
   const moduleUrl = `${pathToFileURL(BUNDLE_PATH).href}?t=${Date.now()}`;
   const moduleNamespace = await import(moduleUrl);
 
@@ -519,7 +552,7 @@ async function executeGate() {
   const seedRaw = process.env.VALIDATION_SEED;
   const seed = Number.isFinite(Number(seedRaw)) ? Math.round(Number(seedRaw)) : undefined;
 
-  return moduleNamespace.runValidationSuiteGate(seed);
+  return moduleNamespace.runValidationSuiteGate(seed, scope);
 }
 
 function printGateSummary(summary) {
@@ -616,13 +649,17 @@ async function cleanup() {
 
 async function main() {
   try {
-    await validateMatrixDefinitionAlignment();
+    const scope = parseScope(process.argv.slice(2));
+    await validateMatrixDefinitionAlignment(scope);
     await validateBaselineParameterEnvelopeContract();
     await validateServiceContinuityBaselineContract();
-    await validateCrossModeBenchmarkContract();
-    await validateReproBundleV1Contract();
+    if (scope === 'all') {
+      await validateCrossModeBenchmarkContract();
+      await validateReproBundleV1Contract();
+    }
     await bundleCli();
-    const gateResult = await executeGate();
+    const gateResult = await executeGate(scope);
+    console.log(`[validation-suite] scope=${scope}`);
     printGateSummary(gateResult.summary);
     await writeSuiteArtifacts(gateResult.suite);
     await writeGateSummaryArtifact(gateResult.summary);

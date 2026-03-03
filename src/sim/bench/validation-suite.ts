@@ -16,6 +16,7 @@ import {
   checkSchedulerStateSanity,
 } from './validation-checks';
 import { appendValidationGroupChecks } from './validation-group-checks';
+import { isCoreValidationId } from './validation-scope';
 import type {
   ValidationCheckResult,
   ValidationSuiteCaseDefinition,
@@ -168,7 +169,10 @@ export function runCoreValidationSuite(
   options: ValidationSuiteOptions = {},
 ): ValidationSuiteResult {
   const seed = Number.isFinite(options.seed) ? Math.round(options.seed as number) : 42;
-  const definitions = buildValidationDefinitions();
+  const requestedScope = options.scope ?? 'all';
+  const definitions = buildValidationDefinitions().filter((definition) =>
+    requestedScope === 'core' ? isCoreValidationId(definition.validationId) : true,
+  );
   const results: ValidationSuiteCaseResult[] = [];
 
   function resolvePolicyRuntimeForCase(
