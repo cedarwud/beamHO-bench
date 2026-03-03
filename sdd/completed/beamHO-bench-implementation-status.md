@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-03  
-**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4 + CR D1~D5 + CMR D1~D5 + BPE D1~D5 + RB1 D1~D5)
+**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4 + CR D1~D5 + CMR D1~D5 + BPE D1~D5 + RB1 D1~D5 + SCB D1~D5)
 
 ---
 
@@ -23,6 +23,7 @@ v2-complete means:
 9. Closure-tracked pending package `sdd/pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` has D1~D5 implemented with closure evidence.
 10. Closure-tracked pending package `sdd/pending/beamHO-bench-baseline-parameter-envelope-sdd.md` has D1~D5 implemented with closure evidence.
 11. Closure-tracked pending package `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md` has D1~D5 implemented with closure evidence.
+12. Closure-tracked pending package `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md` has D1~D5 implemented with closure evidence.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
@@ -50,6 +51,7 @@ Deferred items remain out of active scope:
 | CMR (D1~D5) | Complete | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`) with deterministic plan/run contract, validation-suite guard, workflow command, and closure report |
 | BPE (D1~D5) | Complete | baseline parameter envelope pack (elevation/load/mobility tiers) with deterministic artifact/validation contracts, documentation synchronization, and closure report |
 | RB1 (D1~D5) | Complete | repro bundle v1 package for deterministic one-command packaging of canonical cross-mode and baseline-envelope artifacts, with contract guard and closure report |
+| SCB (D1~D5) | Complete | service continuity baseline validation pack (`VAL-SCB-*`) for starlink/oneweb/coupled-scheduler continuity envelopes with deterministic contract guard and closure report |
 
 ---
 
@@ -86,8 +88,8 @@ Required artifacts:
 
 Latest local verification (2026-03-03):
 1. `validate:stage` passed.
-2. `test:sim`: 65/65 passed (unit 19/19, integration 46/46).
-3. `validate:val-suite`: 58/58 passed, warnings=0.
+2. `test:sim`: 67/67 passed (unit 19/19, integration 48/48).
+3. `validate:val-suite`: 67/67 passed, warnings=0.
 4. Validation artifacts are compact and generated under `dist/`.
 
 ---
@@ -116,6 +118,8 @@ Primary references:
 19. `sdd/completed/beamHO-bench-baseline-parameter-envelope-closure.md`
 20. `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md`
 21. `sdd/completed/beamHO-bench-repro-bundle-v1-closure.md`
+22. `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md`
+23. `sdd/completed/beamHO-bench-service-continuity-baseline-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
@@ -139,3 +143,5 @@ Code points for v2 closure evidence:
 19. `src/sim/bench/baseline-parameter-envelope-pack.ts` + `scripts/validate-validation-suite.mjs` + `sdd/completed/beamHO-bench-validation-matrix.md` (BPE `VAL-BPE-*` validation-suite contract and matrix alignment evidence)
 20. `src/sim/bench/repro-bundle-v1.ts` + `src/sim/tests/integration-cases-repro-bundle-v1.ts` + `scripts/run-repro-bundle-v1.mjs` (RB1 deterministic repro bundle artifact and one-command export evidence)
 21. `scripts/validate-validation-suite.mjs` (`rb1 contract pass`) + `README.md`/`docs/zh-TW/04-testing-and-validation.md` (`bundle:repro-v1`) (RB1 contract guard + workflow guidance evidence)
+22. `src/sim/bench/service-continuity-baseline-pack.ts` + `src/sim/tests/integration-cases-service-continuity-pack.ts` + `src/sim/bench/validation-definitions.ts` (`VAL-SCB-*`) (SCB continuity-oriented validation pack integration evidence)
+23. `scripts/validate-validation-suite.mjs` (`scb contract pass`) + `sdd/completed/beamHO-bench-validation-matrix.md` (`VAL-SCB-*`) (SCB deterministic contract and matrix-alignment evidence)

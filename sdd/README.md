@@ -38,6 +38,7 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 17. `completed/beamHO-bench-cross-mode-reproducible-benchmark-closure.md`
 18. `completed/beamHO-bench-baseline-parameter-envelope-closure.md`
 19. `completed/beamHO-bench-repro-bundle-v1-closure.md`
+20. `completed/beamHO-bench-service-continuity-baseline-closure.md`
 
 ## Pending (Active + Closure-Tracked Specs)
 
@@ -49,6 +50,7 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 6. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked pending spec)
 7. `pending/beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked pending package)
 8. `pending/beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked pending package)
+9. `pending/beamHO-bench-service-continuity-baseline-sdd.md` (implemented/closure-tracked pending package)
 
 ## Backlog (Out of Active Scope)
 
