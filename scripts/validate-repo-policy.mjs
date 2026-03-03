@@ -107,7 +107,16 @@ async function validateDeferredScopePolicy(files, errors) {
   );
 
   for (const file of runtimeCodeFiles) {
-    const content = await readFile(path.join(ROOT, file), 'utf8');
+    let content;
+    try {
+      content = await readFile(path.join(ROOT, file), 'utf8');
+    } catch (error) {
+      if (error && typeof error === 'object' && error.code === 'ENOENT') {
+        // Ignore files deleted in working tree before commit finalization.
+        continue;
+      }
+      throw error;
+    }
     for (const { label, pattern } of DEFERRED_SCOPE_FORBIDDEN_PATTERNS) {
       if (pattern.test(content)) {
         errors.push(

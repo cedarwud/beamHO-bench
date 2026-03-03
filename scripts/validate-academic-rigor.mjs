@@ -55,7 +55,6 @@ const CRITICAL_PROVENANCE_FILES = [
   'src/sim/orbit/sgp4.ts',
   'src/sim/scenarios/case9-analytic.ts',
   'src/sim/scenarios/real-trace.ts',
-  'src/sim/scenarios/case9-static.ts',
   'src/sim/kpi/accumulator.ts',
   'src/sim/kpi/reporter.ts',
   'src/sim/policy/types.ts',
