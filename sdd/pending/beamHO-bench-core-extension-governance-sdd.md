@@ -1,8 +1,8 @@
-# beamHO-bench — Core/Extension Governance SDD (Active Pending)
+# beamHO-bench — Core/Extension Governance SDD (Closure-Tracked Pending)
 
 **Version:** 0.1.0  
 **Date:** 2026-03-03  
-**Status:** Active Pending
+**Status:** Implemented / Closure-Tracked
 
 ---
 
@@ -96,6 +96,20 @@ This package SHALL preserve:
 
 ---
 
-## 7. Planned Closure Output
+## 7. Implementation Progress Backfill
+
+As of 2026-03-03:
+
+| Delivery | Status | Evidence |
+|---|---|---|
+| D1 scope filtering (`core`/`all`) | Implemented | `src/sim/bench/validation-scope.ts`, `src/sim/bench/validation-suite.ts`, `src/sim/bench/cli-validation-suite.ts` |
+| D2 matrix/definition alignment with scope | Implemented | `sdd/completed/beamHO-bench-validation-matrix.md`, `scripts/validate-validation-suite.mjs` |
+| D3 stage artifact freshness enforcement | Implemented | `scripts/validate-stage-gate.mjs`, `package.json` (`validate:stage`) |
+| D4 runtime override source-map coverage guard | Implemented | `scripts/validate-validation-suite.mjs`, `src/config/references/paper-sources.json`, `src/config/paper-profiles/*.sources.json` |
+| D5 docs + lifecycle closure sync | Implemented | closure report + pending/completed/status sync |
+
+---
+
+## 8. Closure Reference
 
 1. `sdd/completed/beamHO-bench-core-extension-governance-closure.md`

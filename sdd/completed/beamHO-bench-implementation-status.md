@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-03  
-**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4 + CR D1~D5 + CMR D1~D5 + BPE D1~D5 + RB1 D1~D5 + SCB D1~D5)
+**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4 + CR D1~D5 + CMR D1~D5 + BPE D1~D5 + RB1 D1~D5 + SCB D1~D5 + CEG D1~D5)
 
 ---
 
@@ -24,6 +24,7 @@ v2-complete means:
 10. Closure-tracked pending package `sdd/pending/beamHO-bench-baseline-parameter-envelope-sdd.md` has D1~D5 implemented with closure evidence.
 11. Closure-tracked pending package `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md` has D1~D5 implemented with closure evidence.
 12. Closure-tracked pending package `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md` has D1~D5 implemented with closure evidence.
+13. Closure-tracked pending package `sdd/pending/beamHO-bench-core-extension-governance-sdd.md` has D1~D5 implemented with closure evidence.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
@@ -52,6 +53,7 @@ Deferred items remain out of active scope:
 | BPE (D1~D5) | Complete | baseline parameter envelope pack (elevation/load/mobility tiers) with deterministic artifact/validation contracts, documentation synchronization, and closure report |
 | RB1 (D1~D5) | Complete | repro bundle v1 package for deterministic one-command packaging of canonical cross-mode and baseline-envelope artifacts, with contract guard and closure report |
 | SCB (D1~D5) | Complete | service continuity baseline validation pack (`VAL-SCB-*`) for starlink/oneweb/coupled-scheduler continuity envelopes with deterministic contract guard and closure report |
+| CEG (D1~D5) | Complete | core/all validation scope governance + stage artifact freshness enforcement + runtime override source-map coverage guard + closure synchronization |
 
 ---
 
@@ -62,6 +64,8 @@ Mandatory command:
 
 Advisory day-to-day command (non-gating shortcut):
 1. `npm run validate:daily`
+2. `npm run validate:val-suite:all`
+3. `npm run validate:nightly`
 
 Governance rule:
 1. `validate:daily` is for local iteration only and does not replace `validate:stage`.
@@ -73,7 +77,7 @@ This gate includes:
 4. `npm run validate:rigor`
 5. `npm run validate:structure`
 6. `npm run validate:repo-policy`
-7. `npm run validate:val-suite`
+7. `npm run validate:val-suite` (`scope=core`)
 
 Required artifacts:
 1. `dist/sim-test-summary.json`
@@ -87,10 +91,11 @@ Required artifacts:
 ## 4. Verification Snapshot (Latest)
 
 Latest local verification (2026-03-03):
-1. `validate:stage` passed.
+1. `validate:stage` passed (core scope gate + artifact freshness check).
 2. `test:sim`: 67/67 passed (unit 19/19, integration 48/48).
-3. `validate:val-suite`: 67/67 passed, warnings=0.
-4. Validation artifacts are compact and generated under `dist/`.
+3. `validate:val-suite`: 50/50 passed (`scope=core`), warnings=0.
+4. `validate:val-suite:all`: 67/67 passed (`scope=all`), warnings=0.
+5. Validation artifacts are compact and generated under `dist/`.
 
 ---
 
@@ -120,6 +125,8 @@ Primary references:
 21. `sdd/completed/beamHO-bench-repro-bundle-v1-closure.md`
 22. `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md`
 23. `sdd/completed/beamHO-bench-service-continuity-baseline-closure.md`
+24. `sdd/pending/beamHO-bench-core-extension-governance-sdd.md`
+25. `sdd/completed/beamHO-bench-core-extension-governance-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
@@ -145,3 +152,4 @@ Code points for v2 closure evidence:
 21. `scripts/validate-validation-suite.mjs` (`rb1 contract pass`) + `README.md`/`docs/zh-TW/04-testing-and-validation.md` (`bundle:repro-v1`) (RB1 contract guard + workflow guidance evidence)
 22. `src/sim/bench/service-continuity-baseline-pack.ts` + `src/sim/tests/integration-cases-service-continuity-pack.ts` + `src/sim/bench/validation-definitions.ts` (`VAL-SCB-*`) (SCB continuity-oriented validation pack integration evidence)
 23. `scripts/validate-validation-suite.mjs` (`scb contract pass`) + `sdd/completed/beamHO-bench-validation-matrix.md` (`VAL-SCB-*`) (SCB deterministic contract and matrix-alignment evidence)
+24. `src/sim/bench/validation-scope.ts` + `src/sim/bench/validation-suite.ts` + `scripts/validate-stage-gate.mjs` + `scripts/validate-validation-suite.mjs` (CEG core/all execution governance, stage artifact freshness, and runtime override source-map coverage enforcement)
