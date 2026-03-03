@@ -7,7 +7,6 @@ import { SatelliteModel } from '../sim/SatelliteModel';
 import { ConnectionLines } from '../sim/ConnectionLines';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
-import { ComparisonChart } from '../sim/ComparisonChart';
 import { HOEventTimeline, type HOEventTimelineRow } from '../sim/HOEventTimeline';
 import { TimelineControls } from '../sim/TimelineControls';
 import { NTPU_CONFIG } from '@/config/ntpu.config';
@@ -18,7 +17,6 @@ import { SceneErrorBoundary } from '../ui/SceneErrorBoundary';
 import { useSimulation } from '@/hooks/useSimulation';
 import type { CanonicalProfileId } from '@/config/paper-profiles/loader';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
-import type { BaselineBatchResult } from '@/sim/bench/runner';
 import type { SimSnapshot } from '@/sim/types';
 import type { SatelliteRenderMode } from '../sim/satellite-render-mode';
 
@@ -47,8 +45,6 @@ export function MainScene() {
   const [satelliteRenderMode, setSatelliteRenderMode] = useState<SatelliteRenderMode>(
     NTPU_CONFIG.satellite.renderMode,
   );
-  const [comparisonBatch, setComparisonBatch] = useState<BaselineBatchResult | null>(null);
-  const [validationSuiteStatus, setValidationSuiteStatus] = useState<string | null>(null);
   const [linkVisibility, setLinkVisibility] = useState<LinkVisibility>({
     serving: true,
     secondary: true,
@@ -64,18 +60,11 @@ export function MainScene() {
     baseline,
     isRunning,
     playbackRate,
-    sourceTraceFileName,
-    kpiResultFileName,
-    kpiTimeseriesFileName,
     start,
     stop,
     step,
     reset,
     setPlaybackRate,
-    exportSourceTrace,
-    exportKpiReport,
-    exportBaselineComparison,
-    exportValidationSuite,
     exportRunBundle,
   } = useSimulation({
     profileId: selectedProfileId,
@@ -219,49 +208,50 @@ export function MainScene() {
               | ue: <strong>{displayedSnapshot.ues.length}</strong>
             </div>
             <div className="sim-hud__actions">
-              <label className="sim-hud__select">
-                Profile
-                <select
-                  value={selectedProfileId}
-                  onChange={(event) => {
-                    setSelectedProfileId(event.target.value as CanonicalProfileId);
-                    setComparisonBatch(null);
-                  }}
-                >
-                  <option value="case9-default">case9-default</option>
-                  <option value="starlink-like">starlink-like</option>
-                  <option value="oneweb-like">oneweb-like</option>
-                </select>
-              </label>
-              <label className="sim-hud__select">
-                Baseline
-                <select
-                  value={selectedBaseline}
-                  onChange={(event) =>
-                    setSelectedBaseline(event.target.value as RuntimeBaseline)
-                  }
-                >
-                  <option value="max-rsrp">max-rsrp</option>
-                  <option value="max-elevation">max-elevation</option>
-                  <option value="max-remaining-time">max-remaining-time</option>
-                  <option value="a3">a3</option>
-                  <option value="a4">a4</option>
-                  <option value="cho">cho</option>
-                  <option value="mc-ho">mc-ho</option>
-                </select>
-              </label>
-              <label className="sim-hud__select">
-                Satellite
-                <select
-                  value={satelliteRenderMode}
-                  onChange={(event) =>
-                    setSatelliteRenderMode(event.target.value as SatelliteRenderMode)
-                  }
-                >
-                  <option value="primitive">primitive</option>
-                  <option value="glb">glb</option>
-                </select>
-              </label>
+              <div className="sim-hud__controls">
+                <label className="sim-hud__select">
+                  Profile
+                  <select
+                    value={selectedProfileId}
+                    onChange={(event) =>
+                      setSelectedProfileId(event.target.value as CanonicalProfileId)
+                    }
+                  >
+                    <option value="case9-default">case9-default</option>
+                    <option value="starlink-like">starlink-like</option>
+                    <option value="oneweb-like">oneweb-like</option>
+                  </select>
+                </label>
+                <label className="sim-hud__select">
+                  Baseline
+                  <select
+                    value={selectedBaseline}
+                    onChange={(event) =>
+                      setSelectedBaseline(event.target.value as RuntimeBaseline)
+                    }
+                  >
+                    <option value="max-rsrp">max-rsrp</option>
+                    <option value="max-elevation">max-elevation</option>
+                    <option value="max-remaining-time">max-remaining-time</option>
+                    <option value="a3">a3</option>
+                    <option value="a4">a4</option>
+                    <option value="cho">cho</option>
+                    <option value="mc-ho">mc-ho</option>
+                  </select>
+                </label>
+                <label className="sim-hud__select">
+                  Satellite
+                  <select
+                    value={satelliteRenderMode}
+                    onChange={(event) =>
+                      setSatelliteRenderMode(event.target.value as SatelliteRenderMode)
+                    }
+                  >
+                    <option value="primitive">primitive</option>
+                    <option value="glb">glb</option>
+                  </select>
+                </label>
+              </div>
               <TimelineControls
                 tick={displayedSnapshot.tick}
                 timeSec={displayedSnapshot.timeSec}
@@ -276,59 +266,18 @@ export function MainScene() {
                 onReplayTickChange={(nextTick) => setReplayTick(nextTick)}
                 onReplayLive={() => setReplayTick(null)}
               />
-              <button
-                type="button"
-                onClick={() => {
-                  void exportSourceTrace();
-                }}
-                title={sourceTraceFileName}
-              >
-                Export Source Trace
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  exportKpiReport();
-                }}
-                title={`${kpiResultFileName}\n${kpiTimeseriesFileName}`}
-              >
-                Export KPI Report
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const artifact = exportBaselineComparison();
-                  setComparisonBatch(artifact.batch);
-                }}
-                title="Export summary CSV/JSON, chart artifact JSON, small-scale comparison template JSON, and per-baseline timeseries CSV files."
-              >
-                Export Baseline Comparison
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const artifact = exportValidationSuite();
-                  setValidationSuiteStatus(
-                    `Validation suite: ${artifact.gateSummary.passedCases}/${artifact.gateSummary.totalCases} cases passed`,
-                  );
-                }}
-                title="Run core VAL-* suite and export suite JSON/CSV, per-case summary CSV, and validation-gate-summary JSON."
-              >
-                Export Validation Suite
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  void exportRunBundle();
-                }}
-                title="Export manifest/resolved-profile/source-trace/kpi-summary/timeseries/validation-gate-summary bundle."
-              >
-                Export Run Bundle
-              </button>
+              <div className="sim-hud__exports">
+                <button
+                  type="button"
+                  onClick={() => {
+                    void exportRunBundle();
+                  }}
+                  title="Export manifest/resolved-profile/source-trace/kpi-summary/timeseries/validation-gate-summary bundle."
+                >
+                  Export Run Bundle
+                </button>
+              </div>
             </div>
-            {validationSuiteStatus ? (
-              <div className="sim-hud__meta">{validationSuiteStatus}</div>
-            ) : null}
             <div className="sim-failure-overlay">
               <div className="sim-failure-overlay__header">State1/2/3 Failure Overlay</div>
               <div className="sim-failure-overlay__stats">
@@ -343,7 +292,6 @@ export function MainScene() {
             />
             <KpiHUD kpi={displayedSnapshot.kpiCumulative} ues={displayedSnapshot.ues} baseline={baseline} />
             <HOEventTimeline events={hoEventTimeline} maxRows={12} />
-            <ComparisonChart batch={comparisonBatch} />
           </div>
         ) : null}
       </div>

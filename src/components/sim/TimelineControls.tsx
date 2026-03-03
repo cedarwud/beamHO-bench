@@ -47,28 +47,33 @@ export function TimelineControls({
   const replayValue = replayTick ?? replayMaxTick;
   return (
     <div className="sim-timeline">
-      <button type="button" onClick={onToggleRun}>
-        {isRunning ? 'Pause' : 'Run'}
-      </button>
-      <button type="button" onClick={onStep} disabled={isRunning}>
-        Step
-      </button>
-      <button type="button" onClick={onReset}>
-        Reset
-      </button>
-      <label className="sim-hud__select">
-        Speed
-        <select
-          value={String(playbackRate)}
-          onChange={(event) => onPlaybackRateChange(Number(event.target.value))}
-        >
-          {PLAYBACK_RATE_OPTIONS.map((rate) => (
-            <option key={rate} value={rate}>
-              {formatRate(rate)}
-            </option>
-          ))}
-        </select>
-      </label>
+      <div className="sim-timeline__run-row">
+        <button type="button" onClick={onToggleRun}>
+          {isRunning ? 'Pause' : 'Run'}
+        </button>
+        <button type="button" onClick={onStep} disabled={isRunning}>
+          Step
+        </button>
+        <button type="button" onClick={onReset}>
+          Reset
+        </button>
+        <button type="button" onClick={onReplayLive} disabled={replayTick === null}>
+          Live
+        </button>
+        <label className="sim-hud__select sim-timeline__speed">
+          Speed
+          <select
+            value={String(playbackRate)}
+            onChange={(event) => onPlaybackRateChange(Number(event.target.value))}
+          >
+            {PLAYBACK_RATE_OPTIONS.map((rate) => (
+              <option key={rate} value={rate}>
+                {formatRate(rate)}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       <label className="sim-timeline__scrubber">
         Replay
         <input
@@ -80,9 +85,6 @@ export function TimelineControls({
           disabled={isRunning || replayMaxTick <= 0}
         />
       </label>
-      <button type="button" onClick={onReplayLive} disabled={replayTick === null}>
-        Live
-      </button>
       <span className="sim-timeline__meta">
         t={timeSec.toFixed(1)}s | tick={tick} | view={replayTick === null ? 'live' : `replay@${replayTick}`}
       </span>
