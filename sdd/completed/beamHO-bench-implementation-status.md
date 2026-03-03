@@ -45,7 +45,7 @@ Deferred items remain out of active scope:
 | CB-v1 (D1~D7) | Complete | multi-seed benchmark + scenario matrix + temporal/doppler realism + paper-ready reporting + replay/timeline/state overlay UI + assumption governance + architecture review closure |
 | CB2 (D1~D4) | Complete | common baseline v2 validation pack + matrix/alignment guard updates + closure synchronization |
 | CR (D1~D5) | Complete | behavior-preserving complexity reduction package; `integration-cases` and validation-definition decomposition + `validate:daily` workflow + SDD status authority cleanup + closure report |
-| CMR (D1~D5) | In Progress | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`); D1-D3 completed (plan/run + integration + val-suite contract guard), D4~D5 pending |
+| CMR (D1~D5) | In Progress | cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`); D1-D4 completed (plan/run + integration + val-suite contract guard + workflow guidance), D5 pending |
 
 ---
 
@@ -125,3 +125,4 @@ Code points for v2 closure evidence:
 14. `src/sim/bench/common-baseline-pack.ts` + `src/sim/tests/integration-cases-common-baseline-pack.ts` + `scripts/validate-validation-suite.mjs` (CB2 pack coverage + modular matrix-definition alignment guard)
 15. `src/sim/tests/integration-cases-real-trace-artifacts.ts` + `src/sim/bench/validation-definitions-*.ts` + `package.json` (`validate:daily`) (CR maintainability and workflow-ergonomics package evidence)
 16. `src/sim/bench/cross-mode-benchmark.ts` + `src/sim/tests/integration-cases-cross-mode-benchmark.ts` (CMR cross-mode tuple contract + deterministic benchmark-run coverage)
+17. `scripts/run-cross-mode-benchmark.mjs` + `package.json` (`bench:cross-mode`) + `README.md` workflow sections (CMR D4 execution workflow guidance)

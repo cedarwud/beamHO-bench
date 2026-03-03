@@ -38,7 +38,7 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 
 ## Pending (Active + Closure-Tracked Specs)
 
-1. `pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (active pending package)
+1. `pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (active pending package; D1-D4 implemented, D5 pending)
 2. `pending/beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked pending package)
 3. `pending/beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked pending package)
 4. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked pending spec)

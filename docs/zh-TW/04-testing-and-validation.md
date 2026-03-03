@@ -17,7 +17,10 @@
 2. `npm run validate:val-suite`  
 執行 `VAL-*` 套件並輸出 validation artifact。
 
-3. `npm run validate:stage`  
+3. `npm run bench:cross-mode`  
+執行 cross-mode reproducible benchmark pack（`case9-default` + `starlink-like` + `oneweb-like`），預設輸出到 `dist/cross-mode-benchmark/`。
+
+4. `npm run validate:stage`  
 一鍵跑完整 gate（lint/build/test/validate 系列）。
 
 ## 3. 主要 artifact
@@ -27,7 +30,10 @@
 3. `dist/validation-suite.csv`
 4. `dist/validation-gate-summary.json`
 5. `dist/runtime-parameter-audit-summary.json`
-6. （UI comparison 匯出）`small-scale-template_<profile>_seed-<seed>_ticks-<tick>.json`
+6. `dist/cross-mode-benchmark/cross-mode-plan_<tupleDigest>.json`
+7. `dist/cross-mode-benchmark/cross-mode-run_<artifactDigest>.json`
+8. `dist/cross-mode-benchmark/cross-mode-summary_<artifactDigest>.json`
+9. （UI comparison 匯出）`small-scale-template_<profile>_seed-<seed>_ticks-<tick>.json`
 
 這些輸出也是 CI artifact 與論文附錄可引用來源。
 
