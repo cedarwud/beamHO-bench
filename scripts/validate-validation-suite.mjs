@@ -50,6 +50,7 @@ const VALIDATION_DEFINITIONS_DIR = path.join(
   'sim',
   'bench',
 );
+const PROFILE_SOURCE_MAP_DIR = path.join(ROOT, 'src', 'config', 'paper-profiles');
 const MATRIX_CORE_SUBSECTION_HEADING = '### 5.1 Core Stage Runs';
 const MATRIX_EXTENSION_SUBSECTION_HEADING = '### 5.2 Extension Runs (Nightly/Research)';
 const REQUIRED_CROSS_MODE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
@@ -133,6 +134,88 @@ function extractValidationIdsFromSubsection(markdown, subsectionHeading) {
 function extractDefinedValidationIdsFromDefinitions(sourceText) {
   const matches = sourceText.matchAll(/validationId:\s*['"]([^'"]+)['"]/g);
   return unique([...matches].map((match) => match[1]));
+}
+
+function flattenRuntimeOverrideLeafPaths(value, parentPath = '') {
+  if (Array.isArray(value)) {
+    return parentPath ? [parentPath] : [];
+  }
+  if (value === null || typeof value !== 'object') {
+    return parentPath ? [parentPath] : [];
+  }
+
+  const entries = Object.entries(value);
+  if (entries.length === 0) {
+    return [];
+  }
+
+  const leaves = [];
+  for (const [key, nestedValue] of entries) {
+    const nextPath = parentPath ? `${parentPath}.${key}` : key;
+    leaves.push(...flattenRuntimeOverrideLeafPaths(nestedValue, nextPath));
+  }
+  return leaves;
+}
+
+function hasSourceMapping(sourceEntries, leafPath) {
+  let pathCursor = leafPath;
+  while (pathCursor.length > 0) {
+    const mappings = sourceEntries[pathCursor];
+    if (Array.isArray(mappings) && mappings.length > 0) {
+      return true;
+    }
+    const separator = pathCursor.lastIndexOf('.');
+    if (separator < 0) {
+      break;
+    }
+    pathCursor = pathCursor.slice(0, separator);
+  }
+  return false;
+}
+
+async function readProfileSourceMap(profileId) {
+  const sourceMapPath = path.join(PROFILE_SOURCE_MAP_DIR, `${profileId}.sources.json`);
+  const content = await readFile(sourceMapPath, 'utf8');
+  return JSON.parse(content);
+}
+
+async function validateRuntimeOverrideSourceCoverage(suite) {
+  const sourceMapCache = new Map();
+  const missing = [];
+
+  for (const result of suite.results) {
+    const runtimeOverrides = result.runtimeOverrides ?? {};
+    const overridePaths = flattenRuntimeOverrideLeafPaths(runtimeOverrides);
+    if (overridePaths.length === 0) {
+      continue;
+    }
+
+    let sourceMap = sourceMapCache.get(result.profileId);
+    if (!sourceMap) {
+      sourceMap = await readProfileSourceMap(result.profileId);
+      sourceMapCache.set(result.profileId, sourceMap);
+    }
+
+    const sourceEntries = sourceMap.sources ?? {};
+    for (const overridePath of overridePaths) {
+      if (hasSourceMapping(sourceEntries, overridePath)) {
+        continue;
+      }
+      missing.push(
+        `${result.validationId}/${result.caseId} profile=${result.profileId} path=${overridePath}`,
+      );
+    }
+  }
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Runtime override source-map coverage missing for ${missing.length} path(s): ${missing
+        .slice(0, 10)
+        .join(' | ')}${missing.length > 10 ? ' ...' : ''}`,
+    );
+  }
+
+  console.log('[validation-suite] runtime override source-map coverage pass');
 }
 
 async function collectTypeScriptFiles(dirPath) {
@@ -659,6 +742,7 @@ async function main() {
     }
     await bundleCli();
     const gateResult = await executeGate(scope);
+    await validateRuntimeOverrideSourceCoverage(gateResult.suite);
     console.log(`[validation-suite] scope=${scope}`);
     printGateSummary(gateResult.summary);
     await writeSuiteArtifacts(gateResult.suite);

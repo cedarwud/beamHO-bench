@@ -142,6 +142,56 @@
       "note": "Profile-scoped SINR-to-spectral-efficiency table for optional mcs-mapped throughput mode."
     },
     {
+      "sourceId": "ASSUME-MIN-ELEVATION-SENSITIVITY-TIERS",
+      "type": "assumption",
+      "title": "Minimum Elevation Sensitivity Tiers",
+      "locator": "constellation.minElevationDeg",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:min-elevation-sensitivity-tiers",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Validation sensitivity sweeps for min-elevation threshold (e.g., 10/20/35 deg) use explicit override tiers."
+    },
+    {
+      "sourceId": "ASSUME-UE-COUNT-TIERS",
+      "type": "assumption",
+      "title": "UE Count Tier Envelope",
+      "locator": "ue.count",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:ue-count-tiers",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Validation and baseline envelope sweeps use bounded UE-count tiers for reproducible load sensitivity."
+    },
+    {
+      "sourceId": "ASSUME-UE-SPEED-TIERS",
+      "type": "assumption",
+      "title": "UE Mobility Speed Tier Envelope",
+      "locator": "ue.speedKmphOptions",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:ue-speed-tiers",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Validation sweeps use fixed UE-speed tiers (e.g., 0/3/30/60 km/h) for deterministic mobility sensitivity."
+    },
+    {
+      "sourceId": "ASSUME-BEAM-COUNT-LAYOUT-TIERS",
+      "type": "assumption",
+      "title": "Beam Count and Layout Tier Envelope",
+      "locator": "beam.beamsPerSatellite|beam.layout",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:beam-count-layout-tiers",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Validation/generalization sweeps use bounded beam-count and layout tiers (e.g., 7/16/19/50)."
+    },
+    {
+      "sourceId": "ASSUME-FREQUENCY-REUSE-MODES",
+      "type": "assumption",
+      "title": "Frequency Reuse Mode Envelope",
+      "locator": "beam.frequencyReuse",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:frequency-reuse-modes",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Validation sweeps compare bounded reuse settings (e.g., FR1/reuse-4) under fixed profile/runtime tuples."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

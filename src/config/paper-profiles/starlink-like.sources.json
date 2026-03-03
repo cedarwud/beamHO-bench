@@ -84,6 +84,9 @@
     "handover.params.timerAlphaOptions": [
       "PAP-2025-TIMERCHO-CORE"
     ],
+    "handover.params.mtsSec": [
+      "PAP-2025-TIMERCHO-CORE"
+    ],
     "scheduler.mode": [
       "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
     ],
@@ -107,6 +110,24 @@
     ],
     "scheduler.fairnessTargetJain": [
       "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG"
+    ],
+    "constellation.minElevationDeg": [
+      "ASSUME-MIN-ELEVATION-SENSITIVITY-TIERS"
+    ],
+    "ue.count": [
+      "ASSUME-UE-COUNT-TIERS"
+    ],
+    "ue.speedKmphOptions": [
+      "ASSUME-UE-SPEED-TIERS"
+    ],
+    "beam.beamsPerSatellite": [
+      "ASSUME-BEAM-COUNT-LAYOUT-TIERS"
+    ],
+    "beam.layout": [
+      "ASSUME-BEAM-COUNT-LAYOUT-TIERS"
+    ],
+    "beam.frequencyReuse": [
+      "ASSUME-FREQUENCY-REUSE-MODES"
     ],
     "rlfStateMachine.qOutDb": [
       "PAP-2022-A4EVENT-CORE",
