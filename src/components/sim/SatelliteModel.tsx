@@ -150,7 +150,6 @@ export function SatelliteModel({
     <>
       {satellites.map((satellite) => {
         const isVisible = satellite.visible;
-        const altitudeWorld = Math.max(0, satellite.positionWorld[1]);
 
         return (
           <Fragment key={satellite.id}>
@@ -174,21 +173,6 @@ export function SatelliteModel({
                 </mesh>
               )}
             </group>
-
-            <mesh
-              position={[
-                satellite.positionWorld[0],
-                altitudeWorld / 2,
-                satellite.positionWorld[2],
-              ]}
-            >
-              <cylinderGeometry args={[0.22, 0.22, altitudeWorld, 10, 1, true]} />
-              <meshBasicMaterial
-                color={isVisible ? '#22d3ee' : '#475569'}
-                transparent
-                opacity={0.3}
-              />
-            </mesh>
           </Fragment>
         );
       })}
