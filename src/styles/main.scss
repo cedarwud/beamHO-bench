@@ -37,13 +37,44 @@ canvas {
   z-index: 1;
 }
 
-.sim-hud {
+.sim-sidebar {
   position: absolute;
   top: 14px;
   left: 14px;
+  bottom: 14px;
   z-index: 3;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.sim-sidebar__toggle {
+  pointer-events: auto;
+  border: 1px solid rgba(125, 211, 252, 0.45);
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: rgba(8, 16, 28, 0.86);
+  color: #e2e8f0;
+  backdrop-filter: blur(6px);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.sim-sidebar__toggle:hover {
+  background: rgba(14, 116, 144, 0.35);
+}
+
+.sim-hud {
+  position: absolute;
+  pointer-events: auto;
+  inset: 0 auto auto 0;
   min-width: 360px;
-  max-width: min(92vw, 560px);
+  max-width: min(56vw, 560px);
+  max-height: calc(100vh - 28px);
+  overflow: auto;
   border: 1px solid rgba(125, 211, 252, 0.35);
   border-radius: 10px;
   padding: 10px 12px;
@@ -336,9 +367,20 @@ canvas {
 }
 
 @media (max-width: 900px) {
+  .sim-sidebar {
+    top: 10px;
+    left: 10px;
+    bottom: 10px;
+  }
+
+  .sim-sidebar__toggle {
+    padding: 7px 11px;
+  }
+
   .sim-hud {
     min-width: 0;
-    width: calc(100vw - 24px);
+    max-width: calc(100vw - 64px);
+    max-height: calc(100vh - 20px);
   }
 
   .sim-kpi-grid {

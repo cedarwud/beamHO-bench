@@ -54,6 +54,7 @@ export function MainScene() {
     secondary: true,
     prepared: true,
   });
+  const [isHudCollapsed, setIsHudCollapsed] = useState(false);
   const [replaySnapshots, setReplaySnapshots] = useState<SimSnapshot[]>([]);
   const [replayTick, setReplayTick] = useState<number | null>(null);
 
@@ -191,148 +192,161 @@ export function MainScene() {
   return (
     <div className="scene-root">
       <Starfield starCount={180} />
-      <div className="sim-hud" role="status" aria-live="polite">
-        <div className="sim-hud__title">
-          {profile.mode === 'real-trace'
-            ? 'Phase 1b Real Trace Orbit'
-            : 'Phase 1a Case9 Analytic Orbit'}
-        </div>
-        <div className="sim-hud__meta">
-          profile: <strong>{profile.profileId}</strong> | tick: <strong>{displayedSnapshot.tick}</strong> |
-          baseline: <strong>{baseline}</strong> | sat: <strong>{displayedSnapshot.satellites.length}</strong> | beams:{' '}
-          <strong>
-            {displayedSnapshot.satellites.reduce((sum, satellite) => sum + satellite.beams.length, 0)}
-          </strong>{' '}
-          | gain: <strong>{profile.beam.gainModel}</strong>{' '}
-          | sat-render: <strong>{satelliteRenderMode}</strong>{' '}
-          | ue: <strong>{displayedSnapshot.ues.length}</strong>
-        </div>
-        <div className="sim-hud__actions">
-          <label className="sim-hud__select">
-            Profile
-            <select
-              value={selectedProfileId}
-              onChange={(event) => {
-                setSelectedProfileId(event.target.value as CanonicalProfileId);
-                setComparisonBatch(null);
-              }}
-            >
-              <option value="case9-default">case9-default</option>
-              <option value="starlink-like">starlink-like</option>
-              <option value="oneweb-like">oneweb-like</option>
-            </select>
-          </label>
-          <label className="sim-hud__select">
-            Baseline
-            <select
-              value={selectedBaseline}
-              onChange={(event) =>
-                setSelectedBaseline(event.target.value as RuntimeBaseline)
-              }
-            >
-              <option value="max-rsrp">max-rsrp</option>
-              <option value="max-elevation">max-elevation</option>
-              <option value="max-remaining-time">max-remaining-time</option>
-              <option value="a3">a3</option>
-              <option value="a4">a4</option>
-              <option value="cho">cho</option>
-              <option value="mc-ho">mc-ho</option>
-            </select>
-          </label>
-          <label className="sim-hud__select">
-            Satellite
-            <select
-              value={satelliteRenderMode}
-              onChange={(event) =>
-                setSatelliteRenderMode(event.target.value as SatelliteRenderMode)
-              }
-            >
-              <option value="primitive">primitive</option>
-              <option value="glb">glb</option>
-            </select>
-          </label>
-          <TimelineControls
-            tick={displayedSnapshot.tick}
-            timeSec={displayedSnapshot.timeSec}
-            isRunning={isRunning}
-            playbackRate={playbackRate}
-            replayTick={replayTick}
-            replayMaxTick={replayMaxTick}
-            onToggleRun={handleToggleRun}
-            onStep={handleStep}
-            onReset={handleReset}
-            onPlaybackRateChange={setPlaybackRate}
-            onReplayTickChange={(nextTick) => setReplayTick(nextTick)}
-            onReplayLive={() => setReplayTick(null)}
-          />
-          <button
-            type="button"
-            onClick={() => {
-              void exportSourceTrace();
-            }}
-            title={sourceTraceFileName}
-          >
-            Export Source Trace
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              exportKpiReport();
-            }}
-            title={`${kpiResultFileName}\n${kpiTimeseriesFileName}`}
-          >
-            Export KPI Report
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const artifact = exportBaselineComparison();
-              setComparisonBatch(artifact.batch);
-            }}
-            title="Export summary CSV/JSON, chart artifact JSON, small-scale comparison template JSON, and per-baseline timeseries CSV files."
-          >
-            Export Baseline Comparison
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const artifact = exportValidationSuite();
-              setValidationSuiteStatus(
-                `Validation suite: ${artifact.gateSummary.passedCases}/${artifact.gateSummary.totalCases} cases passed`,
-              );
-            }}
-            title="Run core VAL-* suite and export suite JSON/CSV, per-case summary CSV, and validation-gate-summary JSON."
-          >
-            Export Validation Suite
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              void exportRunBundle();
-            }}
-            title="Export manifest/resolved-profile/source-trace/kpi-summary/timeseries/validation-gate-summary bundle."
-          >
-            Export Run Bundle
-          </button>
-        </div>
-        {validationSuiteStatus ? (
-          <div className="sim-hud__meta">{validationSuiteStatus}</div>
-        ) : null}
-        <div className="sim-failure-overlay">
-          <div className="sim-failure-overlay__header">State1/2/3 Failure Overlay</div>
-          <div className="sim-failure-overlay__stats">
-            S1: <strong>{hoStateCounts.state1}</strong> | S2: <strong>{hoStateCounts.state2}</strong> | S3:{' '}
-            <strong>{hoStateCounts.state3}</strong>
+      <div className={`sim-sidebar${isHudCollapsed ? ' sim-sidebar--collapsed' : ''}`}>
+        <button
+          type="button"
+          className="sim-sidebar__toggle"
+          onClick={() => setIsHudCollapsed((previous) => !previous)}
+          aria-label={isHudCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={isHudCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isHudCollapsed ? '>' : '<'}
+        </button>
+        {!isHudCollapsed ? (
+          <div className="sim-hud" role="status" aria-live="polite">
+            <div className="sim-hud__title">
+              {profile.mode === 'real-trace'
+                ? 'Phase 1b Real Trace Orbit'
+                : 'Phase 1a Case9 Analytic Orbit'}
+            </div>
+            <div className="sim-hud__meta">
+              profile: <strong>{profile.profileId}</strong> | tick: <strong>{displayedSnapshot.tick}</strong> |
+              baseline: <strong>{baseline}</strong> | sat: <strong>{displayedSnapshot.satellites.length}</strong> | beams:{' '}
+              <strong>
+                {displayedSnapshot.satellites.reduce((sum, satellite) => sum + satellite.beams.length, 0)}
+              </strong>{' '}
+              | gain: <strong>{profile.beam.gainModel}</strong>{' '}
+              | sat-render: <strong>{satelliteRenderMode}</strong>{' '}
+              | ue: <strong>{displayedSnapshot.ues.length}</strong>
+            </div>
+            <div className="sim-hud__actions">
+              <label className="sim-hud__select">
+                Profile
+                <select
+                  value={selectedProfileId}
+                  onChange={(event) => {
+                    setSelectedProfileId(event.target.value as CanonicalProfileId);
+                    setComparisonBatch(null);
+                  }}
+                >
+                  <option value="case9-default">case9-default</option>
+                  <option value="starlink-like">starlink-like</option>
+                  <option value="oneweb-like">oneweb-like</option>
+                </select>
+              </label>
+              <label className="sim-hud__select">
+                Baseline
+                <select
+                  value={selectedBaseline}
+                  onChange={(event) =>
+                    setSelectedBaseline(event.target.value as RuntimeBaseline)
+                  }
+                >
+                  <option value="max-rsrp">max-rsrp</option>
+                  <option value="max-elevation">max-elevation</option>
+                  <option value="max-remaining-time">max-remaining-time</option>
+                  <option value="a3">a3</option>
+                  <option value="a4">a4</option>
+                  <option value="cho">cho</option>
+                  <option value="mc-ho">mc-ho</option>
+                </select>
+              </label>
+              <label className="sim-hud__select">
+                Satellite
+                <select
+                  value={satelliteRenderMode}
+                  onChange={(event) =>
+                    setSatelliteRenderMode(event.target.value as SatelliteRenderMode)
+                  }
+                >
+                  <option value="primitive">primitive</option>
+                  <option value="glb">glb</option>
+                </select>
+              </label>
+              <TimelineControls
+                tick={displayedSnapshot.tick}
+                timeSec={displayedSnapshot.timeSec}
+                isRunning={isRunning}
+                playbackRate={playbackRate}
+                replayTick={replayTick}
+                replayMaxTick={replayMaxTick}
+                onToggleRun={handleToggleRun}
+                onStep={handleStep}
+                onReset={handleReset}
+                onPlaybackRateChange={setPlaybackRate}
+                onReplayTickChange={(nextTick) => setReplayTick(nextTick)}
+                onReplayLive={() => setReplayTick(null)}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  void exportSourceTrace();
+                }}
+                title={sourceTraceFileName}
+              >
+                Export Source Trace
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  exportKpiReport();
+                }}
+                title={`${kpiResultFileName}\n${kpiTimeseriesFileName}`}
+              >
+                Export KPI Report
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const artifact = exportBaselineComparison();
+                  setComparisonBatch(artifact.batch);
+                }}
+                title="Export summary CSV/JSON, chart artifact JSON, small-scale comparison template JSON, and per-baseline timeseries CSV files."
+              >
+                Export Baseline Comparison
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const artifact = exportValidationSuite();
+                  setValidationSuiteStatus(
+                    `Validation suite: ${artifact.gateSummary.passedCases}/${artifact.gateSummary.totalCases} cases passed`,
+                  );
+                }}
+                title="Run core VAL-* suite and export suite JSON/CSV, per-case summary CSV, and validation-gate-summary JSON."
+              >
+                Export Validation Suite
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  void exportRunBundle();
+                }}
+                title="Export manifest/resolved-profile/source-trace/kpi-summary/timeseries/validation-gate-summary bundle."
+              >
+                Export Run Bundle
+              </button>
+            </div>
+            {validationSuiteStatus ? (
+              <div className="sim-hud__meta">{validationSuiteStatus}</div>
+            ) : null}
+            <div className="sim-failure-overlay">
+              <div className="sim-failure-overlay__header">State1/2/3 Failure Overlay</div>
+              <div className="sim-failure-overlay__stats">
+                S1: <strong>{hoStateCounts.state1}</strong> | S2: <strong>{hoStateCounts.state2}</strong> | S3:{' '}
+                <strong>{hoStateCounts.state3}</strong>
+              </div>
+            </div>
+            <ConnectionLegend
+              ues={displayedSnapshot.ues}
+              visibility={linkVisibility}
+              onChange={setLinkVisibility}
+            />
+            <KpiHUD kpi={displayedSnapshot.kpiCumulative} ues={displayedSnapshot.ues} baseline={baseline} />
+            <HOEventTimeline events={hoEventTimeline} maxRows={12} />
+            <ComparisonChart batch={comparisonBatch} />
           </div>
-        </div>
-        <ConnectionLegend
-          ues={displayedSnapshot.ues}
-          visibility={linkVisibility}
-          onChange={setLinkVisibility}
-        />
-        <KpiHUD kpi={displayedSnapshot.kpiCumulative} ues={displayedSnapshot.ues} baseline={baseline} />
-        <HOEventTimeline events={hoEventTimeline} maxRows={12} />
-        <ComparisonChart batch={comparisonBatch} />
+        ) : null}
       </div>
 
       <SceneErrorBoundary>
