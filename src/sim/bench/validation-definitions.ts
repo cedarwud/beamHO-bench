@@ -1,4 +1,5 @@
 import type { ValidationSuiteDefinition } from './validation-types';
+import { buildBaselineParameterEnvelopeValidationDefinitions } from './baseline-parameter-envelope-pack';
 import { buildCommonBaselineV2ValidationDefinitions } from './common-baseline-pack';
 import { buildCoreValidationDefinitions } from './validation-definitions-core';
 import { buildModelSweepValidationDefinitions } from './validation-definitions-model-sweeps';
@@ -9,6 +10,7 @@ export function buildValidationDefinitions(): ValidationSuiteDefinition[] {
     ...buildCoreValidationDefinitions(),
     ...buildPolicyAndSchedulerValidationDefinitions(),
     ...buildModelSweepValidationDefinitions(),
+    ...buildBaselineParameterEnvelopeValidationDefinitions(),
     ...buildCommonBaselineV2ValidationDefinitions(),
   ];
 }

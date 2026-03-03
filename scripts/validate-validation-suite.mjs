@@ -10,8 +10,16 @@ const ROOT = process.cwd();
 const TMP_DIR = path.join(ROOT, '.tmp', 'validation-suite');
 const BUNDLE_PATH = path.join(TMP_DIR, 'validation-suite-cli.mjs');
 const CROSS_MODE_BUNDLE_PATH = path.join(TMP_DIR, 'cross-mode-benchmark.mjs');
+const BPE_BUNDLE_PATH = path.join(TMP_DIR, 'baseline-parameter-envelope-pack.mjs');
 const ENTRY_POINT = path.join(ROOT, 'src/sim/bench/cli-validation-suite.ts');
 const CROSS_MODE_ENTRY_POINT = path.join(ROOT, 'src/sim/bench/cross-mode-benchmark.ts');
+const BPE_ENTRY_POINT = path.join(
+  ROOT,
+  'src',
+  'sim',
+  'bench',
+  'baseline-parameter-envelope-pack.ts',
+);
 const ARTIFACT_DIR = path.join(ROOT, 'dist');
 const GATE_SUMMARY_PATH = path.join(ARTIFACT_DIR, 'validation-gate-summary.json');
 const SUITE_JSON_PATH = path.join(ARTIFACT_DIR, 'validation-suite.json');
@@ -33,6 +41,12 @@ const VALIDATION_DEFINITIONS_DIR = path.join(
   'bench',
 );
 const REQUIRED_CROSS_MODE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
+const REQUIRED_BPE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
+const REQUIRED_BPE_VALIDATION_CASE_COUNTS = {
+  'VAL-BPE-ELEVATION-THRESH-SWEEP': 3,
+  'VAL-BPE-LOAD-MOBILITY-SWEEP': 4,
+  'VAL-BPE-ONEWEB-PARAM-SMOKE': 1,
+};
 
 function unique(values) {
   return [...new Set(values)];
@@ -229,6 +243,85 @@ async function validateCrossModeBenchmarkContract() {
   );
 }
 
+async function validateBaselineParameterEnvelopeContract() {
+  await mkdir(TMP_DIR, { recursive: true });
+  await build({
+    entryPoints: [BPE_ENTRY_POINT],
+    outfile: BPE_BUNDLE_PATH,
+    bundle: true,
+    platform: 'node',
+    format: 'esm',
+    target: ['node20'],
+    sourcemap: false,
+    plugins: [
+      {
+        name: 'alias-at',
+        setup(pluginBuild) {
+          pluginBuild.onResolve({ filter: /^@\// }, (args) => ({
+            path: resolveAliasPath(args.path),
+          }));
+        },
+      },
+    ],
+  });
+
+  const moduleUrl = `${pathToFileURL(BPE_BUNDLE_PATH).href}?t=${Date.now()}`;
+  const moduleNamespace = await import(moduleUrl);
+  if (typeof moduleNamespace.buildBaselineParameterEnvelopeValidationDefinitions !== 'function') {
+    throw new Error(
+      'Baseline-parameter envelope pack module does not export buildBaselineParameterEnvelopeValidationDefinitions().',
+    );
+  }
+
+  const first = moduleNamespace.buildBaselineParameterEnvelopeValidationDefinitions();
+  const replay = moduleNamespace.buildBaselineParameterEnvelopeValidationDefinitions();
+  if (JSON.stringify(first) !== JSON.stringify(replay)) {
+    throw new Error(
+      'Baseline-parameter envelope validation definitions must be deterministic for fixed input.',
+    );
+  }
+
+  const byId = new Map(first.map((definition) => [definition.validationId, definition]));
+  for (const [id, expectedCaseCount] of Object.entries(REQUIRED_BPE_VALIDATION_CASE_COUNTS)) {
+    const definition = byId.get(id);
+    if (!definition) {
+      throw new Error(`Missing required baseline-parameter envelope validation ID: ${id}`);
+    }
+    if (definition.cases.length !== expectedCaseCount) {
+      throw new Error(
+        `Baseline-parameter envelope validation '${id}' expected case count=${expectedCaseCount}, got ${definition.cases.length}.`,
+      );
+    }
+    if (definition.requiresFullFidelity !== true) {
+      throw new Error(`Baseline-parameter envelope validation '${id}' must require full fidelity.`);
+    }
+    for (const suiteCase of definition.cases) {
+      if (!Array.isArray(suiteCase.baselines) || suiteCase.baselines.length === 0) {
+        throw new Error(
+          `Baseline-parameter envelope validation '${id}' has empty baseline list in case '${suiteCase.caseId}'.`,
+        );
+      }
+      if (!Number.isFinite(suiteCase.tickCount) || suiteCase.tickCount <= 0) {
+        throw new Error(
+          `Baseline-parameter envelope validation '${id}' has invalid tickCount in case '${suiteCase.caseId}'.`,
+        );
+      }
+    }
+  }
+
+  const profileIds = new Set(first.map((definition) => definition.profileId));
+  const missingProfileIds = REQUIRED_BPE_PROFILE_IDS.filter((id) => !profileIds.has(id));
+  if (missingProfileIds.length > 0) {
+    throw new Error(
+      `Baseline-parameter envelope validation pack missing canonical profile coverage: ${missingProfileIds.join(', ')}`,
+    );
+  }
+
+  console.log(
+    `[validation-suite] bpe contract pass validations=${Object.keys(REQUIRED_BPE_VALIDATION_CASE_COUNTS).length} profiles=${REQUIRED_BPE_PROFILE_IDS.join('|')}`,
+  );
+}
+
 async function executeGate() {
   const moduleUrl = `${pathToFileURL(BUNDLE_PATH).href}?t=${Date.now()}`;
   const moduleNamespace = await import(moduleUrl);
@@ -338,6 +431,7 @@ async function cleanup() {
 async function main() {
   try {
     await validateMatrixDefinitionAlignment();
+    await validateBaselineParameterEnvelopeContract();
     await validateCrossModeBenchmarkContract();
     await bundleCli();
     const gateResult = await executeGate();

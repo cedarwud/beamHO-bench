@@ -1,6 +1,6 @@
 # beamHO-bench — Validation Matrix
 
-**Version:** 0.9.1  
+**Version:** 0.9.2  
 **Date:** 2026-03-03  
 **Status:** Active (CI-enforced validation suite)
 
@@ -91,6 +91,9 @@ Minimum run set for CI/nightly:
 23. `VAL-CB2-PROTOCOL-RLF-TIMING-SWEEP`
 24. `VAL-CB2-CHO-MC-GEOMETRY-SWEEP`
 25. `VAL-CB2-STRESS-LOAD-SWEEP`
+26. `VAL-BPE-ELEVATION-THRESH-SWEEP`
+27. `VAL-BPE-LOAD-MOBILITY-SWEEP`
+28. `VAL-BPE-ONEWEB-PARAM-SMOKE`
 
 Each run must vary one factor only while keeping profile and seed policy controlled.
 

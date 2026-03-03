@@ -1,6 +1,19 @@
 import { buildBaselineParameterEnvelopeArtifact } from '@/sim/bench/baseline-parameter-envelope';
+import { buildValidationDefinitions } from '@/sim/bench/validation-definitions';
 import { assertCondition } from './helpers';
 import type { SimTestCase } from './types';
+
+const EXPECTED_BPE_VALIDATION_IDS = [
+  'VAL-BPE-ELEVATION-THRESH-SWEEP',
+  'VAL-BPE-LOAD-MOBILITY-SWEEP',
+  'VAL-BPE-ONEWEB-PARAM-SMOKE',
+] as const;
+
+const EXPECTED_BPE_VALIDATION_CASE_COUNTS: Record<(typeof EXPECTED_BPE_VALIDATION_IDS)[number], number> = {
+  'VAL-BPE-ELEVATION-THRESH-SWEEP': 3,
+  'VAL-BPE-LOAD-MOBILITY-SWEEP': 4,
+  'VAL-BPE-ONEWEB-PARAM-SMOKE': 1,
+};
 
 export function buildBaselineParameterEnvelopeIntegrationCases(): SimTestCase[] {
   return [
@@ -109,6 +122,31 @@ export function buildBaselineParameterEnvelopeIntegrationCases(): SimTestCase[] 
           JSON.stringify(artifact.axes.profileSequence) === JSON.stringify(['starlink-like']),
           `Expected normalized profile sequence ['starlink-like'], got ${JSON.stringify(artifact.axes.profileSequence)}.`,
         );
+      },
+    },
+    {
+      name: 'integration: baseline-parameter envelope validation ids are wired into validation definitions',
+      kind: 'integration',
+      run: () => {
+        const definitions = buildValidationDefinitions();
+        const byId = new Map(definitions.map((definition) => [definition.validationId, definition]));
+
+        for (const id of EXPECTED_BPE_VALIDATION_IDS) {
+          const definition = byId.get(id);
+          assertCondition(Boolean(definition), `Expected validation definition '${id}' to exist.`);
+          assertCondition(
+            definition?.requiresFullFidelity === true,
+            `Expected ${id} requiresFullFidelity=true.`,
+          );
+          assertCondition(
+            definition?.cases.length === EXPECTED_BPE_VALIDATION_CASE_COUNTS[id],
+            `Expected ${id} case count=${EXPECTED_BPE_VALIDATION_CASE_COUNTS[id]}, got ${definition?.cases.length ?? 0}.`,
+          );
+          assertCondition(
+            definition?.cases.every((suiteCase) => suiteCase.baselines.length > 0),
+            `Expected ${id} all cases to include non-empty baselines.`,
+          );
+        }
       },
     },
   ];
