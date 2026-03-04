@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
-**Date:** 2026-03-03  
-**Status:** v2 Active Scope Complete + Pending Closures Complete (V2-A/V2-B/V2-D + GC-1~GC-5 + SS-1~SS-4 + CB-v1 D1~D7 + CB2 D1~D4 + CR D1~D5 + CMR D1~D5 + BPE D1~D5 + RB1 D1~D5 + SCB D1~D5 + CEG D1~D5)
+**Date:** 2026-03-04  
+**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete + Active Pending Open (PC-v1 D1~D6 planned)
 
 ---
 
@@ -9,7 +9,7 @@
 
 This status document records whether the active roadmap scope is implemented and continuously verifiable.
 
-v2-complete means:
+Current status snapshot means:
 1. v1 M0-M4 core requirements are implemented in code.
 2. v2 feature phases (RL plugin, joint beam-scheduler + HO coupling, baseline-generalization closure) are implemented in code.
 3. Pending closure packages are implemented and closure-tracked:
@@ -25,10 +25,14 @@ v2-complete means:
 11. Closure-tracked pending package `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md` has D1~D5 implemented with closure evidence.
 12. Closure-tracked pending package `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md` has D1~D5 implemented with closure evidence.
 13. Closure-tracked pending package `sdd/pending/beamHO-bench-core-extension-governance-sdd.md` has D1~D5 implemented with closure evidence.
+14. Active pending package `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md` is opened for next implementation cycle (D1~D6 planned, not implemented yet).
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
 2. RSMA soft-HO and broad large-scale/multi-paper DRL fusion, deferred by BG-6 governance.
+
+Active pending items (implementation open):
+1. Research Parameter Consistency v1 (`sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md`).
 
 ---
 
@@ -54,6 +58,7 @@ Deferred items remain out of active scope:
 | RB1 (D1~D5) | Complete | repro bundle v1 package for deterministic one-command packaging of canonical cross-mode and baseline-envelope artifacts, with contract guard and closure report |
 | SCB (D1~D5) | Complete | service continuity baseline validation pack (`VAL-SCB-*`) for starlink/oneweb/coupled-scheduler continuity envelopes with deterministic contract guard and closure report |
 | CEG (D1~D5) | Complete | core/all validation scope governance + stage artifact freshness enforcement + runtime override source-map coverage guard + closure synchronization |
+| PC-v1 (D1~D6) | Active Pending / Planned | research-parameter consistency rule layer (`hard constraints`, `derived coupling`, `soft warnings`) introduced as new pending implementation package |
 
 ---
 
@@ -127,6 +132,7 @@ Primary references:
 23. `sdd/completed/beamHO-bench-service-continuity-baseline-closure.md`
 24. `sdd/pending/beamHO-bench-core-extension-governance-sdd.md`
 25. `sdd/completed/beamHO-bench-core-extension-governance-closure.md`
+26. `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)

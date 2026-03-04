@@ -8,7 +8,7 @@ Status ownership:
 
 ## 1. Active Pending Specs
 
-1. none (all current pending specs are closure-tracked as of 2026-03-03)
+1. `beamHO-bench-parameter-consistency-v1-sdd.md` (active pending since 2026-03-04)
 
 ## 2. Closure-Tracked Pending Specs
 
