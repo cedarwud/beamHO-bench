@@ -212,6 +212,26 @@
       "note": "Paper-baseline consistency mode derives beam footprint diameter from altitude and 3dB beamwidth using first-order cone geometry."
     },
     {
+      "sourceId": "ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE",
+      "type": "assumption",
+      "title": "Paper-Baseline Synthetic Trajectory Mode Envelope",
+      "locator": "constellation.syntheticTrajectoryModel|constellation.inclinationDeg|constellation.orbitalPlanes|constellation.satellitesPerPlane",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:paper-baseline-synthetic-trajectory-mode",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Defines synthetic paper-baseline trajectory mode options and canonical paper-anchored constellation tiers used for parameterized orbit sweeps."
+    },
+    {
+      "sourceId": "ASSUME-WALKER-CIRCULAR-PHASING",
+      "type": "assumption",
+      "title": "Walker-Like Circular Orbit Phasing Approximation",
+      "locator": "synthetic-orbit-seed-phasing|constellation.orbitalPlanes|constellation.satellitesPerPlane",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:walker-circular-phasing",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Synthetic walker-circular mode uses deterministic per-plane RAAN spacing and slot phasing for reproducible non-TLE orbit trajectories."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

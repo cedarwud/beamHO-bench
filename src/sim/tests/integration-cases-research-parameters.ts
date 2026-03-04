@@ -90,6 +90,32 @@ export function buildResearchParameterIntegrationCases(): SimTestCase[] {
           );
         }
 
+        const visibleIds = new Set(visibleSpecs.map((spec) => spec.id));
+        assertCondition(
+          visibleIds.has('constellation.syntheticTrajectoryModel'),
+          'Expected trajectory model control to be visible in orbit group.',
+        );
+        assertCondition(
+          !visibleIds.has('constellation.inclinationDeg') &&
+            !visibleIds.has('constellation.orbitalPlanes') &&
+            !visibleIds.has('constellation.satellitesPerPlane'),
+          'Expected walker-only trajectory controls to stay hidden in linear-drift mode.',
+        );
+
+        const walkerSelection = normalizeResearchParameterSelection(baseProfile, {
+          ...selection,
+          'constellation.syntheticTrajectoryModel': 'walker-circular',
+        });
+        const walkerVisibleIds = new Set(
+          listResearchParameterSpecs(baseProfile, walkerSelection).map((spec) => spec.id),
+        );
+        assertCondition(
+          walkerVisibleIds.has('constellation.inclinationDeg') &&
+            walkerVisibleIds.has('constellation.orbitalPlanes') &&
+            walkerVisibleIds.has('constellation.satellitesPerPlane'),
+          'Expected walker-only trajectory controls to be visible when walker-circular is selected.',
+        );
+
         assertCondition(
           !visibleSpecs.some((spec) =>
             [
@@ -98,8 +124,6 @@ export function buildResearchParameterIntegrationCases(): SimTestCase[] {
               'beam.layout',
               'beam.beamwidth3dBDeg',
               'constellation.constellationName',
-              'constellation.orbitalPlanes',
-              'constellation.inclinationDeg',
             ].includes(spec.id),
           ),
           'Research catalog must not include known non-runtime or metadata-only controls.',
@@ -340,6 +364,13 @@ export function buildResearchParameterIntegrationCases(): SimTestCase[] {
           tickCount: number;
           expectSignatureChange: boolean;
         }> = [
+          {
+            parameterId: 'constellation.syntheticTrajectoryModel',
+            candidateValue: 'walker-circular',
+            baseline: 'a4',
+            tickCount: 90,
+            expectSignatureChange: false,
+          },
           {
             parameterId: 'constellation.minElevationDeg',
             candidateValue: '35',

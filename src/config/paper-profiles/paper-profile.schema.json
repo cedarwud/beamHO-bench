@@ -82,6 +82,10 @@
           "enum": ["synthetic", "tle"]
         },
         "constellationName": { "type": "string" },
+        "syntheticTrajectoryModel": {
+          "type": "string",
+          "enum": ["linear-drift", "walker-circular"]
+        },
         "altitudeKm": { "type": "number", "exclusiveMinimum": 0 },
         "inclinationDeg": { "type": "number", "minimum": 0, "maximum": 180 },
         "orbitalPlanes": { "type": "integer", "minimum": 1 },

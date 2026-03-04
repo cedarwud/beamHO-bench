@@ -18,6 +18,7 @@
   "constellation": {
     "type": "synthetic",
     "constellationName": "case9-window",
+    "syntheticTrajectoryModel": "linear-drift",
     "altitudeKm": 600,
     "inclinationDeg": 90,
     "orbitalPlanes": 1,
@@ -142,6 +143,6 @@
   ],
   "notes": [
     "Baseline profile for first reproducible implementation in beamHO-bench.",
-    "Use synthetic linear orbit in paper-baseline mode before switching to SGP4 TLE mode."
+    "Paper-baseline synthetic mode supports linear-drift (legacy) and walker-circular parameterized trajectories."
   ]
 }

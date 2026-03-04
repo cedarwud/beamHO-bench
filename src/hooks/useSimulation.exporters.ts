@@ -94,7 +94,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
         ? setup.scenario.id.includes('sgp4-satellitejs')
           ? 'real-trace uses true SGP4 propagation via satellite.js over TLE-derived OMM fixtures (Kepler fallback kept for per-satellite robustness)'
           : 'real-trace uses Kepler fallback over TLE mean elements'
-        : 'paper-baseline uses analytic case9 orbit model';
+        : `paper-baseline uses synthetic trajectory model=${setup.profile.constellation.syntheticTrajectoryModel ?? 'linear-drift'}`;
 
     const fidelityNote =
       setup.profile.handover.algorithmFidelity === 'full'

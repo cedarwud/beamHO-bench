@@ -19,13 +19,22 @@ import {
 } from './common/beam-layout';
 import { worldToLatLon } from './common/geo';
 import { attachUesToBeams, moveUesLinearX, wrapValue } from './common/runtime';
+import {
+  buildParametricOrbitSatelliteStateAtTime,
+  createParametricOrbitContext,
+  type ParametricOrbitContext,
+} from './common/synthetic-orbit';
 
 /**
  * Provenance:
  * - PAP-2022-A4EVENT-CORE
+ * - PAP-2022-SEAMLESSNTN-CORE
+ * - PAP-2024-MADRL-CORE
  * - PAP-2024-MCCHO-CORE
  * - PAP-2025-TIMERCHO-CORE
  * - STD-3GPP-TR38.811-6.6.2-1
+ * - ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE
+ * - ASSUME-WALKER-CIRCULAR-PHASING
  */
 
 const DEFAULT_OBSERVER = {
@@ -112,7 +121,9 @@ function buildInitialUEs(options: {
   });
 }
 
-interface SatelliteKinematicContext {
+type SyntheticTrajectoryModel = 'linear-drift' | 'walker-circular';
+
+interface LegacySatelliteKinematicContext {
   profile: PaperProfile;
   timeSec: number;
   kmToWorldScale: number;
@@ -125,7 +136,25 @@ interface SatelliteKinematicContext {
   wrapWidthWorld: number;
 }
 
-function buildSatelliteStateAtTime(context: SatelliteKinematicContext): SatelliteState[] {
+interface ParametricSatelliteKinematicContext {
+  profile: PaperProfile;
+  timeSec: number;
+  observerLat: number;
+  observerLon: number;
+  beamRadiusKm: number;
+  beamRadiusWorld: number;
+  beamSpacingWorld: number;
+  orbitContext: ParametricOrbitContext;
+}
+
+function resolveSyntheticTrajectoryModel(profile: PaperProfile): SyntheticTrajectoryModel {
+  if (profile.constellation.syntheticTrajectoryModel === 'walker-circular') {
+    return 'walker-circular';
+  }
+  return 'linear-drift';
+}
+
+function buildLegacySatelliteStateAtTime(context: LegacySatelliteKinematicContext): SatelliteState[] {
   const {
     profile,
     timeSec,
@@ -189,6 +218,44 @@ function buildSatelliteStateAtTime(context: SatelliteKinematicContext): Satellit
   });
 }
 
+function buildParametricSatelliteStateAtTime(
+  context: ParametricSatelliteKinematicContext,
+): SatelliteState[] {
+  const {
+    profile,
+    timeSec,
+    observerLat,
+    observerLon,
+    beamRadiusKm,
+    beamRadiusWorld,
+    beamSpacingWorld,
+    orbitContext,
+  } = context;
+
+  return buildParametricOrbitSatelliteStateAtTime(orbitContext, timeSec).map((satellite) => ({
+    id: satellite.id,
+    positionEcef: satellite.positionEcef,
+    positionWorld: satellite.positionWorld,
+    positionLla: satellite.positionLla,
+    azimuthDeg: satellite.azimuthDeg,
+    elevationDeg: satellite.elevationDeg,
+    rangeKm: satellite.rangeKm,
+    visible: satellite.visible,
+    beams: buildBeamsForSatellite({
+      satelliteId: satellite.id,
+      beamIdMultiplier: 1000,
+      centerWorld: satellite.groundCenterWorld,
+      beamCount: profile.beam.beamsPerSatellite,
+      beamRadiusKm,
+      beamRadiusWorld,
+      spacingWorld: beamSpacingWorld,
+      kmToWorldScale: orbitContext.kmToWorldScale,
+      observerLat,
+      observerLon,
+    }),
+  }));
+}
+
 export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOptions): SimScenario {
   const profile = options.profile;
   const scenarioId = options.scenarioId ?? 'phase1a-case9-analytic';
@@ -213,26 +280,59 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
   });
   let triggerMemory: TriggerMemoryStore = new Map();
 
+  const syntheticTrajectoryModel = resolveSyntheticTrajectoryModel(profile);
   const satCount =
     profile.constellation.activeSatellitesInWindow ?? profile.constellation.satellitesPerPlane;
   const beamRadiusKm = profile.beam.footprintDiameterKm / 2;
   const beamRadiusWorld = beamRadiusKm * kmToWorldScale;
   const beamSpacingWorld = computeBeamSpacingWorld(beamRadiusWorld, profile.beam.overlapRatio);
-  const wrapWidthWorld = profile.scenario.areaKm.width * kmToWorldScale * 3.5;
-  const baseCenters = buildSatelliteGroundCenters(satCount, beamRadiusWorld * 6.8);
+  const wrapWidthWorld =
+    syntheticTrajectoryModel === 'linear-drift'
+      ? profile.scenario.areaKm.width * kmToWorldScale * 3.5
+      : 0;
+  const baseCenters =
+    syntheticTrajectoryModel === 'linear-drift'
+      ? buildSatelliteGroundCenters(satCount, beamRadiusWorld * 6.8)
+      : [];
+  const parametricOrbitContext =
+    syntheticTrajectoryModel === 'walker-circular'
+      ? createParametricOrbitContext({
+          profile,
+          observerLat,
+          observerLon,
+          kmToWorldScale,
+        })
+      : null;
 
-  const initialSatellites = buildSatelliteStateAtTime({
-    profile,
-    timeSec: 0,
-    kmToWorldScale,
-    observerLat,
-    observerLon,
-    baseCenters,
-    beamRadiusKm,
-    beamRadiusWorld,
-    beamSpacingWorld,
-    wrapWidthWorld,
-  });
+  function buildSatellitesAtTime(timeSec: number): SatelliteState[] {
+    if (syntheticTrajectoryModel === 'walker-circular' && parametricOrbitContext) {
+      return buildParametricSatelliteStateAtTime({
+        profile,
+        timeSec,
+        observerLat,
+        observerLon,
+        beamRadiusKm,
+        beamRadiusWorld,
+        beamSpacingWorld,
+        orbitContext: parametricOrbitContext,
+      });
+    }
+
+    return buildLegacySatelliteStateAtTime({
+      profile,
+      timeSec,
+      kmToWorldScale,
+      observerLat,
+      observerLon,
+      baseCenters,
+      beamRadiusKm,
+      beamRadiusWorld,
+      beamSpacingWorld,
+      wrapWidthWorld,
+    });
+  }
+
+  const initialSatellites = buildSatellitesAtTime(0);
 
   const initialUes = buildInitialUEs({
     profile,
@@ -273,18 +373,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       observerLon,
     });
 
-    const satellitesAtTime = buildSatelliteStateAtTime({
-      profile,
-      timeSec,
-      kmToWorldScale,
-      observerLat,
-      observerLon,
-      baseCenters,
-      beamRadiusKm,
-      beamRadiusWorld,
-      beamSpacingWorld,
-      wrapWidthWorld,
-    });
+    const satellitesAtTime = buildSatellitesAtTime(timeSec);
     const beamSchedulerSnapshot = beamScheduler.buildSnapshot(
       previous.tick + 1,
       timeSec,

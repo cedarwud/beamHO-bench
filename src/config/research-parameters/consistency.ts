@@ -46,6 +46,14 @@ function asBoolean(value: string): boolean {
   return value === 'true';
 }
 
+function toPositiveInt(value: string | undefined, fallback: number): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) {
+    return Math.max(1, Math.round(fallback));
+  }
+  return Math.max(1, Math.round(parsed));
+}
+
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -105,8 +113,29 @@ export function resolveResearchParameterConsistency(options: {
   const issues: ResearchConsistencyIssue[] = [];
   const derivedOverrides: DeepPartial<PaperProfile> = {};
 
-  // Hard constraint: active-window size cannot exceed synthetic per-plane count.
-  const maxActiveWindow = Math.max(1, Math.round(options.profile.constellation.satellitesPerPlane));
+  const syntheticTrajectoryModel =
+    selection['constellation.syntheticTrajectoryModel'] ??
+    options.profile.constellation.syntheticTrajectoryModel ??
+    'linear-drift';
+  const requestedOrbitalPlanes = toPositiveInt(
+    selection['constellation.orbitalPlanes'],
+    options.profile.constellation.orbitalPlanes,
+  );
+  const requestedSatellitesPerPlane = toPositiveInt(
+    selection['constellation.satellitesPerPlane'],
+    options.profile.constellation.satellitesPerPlane,
+  );
+  const effectiveOrbitalPlanes =
+    syntheticTrajectoryModel === 'walker-circular'
+      ? requestedOrbitalPlanes
+      : Math.max(1, Math.round(options.profile.constellation.orbitalPlanes));
+  const effectiveSatellitesPerPlane =
+    syntheticTrajectoryModel === 'walker-circular'
+      ? requestedSatellitesPerPlane
+      : Math.max(1, Math.round(options.profile.constellation.satellitesPerPlane));
+
+  // Hard constraint: active-window size cannot exceed effective constellation capacity.
+  const maxActiveWindow = Math.max(1, effectiveOrbitalPlanes * effectiveSatellitesPerPlane);
   const requestedActiveWindow = Math.max(
     1,
     Math.round(Number(selection['constellation.activeSatellitesInWindow']) || 1),
@@ -115,10 +144,14 @@ export function resolveResearchParameterConsistency(options: {
     selection['constellation.activeSatellitesInWindow'] = String(maxActiveWindow);
     issues.push({
       ruleId: 'PC-HARD-ACTIVE-WINDOW-UPPER-BOUND',
-      messageCode: 'active_window_clamped_to_satellites_per_plane',
+      messageCode: 'active_window_clamped_to_constellation_capacity',
       severity: 'warn',
-      parameterIds: ['constellation.activeSatellitesInWindow', 'constellation.satellitesPerPlane'],
-      message: `Requested activeSatellitesInWindow=${requestedActiveWindow} exceeds satellitesPerPlane=${maxActiveWindow}; clamped to ${maxActiveWindow}.`,
+      parameterIds: [
+        'constellation.activeSatellitesInWindow',
+        'constellation.orbitalPlanes',
+        'constellation.satellitesPerPlane',
+      ],
+      message: `Requested activeSatellitesInWindow=${requestedActiveWindow} exceeds constellation capacity=${maxActiveWindow} (planes=${effectiveOrbitalPlanes}, satellitesPerPlane=${effectiveSatellitesPerPlane}); clamped to ${maxActiveWindow}.`,
     });
   }
 

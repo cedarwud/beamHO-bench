@@ -22,6 +22,7 @@ import { buildResearchParameterIntegrationCases } from './integration-cases-rese
 import { buildScenarioMatrixIntegrationCases } from './integration-cases-scenario-matrix';
 import { buildServiceContinuityPackIntegrationCases } from './integration-cases-service-continuity-pack';
 import { buildSmallScaleIntegrationCases } from './integration-cases-small-scale';
+import { buildTrajectoryParameterIntegrationCases } from './integration-cases-trajectory-parameters';
 import type { SimTestCase } from './types';
 
 export function buildIntegrationTestCases(): SimTestCase[] {
@@ -369,6 +370,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
     ...buildMultiSeedReportingIntegrationCases(),
     ...buildPolicySchedulerIntegrationCases(),
     ...buildResearchParameterIntegrationCases(),
+    ...buildTrajectoryParameterIntegrationCases(),
     ...buildReproBundleV1IntegrationCases(),
     ...buildScenarioMatrixIntegrationCases(),
     ...buildServiceContinuityPackIntegrationCases(),

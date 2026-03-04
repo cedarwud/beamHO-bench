@@ -1,6 +1,22 @@
 {
   "profileId": "case9-default",
   "sources": {
+    "constellation.syntheticTrajectoryModel": [
+      "ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE"
+    ],
+    "constellation.altitudeKm": [
+      "PAP-2022-A4EVENT-CORE",
+      "ASSUME-CIRCULAR-ORBIT-SPEED-DERIVATION"
+    ],
+    "constellation.inclinationDeg": [
+      "ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE"
+    ],
+    "constellation.orbitalPlanes": [
+      "ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE"
+    ],
+    "constellation.satellitesPerPlane": [
+      "ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE"
+    ],
     "channel.sfClSource": [
       "STD-3GPP-TR38.811-6.6.2-1"
     ],

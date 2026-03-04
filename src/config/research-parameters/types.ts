@@ -10,7 +10,11 @@ export type ResearchParameterGroupId =
   | 'scheduler';
 
 export type ResearchParameterId =
+  | 'constellation.syntheticTrajectoryModel'
   | 'constellation.altitudeKm'
+  | 'constellation.inclinationDeg'
+  | 'constellation.orbitalPlanes'
+  | 'constellation.satellitesPerPlane'
   | 'constellation.minElevationDeg'
   | 'constellation.activeSatellitesInWindow'
   | 'beam.beamsPerSatellite'
@@ -95,4 +99,3 @@ export const RESEARCH_PARAMETER_GROUPS: readonly ResearchParameterGroup[] = [
     description: 'Beam-hopping 排程與換手耦合模式。',
   },
 ];
-

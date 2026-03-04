@@ -5,6 +5,7 @@ import type {
   PaperProfile,
   ProfileMode,
   SmallScaleModel,
+  SyntheticTrajectoryModel,
 } from '@/config/paper-profiles/types';
 import {
   RESEARCH_PARAMETER_GROUPS,
@@ -136,8 +137,37 @@ function asSmallScaleModel(value: string): SmallScaleModel {
   throw new Error(`Invalid small-scale model value '${value}'.`);
 }
 
+function asSyntheticTrajectoryModel(value: string): SyntheticTrajectoryModel {
+  if (value === 'linear-drift' || value === 'walker-circular') {
+    return value;
+  }
+  throw new Error(`Invalid synthetic trajectory model value '${value}'.`);
+}
+
 
 const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
+  {
+    id: 'constellation.syntheticTrajectoryModel',
+    groupId: 'orbit',
+    label: 'Synthetic Trajectory Model',
+    description: 'paper-baseline 衛星軌跡模型。',
+    sourceIds: [
+      'ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE',
+      'ASSUME-WALKER-CIRCULAR-PHASING',
+    ],
+    modes: ['paper-baseline'],
+    options: [
+      { value: 'linear-drift', label: 'linear drift (legacy)' },
+      { value: 'walker-circular', label: 'walker circular (parametric)' },
+    ],
+    readFromProfile: (profile) =>
+      profile.constellation.syntheticTrajectoryModel ?? 'linear-drift',
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.constellation ??= {};
+      overrides.constellation.syntheticTrajectoryModel =
+        asSyntheticTrajectoryModel(serializedValue);
+    },
+  },
   {
     id: 'constellation.altitudeKm',
     groupId: 'orbit',
@@ -162,6 +192,90 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
       overrides.constellation.altitudeKm = toNumber(
         serializedValue,
         'constellation.altitudeKm',
+      );
+    },
+  },
+  {
+    id: 'constellation.inclinationDeg',
+    groupId: 'orbit',
+    label: 'Orbit Inclination',
+    description: '軌道傾角（walker-circular 模式）。',
+    sourceIds: [
+      'PAP-2022-SEAMLESSNTN-CORE',
+      'PAP-2024-MADRL-CORE',
+      'ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE',
+    ],
+    modes: ['paper-baseline'],
+    options: [
+      { value: '53', label: '53° (Starlink-like)' },
+      { value: '87.9', label: '87.9° (OneWeb-like)' },
+      { value: '90', label: '90° (polar stress)' },
+    ],
+    isAvailable: ({ selection }) =>
+      selection['constellation.syntheticTrajectoryModel'] === 'walker-circular',
+    readFromProfile: (profile) =>
+      stringOfNumber(profile.constellation.inclinationDeg, 90),
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.constellation ??= {};
+      overrides.constellation.inclinationDeg = toNumber(
+        serializedValue,
+        'constellation.inclinationDeg',
+      );
+    },
+  },
+  {
+    id: 'constellation.orbitalPlanes',
+    groupId: 'orbit',
+    label: 'Orbital Planes',
+    description: '星座軌道平面數（walker-circular 模式）。',
+    sourceIds: [
+      'PAP-2022-SEAMLESSNTN-CORE',
+      'PAP-2024-MADRL-CORE',
+      'ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE',
+    ],
+    modes: ['paper-baseline'],
+    options: [
+      { value: '1', label: '1 plane (case9)' },
+      { value: '18', label: '18 planes (OneWeb-like)' },
+      { value: '24', label: '24 planes (Starlink-like)' },
+    ],
+    isAvailable: ({ selection }) =>
+      selection['constellation.syntheticTrajectoryModel'] === 'walker-circular',
+    readFromProfile: (profile) =>
+      stringOfNumber(profile.constellation.orbitalPlanes, 1),
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.constellation ??= {};
+      overrides.constellation.orbitalPlanes = Math.max(
+        1,
+        Math.round(toNumber(serializedValue, 'constellation.orbitalPlanes')),
+      );
+    },
+  },
+  {
+    id: 'constellation.satellitesPerPlane',
+    groupId: 'orbit',
+    label: 'Satellites Per Plane',
+    description: '每軌道平面的衛星數（walker-circular 模式）。',
+    sourceIds: [
+      'PAP-2022-SEAMLESSNTN-CORE',
+      'PAP-2024-MADRL-CORE',
+      'ASSUME-PAPER-BASELINE-SYNTHETIC-TRAJECTORY-MODE',
+    ],
+    modes: ['paper-baseline'],
+    options: [
+      { value: '7', label: '7 sats/plane (case9)' },
+      { value: '40', label: '40 sats/plane (OneWeb-like)' },
+      { value: '66', label: '66 sats/plane (Starlink-like)' },
+    ],
+    isAvailable: ({ selection }) =>
+      selection['constellation.syntheticTrajectoryModel'] === 'walker-circular',
+    readFromProfile: (profile) =>
+      stringOfNumber(profile.constellation.satellitesPerPlane, 7),
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.constellation ??= {};
+      overrides.constellation.satellitesPerPlane = Math.max(
+        1,
+        Math.round(toNumber(serializedValue, 'constellation.satellitesPerPlane')),
       );
     },
   },

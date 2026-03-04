@@ -12,6 +12,7 @@ export type ProfileMode = "paper-baseline" | "real-trace";
 export type Deployment = "rural" | "suburban" | "dense-urban";
 
 export type ConstellationType = "synthetic" | "tle";
+export type SyntheticTrajectoryModel = "linear-drift" | "walker-circular";
 
 export type BeamLayout = "hex-7" | "hex-16" | "hex-19" | "hex-50" | "custom";
 
@@ -60,6 +61,7 @@ export interface PaperProfile {
   constellation: {
     type: ConstellationType;
     constellationName: string;
+    syntheticTrajectoryModel?: SyntheticTrajectoryModel;
     altitudeKm: number;
     inclinationDeg: number;
     orbitalPlanes: number;
