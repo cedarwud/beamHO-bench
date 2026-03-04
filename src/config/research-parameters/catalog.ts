@@ -312,6 +312,7 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     sourceIds: ['PAP-2022-SEAMLESSNTN-CORE', 'PAP-2024-MADRL-CORE', 'PAP-2025-DAPS-CORE'],
     options: [
       { value: '7', label: '7 satellites' },
+      { value: '8', label: '8 satellites' },
       { value: '10', label: '10 satellites' },
       { value: '16', label: '16 satellites' },
     ],

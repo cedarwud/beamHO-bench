@@ -22,8 +22,8 @@
     "altitudeKm": 600,
     "inclinationDeg": 90,
     "orbitalPlanes": 1,
-    "satellitesPerPlane": 7,
-    "activeSatellitesInWindow": 7,
+    "satellitesPerPlane": 8,
+    "activeSatellitesInWindow": 8,
     "satelliteSpeedKmps": 7.56,
     "minElevationDeg": 10
   },

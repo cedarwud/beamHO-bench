@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type { SatelliteState } from '@/sim/types';
@@ -13,12 +14,23 @@ interface SatelliteModelProps {
   renderMode: SatelliteRenderMode;
   glbModelPath: string;
   glbModelScale: number;
+  motionTransitionSec?: number;
+  enableSmoothMotion?: boolean;
 }
 
 interface SatelliteGlbInstanceProps {
   sourceScene: THREE.Object3D;
   isVisible: boolean;
   scale: number;
+}
+
+interface SatelliteInstanceProps {
+  satellite: SatelliteState;
+  useGlb: boolean;
+  glbScene: THREE.Object3D | null;
+  glbModelScale: number;
+  motionTransitionSec: number;
+  enableSmoothMotion: boolean;
 }
 
 function cloneMaterial(material: THREE.Material): THREE.Material {
@@ -87,11 +99,93 @@ function SatelliteGlbInstance({ sourceScene, isVisible, scale }: SatelliteGlbIns
   );
 }
 
+function SatelliteInstance({
+  satellite,
+  useGlb,
+  glbScene,
+  glbModelScale,
+  motionTransitionSec,
+  enableSmoothMotion,
+}: SatelliteInstanceProps) {
+  const groupRef = useRef<THREE.Group>(null);
+  const sourcePositionRef = useRef(new THREE.Vector3(...satellite.positionWorld));
+  const targetPositionRef = useRef(new THREE.Vector3(...satellite.positionWorld));
+  const elapsedSecRef = useRef(motionTransitionSec);
+  const isVisible = satellite.visible;
+
+  useLayoutEffect(() => {
+    const group = groupRef.current;
+    const [nextX, nextY, nextZ] = satellite.positionWorld;
+
+    if (!enableSmoothMotion || motionTransitionSec <= 0) {
+      sourcePositionRef.current.set(nextX, nextY, nextZ);
+      targetPositionRef.current.set(nextX, nextY, nextZ);
+      elapsedSecRef.current = motionTransitionSec;
+      if (group) {
+        group.position.set(nextX, nextY, nextZ);
+      }
+      return;
+    }
+
+    if (group) {
+      sourcePositionRef.current.copy(group.position);
+    } else {
+      sourcePositionRef.current.copy(targetPositionRef.current);
+    }
+    targetPositionRef.current.set(nextX, nextY, nextZ);
+    elapsedSecRef.current = 0;
+  }, [
+    satellite.positionWorld[0],
+    satellite.positionWorld[1],
+    satellite.positionWorld[2],
+    enableSmoothMotion,
+    motionTransitionSec,
+  ]);
+
+  useFrame((_state, deltaSec) => {
+    const group = groupRef.current;
+    if (!group) {
+      return;
+    }
+
+    if (!enableSmoothMotion || motionTransitionSec <= 0) {
+      group.position.copy(targetPositionRef.current);
+      return;
+    }
+
+    const nextElapsedSec = Math.min(elapsedSecRef.current + deltaSec, motionTransitionSec);
+    elapsedSecRef.current = nextElapsedSec;
+    const t = motionTransitionSec > 0 ? nextElapsedSec / motionTransitionSec : 1;
+    group.position.lerpVectors(sourcePositionRef.current, targetPositionRef.current, t);
+  });
+
+  return (
+    <group ref={groupRef}>
+      {useGlb && glbScene ? (
+        <SatelliteGlbInstance sourceScene={glbScene} isVisible={isVisible} scale={glbModelScale} />
+      ) : (
+        <mesh castShadow>
+          <icosahedronGeometry args={[5.5, 0]} />
+          <meshStandardMaterial
+            color={isVisible ? '#7ee0ff' : '#64748b'}
+            emissive={isVisible ? '#0ea5e9' : '#334155'}
+            emissiveIntensity={isVisible ? 0.5 : 0.2}
+            roughness={0.35}
+            metalness={0.6}
+          />
+        </mesh>
+      )}
+    </group>
+  );
+}
+
 export function SatelliteModel({
   satellites,
   renderMode,
   glbModelPath,
   glbModelScale,
+  motionTransitionSec = 1,
+  enableSmoothMotion = true,
 }: SatelliteModelProps) {
   const [glbScene, setGlbScene] = useState<THREE.Object3D | null>(null);
   const [glbLoadState, setGlbLoadState] = useState<SatelliteGlbLoadState>('idle');
@@ -148,34 +242,17 @@ export function SatelliteModel({
 
   return (
     <>
-      {satellites.map((satellite) => {
-        const isVisible = satellite.visible;
-
-        return (
-          <Fragment key={satellite.id}>
-            <group position={satellite.positionWorld}>
-              {useGlb && glbScene ? (
-                <SatelliteGlbInstance
-                  sourceScene={glbScene}
-                  isVisible={isVisible}
-                  scale={glbModelScale}
-                />
-              ) : (
-                <mesh castShadow>
-                  <icosahedronGeometry args={[5.5, 0]} />
-                  <meshStandardMaterial
-                    color={isVisible ? '#7ee0ff' : '#64748b'}
-                    emissive={isVisible ? '#0ea5e9' : '#334155'}
-                    emissiveIntensity={isVisible ? 0.5 : 0.2}
-                    roughness={0.35}
-                    metalness={0.6}
-                  />
-                </mesh>
-              )}
-            </group>
-          </Fragment>
-        );
-      })}
+      {satellites.map((satellite) => (
+        <SatelliteInstance
+          key={satellite.id}
+          satellite={satellite}
+          useGlb={useGlb}
+          glbScene={glbScene}
+          glbModelScale={glbModelScale}
+          motionTransitionSec={motionTransitionSec}
+          enableSmoothMotion={enableSmoothMotion}
+        />
+      ))}
     </>
   );
 }

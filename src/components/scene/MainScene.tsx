@@ -17,6 +17,7 @@ import { SceneLoader } from '../ui/SceneLoader';
 import { SceneErrorBoundary } from '../ui/SceneErrorBoundary';
 import { useSimulation } from '@/hooks/useSimulation';
 import { loadPaperProfile, type CanonicalProfileId } from '@/config/paper-profiles/loader';
+import type { PaperProfile } from '@/config/paper-profiles/types';
 import {
   buildResearchRuntimeOverridesWithConsistency,
   createResearchParameterSelection,
@@ -48,13 +49,24 @@ function isMobileLikeDevice() {
   return coarsePointer || lowCpuCoreCount;
 }
 
+function createDefaultResearchSelection(profile: PaperProfile): ResearchParameterSelection {
+  const baseSelection = createResearchParameterSelection(profile);
+  if (profile.profileId === 'case9-default' && profile.mode === 'paper-baseline') {
+    return normalizeResearchParameterSelection(profile, {
+      ...baseSelection,
+      'constellation.syntheticTrajectoryModel': 'walker-circular',
+    });
+  }
+  return baseSelection;
+}
+
 export function MainScene() {
   const [selectedProfileId, setSelectedProfileId] =
     useState<CanonicalProfileId>('case9-default');
   const [selectedBaseline, setSelectedBaseline] =
     useState<RuntimeBaseline>('max-rsrp');
   const [researchSelection, setResearchSelection] = useState<ResearchParameterSelection>(() =>
-    createResearchParameterSelection(loadPaperProfile('case9-default')),
+    createDefaultResearchSelection(loadPaperProfile('case9-default')),
   );
   const [researchConsistencyMode, setResearchConsistencyMode] =
     useState<ResearchConsistencyMode>('strict');
@@ -97,7 +109,7 @@ export function MainScene() {
   );
 
   useEffect(() => {
-    setResearchSelection(createResearchParameterSelection(baseProfile));
+    setResearchSelection(createDefaultResearchSelection(baseProfile));
   }, [baseProfile]);
 
   const handleResearchParameterChange = useCallback(
@@ -112,7 +124,7 @@ export function MainScene() {
     [baseProfile],
   );
   const handleResetResearchParameters = useCallback(() => {
-    setResearchSelection(createResearchParameterSelection(baseProfile));
+    setResearchSelection(createDefaultResearchSelection(baseProfile));
   }, [baseProfile]);
 
   const {
@@ -133,7 +145,7 @@ export function MainScene() {
     researchConsistency: researchConsistencySummary,
     baseline: selectedBaseline,
     seed: 42,
-    autoStart: false,
+    autoStart: true,
   });
 
   const lowPowerMode = useMemo(() => isMobileLikeDevice(), []);
@@ -188,6 +200,13 @@ export function MainScene() {
     ? null
     : replaySnapshots.find((candidate) => candidate.tick === replayTick) ?? null;
   const displayedSnapshot = replaySnapshot ?? snapshot;
+  const isLiveView = replayTick === null;
+  const smoothMotionTransitionSec = Math.max(
+    profile.timeStepSec / Math.max(playbackRate, 0.25),
+    0.016,
+  );
+  const canvasFrameloop: 'always' | 'demand' | 'never' =
+    isRunning && isLiveView ? 'always' : NTPU_CONFIG.render.frameloop;
   const hoEventTimeline = useMemo<HOEventTimelineRow[]>(
     () =>
       replaySnapshots.flatMap((entry) =>
@@ -372,7 +391,7 @@ export function MainScene() {
         <SceneErrorBoundary>
           <Canvas
             className="scene-canvas"
-            frameloop={NTPU_CONFIG.render.frameloop}
+            frameloop={canvasFrameloop}
             dpr={[1, maxDpr]}
             performance={{ min: NTPU_CONFIG.render.performanceMin }}
             shadows
@@ -443,6 +462,8 @@ export function MainScene() {
                 renderMode={satelliteRenderMode}
                 glbModelPath={NTPU_CONFIG.satellite.modelPath}
                 glbModelScale={NTPU_CONFIG.satellite.modelScale}
+                motionTransitionSec={smoothMotionTransitionSec}
+                enableSmoothMotion={isLiveView}
               />
             </Suspense>
 
