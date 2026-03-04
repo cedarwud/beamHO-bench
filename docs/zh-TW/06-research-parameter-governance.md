@@ -82,7 +82,9 @@
 1. 參數目錄：`src/config/research-parameters/catalog.ts`
 2. 前台面板：`src/components/sim/ResearchParameterPanel.tsx`
 3. 主場景接線：`src/components/scene/MainScene.tsx`
-4. 驗證：`src/sim/tests/integration-cases-research-parameters.ts`
+4. 一致性引擎：`src/config/research-parameters/consistency.ts`
+5. 匯出追蹤：`src/sim/reporting/source-trace.ts`、`src/sim/reporting/manifest.ts`
+6. 驗證：`src/sim/tests/integration-cases-research-parameters.ts`
 
 ## 5) 後續擴充規則
 
@@ -93,3 +95,12 @@
 3. 有明確離散層級或上下界，不接受「任意值」。
 4. 至少一個測試證明調整後會改變模擬簽名或 KPI。
 
+## 6) 一致性模式（strict / exploratory）
+
+1. `strict`：
+   - 保留硬約束（例如 `activeSatellitesInWindow` 上限、small-scale 相依性）。
+   - 對 `TTT < tick` 風險採用「自動提升到 tick granularity」並留下可追溯警告碼。
+2. `exploratory`：
+   - 同樣保留硬安全約束。
+   - 對 `TTT < tick` 僅標記警告，不改動使用者設定值。
+3. 兩種模式都會在前台顯示 consistency issues，並在 artifact 內輸出 `research_consistency` 欄位。

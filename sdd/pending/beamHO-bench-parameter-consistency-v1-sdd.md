@@ -2,7 +2,7 @@
 
 **Version:** 0.1.0  
 **Date:** 2026-03-04  
-**Status:** Active Pending / Not Implemented
+**Status:** Active Pending / D1~D5 Implemented (D6 In Progress)
 
 ---
 
@@ -148,12 +148,12 @@ As of 2026-03-04:
 
 | Delivery | Status | Evidence |
 |---|---|---|
-| D1 rule registry/evaluator contract | Planned | not started |
-| D2 hard constraints + derived coupling path | Planned | not started |
-| D3 policy-mode + warning model | Planned | not started |
-| D4 UI/report trace integration | Planned | not started |
-| D5 integration + validation contracts | Planned | not started |
-| D6 docs/status/closure sync | In Progress | this active pending SDD introduced |
+| D1 rule registry/evaluator contract | Complete | `src/config/research-parameters/consistency.ts` defines deterministic consistency issue/types and evaluator contract; `buildResearchRuntimeOverridesWithConsistency` return contract stabilized |
+| D2 hard constraints + derived coupling path | Complete | hard clamp (`activeSatellitesInWindow`), small-scale realism guard, altitude-coupled `satelliteSpeedKmps` + `footprintDiameterKm` derivation wired through `src/config/research-parameters/catalog.ts` |
+| D3 policy-mode + warning model | Complete | explicit `strict/exploratory` mode path; `PC-WARN-TTT-TICK-ALIAS` emits deterministic mode-specific message codes with strict-mode tick clamp behavior |
+| D4 UI/report trace integration | Complete | `MainScene` + `ResearchParameterPanel` surface consistency mode/issues; `source-trace`/`manifest`/export assumptions include `research_consistency` metadata |
+| D5 integration + validation contracts | Complete | `src/sim/tests/integration-cases-research-parameters.ts` adds strict-vs-exploratory + artifact-trace tests; `npm run validate:stage` passed on 2026-03-04 |
+| D6 docs/status/closure sync | In Progress | SDD/status/governance docs synchronized; closure report not finalized yet |
 
 ---
 
@@ -177,4 +177,3 @@ This package maps to:
 2. meaningful parameter grouping with bounded, research-valid ranges.
 3. prevention of invalid cross-parameter tuples entering benchmark comparisons.
 4. preserving common baseline comparability while allowing controlled sensitivity exploration.
-

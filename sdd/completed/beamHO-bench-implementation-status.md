@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-04  
-**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete + Active Pending Open (PC-v1 D1~D6 planned)
+**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete + Active Pending Open (PC-v1 D1~D5 implemented, D6 in progress)
 
 ---
 
@@ -25,7 +25,7 @@ Current status snapshot means:
 11. Closure-tracked pending package `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md` has D1~D5 implemented with closure evidence.
 12. Closure-tracked pending package `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md` has D1~D5 implemented with closure evidence.
 13. Closure-tracked pending package `sdd/pending/beamHO-bench-core-extension-governance-sdd.md` has D1~D5 implemented with closure evidence.
-14. Active pending package `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md` is opened for next implementation cycle (D1~D6 planned, not implemented yet).
+14. Active pending package `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md` has D1~D5 implemented in code/tests, with D6 docs/closure synchronization in progress.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
@@ -58,7 +58,7 @@ Active pending items (implementation open):
 | RB1 (D1~D5) | Complete | repro bundle v1 package for deterministic one-command packaging of canonical cross-mode and baseline-envelope artifacts, with contract guard and closure report |
 | SCB (D1~D5) | Complete | service continuity baseline validation pack (`VAL-SCB-*`) for starlink/oneweb/coupled-scheduler continuity envelopes with deterministic contract guard and closure report |
 | CEG (D1~D5) | Complete | core/all validation scope governance + stage artifact freshness enforcement + runtime override source-map coverage guard + closure synchronization |
-| PC-v1 (D1~D6) | Active Pending / Planned | research-parameter consistency rule layer (`hard constraints`, `derived coupling`, `soft warnings`) introduced as new pending implementation package |
+| PC-v1 (D1~D6) | Active Pending / In Progress | rule layer, strict/exploratory mode contract, UI pre-run feedback, source-trace/manifest consistency metadata, and integration coverage implemented; closure sync pending |
 
 ---
 
@@ -95,9 +95,9 @@ Required artifacts:
 
 ## 4. Verification Snapshot (Latest)
 
-Latest local verification (2026-03-03):
+Latest local verification (2026-03-04):
 1. `validate:stage` passed (core scope gate + artifact freshness check).
-2. `test:sim`: 67/67 passed (unit 19/19, integration 48/48).
+2. `test:sim`: 72/72 passed (unit 19/19, integration 53/53).
 3. `validate:val-suite`: 50/50 passed (`scope=core`), warnings=0.
 4. `validate:val-suite:all`: 67/67 passed (`scope=all`), warnings=0.
 5. Validation artifacts are compact and generated under `dist/`.
@@ -159,3 +159,5 @@ Code points for v2 closure evidence:
 22. `src/sim/bench/service-continuity-baseline-pack.ts` + `src/sim/tests/integration-cases-service-continuity-pack.ts` + `src/sim/bench/validation-definitions.ts` (`VAL-SCB-*`) (SCB continuity-oriented validation pack integration evidence)
 23. `scripts/validate-validation-suite.mjs` (`scb contract pass`) + `sdd/completed/beamHO-bench-validation-matrix.md` (`VAL-SCB-*`) (SCB deterministic contract and matrix-alignment evidence)
 24. `src/sim/bench/validation-scope.ts` + `src/sim/bench/validation-suite.ts` + `scripts/validate-stage-gate.mjs` + `scripts/validate-validation-suite.mjs` (CEG core/all execution governance, stage artifact freshness, and runtime override source-map coverage enforcement)
+25. `src/config/research-parameters/consistency.ts` + `src/config/research-parameters/catalog.ts` + `src/sim/tests/integration-cases-research-parameters.ts` (PC-v1 deterministic consistency policy-mode contract + integration coverage)
+26. `src/components/scene/MainScene.tsx` + `src/components/sim/ResearchParameterPanel.tsx` + `src/sim/reporting/source-trace.ts` + `src/sim/reporting/manifest.ts` (PC-v1 UI pre-run feedback and artifact traceability fields)
