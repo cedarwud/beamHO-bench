@@ -192,6 +192,26 @@
       "note": "Validation sweeps compare bounded reuse settings (e.g., FR1/reuse-4) under fixed profile/runtime tuples."
     },
     {
+      "sourceId": "ASSUME-CIRCULAR-ORBIT-SPEED-DERIVATION",
+      "type": "assumption",
+      "title": "Circular Orbit Speed Derivation",
+      "locator": "constellation.altitudeKm|constellation.satelliteSpeedKmps",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:circular-orbit-speed-derivation",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Paper-baseline synthetic mode derives orbital speed from altitude using circular-orbit approximation for consistency-sensitive parameter sweeps."
+    },
+    {
+      "sourceId": "ASSUME-BEAM-FOOTPRINT-GEOMETRY-COUPLING",
+      "type": "assumption",
+      "title": "Beam Footprint Geometry Coupling",
+      "locator": "beam.beamwidth3dBDeg|constellation.altitudeKm|beam.footprintDiameterKm",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:beam-footprint-geometry-coupling",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Paper-baseline consistency mode derives beam footprint diameter from altitude and 3dB beamwidth using first-order cone geometry."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

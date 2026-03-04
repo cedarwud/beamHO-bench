@@ -9,6 +9,7 @@
 3. `03-real-trace-and-tle.md`
 4. `04-testing-and-validation.md`
 5. `05-development-guidelines.md`
+6. `06-research-parameter-governance.md`
 
 ## 文件地圖
 
@@ -26,6 +27,9 @@
 
 5. `05-development-guidelines.md`  
 說明日常開發規範、有意義拆分、架構巡檢、追溯與版權限制。
+
+6. `06-research-parameter-governance.md`  
+說明「研究參數」與「畫面控制」的邊界、參數分組、離散範圍與來源依據。
 
 ## 與 SDD 的關係
 

@@ -18,6 +18,7 @@ import { buildMultiSeedReportingIntegrationCases } from './integration-cases-mul
 import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy-scheduler';
 import { buildRealTraceArtifactIntegrationCases } from './integration-cases-real-trace-artifacts';
 import { buildReproBundleV1IntegrationCases } from './integration-cases-repro-bundle-v1';
+import { buildResearchParameterIntegrationCases } from './integration-cases-research-parameters';
 import { buildScenarioMatrixIntegrationCases } from './integration-cases-scenario-matrix';
 import { buildServiceContinuityPackIntegrationCases } from './integration-cases-service-continuity-pack';
 import { buildSmallScaleIntegrationCases } from './integration-cases-small-scale';
@@ -367,6 +368,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
     ...buildMultiSeedBenchmarkIntegrationCases(),
     ...buildMultiSeedReportingIntegrationCases(),
     ...buildPolicySchedulerIntegrationCases(),
+    ...buildResearchParameterIntegrationCases(),
     ...buildReproBundleV1IntegrationCases(),
     ...buildScenarioMatrixIntegrationCases(),
     ...buildServiceContinuityPackIntegrationCases(),

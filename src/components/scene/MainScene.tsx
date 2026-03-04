@@ -8,6 +8,7 @@ import { ConnectionLines } from '../sim/ConnectionLines';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
 import { HOEventTimeline, type HOEventTimelineRow } from '../sim/HOEventTimeline';
+import { ResearchParameterPanel } from '../sim/ResearchParameterPanel';
 import { TimelineControls } from '../sim/TimelineControls';
 import { NTPU_CONFIG } from '@/config/ntpu.config';
 import { Starfield } from '../ui/Starfield';
@@ -15,7 +16,14 @@ import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
 import { SceneLoader } from '../ui/SceneLoader';
 import { SceneErrorBoundary } from '../ui/SceneErrorBoundary';
 import { useSimulation } from '@/hooks/useSimulation';
-import type { CanonicalProfileId } from '@/config/paper-profiles/loader';
+import { loadPaperProfile, type CanonicalProfileId } from '@/config/paper-profiles/loader';
+import {
+  buildResearchRuntimeOverrides,
+  createResearchParameterSelection,
+  normalizeResearchParameterSelection,
+  type ResearchParameterId,
+  type ResearchParameterSelection,
+} from '@/config/research-parameters/catalog';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { SimSnapshot } from '@/sim/types';
 import type { SatelliteRenderMode } from '../sim/satellite-render-mode';
@@ -42,6 +50,9 @@ export function MainScene() {
     useState<CanonicalProfileId>('case9-default');
   const [selectedBaseline, setSelectedBaseline] =
     useState<RuntimeBaseline>('max-rsrp');
+  const [researchSelection, setResearchSelection] = useState<ResearchParameterSelection>(() =>
+    createResearchParameterSelection(loadPaperProfile('case9-default')),
+  );
   const [satelliteRenderMode, setSatelliteRenderMode] = useState<SatelliteRenderMode>(
     NTPU_CONFIG.satellite.renderMode,
   );
@@ -53,6 +64,37 @@ export function MainScene() {
   const [isHudCollapsed, setIsHudCollapsed] = useState(false);
   const [replaySnapshots, setReplaySnapshots] = useState<SimSnapshot[]>([]);
   const [replayTick, setReplayTick] = useState<number | null>(null);
+  const baseProfile = useMemo(
+    () => loadPaperProfile(selectedProfileId),
+    [selectedProfileId],
+  );
+  const runtimeOverrides = useMemo(
+    () =>
+      buildResearchRuntimeOverrides({
+        profile: baseProfile,
+        selection: researchSelection,
+      }),
+    [baseProfile, researchSelection],
+  );
+
+  useEffect(() => {
+    setResearchSelection(createResearchParameterSelection(baseProfile));
+  }, [baseProfile]);
+
+  const handleResearchParameterChange = useCallback(
+    (parameterId: ResearchParameterId, value: string) => {
+      setResearchSelection((previous) =>
+        normalizeResearchParameterSelection(baseProfile, {
+          ...previous,
+          [parameterId]: value,
+        }),
+      );
+    },
+    [baseProfile],
+  );
+  const handleResetResearchParameters = useCallback(() => {
+    setResearchSelection(createResearchParameterSelection(baseProfile));
+  }, [baseProfile]);
 
   const {
     profile,
@@ -68,6 +110,7 @@ export function MainScene() {
     exportRunBundle,
   } = useSimulation({
     profileId: selectedProfileId,
+    runtimeOverrides,
     baseline: selectedBaseline,
     seed: 42,
     autoStart: false,
@@ -252,6 +295,12 @@ export function MainScene() {
                   </select>
                 </label>
               </div>
+              <ResearchParameterPanel
+                profile={profile}
+                selection={researchSelection}
+                onSelectionChange={handleResearchParameterChange}
+                onReset={handleResetResearchParameters}
+              />
               <TimelineControls
                 tick={displayedSnapshot.tick}
                 timeSec={displayedSnapshot.timeSec}
