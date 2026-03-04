@@ -6,6 +6,7 @@ import type { RuntimeParameterAuditSnapshot } from '@/sim/audit/runtime-paramete
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
 import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
 import type { CoupledDecisionStats } from '@/sim/scheduler/types';
+import type { ResearchConsistencySummary } from '@/config/research-parameters/consistency';
 
 /**
  * Provenance:
@@ -76,6 +77,17 @@ export interface RunManifest {
   scheduler_blocked_handover_count: number;
   scheduler_induced_interruption_sec: number;
   scheduler_blocked_reasons: Record<string, number>;
+  research_consistency?: {
+    mode: 'strict' | 'exploratory';
+    issue_count: number;
+    issue_codes: string[];
+    issues: Array<{
+      rule_id: string;
+      message_code: string;
+      severity: 'info' | 'warn' | 'error';
+      parameter_ids: string[];
+    }>;
+  };
   validation_gate?: {
     pass: boolean;
     total_cases: number;
@@ -106,6 +118,7 @@ export interface RunManifestOptions {
   policyRuntime?: PolicyRuntimeSnapshot | null;
   beamScheduler?: BeamSchedulerSnapshot | null;
   coupledDecisionStats?: CoupledDecisionStats | null;
+  researchConsistency?: ResearchConsistencySummary | null;
   runtimeParameterAudit?: RuntimeParameterAuditSnapshot | null;
   validationGate?: {
     pass: boolean;
@@ -209,6 +222,36 @@ function cloneCoupledDecisionStats(
   };
 }
 
+function cloneResearchConsistency(
+  value: ResearchConsistencySummary | null | undefined,
+): NonNullable<RunManifest['research_consistency']> | null {
+  if (!value) {
+    return null;
+  }
+
+  return {
+    mode: value.mode,
+    issue_count: value.issueCount,
+    issue_codes: [...value.issueCodes].sort(),
+    issues: value.issues
+      .map((issue) => ({
+        rule_id: issue.ruleId,
+        message_code: issue.messageCode,
+        severity: issue.severity,
+        parameter_ids: [...issue.parameterIds].sort(),
+      }))
+      .sort((left, right) => {
+        if (left.rule_id !== right.rule_id) {
+          return left.rule_id.localeCompare(right.rule_id);
+        }
+        if (left.message_code !== right.message_code) {
+          return left.message_code.localeCompare(right.message_code);
+        }
+        return left.severity.localeCompare(right.severity);
+      }),
+  };
+}
+
 function cloneSmallScaleParams(
   value: PaperProfile['channel']['smallScaleParams'] | null | undefined,
 ): RunManifest['small_scale_params'] {
@@ -267,6 +310,7 @@ export function buildRunManifest(options: RunManifestOptions): RunManifest {
   const policyRuntime = clonePolicyRuntime(options.policyRuntime);
   const beamScheduler = cloneBeamSchedulerSummary(options.beamScheduler);
   const coupledDecisionStats = cloneCoupledDecisionStats(options.coupledDecisionStats);
+  const researchConsistency = cloneResearchConsistency(options.researchConsistency);
 
   const manifest: RunManifest = {
     scenario_id: options.scenarioId,
@@ -337,6 +381,10 @@ export function buildRunManifest(options: RunManifestOptions): RunManifest {
       touched_keys: options.runtimeParameterAudit.touchedKeys.length,
       missing_keys: [...options.runtimeParameterAudit.missingKeys],
     };
+  }
+
+  if (researchConsistency) {
+    manifest.research_consistency = researchConsistency;
   }
 
   return manifest;

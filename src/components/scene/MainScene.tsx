@@ -18,10 +18,13 @@ import { SceneErrorBoundary } from '../ui/SceneErrorBoundary';
 import { useSimulation } from '@/hooks/useSimulation';
 import { loadPaperProfile, type CanonicalProfileId } from '@/config/paper-profiles/loader';
 import {
-  buildResearchRuntimeOverrides,
+  buildResearchRuntimeOverridesWithConsistency,
   createResearchParameterSelection,
   normalizeResearchParameterSelection,
+  summarizeResearchConsistency,
+  type ResearchConsistencyMode,
   type ResearchParameterId,
+  type ResearchConsistencyIssue,
   type ResearchParameterSelection,
 } from '@/config/research-parameters/catalog';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
@@ -53,6 +56,8 @@ export function MainScene() {
   const [researchSelection, setResearchSelection] = useState<ResearchParameterSelection>(() =>
     createResearchParameterSelection(loadPaperProfile('case9-default')),
   );
+  const [researchConsistencyMode, setResearchConsistencyMode] =
+    useState<ResearchConsistencyMode>('strict');
   const [satelliteRenderMode, setSatelliteRenderMode] = useState<SatelliteRenderMode>(
     NTPU_CONFIG.satellite.renderMode,
   );
@@ -68,13 +73,27 @@ export function MainScene() {
     () => loadPaperProfile(selectedProfileId),
     [selectedProfileId],
   );
-  const runtimeOverrides = useMemo(
+  const researchRuntime = useMemo(
     () =>
-      buildResearchRuntimeOverrides({
+      buildResearchRuntimeOverridesWithConsistency({
         profile: baseProfile,
         selection: researchSelection,
+        consistencyMode: researchConsistencyMode,
       }),
-    [baseProfile, researchSelection],
+    [baseProfile, researchSelection, researchConsistencyMode],
+  );
+  const runtimeOverrides = researchRuntime.overrides;
+  const researchConsistencyIssues = useMemo<ResearchConsistencyIssue[]>(
+    () => researchRuntime.issues,
+    [researchRuntime.issues],
+  );
+  const researchConsistencySummary = useMemo(
+    () =>
+      summarizeResearchConsistency({
+        mode: researchRuntime.mode,
+        issues: researchRuntime.issues,
+      }),
+    [researchRuntime.mode, researchRuntime.issues],
   );
 
   useEffect(() => {
@@ -111,6 +130,7 @@ export function MainScene() {
   } = useSimulation({
     profileId: selectedProfileId,
     runtimeOverrides,
+    researchConsistency: researchConsistencySummary,
     baseline: selectedBaseline,
     seed: 42,
     autoStart: false,
@@ -298,7 +318,10 @@ export function MainScene() {
               <ResearchParameterPanel
                 profile={profile}
                 selection={researchSelection}
+                consistencyMode={researchConsistencyMode}
+                consistencyIssues={researchConsistencyIssues}
                 onSelectionChange={handleResearchParameterChange}
+                onConsistencyModeChange={setResearchConsistencyMode}
                 onReset={handleResetResearchParameters}
               />
               <TimelineControls

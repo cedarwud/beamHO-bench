@@ -27,6 +27,18 @@ export interface BuildResearchRuntimeOverridesResult {
   issues: ResearchConsistencyIssue[];
 }
 
+export interface ResearchConsistencySummary {
+  mode: ResearchConsistencyMode;
+  issueCount: number;
+  issueCodes: string[];
+  issues: Array<{
+    ruleId: string;
+    messageCode: string;
+    severity: ResearchConsistencyIssueSeverity;
+    parameterIds: string[];
+  }>;
+}
+
 const EARTH_GRAVITATIONAL_PARAMETER_KM3_PER_SEC2 = 398600.4418;
 const EARTH_MEAN_RADIUS_KM = 6371;
 
@@ -179,13 +191,24 @@ export function resolveResearchParameterConsistency(options: {
   const tttMs = Math.max(0, Math.round(Number(selection['handover.params.a3TttMs']) || 0));
   const tickMs = Math.max(1, Math.round(options.profile.timeStepSec * 1000));
   if (tttMs > 0 && tttMs < tickMs) {
-    issues.push({
-      ruleId: 'PC-WARN-TTT-TICK-ALIAS',
-      messageCode: 'ttt_below_tick_granularity',
-      severity: 'warn',
-      parameterIds: ['handover.params.a3TttMs', 'timeStepSec'],
-      message: `Configured TTT=${tttMs}ms is below tick granularity=${tickMs}ms and may collapse to one-tick behavior.`,
-    });
+    if (mode === 'strict') {
+      selection['handover.params.a3TttMs'] = String(tickMs);
+      issues.push({
+        ruleId: 'PC-WARN-TTT-TICK-ALIAS',
+        messageCode: 'ttt_clamped_to_tick_granularity_in_strict_mode',
+        severity: 'warn',
+        parameterIds: ['handover.params.a3TttMs', 'timeStepSec'],
+        message: `Configured TTT=${tttMs}ms is below tick granularity=${tickMs}ms; strict mode raised TTT to ${tickMs}ms.`,
+      });
+    } else {
+      issues.push({
+        ruleId: 'PC-WARN-TTT-TICK-ALIAS',
+        messageCode: 'ttt_below_tick_granularity',
+        severity: 'warn',
+        parameterIds: ['handover.params.a3TttMs', 'timeStepSec'],
+        message: `Configured TTT=${tttMs}ms is below tick granularity=${tickMs}ms and may collapse to one-tick behavior.`,
+      });
+    }
   }
 
   return {
@@ -193,5 +216,38 @@ export function resolveResearchParameterConsistency(options: {
     selection,
     derivedOverrides,
     issues,
+  };
+}
+
+export function summarizeResearchConsistency(options: {
+  mode: ResearchConsistencyMode;
+  issues: ResearchConsistencyIssue[];
+}): ResearchConsistencySummary {
+  const normalizedIssues = options.issues
+    .map((issue) => ({
+      ruleId: issue.ruleId,
+      messageCode: issue.messageCode,
+      severity: issue.severity,
+      parameterIds: [...issue.parameterIds].sort(),
+    }))
+    .sort((left, right) => {
+      if (left.ruleId !== right.ruleId) {
+        return left.ruleId.localeCompare(right.ruleId);
+      }
+      if (left.messageCode !== right.messageCode) {
+        return left.messageCode.localeCompare(right.messageCode);
+      }
+      return left.severity.localeCompare(right.severity);
+    });
+
+  const issueCodes = [...new Set(
+    normalizedIssues.map((issue) => `${issue.ruleId}:${issue.messageCode}`),
+  )].sort();
+
+  return {
+    mode: options.mode,
+    issueCount: normalizedIssues.length,
+    issueCodes,
+    issues: normalizedIssues,
   };
 }

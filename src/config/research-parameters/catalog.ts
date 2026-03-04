@@ -52,7 +52,9 @@ export type {
   ResearchConsistencyIssue,
   ResearchConsistencyIssueSeverity,
   ResearchConsistencyMode,
+  ResearchConsistencySummary,
 } from './consistency';
+export { summarizeResearchConsistency } from './consistency';
 
 function toNumber(value: string, field: string): number {
   const parsed = Number(value);

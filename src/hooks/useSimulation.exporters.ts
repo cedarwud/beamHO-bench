@@ -6,6 +6,7 @@ import {
   type DeepPartial,
 } from '@/config/paper-profiles/loader';
 import type { PaperProfile } from '@/config/paper-profiles/types';
+import type { ResearchConsistencySummary } from '@/config/research-parameters/consistency';
 import {
   buildBaselineComparisonChartArtifact,
   buildBaselineComparisonChartFileName,
@@ -53,6 +54,7 @@ interface SimulationExporterDeps {
   baseline: RuntimeBaseline;
   seed: number;
   runtimeOverrides: DeepPartial<PaperProfile>;
+  researchConsistency: ResearchConsistencySummary | null;
   historyRef: MutableRefObject<SimSnapshot[]>;
 }
 
@@ -64,8 +66,26 @@ export interface SimulationExporters {
   exportRunBundle: () => Promise<RunBundleExportArtifact>;
 }
 
+function buildResearchConsistencyNote(value: ResearchConsistencySummary | null): string | null {
+  if (!value) {
+    return null;
+  }
+  const codes = value.issueCodes.slice(0, 5).join(', ');
+  return codes.length > 0
+    ? `research consistency mode=${value.mode}; issues=${value.issueCount}; codes=${codes}`
+    : `research consistency mode=${value.mode}; issues=0`;
+}
+
 export function createSimulationExporters(deps: SimulationExporterDeps): SimulationExporters {
-  const { setup, profileId, baseline, seed, runtimeOverrides, historyRef } = deps;
+  const {
+    setup,
+    profileId,
+    baseline,
+    seed,
+    runtimeOverrides,
+    researchConsistency,
+    historyRef,
+  } = deps;
 
   const exportSourceTrace = async () => {
     const latestSnapshot = setup.engine.getSnapshot();
@@ -80,6 +100,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       setup.profile.handover.algorithmFidelity === 'full'
         ? 'handover algorithm fidelity: full (research baseline path)'
         : 'handover algorithm fidelity: simplified (non-default engineering mode)';
+    const consistencyNote = buildResearchConsistencyNote(researchConsistency);
 
     const artifact = await createSourceTraceArtifact({
       scenarioId: setup.scenario.id,
@@ -93,7 +114,10 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       policyRuntime: latestSnapshot.policyRuntime ?? null,
       beamScheduler: latestSnapshot.beamScheduler ?? null,
       coupledDecisionStats: latestSnapshot.coupledDecisionStats ?? null,
-      assumptions: [assumptionMode, fidelityNote],
+      researchConsistency,
+      assumptions: [assumptionMode, fidelityNote, consistencyNote].filter(
+        (value): value is string => typeof value === 'string' && value.length > 0,
+      ),
     });
 
     const fileName = `source-trace_${setup.scenario.id}_${profileId}_${seed}_${baseline}.json`;
@@ -275,11 +299,15 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       policyRuntime: latestSnapshot.policyRuntime ?? null,
       beamScheduler: latestSnapshot.beamScheduler ?? null,
       coupledDecisionStats: latestSnapshot.coupledDecisionStats ?? null,
+      researchConsistency,
       assumptions: [
         setup.profile.mode === 'real-trace'
           ? 'real-trace mode run bundle export'
           : 'paper-baseline mode run bundle export',
-      ],
+        buildResearchConsistencyNote(researchConsistency),
+      ].filter(
+        (value): value is string => typeof value === 'string' && value.length > 0,
+      ),
     });
 
     const resultArtifact = buildKpiResultArtifact(latestSnapshot, {
@@ -313,6 +341,7 @@ export function createSimulationExporters(deps: SimulationExporterDeps): Simulat
       policyRuntime: latestSnapshot.policyRuntime ?? null,
       beamScheduler: latestSnapshot.beamScheduler ?? null,
       coupledDecisionStats: latestSnapshot.coupledDecisionStats ?? null,
+      researchConsistency,
       runtimeParameterAudit: latestSnapshot.runtimeParameterAudit ?? null,
       validationGate: {
         pass: validationGateSummary.pass,

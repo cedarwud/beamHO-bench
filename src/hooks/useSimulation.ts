@@ -39,6 +39,7 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
   const {
     profileId = 'case9-default',
     runtimeOverrides = {},
+    researchConsistency = null,
     baseline = 'max-rsrp',
     seed = 42,
     autoStart = false,
@@ -153,9 +154,10 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
         baseline,
         seed,
         runtimeOverrides,
+        researchConsistency,
         historyRef,
       }),
-    [setup, profileId, baseline, seed, runtimeOverrides],
+    [setup, profileId, baseline, seed, runtimeOverrides, researchConsistency],
   );
 
   return {

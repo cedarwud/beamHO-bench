@@ -9,6 +9,7 @@ import type { AlgorithmFidelity, PaperProfile } from '@/config/paper-profiles/ty
 import type { PolicyRuntimeSnapshot } from '@/sim/policy/types';
 import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
 import type { CoupledDecisionStats } from '@/sim/scheduler/types';
+import type { ResearchConsistencySummary } from '@/config/research-parameters/consistency';
 
 /**
  * Provenance:
@@ -73,6 +74,17 @@ export interface SourceTraceArtifact {
   scheduler_blocked_handover_count: number;
   scheduler_induced_interruption_sec: number;
   scheduler_blocked_reasons: Record<string, number>;
+  research_consistency: {
+    mode: 'strict' | 'exploratory';
+    issue_count: number;
+    issue_codes: string[];
+    issues: Array<{
+      rule_id: string;
+      message_code: string;
+      severity: 'info' | 'warn' | 'error';
+      parameter_ids: string[];
+    }>;
+  } | null;
   assumptions: string[];
 }
 
@@ -89,6 +101,7 @@ export interface SourceTraceOptions {
   policyRuntime?: PolicyRuntimeSnapshot | null;
   beamScheduler?: BeamSchedulerSnapshot | null;
   coupledDecisionStats?: CoupledDecisionStats | null;
+  researchConsistency?: ResearchConsistencySummary | null;
 }
 
 const POLICY_OFF_RUNTIME: PolicyRuntimeSnapshot = {
@@ -182,6 +195,35 @@ function cloneCoupledDecisionStats(
   };
 }
 
+function cloneResearchConsistency(
+  value: ResearchConsistencySummary | null | undefined,
+): SourceTraceArtifact['research_consistency'] {
+  if (!value) {
+    return null;
+  }
+  return {
+    mode: value.mode,
+    issue_count: value.issueCount,
+    issue_codes: [...value.issueCodes].sort(),
+    issues: value.issues
+      .map((issue) => ({
+        rule_id: issue.ruleId,
+        message_code: issue.messageCode,
+        severity: issue.severity,
+        parameter_ids: [...issue.parameterIds].sort(),
+      }))
+      .sort((left, right) => {
+        if (left.rule_id !== right.rule_id) {
+          return left.rule_id.localeCompare(right.rule_id);
+        }
+        if (left.message_code !== right.message_code) {
+          return left.message_code.localeCompare(right.message_code);
+        }
+        return left.severity.localeCompare(right.severity);
+      }),
+  };
+}
+
 function cloneSmallScaleParams(
   value: PaperProfile['channel']['smallScaleParams'] | null | undefined,
 ): SourceTraceArtifact['small_scale_params'] {
@@ -229,6 +271,7 @@ export async function createSourceTraceArtifact(
   const policyRuntime = clonePolicyRuntime(options.policyRuntime);
   const beamScheduler = cloneBeamSchedulerSummary(options.beamScheduler);
   const coupledDecisionStats = cloneCoupledDecisionStats(options.coupledDecisionStats);
+  const researchConsistency = cloneResearchConsistency(options.researchConsistency);
 
   const profile = loadPaperProfile(options.profileId, runtimeOverrides);
   const tracePayload = await buildSourceTracePayload(options.profileId, runtimeOverrides);
@@ -271,6 +314,7 @@ export async function createSourceTraceArtifact(
     scheduler_induced_interruption_sec:
       coupledDecisionStats.schedulerInducedInterruptionSec,
     scheduler_blocked_reasons: coupledDecisionStats.blockedReasons,
+    research_consistency: researchConsistency,
     assumptions,
   };
 }

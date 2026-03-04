@@ -12,10 +12,12 @@ import type { BaselineComparisonChartArtifact } from '@/sim/bench/comparison-cha
 import type { SmallScaleComparisonTemplateArtifact } from '@/sim/bench/small-scale-comparison-template';
 import type { ValidationGateSummary, ValidationSuiteResult } from '@/sim/bench/validation-suite';
 import type { SimSnapshot } from '@/sim/types';
+import type { ResearchConsistencySummary } from '@/config/research-parameters/consistency';
 
 export interface UseSimulationOptions {
   profileId?: CanonicalProfileId;
   runtimeOverrides?: DeepPartial<PaperProfile>;
+  researchConsistency?: ResearchConsistencySummary | null;
   baseline?: RuntimeBaseline;
   seed?: number;
   autoStart?: boolean;

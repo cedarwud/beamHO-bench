@@ -6,9 +6,12 @@ import {
   getResearchParameterSpecById,
   listResearchParameterSpecs,
   normalizeResearchParameterSelection,
+  summarizeResearchConsistency,
   type ResearchParameterId,
   type ResearchParameterSelection,
 } from '@/config/research-parameters/catalog';
+import { buildRunManifest } from '@/sim/reporting/manifest';
+import { createSourceTraceArtifact } from '@/sim/reporting/source-trace';
 import { runBaselineBatch } from '@/sim/bench/runner';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import { assertCondition } from './helpers';
@@ -176,6 +179,150 @@ export function buildResearchParameterIntegrationCases(): SimTestCase[] {
         assertCondition(
           JSON.stringify(overrides) === JSON.stringify(consistency.overrides),
           'Expected wrapper buildResearchRuntimeOverrides to mirror consistency override output.',
+        );
+      },
+    },
+    {
+      name: 'integration: strict and exploratory consistency modes diverge on tick-alias risk handling',
+      kind: 'integration',
+      run: () => {
+        const baseProfile = loadPaperProfile('case9-default');
+        const baseSelection = createResearchParameterSelection(baseProfile);
+        const riskySelection = normalizeResearchParameterSelection(baseProfile, {
+          ...baseSelection,
+          'handover.params.a3TttMs': '40',
+        });
+        const tickMs = Math.max(1, Math.round(baseProfile.timeStepSec * 1000));
+
+        const strictConsistency = buildResearchRuntimeOverridesWithConsistency({
+          profile: baseProfile,
+          selection: riskySelection,
+          consistencyMode: 'strict',
+        });
+        const exploratoryConsistency = buildResearchRuntimeOverridesWithConsistency({
+          profile: baseProfile,
+          selection: riskySelection,
+          consistencyMode: 'exploratory',
+        });
+
+        assertCondition(
+          strictConsistency.selection['handover.params.a3TttMs'] === String(tickMs),
+          'Expected strict mode to raise TTT to tick granularity.',
+        );
+        assertCondition(
+          strictConsistency.overrides.handover?.params?.a3TttMs === tickMs,
+          'Expected strict mode override to use raised TTT tick granularity value.',
+        );
+        assertCondition(
+          strictConsistency.issues.some(
+            (issue) =>
+              issue.ruleId === 'PC-WARN-TTT-TICK-ALIAS' &&
+              issue.messageCode === 'ttt_clamped_to_tick_granularity_in_strict_mode',
+          ),
+          'Expected strict mode issue code for TTT clamp-to-tick behavior.',
+        );
+
+        assertCondition(
+          exploratoryConsistency.selection['handover.params.a3TttMs'] === '40',
+          'Expected exploratory mode to keep requested sub-tick TTT value.',
+        );
+        assertCondition(
+          exploratoryConsistency.overrides.handover?.params?.a3TttMs === 40,
+          'Expected exploratory mode override to keep requested sub-tick TTT value.',
+        );
+        assertCondition(
+          exploratoryConsistency.issues.some(
+            (issue) =>
+              issue.ruleId === 'PC-WARN-TTT-TICK-ALIAS' &&
+              issue.messageCode === 'ttt_below_tick_granularity',
+          ),
+          'Expected exploratory mode warning code for sub-tick TTT risk.',
+        );
+      },
+    },
+    {
+      name: 'integration: research consistency summary is exported to source-trace and manifest artifacts',
+      kind: 'integration',
+      run: async () => {
+        const baseProfile = loadPaperProfile('case9-default');
+        const baseSelection = createResearchParameterSelection(baseProfile);
+        const candidateSelection = normalizeResearchParameterSelection(baseProfile, {
+          ...baseSelection,
+          'constellation.altitudeKm': '1200',
+          'constellation.activeSatellitesInWindow': '16',
+          'channel.smallScaleModel': 'none',
+          'channel.smallScaleParams.temporalCorrelation.enabled': 'true',
+          'channel.smallScaleParams.dopplerAware.enabled': 'true',
+          'handover.params.a3TttMs': '40',
+        });
+        const consistency = buildResearchRuntimeOverridesWithConsistency({
+          profile: baseProfile,
+          selection: candidateSelection,
+          consistencyMode: 'strict',
+        });
+        const summary = summarizeResearchConsistency({
+          mode: consistency.mode,
+          issues: consistency.issues,
+        });
+
+        const sourceTrace = await createSourceTraceArtifact({
+          scenarioId: 'case9-grid',
+          profileId: 'case9-default',
+          baseline: 'a4',
+          algorithmFidelity: baseProfile.handover.algorithmFidelity,
+          seed: 42,
+          playbackRate: 1,
+          runtimeOverrides: consistency.overrides,
+          researchConsistency: summary,
+        });
+
+        const resolvedProfile = loadPaperProfile('case9-default', consistency.overrides);
+        const manifest = buildRunManifest({
+          scenarioId: 'case9-grid',
+          profile: resolvedProfile,
+          baseline: 'a4',
+          seed: 42,
+          playbackRate: 1,
+          profileChecksumSha256: 'test-profile-checksum',
+          sourceCatalogChecksumSha256: 'test-source-catalog-checksum',
+          resolvedAssumptionIds: [],
+          researchConsistency: summary,
+        });
+
+        const expectedIssueCodes = [...summary.issueCodes].sort();
+        assertCondition(
+          sourceTrace.research_consistency !== null,
+          'Expected source-trace to carry research_consistency payload.',
+        );
+        assertCondition(
+          manifest.research_consistency !== undefined,
+          'Expected manifest to carry research_consistency payload.',
+        );
+        assertCondition(
+          sourceTrace.research_consistency?.mode === 'strict',
+          'Expected source-trace research consistency mode to match strict.',
+        );
+        assertCondition(
+          manifest.research_consistency?.mode === 'strict',
+          'Expected manifest research consistency mode to match strict.',
+        );
+        assertCondition(
+          sourceTrace.research_consistency?.issue_count === summary.issueCount,
+          'Expected source-trace issue_count to match consistency summary.',
+        );
+        assertCondition(
+          manifest.research_consistency?.issue_count === summary.issueCount,
+          'Expected manifest issue_count to match consistency summary.',
+        );
+        assertCondition(
+          JSON.stringify(sourceTrace.research_consistency?.issue_codes ?? []) ===
+            JSON.stringify(expectedIssueCodes),
+          'Expected source-trace issue_codes to be sorted and deterministic.',
+        );
+        assertCondition(
+          JSON.stringify(manifest.research_consistency?.issue_codes ?? []) ===
+            JSON.stringify(expectedIssueCodes),
+          'Expected manifest issue_codes to be sorted and deterministic.',
         );
       },
     },
