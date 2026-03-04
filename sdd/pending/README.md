@@ -8,7 +8,7 @@ Status ownership:
 
 ## 1. Active Pending Specs
 
-1. none currently.
+1. `beamHO-bench-parametric-trajectory-backend-sdd.md` (active pending since 2026-03-04; backend implemented, frontend GLB coupling pending)
 
 ## 2. Closure-Tracked Pending Specs
 
