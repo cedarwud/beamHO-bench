@@ -40,10 +40,11 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 19. `completed/beamHO-bench-repro-bundle-v1-closure.md`
 20. `completed/beamHO-bench-service-continuity-baseline-closure.md`
 21. `completed/beamHO-bench-core-extension-governance-closure.md`
+22. `completed/beamHO-bench-parameter-consistency-v1-closure.md`
 
 ## Pending (Active + Closure-Tracked Specs)
 
-1. `pending/beamHO-bench-parameter-consistency-v1-sdd.md` (active pending spec)
+1. `pending/beamHO-bench-parameter-consistency-v1-sdd.md` (implemented/closure-tracked pending package)
 2. `pending/beamHO-bench-repro-bundle-v1-sdd.md` (implemented/closure-tracked pending package)
 3. `pending/beamHO-bench-baseline-parameter-envelope-sdd.md` (implemented/closure-tracked pending package)
 4. `pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (implemented/closure-tracked pending package)

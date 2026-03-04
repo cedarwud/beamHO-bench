@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-04  
-**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete + Active Pending Open (PC-v1 D1~D5 implemented, D6 in progress)
+**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete + No Active Pending Open
 
 ---
 
@@ -25,14 +25,14 @@ Current status snapshot means:
 11. Closure-tracked pending package `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md` has D1~D5 implemented with closure evidence.
 12. Closure-tracked pending package `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md` has D1~D5 implemented with closure evidence.
 13. Closure-tracked pending package `sdd/pending/beamHO-bench-core-extension-governance-sdd.md` has D1~D5 implemented with closure evidence.
-14. Active pending package `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md` has D1~D5 implemented in code/tests, with D6 docs/closure synchronization in progress.
+14. Closure-tracked pending package `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md` has D1~D6 implemented with closure evidence.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
 2. RSMA soft-HO and broad large-scale/multi-paper DRL fusion, deferred by BG-6 governance.
 
 Active pending items (implementation open):
-1. Research Parameter Consistency v1 (`sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md`).
+1. none currently.
 
 ---
 
@@ -58,7 +58,7 @@ Active pending items (implementation open):
 | RB1 (D1~D5) | Complete | repro bundle v1 package for deterministic one-command packaging of canonical cross-mode and baseline-envelope artifacts, with contract guard and closure report |
 | SCB (D1~D5) | Complete | service continuity baseline validation pack (`VAL-SCB-*`) for starlink/oneweb/coupled-scheduler continuity envelopes with deterministic contract guard and closure report |
 | CEG (D1~D5) | Complete | core/all validation scope governance + stage artifact freshness enforcement + runtime override source-map coverage guard + closure synchronization |
-| PC-v1 (D1~D6) | Active Pending / In Progress | rule layer, strict/exploratory mode contract, UI pre-run feedback, source-trace/manifest consistency metadata, and integration coverage implemented; closure sync pending |
+| PC-v1 (D1~D6) | Complete | research-parameter consistency rule layer + policy-mode divergence + UI pre-run feedback + source-trace/manifest metadata + closure synchronization |
 
 ---
 
@@ -133,6 +133,7 @@ Primary references:
 24. `sdd/pending/beamHO-bench-core-extension-governance-sdd.md`
 25. `sdd/completed/beamHO-bench-core-extension-governance-closure.md`
 26. `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md`
+27. `sdd/completed/beamHO-bench-parameter-consistency-v1-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
