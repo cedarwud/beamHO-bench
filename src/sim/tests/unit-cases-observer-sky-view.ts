@@ -1,4 +1,9 @@
+import {
+  applySatelliteDisplayContinuity,
+  buildSatelliteDisplayContinuityMemory,
+} from '@/viz/satellite/display-continuity';
 import { buildSatelliteDisplayFrame } from '@/viz/satellite/display-adapter';
+import { buildSatelliteDisplayCandidates } from '@/viz/satellite/display-selection';
 import { classifySatelliteVisibilityZone } from '@/viz/satellite/visibility-zones';
 import type { SatelliteState } from '@/sim/types';
 import { assertCondition, createInvisibleSatellite } from './helpers';
@@ -27,7 +32,7 @@ export function buildObserverSkyViewUnitCases(): SimTestCase[] {
       },
     },
     {
-      name: 'unit: observer-sky display adapter is deterministic and filters hidden satellites',
+      name: 'unit: observer-sky display selection is deterministic and filters hidden satellites before render assembly',
       kind: 'unit',
       run: () => {
         const satellites: SatelliteState[] = [
@@ -62,12 +67,18 @@ export function buildObserverSkyViewUnitCases(): SimTestCase[] {
           minElevationDeg: 10,
         } as const;
 
-        const first = buildSatelliteDisplayFrame({
+        const selected = buildSatelliteDisplayCandidates({
           satellites,
+          config: {
+            minElevationDeg: config.minElevationDeg,
+          },
+        });
+        const first = buildSatelliteDisplayFrame({
+          satellites: selected,
           config,
         });
         const second = buildSatelliteDisplayFrame({
-          satellites,
+          satellites: selected,
           config,
         });
 
@@ -89,6 +100,127 @@ export function buildObserverSkyViewUnitCases(): SimTestCase[] {
         assertCondition(
           JSON.stringify(first.satellites) === JSON.stringify(second.satellites),
           'Expected deterministic observer-sky display adapter output for the same inputs.',
+        );
+      },
+    },
+    {
+      name: 'unit: observer-sky continuity retains prior members while allowing bounded replacement',
+      kind: 'unit',
+      run: () => {
+        const firstTickSatellites: SatelliteState[] = [
+          {
+            ...createInvisibleSatellite(),
+            id: 1,
+            azimuthDeg: 10,
+            elevationDeg: 42,
+            rangeKm: 9,
+          },
+          {
+            ...createInvisibleSatellite(),
+            id: 2,
+            azimuthDeg: 110,
+            elevationDeg: 36,
+            rangeKm: 10,
+          },
+          {
+            ...createInvisibleSatellite(),
+            id: 3,
+            azimuthDeg: 220,
+            elevationDeg: 31,
+            rangeKm: 11,
+          },
+          {
+            ...createInvisibleSatellite(),
+            id: 4,
+            azimuthDeg: 300,
+            elevationDeg: 28,
+            rangeKm: 12,
+          },
+        ];
+        const secondTickSatellites: SatelliteState[] = [
+          {
+            ...createInvisibleSatellite(),
+            id: 1,
+            azimuthDeg: 12,
+            elevationDeg: 41,
+            rangeKm: 9,
+          },
+          {
+            ...createInvisibleSatellite(),
+            id: 2,
+            azimuthDeg: 112,
+            elevationDeg: 34,
+            rangeKm: 10,
+          },
+          {
+            ...createInvisibleSatellite(),
+            id: 3,
+            azimuthDeg: 225,
+            elevationDeg: 30,
+            rangeKm: 11,
+          },
+          {
+            ...createInvisibleSatellite(),
+            id: 9,
+            azimuthDeg: 305,
+            elevationDeg: 44,
+            rangeKm: 8,
+          },
+          {
+            ...createInvisibleSatellite(),
+            id: 11,
+            azimuthDeg: 40,
+            elevationDeg: 18,
+            rangeKm: 14,
+          },
+        ];
+
+        const firstSelection = applySatelliteDisplayContinuity({
+          candidates: buildSatelliteDisplayCandidates({
+            satellites: firstTickSatellites,
+            config: {
+              minElevationDeg: 10,
+              displayBudget: 4,
+            },
+          }),
+          displayBudget: 4,
+          sequenceKey: 'test-sequence',
+          tick: 0,
+          timeSec: 0,
+        });
+        const continuityMemory = buildSatelliteDisplayContinuityMemory({
+          sequenceKey: 'test-sequence',
+          tick: 0,
+          timeSec: 0,
+          selectedIds: firstSelection.selectedIds,
+        });
+
+        const secondSelection = applySatelliteDisplayContinuity({
+          candidates: buildSatelliteDisplayCandidates({
+            satellites: secondTickSatellites,
+            config: {
+              minElevationDeg: 10,
+              displayBudget: 4,
+            },
+          }),
+          displayBudget: 4,
+          sequenceKey: 'test-sequence',
+          tick: 1,
+          timeSec: 1,
+          memory: continuityMemory,
+        });
+
+        assertCondition(
+          secondSelection.retainedIds.length >= 3,
+          'Expected observer-sky continuity to retain most still-visible satellites across adjacent ticks.',
+        );
+        assertCondition(
+          secondSelection.selectedIds.includes(9),
+          'Expected bounded replacement to admit a new high-priority pass when budget pressure exists.',
+        );
+        assertCondition(
+          secondSelection.droppedIds.length <= 1,
+          'Expected adjacent-tick display churn to remain bounded.',
         );
       },
     },

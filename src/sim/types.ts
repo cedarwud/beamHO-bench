@@ -28,7 +28,7 @@ export interface BeamState {
   connectedUeIds: number[];
 }
 
-export interface SatelliteState {
+export interface SatelliteGeometryState {
   id: number;
   positionEcef: [number, number, number];
   positionWorld: [number, number, number];
@@ -37,6 +37,9 @@ export interface SatelliteState {
   elevationDeg: number;
   rangeKm: number;
   visible: boolean;
+}
+
+export interface SatelliteState extends SatelliteGeometryState {
   beams: BeamState[];
 }
 
@@ -100,6 +103,7 @@ export interface SimSnapshot {
   scenarioId: string;
   profileId: string;
   satellites: SatelliteState[];
+  observerSkyPhysicalSatellites?: SatelliteGeometryState[];
   ues: UEState[];
   hoEvents: HOEvent[];
   kpiCumulative: KpiResult;

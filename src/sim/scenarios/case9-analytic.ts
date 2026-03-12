@@ -10,7 +10,15 @@ import { computeJainFairness, updateKpiAccumulator } from '@/sim/kpi/accumulator
 import { PolicyRuntimeSession } from '@/sim/policy/runtime-session';
 import type { PolicyMode, PolicyPlugin } from '@/sim/policy/types';
 import { BeamSchedulerWindowEngine } from '@/sim/scheduler/window-engine';
-import type { KpiResult, SatelliteState, SimScenario, SimSnapshot, SimTickContext, UEState } from '@/sim/types';
+import type {
+  KpiResult,
+  SatelliteGeometryState,
+  SatelliteState,
+  SimScenario,
+  SimSnapshot,
+  SimTickContext,
+  UEState,
+} from '@/sim/types';
 import { SeededRng } from '@/sim/util/rng';
 import {
   buildBeamsForSatellite,
@@ -23,6 +31,7 @@ import {
   buildParametricOrbitSatelliteStateAtTime,
   createParametricOrbitContext,
   type ParametricOrbitContext,
+  selectParametricOrbitRuntimeWindow,
 } from './common/synthetic-orbit';
 
 /**
@@ -147,6 +156,11 @@ interface ParametricSatelliteKinematicContext {
   orbitContext: ParametricOrbitContext;
 }
 
+interface SatelliteStateFrame {
+  runtimeSatellites: SatelliteState[];
+  observerSkyPhysicalSatellites?: SatelliteGeometryState[];
+}
+
 function resolveSyntheticTrajectoryModel(profile: PaperProfile): SyntheticTrajectoryModel {
   if (profile.constellation.syntheticTrajectoryModel === 'walker-circular') {
     return 'walker-circular';
@@ -220,7 +234,7 @@ function buildLegacySatelliteStateAtTime(context: LegacySatelliteKinematicContex
 
 function buildParametricSatelliteStateAtTime(
   context: ParametricSatelliteKinematicContext,
-): SatelliteState[] {
+): SatelliteStateFrame {
   const {
     profile,
     timeSec,
@@ -232,7 +246,11 @@ function buildParametricSatelliteStateAtTime(
     orbitContext,
   } = context;
 
-  return buildParametricOrbitSatelliteStateAtTime(orbitContext, timeSec).map((satellite) => ({
+  const physicalSatellites = buildParametricOrbitSatelliteStateAtTime(orbitContext, timeSec);
+  const runtimeSatellites = selectParametricOrbitRuntimeWindow(
+    physicalSatellites,
+    orbitContext.desiredSatelliteCount,
+  ).map((satellite) => ({
     id: satellite.id,
     positionEcef: satellite.positionEcef,
     positionWorld: satellite.positionWorld,
@@ -254,6 +272,11 @@ function buildParametricSatelliteStateAtTime(
       observerLon,
     }),
   }));
+
+  return {
+    runtimeSatellites,
+    observerSkyPhysicalSatellites: physicalSatellites,
+  };
 }
 
 export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOptions): SimScenario {
@@ -304,7 +327,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
         })
       : null;
 
-  function buildSatellitesAtTime(timeSec: number): SatelliteState[] {
+  function buildSatellitesAtTime(timeSec: number): SatelliteStateFrame {
     if (syntheticTrajectoryModel === 'walker-circular' && parametricOrbitContext) {
       return buildParametricSatelliteStateAtTime({
         profile,
@@ -318,7 +341,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       });
     }
 
-    return buildLegacySatelliteStateAtTime({
+    const satellites = buildLegacySatelliteStateAtTime({
       profile,
       timeSec,
       kmToWorldScale,
@@ -330,6 +353,10 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       beamSpacingWorld,
       wrapWidthWorld,
     });
+    return {
+      runtimeSatellites: satellites,
+      observerSkyPhysicalSatellites: satellites,
+    };
   }
 
   function createInitialSnapshot(): SimSnapshot {
@@ -338,7 +365,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
     policyRuntime.reset();
     beamScheduler.reset();
 
-    const satellites = buildSatellitesAtTime(0);
+    const satelliteFrame = buildSatellitesAtTime(0);
     const ues = buildInitialUEs({
       profile,
       seed: options.seed,
@@ -352,13 +379,14 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       timeSec: 0,
       scenarioId,
       profileId: profile.profileId,
-      satellites,
+      satellites: satelliteFrame.runtimeSatellites,
+      observerSkyPhysicalSatellites: satelliteFrame.observerSkyPhysicalSatellites,
       ues,
       hoEvents: [],
       kpiCumulative: { ...EMPTY_KPI },
       runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
       policyRuntime: policyRuntime.snapshot(),
-      beamScheduler: beamScheduler.buildSnapshot(0, 0, satellites),
+      beamScheduler: beamScheduler.buildSnapshot(0, 0, satelliteFrame.runtimeSatellites),
       coupledDecisionStats: {
         mode: profile.scheduler.mode,
         blockedByScheduleHandoverCount: 0,
@@ -379,11 +407,11 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       observerLon,
     });
 
-    const satellitesAtTime = buildSatellitesAtTime(timeSec);
+    const satelliteFrame = buildSatellitesAtTime(timeSec);
     const beamSchedulerSnapshot = beamScheduler.buildSnapshot(
       previous.tick + 1,
       timeSec,
-      satellitesAtTime,
+      satelliteFrame.runtimeSatellites,
     );
 
     const decision = runHandoverBaseline({
@@ -391,7 +419,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       timeSec,
       timeStepSec: context.timeStepSec,
       profile,
-      satellites: satellitesAtTime,
+      satellites: satelliteFrame.runtimeSatellites,
       ues: movedUes,
       baseline,
       triggerMemory,
@@ -407,7 +435,10 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       runtimeParameterAudit,
     });
 
-    const satellitesWithConnections = attachUesToBeams(stateMachine.ues, satellitesAtTime);
+    const satellitesWithConnections = attachUesToBeams(
+      stateMachine.ues,
+      satelliteFrame.runtimeSatellites,
+    );
     const loadVector = satellitesWithConnections.map((satellite) =>
       satellite.beams.reduce((sum, beam) => sum + beam.connectedUeIds.length, 0),
     );
@@ -431,6 +462,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       scenarioId,
       profileId: profile.profileId,
       satellites: satellitesWithConnections,
+      observerSkyPhysicalSatellites: satelliteFrame.observerSkyPhysicalSatellites,
       ues: stateMachine.ues,
       hoEvents: decision.events,
       kpiCumulative,

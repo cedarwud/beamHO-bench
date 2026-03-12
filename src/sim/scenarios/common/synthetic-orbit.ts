@@ -374,16 +374,11 @@ export function buildParametricOrbitSatelliteStateAtTime(
     meanMotionRadPerSec,
     raanOffsetRad,
     anomalyOffsetRad,
-    desiredSatelliteCount,
     seeds,
     profile,
   } = context;
-  const azimuthSectorCount = Math.max(
-    1,
-    Math.min(8, Math.ceil(desiredSatelliteCount / 2)),
-  );
 
-  const allSatellites = seeds.map((seed) => {
+  return seeds.map((seed) => {
     const anomalyRad =
       seed.meanAnomalyAtEpochRad + anomalyOffsetRad + meanMotionRadPerSec * timeSec;
     const cosAnomaly = Math.cos(anomalyRad);
@@ -433,21 +428,32 @@ export function buildParametricOrbitSatelliteStateAtTime(
       groundCenterWorld,
     };
   });
+}
 
-  if (allSatellites.length <= desiredSatelliteCount) {
-    return buildAzimuthDiversifiedRanking(allSatellites, azimuthSectorCount);
+export function selectParametricOrbitRuntimeWindow(
+  satellites: readonly ParametricOrbitSatelliteState[],
+  desiredSatelliteCount: number,
+): ParametricOrbitSatelliteState[] {
+  const normalizedDesiredCount = Math.max(1, Math.floor(desiredSatelliteCount));
+  const azimuthSectorCount = Math.max(
+    1,
+    Math.min(8, Math.ceil(normalizedDesiredCount / 2)),
+  );
+
+  if (satellites.length <= normalizedDesiredCount) {
+    return buildAzimuthDiversifiedRanking([...satellites], azimuthSectorCount);
   }
 
   const visibleRanked = buildAzimuthDiversifiedRanking(
-    allSatellites.filter((satellite) => satellite.visible),
+    satellites.filter((satellite) => satellite.visible),
     azimuthSectorCount,
   );
   const fallbackRanked = buildAzimuthDiversifiedRanking(
-    allSatellites.filter((satellite) => !satellite.visible),
+    satellites.filter((satellite) => !satellite.visible),
     azimuthSectorCount,
   );
   const ranked = [...visibleRanked, ...fallbackRanked];
   return ranked
-    .slice(0, desiredSatelliteCount)
+    .slice(0, normalizedDesiredCount)
     .sort(compareSatelliteWindowPriority);
 }

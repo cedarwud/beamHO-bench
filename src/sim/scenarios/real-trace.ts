@@ -17,7 +17,15 @@ import {
   loadOrbitCatalog,
   propagateOrbitElement,
 } from '@/sim/orbit/sgp4';
-import type { KpiResult, SatelliteState, SimScenario, SimSnapshot, SimTickContext, UEState } from '@/sim/types';
+import type {
+  KpiResult,
+  SatelliteGeometryState,
+  SatelliteState,
+  SimScenario,
+  SimSnapshot,
+  SimTickContext,
+  UEState,
+} from '@/sim/types';
 import { SeededRng } from '@/sim/util/rng';
 import { buildBeamsForSatellite, computeBeamSpacingWorld } from './common/beam-layout';
 import { worldToLatLon } from './common/geo';
@@ -67,6 +75,11 @@ const EMPTY_KPI: KpiResult = {
   avgDlSinr: 0,
   jainFairness: 0,
 };
+
+interface SatelliteStateFrame {
+  runtimeSatellites: SatelliteState[];
+  observerSkyPhysicalSatellites: SatelliteGeometryState[];
+}
 
 function buildInitialUEs(options: {
   profile: PaperProfile;
@@ -149,17 +162,40 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
     profile.constellation.activeSatellitesInWindow ?? profile.constellation.satellitesPerPlane;
   let triggerMemory: TriggerMemoryStore = new Map();
 
-  function buildSatellitesAt(timeSec: number): SatelliteState[] {
+  function buildSatellitesAt(timeSec: number): SatelliteStateFrame {
     const simUtcMs = catalog.startTimeUtcMs + Math.round(timeSec * 1000);
     const minElevationDeg = profile.constellation.minElevationDeg;
 
     const propagated = catalog.records.map((record) => {
       const point = propagateOrbitElement(record, simUtcMs);
       const topo = computeTopocentricPoint(observer, point.ecefKm);
+      const [groundX, groundZ] = geoToWorldXZ(
+        point.latDeg,
+        point.lonDeg,
+        observerLat,
+        observerLon,
+        kmToWorldScale,
+      );
       return {
-        record,
-        point,
-        topo,
+        satellite: {
+          id: record.noradId,
+          positionEcef: point.ecefKm,
+          positionWorld: [
+            topo.eastKm * kmToWorldScale,
+            topo.upKm * kmToWorldScale,
+            topo.northKm * kmToWorldScale,
+          ] as [number, number, number],
+          positionLla: {
+            lat: point.latDeg,
+            lon: point.lonDeg,
+            altKm: point.altKm,
+          },
+          azimuthDeg: topo.azimuthDeg,
+          elevationDeg: topo.elevationDeg,
+          rangeKm: topo.rangeKm,
+          visible: topo.elevationDeg >= minElevationDeg,
+        },
+        groundCenterWorld: [groundX, groundZ] as [number, number],
       };
     });
 
@@ -167,17 +203,17 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
       // Source: PAP-2022-SEAMLESSNTN-CORE
       // Source: STD-3GPP-TR38.811-6.6.2-1
       // Visibility gate uses profile-configured minimum elevation.
-      .filter((entry) => entry.topo.elevationDeg >= minElevationDeg)
-      .sort((left, right) => right.topo.elevationDeg - left.topo.elevationDeg);
+      .filter((entry) => entry.satellite.elevationDeg >= minElevationDeg)
+      .sort((left, right) => right.satellite.elevationDeg - left.satellite.elevationDeg);
 
     const fallbackSorted = propagated
       .filter(
         (entry) =>
           !visibleSorted.some(
-            (visible) => visible.record.noradId === entry.record.noradId,
+            (visible) => visible.satellite.id === entry.satellite.id,
           ),
       )
-      .sort((left, right) => right.topo.elevationDeg - left.topo.elevationDeg);
+      .sort((left, right) => right.satellite.elevationDeg - left.satellite.elevationDeg);
 
     const selected = visibleSorted.slice(0, desiredSatCount);
     if (selected.length < desiredSatCount) {
@@ -186,37 +222,13 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
       selected.push(...fallbackSorted.slice(0, desiredSatCount - selected.length));
     }
 
-    return selected.map((entry) => {
-      const satId = entry.record.noradId;
-      const [groundX, groundZ] = geoToWorldXZ(
-        entry.point.latDeg,
-        entry.point.lonDeg,
-        observerLat,
-        observerLon,
-        kmToWorldScale,
-      );
-
-      return {
-        id: satId,
-        positionEcef: entry.point.ecefKm,
-        positionWorld: [
-          entry.topo.eastKm * kmToWorldScale,
-          entry.topo.upKm * kmToWorldScale,
-          entry.topo.northKm * kmToWorldScale,
-        ],
-        positionLla: {
-          lat: entry.point.latDeg,
-          lon: entry.point.lonDeg,
-          altKm: entry.point.altKm,
-        },
-        azimuthDeg: entry.topo.azimuthDeg,
-        elevationDeg: entry.topo.elevationDeg,
-        rangeKm: entry.topo.rangeKm,
-        visible: entry.topo.elevationDeg >= minElevationDeg,
+    return {
+      runtimeSatellites: selected.map((entry) => ({
+        ...entry.satellite,
         beams: buildBeamsForSatellite({
-          satelliteId: satId,
+          satelliteId: entry.satellite.id,
           beamIdMultiplier: 1000,
-          centerWorld: [groundX, groundZ],
+          centerWorld: entry.groundCenterWorld,
           beamCount: profile.beam.beamsPerSatellite,
           beamRadiusKm,
           beamRadiusWorld,
@@ -225,11 +237,12 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
           observerLat,
           observerLon,
         }),
-      };
-    });
+      })),
+      observerSkyPhysicalSatellites: propagated.map((entry) => entry.satellite),
+    };
   }
 
-  const initialSatellites = buildSatellitesAt(0);
+  const initialSatelliteFrame = buildSatellitesAt(0);
   const initialUes = buildInitialUEs({
     profile,
     seed: options.seed,
@@ -243,13 +256,14 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
     timeSec: 0,
     scenarioId,
     profileId: profile.profileId,
-    satellites: initialSatellites,
+    satellites: initialSatelliteFrame.runtimeSatellites,
+    observerSkyPhysicalSatellites: initialSatelliteFrame.observerSkyPhysicalSatellites,
     ues: initialUes,
     hoEvents: [],
     kpiCumulative: { ...EMPTY_KPI },
     runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
     policyRuntime: policyRuntime.snapshot(),
-    beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatellites),
+    beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatelliteFrame.runtimeSatellites),
     coupledDecisionStats: {
       mode: profile.scheduler.mode,
       blockedByScheduleHandoverCount: 0,
@@ -269,18 +283,18 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
       observerLon,
     });
 
-    const satellitesAtTime = buildSatellitesAt(timeSec);
+    const satelliteFrame = buildSatellitesAt(timeSec);
     const beamSchedulerSnapshot = beamScheduler.buildSnapshot(
       previous.tick + 1,
       timeSec,
-      satellitesAtTime,
+      satelliteFrame.runtimeSatellites,
     );
     const decision = runHandoverBaseline({
       tick: previous.tick + 1,
       timeSec,
       timeStepSec: context.timeStepSec,
       profile,
-      satellites: satellitesAtTime,
+      satellites: satelliteFrame.runtimeSatellites,
       ues: movedUes,
       baseline,
       triggerMemory,
@@ -296,7 +310,10 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
       runtimeParameterAudit,
     });
 
-    const satellitesWithConnections = attachUesToBeams(stateMachine.ues, satellitesAtTime);
+    const satellitesWithConnections = attachUesToBeams(
+      stateMachine.ues,
+      satelliteFrame.runtimeSatellites,
+    );
     const loadVector = satellitesWithConnections.map((satellite) =>
       satellite.beams.reduce((sum, beam) => sum + beam.connectedUeIds.length, 0),
     );
@@ -320,6 +337,7 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
       scenarioId,
       profileId: profile.profileId,
       satellites: satellitesWithConnections,
+      observerSkyPhysicalSatellites: satelliteFrame.observerSkyPhysicalSatellites,
       ues: stateMachine.ues,
       hoEvents: decision.events,
       kpiCumulative,
@@ -340,13 +358,14 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
       beamScheduler.reset();
       return {
         ...initialSnapshot,
-        satellites: initialSatellites,
+        satellites: initialSatelliteFrame.runtimeSatellites,
+        observerSkyPhysicalSatellites: initialSatelliteFrame.observerSkyPhysicalSatellites,
         ues: initialUes,
         hoEvents: [],
         kpiCumulative: { ...EMPTY_KPI },
         runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
         policyRuntime: policyRuntime.snapshot(),
-        beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatellites),
+        beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatelliteFrame.runtimeSatellites),
         coupledDecisionStats: {
           mode: profile.scheduler.mode,
           blockedByScheduleHandoverCount: 0,

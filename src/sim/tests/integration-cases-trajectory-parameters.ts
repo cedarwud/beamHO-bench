@@ -9,6 +9,7 @@ import { runBaselineBatch } from '@/sim/bench/runner';
 import {
   buildParametricOrbitSatelliteStateAtTime,
   createParametricOrbitContext,
+  selectParametricOrbitRuntimeWindow,
 } from '@/sim/scenarios/common/synthetic-orbit';
 import { assertCondition } from './helpers';
 import type { SimTestCase } from './types';
@@ -185,13 +186,29 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
           observerLon: 121.3713889,
           kmToWorldScale: 0.6,
         });
-        const initialWindow = buildParametricOrbitSatelliteStateAtTime(orbitContext, 0);
-        const replayWindow = buildParametricOrbitSatelliteStateAtTime(orbitContext, 0);
-        const nextWindow = buildParametricOrbitSatelliteStateAtTime(orbitContext, 60);
+        const initialPhysicalPool = buildParametricOrbitSatelliteStateAtTime(orbitContext, 0);
+        const replayPhysicalPool = buildParametricOrbitSatelliteStateAtTime(orbitContext, 0);
+        const nextPhysicalPool = buildParametricOrbitSatelliteStateAtTime(orbitContext, 60);
+        const initialWindow = selectParametricOrbitRuntimeWindow(
+          initialPhysicalPool,
+          orbitContext.desiredSatelliteCount,
+        );
+        const replayWindow = selectParametricOrbitRuntimeWindow(
+          replayPhysicalPool,
+          orbitContext.desiredSatelliteCount,
+        );
+        const nextWindow = selectParametricOrbitRuntimeWindow(
+          nextPhysicalPool,
+          orbitContext.desiredSatelliteCount,
+        );
 
         assertCondition(
           initialWindow.length === 16,
           'Expected walker-circular backend window selection to honor the configured active satellite count.',
+        );
+        assertCondition(
+          initialPhysicalPool.length > initialWindow.length,
+          'Expected walker-circular backend to expose a broader physical pool than the runtime window.',
         );
         assertCondition(
           initialWindow.every((satellite) =>

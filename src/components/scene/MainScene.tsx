@@ -438,12 +438,18 @@ export function MainScene() {
               <SatelliteSkyLayer
                 profile={profile}
                 satellites={displayedSnapshot.satellites}
+                physicalSatellites={
+                  displayedSnapshot.observerSkyPhysicalSatellites ?? displayedSnapshot.satellites
+                }
                 ues={displayedSnapshot.ues}
                 renderMode={NTPU_CONFIG.satellite.renderMode}
                 glbModelPath={NTPU_CONFIG.satellite.modelPath}
                 glbModelScale={NTPU_CONFIG.satellite.modelScale}
                 motionTransitionSec={smoothMotionTransitionSec}
                 enableSmoothMotion={isLiveView}
+                continuitySequenceKey={`${displayedSnapshot.scenarioId}:${displayedSnapshot.profileId}`}
+                snapshotTick={displayedSnapshot.tick}
+                snapshotTimeSec={displayedSnapshot.timeSec}
                 showServingLinks={linkVisibility.serving}
                 showSecondaryLinks={linkVisibility.secondary}
                 showPreparedLinks={linkVisibility.prepared}

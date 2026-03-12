@@ -1,4 +1,4 @@
-import type { SatelliteState } from '@/sim/types';
+import type { SatelliteGeometryState } from '@/sim/types';
 
 export type SatelliteVisibilityZone = 'hidden' | 'ghost' | 'active';
 
@@ -20,13 +20,61 @@ export interface SatelliteDisplayFrame {
   renderPositionsById: Map<number, [number, number, number]>;
 }
 
+export interface SatelliteDisplayCandidate {
+  satellite: SatelliteGeometryState;
+  zone: RenderableSatelliteVisibilityZone;
+  sectorIndex: number;
+  coverageRank: number;
+}
+
+export interface SatelliteDisplaySelectionConfig {
+  minElevationDeg: number;
+  displayBudget?: number;
+  showGhosts?: boolean;
+  coverageSectorCount?: number;
+}
+
+export interface SatelliteDisplaySelectionInput {
+  satellites: readonly SatelliteGeometryState[];
+  config: SatelliteDisplaySelectionConfig;
+}
+
+export interface SatelliteDisplaySelectionState {
+  budget: number;
+  coverageSectorCount: number;
+  candidates: SatelliteDisplayCandidate[];
+  selected: SatelliteDisplayCandidate[];
+  selectedIds: number[];
+  retainedIds: number[];
+  droppedIds: number[];
+}
+
+export interface SatelliteDisplayContinuityConfig {
+  retentionRankSlack?: number;
+}
+
+export interface SatelliteDisplayContinuityMemory {
+  sequenceKey: string;
+  tick: number;
+  timeSec: number;
+  selectedIds: number[];
+}
+
+export interface SatelliteDisplayContinuityInput {
+  candidates: readonly SatelliteDisplayCandidate[];
+  displayBudget?: number;
+  sequenceKey: string;
+  tick: number;
+  timeSec: number;
+  memory?: SatelliteDisplayContinuityMemory | null;
+  config?: SatelliteDisplayContinuityConfig;
+}
+
 export interface SatelliteDisplayAdapterConfig {
   areaWidthKm: number;
   areaHeightKm: number;
   minElevationDeg: number;
   kmToWorldScale?: number;
-  displayBudget?: number;
-  showGhosts?: boolean;
   activeOpacity?: number;
   ghostOpacity?: number;
 }
@@ -47,6 +95,6 @@ export interface ObserverSkyProjectionConfig {
 }
 
 export interface SatelliteDisplayAdapterInput {
-  satellites: readonly SatelliteState[];
+  satellites: readonly SatelliteDisplayCandidate[];
   config: SatelliteDisplayAdapterConfig;
 }

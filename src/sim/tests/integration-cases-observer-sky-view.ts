@@ -1,15 +1,24 @@
 import { loadPaperProfile } from '@/config/paper-profiles/loader';
+import type { PaperProfile } from '@/config/paper-profiles/types';
 import {
   buildResearchRuntimeOverrides,
   createResearchParameterSelection,
   normalizeResearchParameterSelection,
 } from '@/config/research-parameters/catalog';
 import { runBaselineBatch } from '@/sim/bench/runner';
+import type { SatelliteGeometryState, SimSnapshot } from '@/sim/types';
+import {
+  applySatelliteDisplayContinuity,
+  buildSatelliteDisplayContinuityMemory,
+} from '@/viz/satellite/display-continuity';
 import { buildSatelliteDisplayFrame } from '@/viz/satellite/display-adapter';
+import { buildSatelliteDisplayCandidates } from '@/viz/satellite/display-selection';
 import { assertCondition } from './helpers';
 import type { SimTestCase } from './types';
 
-function buildSyntheticObserverSkyProfile() {
+function buildSyntheticObserverSkyProfile(
+  overrides: Partial<Record<string, string>> = {},
+): PaperProfile {
   const baseProfile = loadPaperProfile('case9-default');
   const selection = normalizeResearchParameterSelection(baseProfile, {
     ...createResearchParameterSelection(baseProfile),
@@ -19,6 +28,8 @@ function buildSyntheticObserverSkyProfile() {
     'constellation.orbitalPlanes': '24',
     'constellation.satellitesPerPlane': '66',
     'constellation.activeSatellitesInWindow': '16',
+    'handover.params.candidateSatelliteLimit': '8',
+    ...overrides,
   });
   const runtimeOverrides = buildResearchRuntimeOverrides({
     profile: baseProfile,
@@ -27,10 +38,240 @@ function buildSyntheticObserverSkyProfile() {
   return loadPaperProfile('case9-default', runtimeOverrides);
 }
 
+function getDisplayPool(snapshot: SimSnapshot): readonly SatelliteGeometryState[] {
+  return snapshot.observerSkyPhysicalSatellites ?? snapshot.satellites;
+}
+
+function buildObserverSkyDisplayView(options: {
+  profile: PaperProfile;
+  snapshot: SimSnapshot;
+  displayBudget?: number;
+  sequenceKey?: string;
+  memory?: ReturnType<typeof buildSatelliteDisplayContinuityMemory> | null;
+}) {
+  const displayPool = getDisplayPool(options.snapshot);
+  const candidates = buildSatelliteDisplayCandidates({
+    satellites: displayPool,
+    config: {
+      minElevationDeg: options.profile.constellation.minElevationDeg,
+      displayBudget: options.displayBudget,
+      showGhosts: true,
+    },
+  });
+  const sequenceKey =
+    options.sequenceKey ??
+    `${options.snapshot.scenarioId}:${options.snapshot.profileId}`;
+  const selection = applySatelliteDisplayContinuity({
+    candidates,
+    displayBudget: options.displayBudget,
+    sequenceKey,
+    tick: options.snapshot.tick,
+    timeSec: options.snapshot.timeSec,
+    memory: options.memory,
+  });
+  const frame = buildSatelliteDisplayFrame({
+    satellites: selection.selected,
+    config: {
+      areaWidthKm: options.profile.scenario.areaKm.width,
+      areaHeightKm: options.profile.scenario.areaKm.height,
+      minElevationDeg: options.profile.constellation.minElevationDeg,
+    },
+  });
+  return {
+    displayPool,
+    candidates,
+    selection,
+    frame,
+    memory: buildSatelliteDisplayContinuityMemory({
+      sequenceKey,
+      tick: options.snapshot.tick,
+      timeSec: options.snapshot.timeSec,
+      selectedIds: selection.selectedIds,
+    }),
+  };
+}
+
+function computeAzimuthSectorCount(
+  satellites: readonly Pick<SatelliteGeometryState, 'azimuthDeg'>[],
+  sectorCount: number,
+): number {
+  const sectors = new Set(
+    satellites.map((satellite) => {
+      let normalized = satellite.azimuthDeg % 360;
+      if (normalized < 0) {
+        normalized += 360;
+      }
+      return Math.min(sectorCount - 1, Math.floor((normalized / 360) * sectorCount));
+    }),
+  );
+  return sectors.size;
+}
+
 export function buildObserverSkyViewIntegrationCases(): SimTestCase[] {
   return [
     {
-      name: 'integration: observer-sky display adapter enforces the same zone semantics across Synthetic Orbit, Starlink TLE, and OneWeb TLE',
+      name: 'integration: observer-sky display selection stays independent from HO candidateSatelliteLimit and uses a broader physical pool',
+      kind: 'integration',
+      run: () => {
+        const constrainedProfile = buildSyntheticObserverSkyProfile({
+          'handover.params.candidateSatelliteLimit': '2',
+        });
+        const relaxedProfile = buildSyntheticObserverSkyProfile({
+          'handover.params.candidateSatelliteLimit': '8',
+        });
+        const constrainedBatch = runBaselineBatch({
+          profile: constrainedProfile,
+          seed: 42,
+          baselines: ['max-rsrp'],
+          tickCount: 1,
+          captureSnapshots: true,
+        });
+        const relaxedBatch = runBaselineBatch({
+          profile: relaxedProfile,
+          seed: 42,
+          baselines: ['max-rsrp'],
+          tickCount: 1,
+          captureSnapshots: true,
+        });
+        const constrainedSnapshot = constrainedBatch.runs[0]?.snapshots?.[0];
+        const relaxedSnapshot = relaxedBatch.runs[0]?.snapshots?.[0];
+
+        assertCondition(Boolean(constrainedSnapshot), 'Expected constrained synthetic snapshot.');
+        assertCondition(Boolean(relaxedSnapshot), 'Expected relaxed synthetic snapshot.');
+
+        const constrainedPool = getDisplayPool(constrainedSnapshot as SimSnapshot);
+        const relaxedPool = getDisplayPool(relaxedSnapshot as SimSnapshot);
+
+        assertCondition(
+          constrainedPool.length > (constrainedSnapshot?.satellites.length ?? 0),
+          'Expected observer-sky physical pool to be broader than runtime synthetic satellites.',
+        );
+        assertCondition(
+          constrainedPool.length === relaxedPool.length,
+          'Expected candidateSatelliteLimit changes not to mutate observer-sky physical pool size.',
+        );
+
+        const renderableCount = constrainedPool.filter(
+          (satellite) => satellite.elevationDeg >= 0,
+        ).length;
+        const displayBudget = Math.min(
+          renderableCount,
+          (constrainedSnapshot?.satellites.length ?? 0) + 4,
+        );
+        assertCondition(
+          displayBudget > (constrainedSnapshot?.satellites.length ?? 0),
+          'Expected extra above-horizon satellites to remain available for display beyond runtime window size.',
+        );
+
+        const constrainedDisplay = buildObserverSkyDisplayView({
+          profile: constrainedProfile,
+          snapshot: constrainedSnapshot as SimSnapshot,
+          displayBudget,
+        });
+        const relaxedDisplay = buildObserverSkyDisplayView({
+          profile: relaxedProfile,
+          snapshot: relaxedSnapshot as SimSnapshot,
+          displayBudget,
+        });
+
+        assertCondition(
+          JSON.stringify(constrainedDisplay.selection.selectedIds) ===
+            JSON.stringify(relaxedDisplay.selection.selectedIds),
+          'Expected observer-sky display membership to stay invariant when only HO candidateSatelliteLimit changes.',
+        );
+      },
+    },
+    {
+      name: 'integration: default Synthetic Orbit display spans multiple azimuth sectors instead of collapsing into a central top-N cluster',
+      kind: 'integration',
+      run: () => {
+        const profile = buildSyntheticObserverSkyProfile();
+        const batch = runBaselineBatch({
+          profile,
+          seed: 42,
+          baselines: ['max-rsrp'],
+          tickCount: 1,
+          captureSnapshots: true,
+        });
+        const snapshot = batch.runs[0]?.snapshots?.[0];
+        assertCondition(Boolean(snapshot), 'Expected synthetic observer-sky snapshot.');
+
+        const displayBudget = profile.constellation.activeSatellitesInWindow ?? 16;
+        const displayView = buildObserverSkyDisplayView({
+          profile,
+          snapshot: snapshot as SimSnapshot,
+          displayBudget,
+        });
+
+        assertCondition(
+          displayView.candidates.length > displayBudget,
+          'Expected more renderable physical satellites than the display budget for coverage validation.',
+        );
+
+        const selectedSectorCount = new Set(
+          displayView.selection.selected.map((candidate) => candidate.sectorIndex),
+        ).size;
+        assertCondition(
+          selectedSectorCount >= 4,
+          `Expected Synthetic Orbit display to span at least 4 azimuth sectors, got ${selectedSectorCount}.`,
+        );
+
+        const rawRuntimeSectorCount = computeAzimuthSectorCount(
+          snapshot?.satellites ?? [],
+          8,
+        );
+        assertCondition(
+          selectedSectorCount >= Math.min(4, rawRuntimeSectorCount),
+          'Expected corrected display selection to preserve broad sky coverage.',
+        );
+      },
+    },
+    {
+      name: 'integration: adjacent synthetic observer-sky ticks preserve display membership continuity',
+      kind: 'integration',
+      run: () => {
+        const profile = buildSyntheticObserverSkyProfile();
+        const batch = runBaselineBatch({
+          profile,
+          seed: 42,
+          baselines: ['max-rsrp'],
+          tickCount: 4,
+          captureSnapshots: true,
+        });
+        const snapshots = batch.runs[0]?.snapshots ?? [];
+        assertCondition(
+          snapshots.length >= 5,
+          'Expected consecutive snapshots for observer-sky continuity validation.',
+        );
+
+        const displayBudget = profile.constellation.activeSatellitesInWindow ?? 16;
+        let memory: ReturnType<typeof buildSatelliteDisplayContinuityMemory> | null = null;
+        let previousSelectedIds: number[] | null = null;
+
+        for (const snapshot of snapshots) {
+          const view = buildObserverSkyDisplayView({
+            profile,
+            snapshot,
+            displayBudget,
+            memory,
+          });
+          if (previousSelectedIds !== null) {
+            assertCondition(
+              view.selection.retainedIds.length >= Math.ceil(previousSelectedIds.length / 2),
+              `Expected bounded observer-sky churn at tick=${snapshot.tick}, retained=${view.selection.retainedIds.length}.`,
+            );
+            assertCondition(
+              view.selection.droppedIds.length < previousSelectedIds.length,
+              `Expected observer-sky continuity to avoid full-window replacement at tick=${snapshot.tick}.`,
+            );
+          }
+          previousSelectedIds = view.selection.selectedIds;
+          memory = view.memory;
+        }
+      },
+    },
+    {
+      name: 'integration: observer-sky hidden/ghost/active semantics stay consistent across Synthetic Orbit, Starlink TLE, and OneWeb TLE under the corrective display policy',
       kind: 'integration',
       run: () => {
         const profiles = [
@@ -49,34 +290,31 @@ export function buildObserverSkyViewIntegrationCases(): SimTestCase[] {
           });
           const snapshot = batch.runs[0]?.snapshots?.[0];
           assertCondition(
-            Boolean(snapshot && snapshot.satellites.length > 0),
+            Boolean(snapshot),
             `Expected snapshot satellites for observer-sky integration profile=${profile.profileId}.`,
           );
 
-          const displayFrame = buildSatelliteDisplayFrame({
-            satellites: snapshot?.satellites ?? [],
-            config: {
-              areaWidthKm: profile.scenario.areaKm.width,
-              areaHeightKm: profile.scenario.areaKm.height,
-              minElevationDeg: profile.constellation.minElevationDeg,
-            },
+          const displayView = buildObserverSkyDisplayView({
+            profile,
+            snapshot: snapshot as SimSnapshot,
           });
           const displayById = new Map(
-            displayFrame.satellites.map((satellite) => [satellite.satelliteId, satellite]),
+            displayView.frame.satellites.map((satellite) => [satellite.satelliteId, satellite]),
           );
+          const displayPool = getDisplayPool(snapshot as SimSnapshot);
 
           assertCondition(
-            displayFrame.satellites.length > 0,
+            displayView.frame.satellites.length > 0,
             `Expected observer-sky display output for profile=${profile.profileId}.`,
           );
           assertCondition(
-            displayFrame.satellites.every((satellite) =>
+            displayView.frame.satellites.every((satellite) =>
               satellite.renderPosition.every((value) => Number.isFinite(value)),
             ),
             `Expected finite observer-sky render positions for profile=${profile.profileId}.`,
           );
 
-          for (const satellite of snapshot?.satellites ?? []) {
+          for (const satellite of displayPool) {
             const displayState = displayById.get(satellite.id);
 
             if (satellite.elevationDeg < 0) {
@@ -88,30 +326,31 @@ export function buildObserverSkyViewIntegrationCases(): SimTestCase[] {
             }
 
             if (satellite.elevationDeg < profile.constellation.minElevationDeg) {
-              assertCondition(
-                displayState?.zone === 'ghost',
-                `Expected ghost display state below theta_min for profile=${profile.profileId}, sat=${satellite.id}.`,
-              );
+              if (displayState !== undefined) {
+                assertCondition(
+                  displayState.zone === 'ghost',
+                  `Expected ghost display state below theta_min for profile=${profile.profileId}, sat=${satellite.id}.`,
+                );
+              }
               continue;
             }
 
-            assertCondition(
-              displayState?.zone === 'active',
-              `Expected active display state at/above theta_min for profile=${profile.profileId}, sat=${satellite.id}.`,
-            );
+            if (displayState !== undefined) {
+              assertCondition(
+                displayState.zone === 'active',
+                `Expected active display state at/above theta_min for profile=${profile.profileId}, sat=${satellite.id}.`,
+              );
+            }
           }
 
-          const replayDisplayFrame = buildSatelliteDisplayFrame({
-            satellites: snapshot?.satellites ?? [],
-            config: {
-              areaWidthKm: profile.scenario.areaKm.width,
-              areaHeightKm: profile.scenario.areaKm.height,
-              minElevationDeg: profile.constellation.minElevationDeg,
-            },
+          const replayDisplay = buildObserverSkyDisplayView({
+            profile,
+            snapshot: snapshot as SimSnapshot,
           });
           assertCondition(
-            JSON.stringify(displayFrame.satellites) === JSON.stringify(replayDisplayFrame.satellites),
-            `Expected deterministic observer-sky display adapter replay for profile=${profile.profileId}.`,
+            JSON.stringify(displayView.frame.satellites) ===
+              JSON.stringify(replayDisplay.frame.satellites),
+            `Expected deterministic observer-sky corrective display replay for profile=${profile.profileId}.`,
           );
         }
       },

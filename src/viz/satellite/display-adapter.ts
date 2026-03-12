@@ -1,13 +1,12 @@
-import type { SatelliteState } from '@/sim/types';
 import { projectObserverSkyPosition } from './observer-sky-projection';
 import type {
+  SatelliteDisplayCandidate,
   RenderableSatelliteVisibilityZone,
   SatelliteDisplayAdapterConfig,
   SatelliteDisplayAdapterInput,
   SatelliteDisplayFrame,
   SatelliteDisplayState,
 } from './types';
-import { classifySatelliteVisibilityZone } from './visibility-zones';
 
 function compareZonePriority(
   left: RenderableSatelliteVisibilityZone,
@@ -21,11 +20,11 @@ function compareZonePriority(
 
 function compareDisplayPriority(
   left: {
-    satellite: SatelliteState;
+    satellite: SatelliteDisplayCandidate;
     zone: RenderableSatelliteVisibilityZone;
   },
   right: {
-    satellite: SatelliteState;
+    satellite: SatelliteDisplayCandidate;
     zone: RenderableSatelliteVisibilityZone;
   },
 ): number {
@@ -33,13 +32,13 @@ function compareDisplayPriority(
   if (zoneComparison !== 0) {
     return zoneComparison;
   }
-  if (left.satellite.elevationDeg !== right.satellite.elevationDeg) {
-    return right.satellite.elevationDeg - left.satellite.elevationDeg;
+  if (left.satellite.satellite.elevationDeg !== right.satellite.satellite.elevationDeg) {
+    return right.satellite.satellite.elevationDeg - left.satellite.satellite.elevationDeg;
   }
-  if (left.satellite.rangeKm !== right.satellite.rangeKm) {
-    return left.satellite.rangeKm - right.satellite.rangeKm;
+  if (left.satellite.satellite.rangeKm !== right.satellite.satellite.rangeKm) {
+    return left.satellite.satellite.rangeKm - right.satellite.satellite.rangeKm;
   }
-  return left.satellite.id - right.satellite.id;
+  return left.satellite.satellite.id - right.satellite.satellite.id;
 }
 
 function resolveOpacity(options: {
@@ -52,18 +51,18 @@ function resolveOpacity(options: {
   return options.config.activeOpacity ?? 1;
 }
 
-function estimateKmToWorldScale(satellites: readonly SatelliteState[]): number {
+function estimateKmToWorldScale(satellites: readonly SatelliteDisplayCandidate[]): number {
   const estimates = satellites
     .map((satellite) => {
-      if (!Number.isFinite(satellite.rangeKm) || satellite.rangeKm <= 0) {
+      if (!Number.isFinite(satellite.satellite.rangeKm) || satellite.satellite.rangeKm <= 0) {
         return null;
       }
-      const [x, y, z] = satellite.positionWorld;
+      const [x, y, z] = satellite.satellite.positionWorld;
       const magnitudeWorld = Math.hypot(x, y, z);
       if (!Number.isFinite(magnitudeWorld) || magnitudeWorld <= 0) {
         return null;
       }
-      return magnitudeWorld / satellite.rangeKm;
+      return magnitudeWorld / satellite.satellite.rangeKm;
     })
     .filter((value): value is number => value !== null && Number.isFinite(value) && value > 0)
     .sort((left, right) => left - right);
@@ -76,18 +75,18 @@ function estimateKmToWorldScale(satellites: readonly SatelliteState[]): number {
 }
 
 function toDisplayState(options: {
-  satellite: SatelliteState;
+  satellite: SatelliteDisplayCandidate;
   zone: RenderableSatelliteVisibilityZone;
   config: SatelliteDisplayAdapterConfig;
   kmToWorldScale: number;
 }): SatelliteDisplayState {
   const { satellite, zone, config, kmToWorldScale } = options;
   return {
-    satelliteId: satellite.id,
+    satelliteId: satellite.satellite.id,
     zone,
     renderPosition: projectObserverSkyPosition({
-      azimuthDeg: satellite.azimuthDeg,
-      elevationDeg: satellite.elevationDeg,
+      azimuthDeg: satellite.satellite.azimuthDeg,
+      elevationDeg: satellite.satellite.elevationDeg,
       config: {
         areaWidthKm: config.areaWidthKm,
         areaHeightKm: config.areaHeightKm,
@@ -95,9 +94,9 @@ function toDisplayState(options: {
         minRenderElevationDeg: 0,
       },
     }),
-    azimuthDeg: satellite.azimuthDeg,
-    elevationDeg: satellite.elevationDeg,
-    rangeKm: satellite.rangeKm,
+    azimuthDeg: satellite.satellite.azimuthDeg,
+    elevationDeg: satellite.satellite.elevationDeg,
+    rangeKm: satellite.satellite.rangeKm,
     opacity: resolveOpacity({ zone, config }),
   };
 }
@@ -105,43 +104,22 @@ function toDisplayState(options: {
 /**
  * Provenance:
  * - sdd/pending/beamHO-bench-observer-sky-view-sdd.md (Section 3.2, 3.3, 3.4, 6)
+ * - sdd/pending/beamHO-bench-observer-sky-visual-correction-sdd.md (Section 3.1, 3.3, 3.6, 6)
  *
  * Notes:
- * - This adapter is deterministic for the same snapshot + config.
- * - Hidden satellites are removed here so renderer-only components never need
- *   to interpret frontend visibility semantics.
+ * - This adapter is deterministic for the same candidate set + config.
+ * - Hidden/ghost selection and continuity are resolved before this assembly step.
  */
 export function buildSatelliteDisplayFrame(
   input: SatelliteDisplayAdapterInput,
 ): SatelliteDisplayFrame {
   const { satellites, config } = input;
   const kmToWorldScale = config.kmToWorldScale ?? estimateKmToWorldScale(satellites);
-  const showGhosts = config.showGhosts ?? true;
-  const renderable = satellites
-    .map((satellite) => {
-      const zoneDecision = classifySatelliteVisibilityZone(
-        satellite.elevationDeg,
-        config.minElevationDeg,
-      );
-      if (zoneDecision.zone === 'hidden') {
-        return null;
-      }
-      if (zoneDecision.zone === 'ghost' && !showGhosts) {
-        return null;
-      }
-      return {
-        satellite,
-        zone: zoneDecision.zone,
-      };
-    })
-    .filter(
-      (
-        candidate,
-      ): candidate is {
-        satellite: SatelliteState;
-        zone: RenderableSatelliteVisibilityZone;
-      } => candidate !== null,
-    )
+  const selected = satellites
+    .map((candidate) => ({
+      satellite: candidate,
+      zone: candidate.zone,
+    }))
     .sort(compareDisplayPriority)
     .map(({ satellite, zone }) =>
       toDisplayState({
@@ -151,11 +129,6 @@ export function buildSatelliteDisplayFrame(
         kmToWorldScale,
       }),
     );
-  const budget = config.displayBudget;
-  const selected =
-    budget !== undefined && Number.isFinite(budget) && budget >= 0
-      ? renderable.slice(0, Math.floor(budget))
-      : renderable;
 
   return {
     satellites: selected,
