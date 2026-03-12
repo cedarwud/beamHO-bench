@@ -232,6 +232,16 @@
       "note": "Synthetic walker-circular mode uses deterministic per-plane RAAN spacing and slot phasing for reproducible non-TLE orbit trajectories."
     },
     {
+      "sourceId": "ASSUME-OBSERVER-SKY-DISPLAY-COVERAGE-POLICY",
+      "type": "assumption",
+      "title": "Observer-Sky Display Coverage and Continuity Policy",
+      "locator": "viz.satellite.display-selection|viz.satellite.display-continuity",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:observer-sky-display-coverage-policy",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Observer-sky frontend display selection uses deterministic azimuth-sector coverage ranking plus bounded continuity retention so visible passes remain spatially distributed without one-tick display churn."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

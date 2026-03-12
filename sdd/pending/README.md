@@ -14,30 +14,36 @@ Status ownership:
 
 1. `beamHO-bench-parametric-trajectory-backend-sdd.md` (implemented/closure-tracked on 2026-03-12)
 2. `beamHO-bench-observer-sky-view-sdd.md` (implemented/closure-tracked on 2026-03-12)
-3. `beamHO-bench-repro-bundle-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
-4. `beamHO-bench-baseline-parameter-envelope-sdd.md` (implemented/closure-tracked on 2026-03-03)
-5. `beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (implemented/closure-tracked on 2026-03-03)
-6. `beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked on 2026-03-03)
-7. `beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked on 2026-03-03)
-8. `beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
-9. `beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked on 2026-03-02)
-10. `beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked on 2026-03-02)
-11. `beamHO-bench-service-continuity-baseline-sdd.md` (implemented/closure-tracked on 2026-03-03)
-12. `beamHO-bench-core-extension-governance-sdd.md` (implemented/closure-tracked on 2026-03-03)
-13. `beamHO-bench-parameter-consistency-v1-sdd.md` (implemented/closure-tracked on 2026-03-04)
-14. closure report: `sdd/completed/beamHO-bench-parametric-trajectory-backend-closure.md`
-15. closure report: `sdd/completed/beamHO-bench-observer-sky-view-closure.md`
-16. closure report: `sdd/completed/beamHO-bench-repro-bundle-v1-closure.md`
-17. closure report: `sdd/completed/beamHO-bench-baseline-parameter-envelope-closure.md`
-18. closure report: `sdd/completed/beamHO-bench-cross-mode-reproducible-benchmark-closure.md`
-19. closure report: `sdd/completed/beamHO-bench-complexity-reduction-closure.md`
-20. closure report: `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
-21. closure report: `sdd/completed/beamHO-bench-gap-closure-closure.md`
-22. closure report: `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
-23. closure report: `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
-24. closure report: `sdd/completed/beamHO-bench-service-continuity-baseline-closure.md`
-25. closure report: `sdd/completed/beamHO-bench-core-extension-governance-closure.md`
-26. closure report: `sdd/completed/beamHO-bench-parameter-consistency-v1-closure.md`
+3. `beamHO-bench-observer-sky-visual-correction-sdd.md` (implemented/closure-tracked on 2026-03-12)
+4. `beamHO-bench-repro-bundle-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
+5. `beamHO-bench-baseline-parameter-envelope-sdd.md` (implemented/closure-tracked on 2026-03-03)
+6. `beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (implemented/closure-tracked on 2026-03-03)
+7. `beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked on 2026-03-03)
+8. `beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked on 2026-03-03)
+9. `beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
+10. `beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked on 2026-03-02)
+11. `beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked on 2026-03-02)
+12. `beamHO-bench-service-continuity-baseline-sdd.md` (implemented/closure-tracked on 2026-03-03)
+13. `beamHO-bench-core-extension-governance-sdd.md` (implemented/closure-tracked on 2026-03-03)
+14. `beamHO-bench-parameter-consistency-v1-sdd.md` (implemented/closure-tracked on 2026-03-04)
+15. closure report: `sdd/completed/beamHO-bench-parametric-trajectory-backend-closure.md`
+16. closure report: `sdd/completed/beamHO-bench-observer-sky-view-closure.md`
+17. closure report: `sdd/completed/beamHO-bench-observer-sky-visual-correction-closure.md`
+18. closure report: `sdd/completed/beamHO-bench-repro-bundle-v1-closure.md`
+19. closure report: `sdd/completed/beamHO-bench-baseline-parameter-envelope-closure.md`
+20. closure report: `sdd/completed/beamHO-bench-cross-mode-reproducible-benchmark-closure.md`
+21. closure report: `sdd/completed/beamHO-bench-complexity-reduction-closure.md`
+22. closure report: `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
+23. closure report: `sdd/completed/beamHO-bench-gap-closure-closure.md`
+24. closure report: `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
+25. closure report: `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
+26. closure report: `sdd/completed/beamHO-bench-service-continuity-baseline-closure.md`
+27. closure report: `sdd/completed/beamHO-bench-core-extension-governance-closure.md`
+28. closure report: `sdd/completed/beamHO-bench-parameter-consistency-v1-closure.md`
+
+Corrective follow-up note:
+1. `beamHO-bench-observer-sky-view-sdd.md` remains closure-tracked for the architecture split.
+2. `beamHO-bench-observer-sky-visual-correction-sdd.md` is now closure-tracked for the corrective package that completed sky coverage, display/candidate separation, and bounded membership continuity.
 
 ## 3. Backlog Location
 

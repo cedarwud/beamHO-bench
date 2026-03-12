@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-12  
-**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete
+**Status:** v2 Core Scope Complete + No Active Pending Packages
 
 ---
 
@@ -28,6 +28,7 @@ Current status snapshot means:
 14. Closure-tracked pending package `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md` has D1~D6 implemented with closure evidence.
 15. Closure-tracked pending package `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` has D1~D5 implemented with backend/runtime evidence and frontend handoff closure.
 16. Closure-tracked pending package `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` has D1~D5 implemented with observer-sky display-layer rewrite evidence and stage-gate verification.
+17. Closure-tracked pending package `sdd/pending/beamHO-bench-observer-sky-visual-correction-sdd.md` has D1~D6 implemented with display/candidate separation, sky-coverage, continuity, and stage-gate closure evidence.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
@@ -62,7 +63,8 @@ Active pending items (implementation open):
 | CEG (D1~D5) | Complete | core/all validation scope governance + stage artifact freshness enforcement + runtime override source-map coverage guard + closure synchronization |
 | PC-v1 (D1~D6) | Complete | research-parameter consistency rule layer + policy-mode divergence + UI pre-run feedback + source-trace/manifest metadata + closure synchronization |
 | PTB (D1~D5) | Complete (Closure-Tracked) | paper-tier parametric trajectory backend package: synthetic trajectory model contract + walker-circular backend + discrete trajectory parameters + consistency coupling + deterministic integration gates + frontend handoff closure report |
-| OSV (D1~D5) | Complete (Closure-Tracked) | `src/viz/satellite/*` + `src/components/scene/SatelliteSkyLayer.tsx` + renderer-only `src/components/sim/SatelliteModel.tsx` + observer-sky parity tests + lifecycle closure synchronization |
+| OSV (D1~D5) | Complete (Closure-Tracked) | `src/viz/satellite/*` + `src/components/scene/SatelliteSkyLayer.tsx` + renderer-only `src/components/sim/SatelliteModel.tsx` + observer-sky parity tests + lifecycle closure synchronization; visual acceptance follow-up is closed separately under OSVC |
+| OSVC (D1~D6) | Complete (Closure-Tracked) | observer-sky corrective package: broader physical display pool + deterministic display selection/continuity policy + synthetic sky-coverage fix + bounded adjacent-tick churn + cross-mode acceptance gates + lifecycle closure report |
 
 ---
 
@@ -101,7 +103,7 @@ Required artifacts:
 
 Latest local verification (2026-03-12):
 1. `validate:stage` passed (core scope gate + artifact freshness check).
-2. `test:sim`: 78/78 passed (unit 21/21, integration 57/57).
+2. `test:sim`: 82/82 passed (unit 22/22, integration 60/60).
 3. `validate:val-suite`: 50/50 passed (`scope=core`), warnings=0.
 4. `build` passed (`tsc && vite build`).
 5. Validation artifacts are compact and generated under `dist/`.
@@ -142,6 +144,7 @@ Primary references:
 29. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md`
 30. `sdd/completed/beamHO-bench-parametric-trajectory-backend-closure.md`
 31. `sdd/completed/beamHO-bench-observer-sky-view-closure.md`
+32. `sdd/completed/beamHO-bench-observer-sky-visual-correction-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
@@ -172,3 +175,4 @@ Code points for v2 closure evidence:
 26. `src/components/scene/MainScene.tsx` + `src/components/sim/ResearchParameterPanel.tsx` + `src/sim/reporting/source-trace.ts` + `src/sim/reporting/manifest.ts` (PC-v1 UI pre-run feedback and artifact traceability fields)
 27. `src/sim/scenarios/common/synthetic-orbit.ts` + `src/sim/scenarios/case9-analytic.ts` + `src/config/research-parameters/catalog.ts` + `src/config/research-parameters/consistency.ts` + `src/sim/tests/integration-cases-trajectory-parameters.ts` (PTB deterministic paper-tier parametric trajectory backend + coupling + gate coverage)
 28. `src/viz/satellite/types.ts` + `src/viz/satellite/visibility-zones.ts` + `src/viz/satellite/observer-sky-projection.ts` + `src/viz/satellite/display-adapter.ts` + `src/components/scene/SatelliteSkyLayer.tsx` + `src/components/sim/ConnectionLines.tsx` + `src/components/sim/SatelliteModel.tsx` + `src/sim/tests/unit-cases-observer-sky-view.ts` + `src/sim/tests/integration-cases-observer-sky-view.ts` (OSV observer-centric display-layer split, visibility-zone semantics, scene wiring, and cross-mode deterministic validation evidence)
+29. `src/sim/types.ts` + `src/viz/satellite/display-selection.ts` + `src/viz/satellite/display-continuity.ts` + `src/sim/scenarios/common/synthetic-orbit.ts` + `src/sim/scenarios/case9-analytic.ts` + `src/sim/scenarios/real-trace.ts` + `src/components/scene/MainScene.tsx` + `src/components/scene/SatelliteSkyLayer.tsx` + `src/sim/tests/integration-cases-observer-sky-view.ts` (OSVC broader physical pool contract, deterministic display coverage/continuity policy, and corrective observer-sky acceptance evidence)

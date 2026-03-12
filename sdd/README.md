@@ -43,22 +43,24 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 22. `completed/beamHO-bench-parameter-consistency-v1-closure.md`
 23. `completed/beamHO-bench-parametric-trajectory-backend-closure.md`
 24. `completed/beamHO-bench-observer-sky-view-closure.md`
+25. `completed/beamHO-bench-observer-sky-visual-correction-closure.md`
 
 ## Pending (Active + Closure-Tracked Specs)
 
-1. `pending/beamHO-bench-parametric-trajectory-backend-sdd.md` (implemented/closure-tracked pending backend package)
-2. `pending/beamHO-bench-observer-sky-view-sdd.md` (implemented/closure-tracked pending frontend display/motion package)
-3. `pending/beamHO-bench-parameter-consistency-v1-sdd.md` (implemented/closure-tracked pending package)
-4. `pending/beamHO-bench-repro-bundle-v1-sdd.md` (implemented/closure-tracked pending package)
-5. `pending/beamHO-bench-baseline-parameter-envelope-sdd.md` (implemented/closure-tracked pending package)
-6. `pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (implemented/closure-tracked pending package)
-7. `pending/beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked pending package)
-8. `pending/beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked pending package)
-9. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked pending spec)
-10. `pending/beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked pending package)
-11. `pending/beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked pending package)
-12. `pending/beamHO-bench-service-continuity-baseline-sdd.md` (implemented/closure-tracked pending package)
-13. `pending/beamHO-bench-core-extension-governance-sdd.md` (implemented/closure-tracked pending package)
+1. `pending/beamHO-bench-observer-sky-visual-correction-sdd.md` (implemented/closure-tracked pending corrective package for observer-sky visual acceptance)
+2. `pending/beamHO-bench-parametric-trajectory-backend-sdd.md` (implemented/closure-tracked pending backend package)
+3. `pending/beamHO-bench-observer-sky-view-sdd.md` (implemented/closure-tracked pending frontend display/motion ownership split)
+4. `pending/beamHO-bench-parameter-consistency-v1-sdd.md` (implemented/closure-tracked pending package)
+5. `pending/beamHO-bench-repro-bundle-v1-sdd.md` (implemented/closure-tracked pending package)
+6. `pending/beamHO-bench-baseline-parameter-envelope-sdd.md` (implemented/closure-tracked pending package)
+7. `pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (implemented/closure-tracked pending package)
+8. `pending/beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked pending package)
+9. `pending/beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked pending package)
+10. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked pending spec)
+11. `pending/beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked pending package)
+12. `pending/beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked pending package)
+13. `pending/beamHO-bench-service-continuity-baseline-sdd.md` (implemented/closure-tracked pending package)
+14. `pending/beamHO-bench-core-extension-governance-sdd.md` (implemented/closure-tracked pending package)
 
 ## Backlog (Out of Active Scope)
 
