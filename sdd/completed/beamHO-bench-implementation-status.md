@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
-**Date:** 2026-03-04  
-**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete + PTB Active Pending (D1~D4 Complete, D5 Pending)
+**Date:** 2026-03-12  
+**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete + PTB/OSV Active Pending
 
 ---
 
@@ -26,14 +26,16 @@ Current status snapshot means:
 12. Closure-tracked pending package `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md` has D1~D5 implemented with closure evidence.
 13. Closure-tracked pending package `sdd/pending/beamHO-bench-core-extension-governance-sdd.md` has D1~D5 implemented with closure evidence.
 14. Closure-tracked pending package `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md` has D1~D6 implemented with closure evidence.
-15. Active pending package `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` has D1~D4 implemented (backend/safety/tests complete) and D5 pending (frontend GLB trajectory coupling).
+15. Active pending package `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` has D1~D4 implemented (backend/safety/tests complete); frontend phase is now re-scoped to a dedicated observer-sky frontend package.
+16. Active pending package `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` has D1~D4 implemented in code (`viz/satellite/*`, `SatelliteSkyLayer`, renderer-only `SatelliteModel`, observer-sky tests); D5 lifecycle closure remains open.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
 2. RSMA soft-HO and broad large-scale/multi-paper DRL fusion, deferred by BG-6 governance.
 
 Active pending items (implementation open):
-1. `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` (PTB; D1~D4 complete, D5 pending)
+1. `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` (PTB; backend D1~D4 complete, frontend phase re-scoped)
+2. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` (OSV; D1~D4 implemented in code, D5 closure/status sync pending)
 
 ---
 
@@ -60,7 +62,8 @@ Active pending items (implementation open):
 | SCB (D1~D5) | Complete | service continuity baseline validation pack (`VAL-SCB-*`) for starlink/oneweb/coupled-scheduler continuity envelopes with deterministic contract guard and closure report |
 | CEG (D1~D5) | Complete | core/all validation scope governance + stage artifact freshness enforcement + runtime override source-map coverage guard + closure synchronization |
 | PC-v1 (D1~D6) | Complete | research-parameter consistency rule layer + policy-mode divergence + UI pre-run feedback + source-trace/manifest metadata + closure synchronization |
-| PTB (D1~D5) | Active Pending | paper-tier parametric trajectory backend package: synthetic trajectory model contract + walker-circular backend + discrete trajectory parameters + consistency coupling + deterministic integration gates complete; frontend GLB trajectory coupling pending |
+| PTB (D1~D5) | Active Pending | paper-tier parametric trajectory backend package: synthetic trajectory model contract + walker-circular backend + discrete trajectory parameters + consistency coupling + deterministic integration gates complete; frontend phase re-scoped to OSV package |
+| OSV (D1~D5) | Active Pending (D1~D4 Implemented) | `src/viz/satellite/*` + `src/components/scene/SatelliteSkyLayer.tsx` + renderer-only `src/components/sim/SatelliteModel.tsx` + observer-sky parity tests; D5 closure/status synchronization remains open |
 
 ---
 
@@ -97,11 +100,11 @@ Required artifacts:
 
 ## 4. Verification Snapshot (Latest)
 
-Latest local verification (2026-03-04):
+Latest local verification (2026-03-12):
 1. `validate:stage` passed (core scope gate + artifact freshness check).
-2. `test:sim`: 73/73 passed (unit 19/19, integration 54/54).
+2. `test:sim`: 78/78 passed (unit 21/21, integration 57/57).
 3. `validate:val-suite`: 50/50 passed (`scope=core`), warnings=0.
-4. `validate:val-suite:all`: 67/67 passed (`scope=all`), warnings=0.
+4. `build` passed (`tsc && vite build`).
 5. Validation artifacts are compact and generated under `dist/`.
 
 ---
@@ -137,6 +140,7 @@ Primary references:
 26. `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md`
 27. `sdd/completed/beamHO-bench-parameter-consistency-v1-closure.md`
 28. `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md`
+29. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
@@ -166,3 +170,4 @@ Code points for v2 closure evidence:
 25. `src/config/research-parameters/consistency.ts` + `src/config/research-parameters/catalog.ts` + `src/sim/tests/integration-cases-research-parameters.ts` (PC-v1 deterministic consistency policy-mode contract + integration coverage)
 26. `src/components/scene/MainScene.tsx` + `src/components/sim/ResearchParameterPanel.tsx` + `src/sim/reporting/source-trace.ts` + `src/sim/reporting/manifest.ts` (PC-v1 UI pre-run feedback and artifact traceability fields)
 27. `src/sim/scenarios/common/synthetic-orbit.ts` + `src/sim/scenarios/case9-analytic.ts` + `src/config/research-parameters/catalog.ts` + `src/config/research-parameters/consistency.ts` + `src/sim/tests/integration-cases-trajectory-parameters.ts` (PTB deterministic paper-tier parametric trajectory backend + coupling + gate coverage)
+28. `src/viz/satellite/types.ts` + `src/viz/satellite/visibility-zones.ts` + `src/viz/satellite/observer-sky-projection.ts` + `src/viz/satellite/display-adapter.ts` + `src/components/scene/SatelliteSkyLayer.tsx` + `src/components/sim/ConnectionLines.tsx` + `src/components/sim/SatelliteModel.tsx` + `src/sim/tests/unit-cases-observer-sky-view.ts` + `src/sim/tests/integration-cases-observer-sky-view.ts` (OSV observer-centric display-layer split, visibility-zone semantics, scene wiring, and cross-mode deterministic validation evidence)
