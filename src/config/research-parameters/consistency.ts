@@ -154,6 +154,26 @@ export function resolveResearchParameterConsistency(options: {
       message: `Requested activeSatellitesInWindow=${requestedActiveWindow} exceeds constellation capacity=${maxActiveWindow} (planes=${effectiveOrbitalPlanes}, satellitesPerPlane=${effectiveSatellitesPerPlane}); clamped to ${maxActiveWindow}.`,
     });
   }
+  const effectiveActiveWindow = Math.min(requestedActiveWindow, maxActiveWindow);
+  const requestedCandidateSatelliteLimit = Math.max(
+    1,
+    Math.round(
+      Number(selection['handover.params.candidateSatelliteLimit']) || effectiveActiveWindow,
+    ),
+  );
+  if (requestedCandidateSatelliteLimit > effectiveActiveWindow) {
+    selection['handover.params.candidateSatelliteLimit'] = String(effectiveActiveWindow);
+    issues.push({
+      ruleId: 'PC-HARD-CANDIDATE-WINDOW-UPPER-BOUND',
+      messageCode: 'candidate_window_clamped_to_scene_window',
+      severity: 'warn',
+      parameterIds: [
+        'handover.params.candidateSatelliteLimit',
+        'constellation.activeSatellitesInWindow',
+      ],
+      message: `Requested candidateSatelliteLimit=${requestedCandidateSatelliteLimit} exceeds activeSatellitesInWindow=${effectiveActiveWindow}; clamped to ${effectiveActiveWindow}.`,
+    });
+  }
 
   // Hard constraint: realism toggles are invalid when small-scale model is disabled.
   if (selection['channel.smallScaleModel'] === 'none') {

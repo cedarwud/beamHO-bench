@@ -4,6 +4,10 @@
 **Date:** 2026-03-12  
 **Status:** Implemented / Closure-Tracked
 
+Follow-up note (2026-03-12):
+1. This package remains closure-tracked for the frontend ownership split, visibility-zone model, and observer-sky display adapter architecture.
+2. Remaining visual acceptance gaps (display/candidate separation, sky coverage, membership continuity) are now governed by `sdd/pending/beamHO-bench-observer-sky-visual-correction-sdd.md`.
+
 ---
 
 ## 1. Purpose

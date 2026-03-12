@@ -77,6 +77,11 @@
     "handover.algorithmFidelity": [
       "ASSUME-HANDOVER-FIDELITY-FULL"
     ],
+    "handover.params.candidateSatelliteLimit": [
+      "PAP-2022-SEAMLESSNTN-CORE",
+      "PAP-2024-MADRL-CORE",
+      "ASSUME-HANDOVER-CANDIDATE-WINDOW"
+    ],
     "handover.params.a3OffsetDb": [
       "PAP-2022-A4EVENT-CORE",
       "STD-3GPP-TS38.331-RRC"

@@ -183,7 +183,7 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     modes: ['paper-baseline'],
     options: [
       { value: '550', label: '550 km (Starlink-like)' },
-      { value: '600', label: '600 km (Case-9 / A4 / MC-CHO)' },
+      { value: '600', label: '600 km' },
       { value: '1200', label: '1200 km (OneWeb-like)' },
     ],
     readFromProfile: (profile) => stringOfNumber(profile.constellation.altitudeKm, 600),
@@ -235,7 +235,7 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     ],
     modes: ['paper-baseline'],
     options: [
-      { value: '1', label: '1 plane (case9)' },
+      { value: '1', label: '1 plane (compact baseline)' },
       { value: '18', label: '18 planes (OneWeb-like)' },
       { value: '24', label: '24 planes (Starlink-like)' },
     ],
@@ -263,7 +263,8 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     ],
     modes: ['paper-baseline'],
     options: [
-      { value: '7', label: '7 sats/plane (case9)' },
+      { value: '7', label: '7 sats/plane (compact baseline)' },
+      { value: '8', label: '8 sats/plane' },
       { value: '40', label: '40 sats/plane (OneWeb-like)' },
       { value: '66', label: '66 sats/plane (Starlink-like)' },
     ],
@@ -307,14 +308,15 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
   {
     id: 'constellation.activeSatellitesInWindow',
     groupId: 'orbit',
-    label: 'Active Satellites In Window',
-    description: '每個 tick 的活躍衛星視窗大小。',
+    label: 'Scene Satellite Window',
+    description: '每個 tick 保留在場景與模擬視窗中的衛星數量上限。',
     sourceIds: ['PAP-2022-SEAMLESSNTN-CORE', 'PAP-2024-MADRL-CORE', 'PAP-2025-DAPS-CORE'],
     options: [
       { value: '7', label: '7 satellites' },
       { value: '8', label: '8 satellites' },
       { value: '10', label: '10 satellites' },
       { value: '16', label: '16 satellites' },
+      { value: '30', label: '30 satellites' },
     ],
     readFromProfile: (profile) =>
       stringOfNumber(
@@ -327,6 +329,42 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
       overrides.constellation.activeSatellitesInWindow = Math.max(
         1,
         Math.round(toNumber(serializedValue, 'constellation.activeSatellitesInWindow')),
+      );
+    },
+  },
+  {
+    id: 'handover.params.candidateSatelliteLimit',
+    groupId: 'handover',
+    label: 'HO Candidate Window',
+    description: '每個 UE 每個 tick 參與換手決策的候選衛星上限。',
+    sourceIds: [
+      'PAP-2022-SEAMLESSNTN-CORE',
+      'PAP-2024-MADRL-CORE',
+      'ASSUME-HANDOVER-CANDIDATE-WINDOW',
+    ],
+    options: [
+      { value: '2', label: '2 satellites' },
+      { value: '4', label: '4 satellites' },
+      { value: '7', label: '7 satellites' },
+      { value: '8', label: '8 satellites' },
+      { value: '10', label: '10 satellites' },
+      { value: '16', label: '16 satellites' },
+      { value: '30', label: '30 satellites' },
+    ],
+    readFromProfile: (profile) =>
+      stringOfNumber(
+        profile.handover.params.candidateSatelliteLimit ??
+          profile.constellation.activeSatellitesInWindow ??
+          profile.constellation.satellitesPerPlane,
+        profile.constellation.activeSatellitesInWindow ??
+          profile.constellation.satellitesPerPlane,
+      ),
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.handover ??= {};
+      overrides.handover.params ??= {};
+      overrides.handover.params.candidateSatelliteLimit = Math.max(
+        1,
+        Math.round(toNumber(serializedValue, 'handover.params.candidateSatelliteLimit')),
       );
     },
   },

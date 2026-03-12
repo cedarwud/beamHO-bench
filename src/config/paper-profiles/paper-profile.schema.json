@@ -363,6 +363,7 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "candidateSatelliteLimit": { "type": "integer", "minimum": 1 },
             "a3OffsetDb": { "type": "number" },
             "a3TttMs": { "type": "integer", "minimum": 0 },
             "a4ThresholdDbm": { "type": "number" },

@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-12  
-**Status:** v2 Core Scope Complete + No Active Pending Packages
+**Status:** v2 Core Scope Complete + Active Observer-Sky God-View Composition Pending
 
 ---
 
@@ -29,13 +29,14 @@ Current status snapshot means:
 15. Closure-tracked pending package `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` has D1~D5 implemented with backend/runtime evidence and frontend handoff closure.
 16. Closure-tracked pending package `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` has D1~D5 implemented with observer-sky display-layer rewrite evidence and stage-gate verification.
 17. Closure-tracked pending package `sdd/pending/beamHO-bench-observer-sky-visual-correction-sdd.md` has D1~D6 implemented with display/candidate separation, sky-coverage, continuity, and stage-gate closure evidence.
+18. A new active pending package `sdd/pending/beamHO-bench-observer-sky-god-view-composition-sdd.md` is open to resolve the remaining frontend visual acceptance gap: primary-view composition, screen-space spread, and god-view observer-sky readability.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
 2. RSMA soft-HO and broad large-scale/multi-paper DRL fusion, deferred by BG-6 governance.
 
 Active pending items (implementation open):
-1. none at this time.
+1. `sdd/pending/beamHO-bench-observer-sky-god-view-composition-sdd.md`
 
 ---
 

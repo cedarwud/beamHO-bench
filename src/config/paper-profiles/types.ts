@@ -160,6 +160,7 @@ export interface PaperProfile {
     algorithmFidelity: AlgorithmFidelity;
     baselines: HandoverBaseline[];
     params: {
+      candidateSatelliteLimit?: number;
       a3OffsetDb?: number;
       a3TttMs?: number;
       a4ThresholdDbm?: number;

@@ -112,6 +112,16 @@
       "note": "Benchmark-default path uses full CHO/MC-HO implementation."
     },
     {
+      "sourceId": "ASSUME-HANDOVER-CANDIDATE-WINDOW",
+      "type": "assumption",
+      "title": "Handover Candidate Satellite Window",
+      "locator": "handover.params.candidateSatelliteLimit",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:handover-candidate-window",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Bounds the per-UE satellite candidate set after scene-window selection so total constellation size, rendered satellites, and HO decision scope can be tuned independently."
+    },
+    {
       "sourceId": "ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG",
       "type": "assumption",
       "title": "Deterministic Beam Scheduler Window Configuration",

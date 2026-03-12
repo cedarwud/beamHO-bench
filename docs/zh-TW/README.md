@@ -10,6 +10,7 @@
 4. `04-testing-and-validation.md`
 5. `05-development-guidelines.md`
 6. `06-research-parameter-governance.md`
+7. `07-observer-sky-visual-acceptance.md`
 
 ## 文件地圖
 
@@ -30,6 +31,9 @@
 
 6. `06-research-parameter-governance.md`  
 說明「研究參數」與「畫面控制」的邊界、參數分組、離散範圍與來源依據。
+
+7. `07-observer-sky-visual-acceptance.md`  
+定義 observer-sky 前台畫面最終要長什麼樣，供後續 SDD 與實作驗收使用。
 
 ## 與 SDD 的關係
 

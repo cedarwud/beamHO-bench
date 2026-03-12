@@ -17,6 +17,7 @@ export type ResearchParameterId =
   | 'constellation.satellitesPerPlane'
   | 'constellation.minElevationDeg'
   | 'constellation.activeSatellitesInWindow'
+  | 'handover.params.candidateSatelliteLimit'
   | 'beam.beamsPerSatellite'
   | 'beam.overlapRatio'
   | 'beam.frequencyReuse'

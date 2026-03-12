@@ -8,7 +8,7 @@ Status ownership:
 
 ## 1. Active Pending Specs
 
-1. none at this time.
+1. `beamHO-bench-observer-sky-god-view-composition-sdd.md` (active pending on 2026-03-12; primary observer-sky god-view composition and screen-space acceptance package)
 
 ## 2. Closure-Tracked Pending Specs
 
@@ -44,6 +44,7 @@ Status ownership:
 Corrective follow-up note:
 1. `beamHO-bench-observer-sky-view-sdd.md` remains closure-tracked for the architecture split.
 2. `beamHO-bench-observer-sky-visual-correction-sdd.md` is now closure-tracked for the corrective package that completed sky coverage, display/candidate separation, and bounded membership continuity.
+3. active frontend visual work is now governed by `beamHO-bench-observer-sky-god-view-composition-sdd.md`.
 
 ## 3. Backlog Location
 

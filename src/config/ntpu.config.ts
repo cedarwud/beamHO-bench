@@ -119,7 +119,7 @@ export const NTPU_CONFIG: SceneConfig = {
     // Default to GLB satellite model; runtime still falls back to primitive on load failure.
     renderMode: 'glb',
     modelPath: '/models/sat.glb',
-    modelScale: 2.4,
+    modelScale: 5.5,
   },
   camera: {
     initialPosition: [0, 400, 500],

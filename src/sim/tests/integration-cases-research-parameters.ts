@@ -140,6 +140,7 @@ export function buildResearchParameterIntegrationCases(): SimTestCase[] {
           ...baseSelection,
           'constellation.altitudeKm': '1200',
           'constellation.activeSatellitesInWindow': '16',
+          'handover.params.candidateSatelliteLimit': '16',
           'channel.smallScaleModel': 'none',
           'channel.smallScaleParams.temporalCorrelation.enabled': 'true',
           'channel.smallScaleParams.dopplerAware.enabled': 'true',
@@ -161,6 +162,11 @@ export function buildResearchParameterIntegrationCases(): SimTestCase[] {
           consistency.selection['constellation.activeSatellitesInWindow'] ===
             String(baseProfile.constellation.satellitesPerPlane),
           'Expected activeSatellitesInWindow to be clamped to satellitesPerPlane in strict consistency mode.',
+        );
+        assertCondition(
+          consistency.selection['handover.params.candidateSatelliteLimit'] ===
+            String(baseProfile.constellation.satellitesPerPlane),
+          'Expected candidateSatelliteLimit to be clamped to the effective scene window in strict consistency mode.',
         );
         assertCondition(
           consistency.selection['channel.smallScaleParams.temporalCorrelation.enabled'] ===
@@ -191,6 +197,12 @@ export function buildResearchParameterIntegrationCases(): SimTestCase[] {
             (issue) => issue.ruleId === 'PC-HARD-ACTIVE-WINDOW-UPPER-BOUND',
           ),
           'Expected hard-consistency issue for active-window upper-bound clamp.',
+        );
+        assertCondition(
+          consistency.issues.some(
+            (issue) => issue.ruleId === 'PC-HARD-CANDIDATE-WINDOW-UPPER-BOUND',
+          ),
+          'Expected hard-consistency issue for candidate-window upper-bound clamp.',
         );
         assertCondition(
           consistency.issues.some((issue) => issue.ruleId === 'PC-DERIVE-ALTITUDE-COUPLING'),

@@ -129,6 +129,7 @@
       "mc-ho"
     ],
     "params": {
+      "candidateSatelliteLimit": 10,
       "a3OffsetDb": 0,
       "a3TttMs": 0,
       "a4ThresholdDbm": -100,

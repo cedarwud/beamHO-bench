@@ -1,3 +1,4 @@
+import type { PaperProfile } from '@/config/paper-profiles/types';
 import { computeThroughputMbps, evaluateLinksForUe } from '@/sim/channel/link-budget';
 import { resolveCoupledHandoverConflicts } from '@/sim/scheduler/coupled-resolver';
 import type { CoupledDecisionStats } from '@/sim/scheduler/types';
@@ -79,6 +80,61 @@ function filterLinksByScheduler(
   return links.filter((sample) => activeBeamKeys.has(sampleKey(sample.satId, sample.beamId)));
 }
 
+function filterLinksByCandidateSatelliteWindow(
+  profile: PaperProfile,
+  links: ReturnType<typeof evaluateLinksForUe>,
+): ReturnType<typeof evaluateLinksForUe> {
+  const limit = Math.max(
+    1,
+    Math.round(
+      profile.handover.params.candidateSatelliteLimit ??
+        profile.constellation.activeSatellitesInWindow ??
+        profile.constellation.satellitesPerPlane,
+    ),
+  );
+
+  if (links.length <= 1) {
+    return links;
+  }
+
+  const bestBySatellite = new Map<number, { satId: number; bestRsrpDbm: number; bestSinrDb: number }>();
+  for (const sample of links) {
+    const current = bestBySatellite.get(sample.satId);
+    if (
+      !current ||
+      sample.rsrpDbm > current.bestRsrpDbm ||
+      (sample.rsrpDbm === current.bestRsrpDbm && sample.sinrDb > current.bestSinrDb)
+    ) {
+      bestBySatellite.set(sample.satId, {
+        satId: sample.satId,
+        bestRsrpDbm: sample.rsrpDbm,
+        bestSinrDb: sample.sinrDb,
+      });
+    }
+  }
+
+  if (bestBySatellite.size <= limit) {
+    return links;
+  }
+
+  const allowedSatelliteIds = new Set(
+    [...bestBySatellite.values()]
+      .sort((left, right) => {
+        if (left.bestRsrpDbm !== right.bestRsrpDbm) {
+          return right.bestRsrpDbm - left.bestRsrpDbm;
+        }
+        if (left.bestSinrDb !== right.bestSinrDb) {
+          return right.bestSinrDb - left.bestSinrDb;
+        }
+        return left.satId - right.satId;
+      })
+      .slice(0, limit)
+      .map((entry) => entry.satId),
+  );
+
+  return links.filter((sample) => allowedSatelliteIds.has(sample.satId));
+}
+
 export function runHandoverBaseline(context: DecisionContext): HandoverDecisionResult {
   const {
     tick,
@@ -120,14 +176,17 @@ export function runHandoverBaseline(context: DecisionContext): HandoverDecisionR
   let throughputSum = 0;
 
   for (const ue of ues) {
-    const links = filterLinksByScheduler(
-      evaluateLinksForUe(profile, ue, satellites, {
-        tick,
-        timeSec,
-        timeStepSec,
-      }),
-      schedulerMode,
-      activeBeamKeys,
+    const links = filterLinksByCandidateSatelliteWindow(
+      profile,
+      filterLinksByScheduler(
+        evaluateLinksForUe(profile, ue, satellites, {
+          tick,
+          timeSec,
+          timeStepSec,
+        }),
+        schedulerMode,
+        activeBeamKeys,
+      ),
     );
     const servingSample = findServingSample(links, ue);
     const ueMemory = nextTriggerMemory.get(ue.id) ?? {};
