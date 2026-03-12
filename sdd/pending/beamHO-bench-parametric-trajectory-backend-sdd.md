@@ -1,8 +1,8 @@
-# beamHO-bench — Parametric Trajectory Backend SDD (Active Pending)
+# beamHO-bench — Parametric Trajectory Backend SDD (Closure-Tracked Pending)
 
 **Version:** 0.1.0  
-**Date:** 2026-03-04  
-**Status:** Active Pending / Backend Implemented (Frontend GLB Coupling Pending)
+**Date:** 2026-03-12  
+**Status:** Implemented / Closure-Tracked
 
 ---
 
@@ -12,7 +12,10 @@ Define a paper-anchored parametric trajectory backend for `paper-baseline` mode 
 
 This package explicitly separates:
 1. backend kinematics + parameter governance (implemented in current phase)
-2. frontend GLB movement coupling and visualization controls (next phase)
+2. frontend visualization semantics (now re-scoped into a dedicated observer-sky frontend SDD)
+
+Frontend follow-up is no longer treated as a generic "GLB movement coupling" task. It is now governed by:
+1. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md`
 
 ---
 
@@ -24,8 +27,8 @@ In scope (current phase):
 3. add parameter consistency coupling across trajectory and existing constellation controls.
 4. provide deterministic integration tests and stage-gate validation evidence.
 
-Out of scope (deferred to next phase):
-1. direct GLB motion binding and timeline UI visualization for new trajectory states.
+Out of scope (deferred to dedicated frontend package):
+1. observer-sky display layer, visibility-zone rendering, and frontend motion semantics.
 2. multi-orbit (`LEO/MEO/GEO`) unified runtime path.
 3. RSMA/soft-HO runtime activation.
 4. external simulator dependency (STK/ns-3/MATLAB mandatory coupling).
@@ -82,7 +85,7 @@ Out of scope (deferred to next phase):
 2. D2: scenario backend implementation (`walker-circular` synthetic orbit path).
 3. D3: research parameter catalog/discrete tiers + consistency coupling updates.
 4. D4: integration tests and stage-gate verification.
-5. D5: frontend GLB movement coupling and visualization pipeline (pending).
+5. D5: frontend visualization package handoff to dedicated observer-sky SDD.
 
 ---
 
@@ -96,7 +99,7 @@ As of 2026-03-04:
 | D2 synthetic trajectory backend | Implemented | `src/sim/scenarios/common/synthetic-orbit.ts`, `src/sim/scenarios/case9-analytic.ts` |
 | D3 research parameter tiers + coupling | Implemented | `src/config/research-parameters/types.ts`, `catalog.ts`, `consistency.ts` |
 | D4 tests and gate verification | Implemented | `src/sim/tests/integration-cases-research-parameters.ts`, `integration-cases-trajectory-parameters.ts`, `npm run validate:stage` pass |
-| D5 frontend GLB movement coupling | Pending | next phase (bind trajectory state to satellite GLB render path) |
+| D5 frontend visualization handoff | Implemented / Closure-Tracked | handoff completed by `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` implementation (`src/viz/satellite/*`, `src/components/scene/SatelliteSkyLayer.tsx`) |
 
 ---
 
@@ -110,3 +113,8 @@ This package SHALL maintain:
 5. no hidden KPI-impacting constants outside profile/assumption governance.
 6. deterministic run outputs and traceable source/assumption mapping.
 
+---
+
+## 8. Closure Reference
+
+1. `sdd/completed/beamHO-bench-parametric-trajectory-backend-closure.md`

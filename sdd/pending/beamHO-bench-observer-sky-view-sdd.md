@@ -1,8 +1,8 @@
-# beamHO-bench — Observer Sky View Frontend SDD (Active Pending)
+# beamHO-bench — Observer Sky View Frontend SDD (Closure-Tracked Pending)
 
 **Version:** 0.1.0  
 **Date:** 2026-03-12  
-**Status:** Active Pending / D1~D4 Implemented In Code / D5 Closure Open
+**Status:** Implemented / Closure-Tracked
 
 ---
 
@@ -164,7 +164,7 @@ Current implementation snapshot (2026-03-12):
 2. D2 implemented: visibility-zone classification, observer-sky projection, and deterministic display-adapter helpers are in code.
 3. D3 implemented: `SatelliteModel` is renderer-only and `ConnectionLines` consumes display-layer-resolved render positions.
 4. D4 implemented: synthetic / Starlink TLE / OneWeb TLE parity is covered by observer-sky integration tests.
-5. D5 remains open for closure-state promotion and lifecycle convergence.
+5. D5 implemented: superseded frontend-only simulation fields/path pieces are retired and lifecycle docs are synchronized.
 
 ---
 
@@ -177,3 +177,9 @@ This package SHALL maintain:
 4. meaningful module splitting by responsibility boundary.
 5. stage-gate freshness and deterministic output requirements.
 6. traceable assumptions and no hidden KPI-impacting constants.
+
+---
+
+## 9. Closure Reference
+
+1. `sdd/completed/beamHO-bench-observer-sky-view-closure.md`

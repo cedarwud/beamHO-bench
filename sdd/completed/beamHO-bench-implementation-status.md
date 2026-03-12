@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-12  
-**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete + PTB/OSV Active Pending
+**Status:** v2 Core Scope Complete + Closure-Tracked Pending Complete
 
 ---
 
@@ -26,16 +26,15 @@ Current status snapshot means:
 12. Closure-tracked pending package `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md` has D1~D5 implemented with closure evidence.
 13. Closure-tracked pending package `sdd/pending/beamHO-bench-core-extension-governance-sdd.md` has D1~D5 implemented with closure evidence.
 14. Closure-tracked pending package `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md` has D1~D6 implemented with closure evidence.
-15. Active pending package `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` has D1~D4 implemented (backend/safety/tests complete); frontend phase is now re-scoped to a dedicated observer-sky frontend package.
-16. Active pending package `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` has D1~D4 implemented in code (`viz/satellite/*`, `SatelliteSkyLayer`, renderer-only `SatelliteModel`, observer-sky tests); D5 lifecycle closure remains open.
+15. Closure-tracked pending package `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` has D1~D5 implemented with backend/runtime evidence and frontend handoff closure.
+16. Closure-tracked pending package `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` has D1~D5 implemented with observer-sky display-layer rewrite evidence and stage-gate verification.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
 2. RSMA soft-HO and broad large-scale/multi-paper DRL fusion, deferred by BG-6 governance.
 
 Active pending items (implementation open):
-1. `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` (PTB; backend D1~D4 complete, frontend phase re-scoped)
-2. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` (OSV; D1~D4 implemented in code, D5 closure/status sync pending)
+1. none at this time.
 
 ---
 
@@ -62,8 +61,8 @@ Active pending items (implementation open):
 | SCB (D1~D5) | Complete | service continuity baseline validation pack (`VAL-SCB-*`) for starlink/oneweb/coupled-scheduler continuity envelopes with deterministic contract guard and closure report |
 | CEG (D1~D5) | Complete | core/all validation scope governance + stage artifact freshness enforcement + runtime override source-map coverage guard + closure synchronization |
 | PC-v1 (D1~D6) | Complete | research-parameter consistency rule layer + policy-mode divergence + UI pre-run feedback + source-trace/manifest metadata + closure synchronization |
-| PTB (D1~D5) | Active Pending | paper-tier parametric trajectory backend package: synthetic trajectory model contract + walker-circular backend + discrete trajectory parameters + consistency coupling + deterministic integration gates complete; frontend phase re-scoped to OSV package |
-| OSV (D1~D5) | Active Pending (D1~D4 Implemented) | `src/viz/satellite/*` + `src/components/scene/SatelliteSkyLayer.tsx` + renderer-only `src/components/sim/SatelliteModel.tsx` + observer-sky parity tests; D5 closure/status synchronization remains open |
+| PTB (D1~D5) | Complete (Closure-Tracked) | paper-tier parametric trajectory backend package: synthetic trajectory model contract + walker-circular backend + discrete trajectory parameters + consistency coupling + deterministic integration gates + frontend handoff closure report |
+| OSV (D1~D5) | Complete (Closure-Tracked) | `src/viz/satellite/*` + `src/components/scene/SatelliteSkyLayer.tsx` + renderer-only `src/components/sim/SatelliteModel.tsx` + observer-sky parity tests + lifecycle closure synchronization |
 
 ---
 
@@ -141,6 +140,8 @@ Primary references:
 27. `sdd/completed/beamHO-bench-parameter-consistency-v1-closure.md`
 28. `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md`
 29. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md`
+30. `sdd/completed/beamHO-bench-parametric-trajectory-backend-closure.md`
+31. `sdd/completed/beamHO-bench-observer-sky-view-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
