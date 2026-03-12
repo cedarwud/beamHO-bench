@@ -41,6 +41,9 @@ export interface ParametricOrbitContext {
   inclinationRad: number;
   semiMajorAxisKm: number;
   meanMotionRadPerSec: number;
+  raanOffsetRad: number;
+  anomalyOffsetRad: number;
+  desiredSatelliteCount: number;
   seeds: ParametricOrbitSeed[];
 }
 
@@ -81,6 +84,30 @@ function normalizeDeg(value: number): number {
   return Math.max(0, Math.min(180, value));
 }
 
+function normalizeAngleRad(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  let normalized = value % TWO_PI;
+  if (normalized < 0) {
+    normalized += TWO_PI;
+  }
+  return normalized;
+}
+
+function shortestAngleDeltaRad(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  let normalized = value % TWO_PI;
+  if (normalized <= -Math.PI) {
+    normalized += TWO_PI;
+  } else if (normalized > Math.PI) {
+    normalized -= TWO_PI;
+  }
+  return normalized;
+}
+
 function deriveMeanMotionRadPerSec(options: {
   altitudeKm: number;
   satelliteSpeedKmps?: number;
@@ -90,6 +117,64 @@ function deriveMeanMotionRadPerSec(options: {
     return asPositiveNumber((options.satelliteSpeedKmps as number) / orbitRadiusKm, 1e-6);
   }
   return Math.sqrt(EARTH_MU_KM3_PER_SEC2 / (orbitRadiusKm ** 3));
+}
+
+function deriveObserverAnchoredOrbitOffsets(options: {
+  observerLat: number;
+  observerLon: number;
+  inclinationRad: number;
+  anchorSeed: ParametricOrbitSeed | null;
+}): {
+  raanOffsetRad: number;
+  anomalyOffsetRad: number;
+} {
+  const { observerLat, observerLon, inclinationRad, anchorSeed } = options;
+  if (anchorSeed === null) {
+    return {
+      raanOffsetRad: 0,
+      anomalyOffsetRad: 0,
+    };
+  }
+
+  const latRad = (observerLat * Math.PI) / 180;
+  const lonRad = (observerLon * Math.PI) / 180;
+  const sinInclination = Math.sin(inclinationRad);
+  const sinLatitude = Math.sin(latRad);
+
+  if (Math.abs(sinInclination) <= 1e-9) {
+    return {
+      raanOffsetRad: shortestAngleDeltaRad(lonRad - anchorSeed.raanRad),
+      anomalyOffsetRad: shortestAngleDeltaRad(-anchorSeed.meanAnomalyAtEpochRad),
+    };
+  }
+
+  const normalizedSinAnomaly = Math.max(-1, Math.min(1, sinLatitude / sinInclination));
+  const baseAnomalyRad = Math.asin(normalizedSinAnomaly);
+  const anomalyCandidates = [
+    normalizeAngleRad(baseAnomalyRad),
+    normalizeAngleRad(Math.PI - baseAnomalyRad),
+  ];
+
+  const anchoredCandidates = anomalyCandidates.map((targetAnomalyRad) => {
+    const projectedX = Math.cos(targetAnomalyRad);
+    const projectedY = Math.sin(targetAnomalyRad) * Math.cos(inclinationRad);
+    const targetRaanRad = normalizeAngleRad(lonRad - Math.atan2(projectedY, projectedX));
+    const raanOffsetRad = shortestAngleDeltaRad(targetRaanRad - anchorSeed.raanRad);
+    const anomalyOffsetRad = shortestAngleDeltaRad(
+      targetAnomalyRad - anchorSeed.meanAnomalyAtEpochRad,
+    );
+    return {
+      raanOffsetRad,
+      anomalyOffsetRad,
+      score: Math.abs(raanOffsetRad) + Math.abs(anomalyOffsetRad),
+    };
+  });
+
+  anchoredCandidates.sort((left, right) => left.score - right.score);
+  return {
+    raanOffsetRad: anchoredCandidates[0]?.raanOffsetRad ?? 0,
+    anomalyOffsetRad: anchoredCandidates[0]?.anomalyOffsetRad ?? 0,
+  };
 }
 
 function normalizeLongitudeDeg(value: number): number {
@@ -132,15 +217,9 @@ function ecefToGeodetic(ecefKm: [number, number, number]): {
 function buildParametricOrbitSeeds(options: {
   orbitalPlanes: number;
   satellitesPerPlane: number;
-  activeSatellitesInWindow: number;
 }): ParametricOrbitSeed[] {
   const orbitalPlanes = asPositiveInt(options.orbitalPlanes, 1);
   const satellitesPerPlane = asPositiveInt(options.satellitesPerPlane, 1);
-  const totalSatelliteCount = orbitalPlanes * satellitesPerPlane;
-  const activeSatellitesInWindow = Math.min(
-    asPositiveInt(options.activeSatellitesInWindow, 1),
-    totalSatelliteCount,
-  );
 
   const allSeeds: ParametricOrbitSeed[] = [];
   for (let planeIndex = 0; planeIndex < orbitalPlanes; planeIndex += 1) {
@@ -159,18 +238,79 @@ function buildParametricOrbitSeeds(options: {
       });
     }
   }
+  return allSeeds;
+}
 
-  if (activeSatellitesInWindow >= allSeeds.length) {
-    return allSeeds;
+function compareSatelliteWindowPriority(
+  left: Pick<ParametricOrbitSatelliteState, 'visible' | 'elevationDeg' | 'rangeKm' | 'id'>,
+  right: Pick<ParametricOrbitSatelliteState, 'visible' | 'elevationDeg' | 'rangeKm' | 'id'>,
+): number {
+  if (left.visible !== right.visible) {
+    return left.visible ? -1 : 1;
+  }
+  if (left.elevationDeg !== right.elevationDeg) {
+    return right.elevationDeg - left.elevationDeg;
+  }
+  if (left.rangeKm !== right.rangeKm) {
+    return left.rangeKm - right.rangeKm;
+  }
+  return left.id - right.id;
+}
+
+function normalizeAzimuthDeg(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  let normalized = value % 360;
+  if (normalized < 0) {
+    normalized += 360;
+  }
+  return normalized;
+}
+
+function buildAzimuthDiversifiedRanking(
+  satellites: ParametricOrbitSatelliteState[],
+  sectorCount: number,
+): ParametricOrbitSatelliteState[] {
+  if (satellites.length <= 1 || sectorCount <= 1) {
+    return [...satellites].sort(compareSatelliteWindowPriority);
   }
 
-  const selected: ParametricOrbitSeed[] = [];
-  const stride = allSeeds.length / activeSatellitesInWindow;
-  for (let index = 0; index < activeSatellitesInWindow; index += 1) {
-    const seedIndex = Math.floor(index * stride);
-    selected.push(allSeeds[seedIndex]);
+  const ranked = [...satellites].sort(compareSatelliteWindowPriority);
+  const buckets = Array.from({ length: sectorCount }, () => [] as ParametricOrbitSatelliteState[]);
+
+  for (const satellite of ranked) {
+    const azimuthDeg = normalizeAzimuthDeg(satellite.azimuthDeg);
+    const sectorIndex = Math.min(
+      sectorCount - 1,
+      Math.floor((azimuthDeg / 360) * sectorCount),
+    );
+    buckets[sectorIndex].push(satellite);
   }
-  return selected;
+
+  const sectorOrder = buckets
+    .map((bucket, index) => ({
+      index,
+      top: bucket[0] ?? null,
+    }))
+    .filter((entry): entry is { index: number; top: ParametricOrbitSatelliteState } => entry.top !== null)
+    .sort((left, right) => compareSatelliteWindowPriority(left.top, right.top));
+
+  const diversified: ParametricOrbitSatelliteState[] = [];
+  let appended = true;
+  while (appended) {
+    appended = false;
+    for (const sector of sectorOrder) {
+      const satellite = buckets[sector.index]?.shift();
+      if (!satellite) {
+        continue;
+      }
+      diversified.push(satellite);
+      appended = true;
+    }
+  }
+
+  return diversified;
 }
 
 export function createParametricOrbitContext(options: {
@@ -187,6 +327,16 @@ export function createParametricOrbitContext(options: {
     satellitesPerPlane,
   );
   const inclinationDeg = normalizeDeg(profile.constellation.inclinationDeg);
+  const seeds = buildParametricOrbitSeeds({
+    orbitalPlanes,
+    satellitesPerPlane,
+  });
+  const anchoredOffsets = deriveObserverAnchoredOrbitOffsets({
+    observerLat,
+    observerLon,
+    inclinationRad: (inclinationDeg * Math.PI) / 180,
+    anchorSeed: seeds[0] ?? null,
+  });
 
   return {
     profile,
@@ -203,11 +353,10 @@ export function createParametricOrbitContext(options: {
       altitudeKm: profile.constellation.altitudeKm,
       satelliteSpeedKmps: profile.constellation.satelliteSpeedKmps,
     }),
-    seeds: buildParametricOrbitSeeds({
-      orbitalPlanes,
-      satellitesPerPlane,
-      activeSatellitesInWindow,
-    }),
+    raanOffsetRad: anchoredOffsets.raanOffsetRad,
+    anomalyOffsetRad: anchoredOffsets.anomalyOffsetRad,
+    desiredSatelliteCount: Math.min(activeSatellitesInWindow, Math.max(seeds.length, 1)),
+    seeds,
   };
 }
 
@@ -223,16 +372,25 @@ export function buildParametricOrbitSatelliteStateAtTime(
     inclinationRad,
     semiMajorAxisKm,
     meanMotionRadPerSec,
+    raanOffsetRad,
+    anomalyOffsetRad,
+    desiredSatelliteCount,
     seeds,
     profile,
   } = context;
+  const azimuthSectorCount = Math.max(
+    1,
+    Math.min(8, Math.ceil(desiredSatelliteCount / 2)),
+  );
 
-  return seeds.map((seed) => {
-    const anomalyRad = seed.meanAnomalyAtEpochRad + meanMotionRadPerSec * timeSec;
+  const allSatellites = seeds.map((seed) => {
+    const anomalyRad =
+      seed.meanAnomalyAtEpochRad + anomalyOffsetRad + meanMotionRadPerSec * timeSec;
     const cosAnomaly = Math.cos(anomalyRad);
     const sinAnomaly = Math.sin(anomalyRad);
-    const cosRaan = Math.cos(seed.raanRad);
-    const sinRaan = Math.sin(seed.raanRad);
+    const anchoredRaanRad = seed.raanRad + raanOffsetRad;
+    const cosRaan = Math.cos(anchoredRaanRad);
+    const sinRaan = Math.sin(anchoredRaanRad);
     const cosInclination = Math.cos(inclinationRad);
     const sinInclination = Math.sin(inclinationRad);
 
@@ -252,15 +410,17 @@ export function buildParametricOrbitSatelliteStateAtTime(
       observerLon,
       kmToWorldScale,
     );
+    const positionWorld: [number, number, number] = [
+      topocentric.eastKm * kmToWorldScale,
+      topocentric.upKm * kmToWorldScale,
+      topocentric.northKm * kmToWorldScale,
+    ];
+    const groundCenterWorld: [number, number] = [groundX, groundZ];
 
     return {
       id: seed.id,
       positionEcef,
-      positionWorld: [
-        topocentric.eastKm * kmToWorldScale,
-        topocentric.upKm * kmToWorldScale,
-        topocentric.northKm * kmToWorldScale,
-      ],
+      positionWorld,
       positionLla: {
         lat: lla.latDeg,
         lon: lla.lonDeg,
@@ -270,7 +430,24 @@ export function buildParametricOrbitSatelliteStateAtTime(
       elevationDeg: topocentric.elevationDeg,
       rangeKm: topocentric.rangeKm,
       visible: topocentric.elevationDeg >= profile.constellation.minElevationDeg,
-      groundCenterWorld: [groundX, groundZ],
+      groundCenterWorld,
     };
   });
+
+  if (allSatellites.length <= desiredSatelliteCount) {
+    return buildAzimuthDiversifiedRanking(allSatellites, azimuthSectorCount);
+  }
+
+  const visibleRanked = buildAzimuthDiversifiedRanking(
+    allSatellites.filter((satellite) => satellite.visible),
+    azimuthSectorCount,
+  );
+  const fallbackRanked = buildAzimuthDiversifiedRanking(
+    allSatellites.filter((satellite) => !satellite.visible),
+    azimuthSectorCount,
+  );
+  const ranked = [...visibleRanked, ...fallbackRanked];
+  return ranked
+    .slice(0, desiredSatelliteCount)
+    .sort(compareSatelliteWindowPriority);
 }

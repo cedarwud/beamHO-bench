@@ -332,35 +332,41 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
     });
   }
 
-  const initialSatellites = buildSatellitesAtTime(0);
+  function createInitialSnapshot(): SimSnapshot {
+    triggerMemory = new Map();
+    runtimeParameterAudit.reset();
+    policyRuntime.reset();
+    beamScheduler.reset();
 
-  const initialUes = buildInitialUEs({
-    profile,
-    seed: options.seed,
-    kmToWorldScale,
-    observerLat,
-    observerLon,
-  });
+    const satellites = buildSatellitesAtTime(0);
+    const ues = buildInitialUEs({
+      profile,
+      seed: options.seed,
+      kmToWorldScale,
+      observerLat,
+      observerLon,
+    });
 
-  const initialSnapshot: SimSnapshot = {
-    tick: 0,
-    timeSec: 0,
-    scenarioId,
-    profileId: profile.profileId,
-    satellites: initialSatellites,
-    ues: initialUes,
-    hoEvents: [],
-    kpiCumulative: { ...EMPTY_KPI },
-    runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
-    policyRuntime: policyRuntime.snapshot(),
-    beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatellites),
-    coupledDecisionStats: {
-      mode: profile.scheduler.mode,
-      blockedByScheduleHandoverCount: 0,
-      schedulerInducedInterruptionSec: 0,
-      blockedReasons: {},
-    },
-  };
+    return {
+      tick: 0,
+      timeSec: 0,
+      scenarioId,
+      profileId: profile.profileId,
+      satellites,
+      ues,
+      hoEvents: [],
+      kpiCumulative: { ...EMPTY_KPI },
+      runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
+      policyRuntime: policyRuntime.snapshot(),
+      beamScheduler: beamScheduler.buildSnapshot(0, 0, satellites),
+      coupledDecisionStats: {
+        mode: profile.scheduler.mode,
+        blockedByScheduleHandoverCount: 0,
+        schedulerInducedInterruptionSec: 0,
+        blockedReasons: {},
+      },
+    };
+  }
 
   function nextSnapshot(previous: SimSnapshot, context: SimTickContext): SimSnapshot {
     const timeSec = previous.timeSec + context.timeStepSec;
@@ -438,28 +444,7 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
   return {
     id: scenarioId,
     profileId: profile.profileId,
-    createInitialSnapshot: () => {
-      triggerMemory = new Map();
-      runtimeParameterAudit.reset();
-      policyRuntime.reset();
-      beamScheduler.reset();
-      return {
-        ...initialSnapshot,
-        satellites: initialSatellites,
-        ues: initialUes,
-        hoEvents: [],
-        kpiCumulative: { ...EMPTY_KPI },
-        runtimeParameterAudit: runtimeParameterAudit.snapshot(0),
-        policyRuntime: policyRuntime.snapshot(),
-        beamScheduler: beamScheduler.buildSnapshot(0, 0, initialSatellites),
-        coupledDecisionStats: {
-          mode: profile.scheduler.mode,
-          blockedByScheduleHandoverCount: 0,
-          schedulerInducedInterruptionSec: 0,
-          blockedReasons: {},
-        },
-      };
-    },
+    createInitialSnapshot,
     nextSnapshot,
   };
 }

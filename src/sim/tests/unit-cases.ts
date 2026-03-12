@@ -7,6 +7,7 @@ import type { BeamSchedulerSnapshot } from '@/sim/scheduler/types';
 import type { BeamState, SatelliteState } from '@/sim/types';
 import { assertCondition, createBaseUe, createInvisibleSatellite } from './helpers';
 import { buildGainModelUnitCases } from './unit-cases-gain-model';
+import { buildObserverSkyViewUnitCases } from './unit-cases-observer-sky-view';
 import { buildSatelliteRenderUnitCases } from './unit-cases-satellite-render';
 import { buildSmallScaleUnitCases } from './unit-cases-small-scale';
 import { buildTimerChoUnitCases } from './unit-cases-timer-cho';
@@ -477,6 +478,7 @@ export function buildUnitTestCases(): SimTestCase[] {
       },
     },
     ...buildGainModelUnitCases(),
+    ...buildObserverSkyViewUnitCases(),
     ...buildSatelliteRenderUnitCases(),
     ...buildSmallScaleUnitCases(),
     ...buildTimerChoUnitCases(),

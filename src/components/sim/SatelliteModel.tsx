@@ -2,15 +2,15 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type { SatelliteState } from '@/sim/types';
 import {
   resolveSatelliteRenderDecision,
   type SatelliteGlbLoadState,
   type SatelliteRenderMode,
 } from './satellite-render-mode';
+import type { SatelliteDisplayState } from '@/viz/satellite/types';
 
 interface SatelliteModelProps {
-  satellites: SatelliteState[];
+  satellites: readonly SatelliteDisplayState[];
   renderMode: SatelliteRenderMode;
   glbModelPath: string;
   glbModelScale: number;
@@ -20,17 +20,22 @@ interface SatelliteModelProps {
 
 interface SatelliteGlbInstanceProps {
   sourceScene: THREE.Object3D;
-  isVisible: boolean;
+  opacity: number;
+  zone: SatelliteDisplayState['zone'];
   scale: number;
 }
 
 interface SatelliteInstanceProps {
-  satellite: SatelliteState;
+  satellite: SatelliteDisplayState;
   useGlb: boolean;
   glbScene: THREE.Object3D | null;
   glbModelScale: number;
   motionTransitionSec: number;
   enableSmoothMotion: boolean;
+}
+
+function resolveRenderPosition(satellite: SatelliteDisplayState): [number, number, number] {
+  return satellite.renderPosition;
 }
 
 function cloneMaterial(material: THREE.Material): THREE.Material {
@@ -45,18 +50,25 @@ function cloneMeshMaterials(mesh: THREE.Mesh) {
   mesh.material = cloneMaterial(mesh.material);
 }
 
-function applyMeshVisibilityMaterial(mesh: THREE.Mesh, isVisible: boolean) {
+function applyMeshDisplayMaterial(
+  mesh: THREE.Mesh,
+  options: {
+    opacity: number;
+    zone: SatelliteDisplayState['zone'];
+  },
+) {
+  const isActive = options.zone === 'active';
   const apply = (material: THREE.Material) => {
     if (material instanceof THREE.MeshStandardMaterial) {
       material.transparent = true;
-      material.opacity = isVisible ? 1 : 0.55;
-      material.emissive = isVisible ? new THREE.Color('#0ea5e9') : new THREE.Color('#1e293b');
-      material.emissiveIntensity = isVisible ? 0.28 : 0.12;
+      material.opacity = options.opacity;
+      material.emissive = isActive ? new THREE.Color('#0ea5e9') : new THREE.Color('#475569');
+      material.emissiveIntensity = isActive ? 0.28 : 0.1;
       return;
     }
     if (material instanceof THREE.MeshBasicMaterial) {
       material.transparent = true;
-      material.opacity = isVisible ? 1 : 0.55;
+      material.opacity = options.opacity;
     }
   };
 
@@ -67,7 +79,7 @@ function applyMeshVisibilityMaterial(mesh: THREE.Mesh, isVisible: boolean) {
   apply(mesh.material);
 }
 
-function SatelliteGlbInstance({ sourceScene, isVisible, scale }: SatelliteGlbInstanceProps) {
+function SatelliteGlbInstance({ sourceScene, opacity, zone, scale }: SatelliteGlbInstanceProps) {
   const scene = useMemo(() => {
     const cloned = sourceScene.clone(true);
     cloned.traverse((obj: THREE.Object3D) => {
@@ -78,19 +90,19 @@ function SatelliteGlbInstance({ sourceScene, isVisible, scale }: SatelliteGlbIns
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       cloneMeshMaterials(mesh);
-      applyMeshVisibilityMaterial(mesh, isVisible);
+      applyMeshDisplayMaterial(mesh, { opacity, zone });
     });
     return cloned;
-  }, [sourceScene]);
+  }, [sourceScene, opacity, zone]);
 
   useEffect(() => {
     scene.traverse((obj: THREE.Object3D) => {
       if (!(obj as THREE.Mesh).isMesh) {
         return;
       }
-      applyMeshVisibilityMaterial(obj as THREE.Mesh, isVisible);
+      applyMeshDisplayMaterial(obj as THREE.Mesh, { opacity, zone });
     });
-  }, [scene, isVisible]);
+  }, [scene, opacity, zone]);
 
   return (
     <group scale={scale}>
@@ -108,14 +120,15 @@ function SatelliteInstance({
   enableSmoothMotion,
 }: SatelliteInstanceProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const sourcePositionRef = useRef(new THREE.Vector3(...satellite.positionWorld));
-  const targetPositionRef = useRef(new THREE.Vector3(...satellite.positionWorld));
+  const sourcePositionRef = useRef(new THREE.Vector3(...resolveRenderPosition(satellite)));
+  const targetPositionRef = useRef(new THREE.Vector3(...resolveRenderPosition(satellite)));
   const elapsedSecRef = useRef(motionTransitionSec);
-  const isVisible = satellite.visible;
+  const isActive = satellite.zone === 'active';
+  const instanceScale = glbModelScale * (satellite.modelScale ?? 1);
 
   useLayoutEffect(() => {
     const group = groupRef.current;
-    const [nextX, nextY, nextZ] = satellite.positionWorld;
+    const [nextX, nextY, nextZ] = resolveRenderPosition(satellite);
 
     if (!enableSmoothMotion || motionTransitionSec <= 0) {
       sourcePositionRef.current.set(nextX, nextY, nextZ);
@@ -135,9 +148,9 @@ function SatelliteInstance({
     targetPositionRef.current.set(nextX, nextY, nextZ);
     elapsedSecRef.current = 0;
   }, [
-    satellite.positionWorld[0],
-    satellite.positionWorld[1],
-    satellite.positionWorld[2],
+    satellite.renderPosition[0],
+    satellite.renderPosition[1],
+    satellite.renderPosition[2],
     enableSmoothMotion,
     motionTransitionSec,
   ]);
@@ -162,16 +175,23 @@ function SatelliteInstance({
   return (
     <group ref={groupRef}>
       {useGlb && glbScene ? (
-        <SatelliteGlbInstance sourceScene={glbScene} isVisible={isVisible} scale={glbModelScale} />
+        <SatelliteGlbInstance
+          sourceScene={glbScene}
+          opacity={satellite.opacity}
+          zone={satellite.zone}
+          scale={instanceScale}
+        />
       ) : (
         <mesh castShadow>
           <icosahedronGeometry args={[5.5, 0]} />
           <meshStandardMaterial
-            color={isVisible ? '#7ee0ff' : '#64748b'}
-            emissive={isVisible ? '#0ea5e9' : '#334155'}
-            emissiveIntensity={isVisible ? 0.5 : 0.2}
+            color={isActive ? '#7ee0ff' : '#94a3b8'}
+            emissive={isActive ? '#0ea5e9' : '#475569'}
+            emissiveIntensity={isActive ? 0.5 : 0.12}
             roughness={0.35}
             metalness={0.6}
+            transparent
+            opacity={satellite.opacity}
           />
         </mesh>
       )}
@@ -244,7 +264,7 @@ export function SatelliteModel({
     <>
       {satellites.map((satellite) => (
         <SatelliteInstance
-          key={satellite.id}
+          key={satellite.satelliteId}
           satellite={satellite}
           useGlb={useGlb}
           glbScene={glbScene}

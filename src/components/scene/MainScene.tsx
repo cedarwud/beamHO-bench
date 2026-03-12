@@ -3,8 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { AdaptiveDpr, OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
 import { NTPUScene } from './NTPUScene';
 import { UAV } from './UAV';
-import { SatelliteModel } from '../sim/SatelliteModel';
-import { ConnectionLines } from '../sim/ConnectionLines';
+import { SatelliteSkyLayer } from './SatelliteSkyLayer';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
 import { HOEventTimeline, type HOEventTimelineRow } from '../sim/HOEventTimeline';
@@ -30,7 +29,6 @@ import {
 } from '@/config/research-parameters/catalog';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { SimSnapshot } from '@/sim/types';
-import type { SatelliteRenderMode } from '../sim/satellite-render-mode';
 
 const SHOW_DEBUG =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_SCENE_DEBUG === 'true';
@@ -55,10 +53,22 @@ function createDefaultResearchSelection(profile: PaperProfile): ResearchParamete
     return normalizeResearchParameterSelection(profile, {
       ...baseSelection,
       'constellation.syntheticTrajectoryModel': 'walker-circular',
+      'constellation.altitudeKm': '550',
+      'constellation.inclinationDeg': '53',
+      'constellation.orbitalPlanes': '24',
+      'constellation.satellitesPerPlane': '66',
+      'constellation.activeSatellitesInWindow': '16',
+      'handover.params.candidateSatelliteLimit': '8',
     });
   }
   return baseSelection;
 }
+
+const PROFILE_LABELS: Record<CanonicalProfileId, string> = {
+  'case9-default': 'Synthetic Orbit',
+  'starlink-like': 'Starlink TLE',
+  'oneweb-like': 'OneWeb TLE',
+};
 
 export function MainScene() {
   const [selectedProfileId, setSelectedProfileId] =
@@ -70,9 +80,6 @@ export function MainScene() {
   );
   const [researchConsistencyMode, setResearchConsistencyMode] =
     useState<ResearchConsistencyMode>('strict');
-  const [satelliteRenderMode, setSatelliteRenderMode] = useState<SatelliteRenderMode>(
-    NTPU_CONFIG.satellite.renderMode,
-  );
   const [linkVisibility, setLinkVisibility] = useState<LinkVisibility>({
     serving: true,
     secondary: true,
@@ -85,6 +92,7 @@ export function MainScene() {
     () => loadPaperProfile(selectedProfileId),
     [selectedProfileId],
   );
+  const selectedProfileLabel = PROFILE_LABELS[selectedProfileId];
   const researchRuntime = useMemo(
     () =>
       buildResearchRuntimeOverridesWithConsistency({
@@ -138,7 +146,6 @@ export function MainScene() {
     step,
     reset,
     setPlaybackRate,
-    exportRunBundle,
   } = useSimulation({
     profileId: selectedProfileId,
     runtimeOverrides,
@@ -274,19 +281,13 @@ export function MainScene() {
         </button>
         {!isHudCollapsed ? (
           <div className="sim-hud" role="status" aria-live="polite">
-            <div className="sim-hud__title">
-              {profile.mode === 'real-trace'
-                ? 'Phase 1b Real Trace Orbit'
-                : 'Phase 1a Case9 Analytic Orbit'}
-            </div>
+            <div className="sim-hud__title">{selectedProfileLabel}</div>
             <div className="sim-hud__meta">
-              profile: <strong>{profile.profileId}</strong> | tick: <strong>{displayedSnapshot.tick}</strong> |
+              orbit: <strong>{selectedProfileLabel}</strong> | tick: <strong>{displayedSnapshot.tick}</strong> |
               baseline: <strong>{baseline}</strong> | sat: <strong>{displayedSnapshot.satellites.length}</strong> | beams:{' '}
               <strong>
                 {displayedSnapshot.satellites.reduce((sum, satellite) => sum + satellite.beams.length, 0)}
               </strong>{' '}
-              | gain: <strong>{profile.beam.gainModel}</strong>{' '}
-              | sat-render: <strong>{satelliteRenderMode}</strong>{' '}
               | ue: <strong>{displayedSnapshot.ues.length}</strong>
             </div>
             <div className="sim-hud__actions">
@@ -299,9 +300,9 @@ export function MainScene() {
                       setSelectedProfileId(event.target.value as CanonicalProfileId)
                     }
                   >
-                    <option value="case9-default">case9-default</option>
-                    <option value="starlink-like">starlink-like</option>
-                    <option value="oneweb-like">oneweb-like</option>
+                    <option value="case9-default">Synthetic Orbit</option>
+                    <option value="starlink-like">Starlink TLE</option>
+                    <option value="oneweb-like">OneWeb TLE</option>
                   </select>
                 </label>
                 <label className="sim-hud__select">
@@ -321,21 +322,10 @@ export function MainScene() {
                     <option value="mc-ho">mc-ho</option>
                   </select>
                 </label>
-                <label className="sim-hud__select">
-                  Satellite
-                  <select
-                    value={satelliteRenderMode}
-                    onChange={(event) =>
-                      setSatelliteRenderMode(event.target.value as SatelliteRenderMode)
-                    }
-                  >
-                    <option value="primitive">primitive</option>
-                    <option value="glb">glb</option>
-                  </select>
-                </label>
               </div>
               <ResearchParameterPanel
                 profile={profile}
+                baseline={baseline}
                 selection={researchSelection}
                 consistencyMode={researchConsistencyMode}
                 consistencyIssues={researchConsistencyIssues}
@@ -343,31 +333,31 @@ export function MainScene() {
                 onConsistencyModeChange={setResearchConsistencyMode}
                 onReset={handleResetResearchParameters}
               />
-              <TimelineControls
-                tick={displayedSnapshot.tick}
-                timeSec={displayedSnapshot.timeSec}
-                isRunning={isRunning}
-                playbackRate={playbackRate}
-                replayTick={replayTick}
-                replayMaxTick={replayMaxTick}
-                onToggleRun={handleToggleRun}
-                onStep={handleStep}
-                onReset={handleReset}
-                onPlaybackRateChange={setPlaybackRate}
-                onReplayTickChange={(nextTick) => setReplayTick(nextTick)}
-                onReplayLive={() => setReplayTick(null)}
-              />
-              <div className="sim-hud__exports">
-                <button
-                  type="button"
-                  onClick={() => {
-                    void exportRunBundle();
-                  }}
-                  title="Export manifest/resolved-profile/source-trace/kpi-summary/timeseries/validation-gate-summary bundle."
-                >
-                  Export Run Bundle
-                </button>
-              </div>
+              <section className="sim-hud-panel" aria-label="Replay controls">
+                <div className="sim-hud-panel__title">Replay Controls</div>
+                <TimelineControls
+                  tick={displayedSnapshot.tick}
+                  timeSec={displayedSnapshot.timeSec}
+                  isRunning={isRunning}
+                  playbackRate={playbackRate}
+                  replayTick={replayTick}
+                  replayMaxTick={replayMaxTick}
+                  onToggleRun={handleToggleRun}
+                  onStep={handleStep}
+                  onReset={handleReset}
+                  onPlaybackRateChange={setPlaybackRate}
+                  onReplayTickChange={(nextTick) => setReplayTick(nextTick)}
+                  onReplayLive={() => setReplayTick(null)}
+                />
+              </section>
+              <details className="sim-hud-panel sim-hud-panel--details">
+                <summary>View Filters</summary>
+                <ConnectionLegend
+                  ues={displayedSnapshot.ues}
+                  visibility={linkVisibility}
+                  onChange={setLinkVisibility}
+                />
+              </details>
             </div>
             <div className="sim-failure-overlay">
               <div className="sim-failure-overlay__header">State1/2/3 Failure Overlay</div>
@@ -376,11 +366,6 @@ export function MainScene() {
                 <strong>{hoStateCounts.state3}</strong>
               </div>
             </div>
-            <ConnectionLegend
-              ues={displayedSnapshot.ues}
-              visibility={linkVisibility}
-              onChange={setLinkVisibility}
-            />
             <KpiHUD kpi={displayedSnapshot.kpiCumulative} ues={displayedSnapshot.ues} baseline={baseline} />
             <HOEventTimeline events={hoEventTimeline} maxRows={12} />
           </div>
@@ -450,20 +435,18 @@ export function MainScene() {
             <Suspense fallback={<SceneLoader label="Loading NTPU Scene..." />}>
               <NTPUScene />
               <UAV position={NTPU_CONFIG.uav.position} scale={NTPU_CONFIG.uav.scale} />
-              <ConnectionLines
+              <SatelliteSkyLayer
+                profile={profile}
                 satellites={displayedSnapshot.satellites}
                 ues={displayedSnapshot.ues}
-                showServing={linkVisibility.serving}
-                showSecondary={linkVisibility.secondary}
-                showPrepared={linkVisibility.prepared}
-              />
-              <SatelliteModel
-                satellites={displayedSnapshot.satellites}
-                renderMode={satelliteRenderMode}
+                renderMode={NTPU_CONFIG.satellite.renderMode}
                 glbModelPath={NTPU_CONFIG.satellite.modelPath}
                 glbModelScale={NTPU_CONFIG.satellite.modelScale}
                 motionTransitionSec={smoothMotionTransitionSec}
                 enableSmoothMotion={isLiveView}
+                showServingLinks={linkVisibility.serving}
+                showSecondaryLinks={linkVisibility.secondary}
+                showPreparedLinks={linkVisibility.prepared}
               />
             </Suspense>
 

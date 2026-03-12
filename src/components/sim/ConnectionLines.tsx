@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import type { SatelliteState, UEState } from '@/sim/types';
+import type { UEState } from '@/sim/types';
+import type { SatelliteDisplayFrame } from '@/viz/satellite/types';
 
 /**
  * Provenance:
@@ -11,8 +12,8 @@ import type { SatelliteState, UEState } from '@/sim/types';
  */
 
 export interface ConnectionLinesProps {
-  satellites: SatelliteState[];
-  ues: UEState[];
+  satelliteRenderPositions: SatelliteDisplayFrame['renderPositionsById'];
+  ues: readonly UEState[];
   showServing?: boolean;
   showSecondary?: boolean;
   showPrepared?: boolean;
@@ -34,16 +35,13 @@ function toSegmentArray(values: number[]): Float32Array {
 }
 
 export function ConnectionLines({
-  satellites,
+  satelliteRenderPositions,
   ues,
   showServing = true,
   showSecondary = true,
   showPrepared = true,
 }: ConnectionLinesProps) {
   const { servingSegments, secondarySegments, preparedSegments } = useMemo(() => {
-    const satById = new Map<number, SatelliteState>(
-      satellites.map((satellite) => [satellite.id, satellite]),
-    );
     const serving: number[] = [];
     const secondary: number[] = [];
     const prepared: number[] = [];
@@ -51,33 +49,33 @@ export function ConnectionLines({
     for (const ue of ues) {
       const servingSat =
         ue.servingSatId !== null && ue.servingSatId !== undefined
-          ? satById.get(ue.servingSatId)
+          ? satelliteRenderPositions.get(ue.servingSatId)
           : undefined;
       if (servingSat) {
-        appendSegment(serving, ue.positionWorld, servingSat.positionWorld);
+        appendSegment(serving, ue.positionWorld, servingSat);
       }
 
       const secondarySat =
         ue.secondarySatId !== null && ue.secondarySatId !== undefined
-          ? satById.get(ue.secondarySatId)
+          ? satelliteRenderPositions.get(ue.secondarySatId)
           : undefined;
       if (
         secondarySat &&
-        secondarySat.id !== ue.servingSatId
+        ue.secondarySatId !== ue.servingSatId
       ) {
-        appendSegment(secondary, ue.positionWorld, secondarySat.positionWorld);
+        appendSegment(secondary, ue.positionWorld, secondarySat);
       }
 
       const preparedSat =
         ue.choPreparedSatId !== null && ue.choPreparedSatId !== undefined
-          ? satById.get(ue.choPreparedSatId)
+          ? satelliteRenderPositions.get(ue.choPreparedSatId)
           : undefined;
       if (
         preparedSat &&
-        preparedSat.id !== ue.servingSatId &&
-        preparedSat.id !== ue.secondarySatId
+        ue.choPreparedSatId !== ue.servingSatId &&
+        ue.choPreparedSatId !== ue.secondarySatId
       ) {
-        appendSegment(prepared, ue.positionWorld, preparedSat.positionWorld);
+        appendSegment(prepared, ue.positionWorld, preparedSat);
       }
     }
 
@@ -86,7 +84,7 @@ export function ConnectionLines({
       secondarySegments: toSegmentArray(secondary),
       preparedSegments: toSegmentArray(prepared),
     };
-  }, [satellites, ues]);
+  }, [satelliteRenderPositions, ues]);
 
   return (
     <group name="connection-lines">
