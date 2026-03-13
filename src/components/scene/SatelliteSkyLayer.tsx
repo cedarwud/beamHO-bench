@@ -4,13 +4,9 @@ import { ConnectionLines } from '@/components/sim/ConnectionLines';
 import { SatelliteModel } from '@/components/sim/SatelliteModel';
 import type { SatelliteRenderMode } from '@/components/sim/satellite-render-mode';
 import type { SatelliteGeometryState, SatelliteState, UEState } from '@/sim/types';
-import {
-  applySatelliteDisplayContinuity,
-  buildSatelliteDisplayContinuityMemory,
-} from '@/viz/satellite/display-continuity';
-import { buildSatelliteDisplayFrame } from '@/viz/satellite/display-adapter';
-import { buildSatelliteDisplayCandidates } from '@/viz/satellite/display-selection';
+import { buildObserverSkyDisplayPipeline } from '@/viz/satellite/display-pipeline';
 import type { SatelliteDisplayContinuityMemory } from '@/viz/satellite/types';
+import type { ObserverSkyCompositionConfig } from '@/viz/satellite/view-composition';
 
 interface SatelliteSkyLayerProps {
   profile: PaperProfile;
@@ -22,6 +18,7 @@ interface SatelliteSkyLayerProps {
   glbModelScale: number;
   motionTransitionSec?: number;
   enableSmoothMotion?: boolean;
+  composition: ObserverSkyCompositionConfig;
   displayBudget?: number;
   continuitySequenceKey: string;
   snapshotTick: number;
@@ -50,6 +47,7 @@ export function SatelliteSkyLayer({
   glbModelScale,
   motionTransitionSec = 1,
   enableSmoothMotion = true,
+  composition,
   displayBudget,
   continuitySequenceKey,
   snapshotTick,
@@ -61,46 +59,27 @@ export function SatelliteSkyLayer({
 }: SatelliteSkyLayerProps) {
   const continuityMemoryRef = useRef<SatelliteDisplayContinuityMemory | null>(null);
   const displayPool = physicalSatellites ?? satellites;
-  const resolvedDisplayBudget = displayBudget ?? profile.constellation.activeSatellitesInWindow;
   const displayFrame = useMemo(
     () => {
-      const candidates = buildSatelliteDisplayCandidates({
+      const displayState = buildObserverSkyDisplayPipeline({
+        profile,
         satellites: displayPool,
-        config: {
-          minElevationDeg: profile.constellation.minElevationDeg,
-          displayBudget: resolvedDisplayBudget,
-          showGhosts,
-        },
-      });
-      const selection = applySatelliteDisplayContinuity({
-        candidates,
-        displayBudget: resolvedDisplayBudget,
+        composition,
+        displayBudget,
         sequenceKey: continuitySequenceKey,
-        tick: snapshotTick,
-        timeSec: snapshotTimeSec,
+        snapshotTick,
+        snapshotTimeSec,
         memory: continuityMemoryRef.current,
+        showGhosts,
       });
-      continuityMemoryRef.current = buildSatelliteDisplayContinuityMemory({
-        sequenceKey: continuitySequenceKey,
-        tick: snapshotTick,
-        timeSec: snapshotTimeSec,
-        selectedIds: selection.selectedIds,
-      });
-      return buildSatelliteDisplayFrame({
-        satellites: selection.selected,
-        config: {
-          areaWidthKm: profile.scenario.areaKm.width,
-          areaHeightKm: profile.scenario.areaKm.height,
-          minElevationDeg: profile.constellation.minElevationDeg,
-        },
-      });
+      continuityMemoryRef.current = displayState.memory;
+      return displayState.frame;
     },
     [
       displayPool,
-      profile.scenario.areaKm.width,
-      profile.scenario.areaKm.height,
-      profile.constellation.minElevationDeg,
-      resolvedDisplayBudget,
+      profile,
+      composition,
+      displayBudget,
       continuitySequenceKey,
       snapshotTick,
       snapshotTimeSec,

@@ -77,6 +77,11 @@ export interface SatelliteDisplayAdapterConfig {
   kmToWorldScale?: number;
   activeOpacity?: number;
   ghostOpacity?: number;
+  projection?: {
+    horizonLiftRatio?: number;
+    domeRadiusRatio?: number;
+    minRenderElevationDeg?: number;
+  };
 }
 
 export interface SatelliteVisibilityZoneDecision {

@@ -15,6 +15,7 @@ import { buildComparisonChartIntegrationCases } from './integration-cases-compar
 import { buildCrossModeBenchmarkIntegrationCases } from './integration-cases-cross-mode-benchmark';
 import { buildMultiSeedBenchmarkIntegrationCases } from './integration-cases-multi-seed-benchmark';
 import { buildMultiSeedReportingIntegrationCases } from './integration-cases-multi-seed-reporting';
+import { buildObserverSkyCompositionIntegrationCases } from './integration-cases-observer-sky-composition';
 import { buildObserverSkyViewIntegrationCases } from './integration-cases-observer-sky-view';
 import { buildPolicySchedulerIntegrationCases } from './integration-cases-policy-scheduler';
 import { buildRealTraceArtifactIntegrationCases } from './integration-cases-real-trace-artifacts';
@@ -369,6 +370,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
     ...buildCrossModeBenchmarkIntegrationCases(),
     ...buildMultiSeedBenchmarkIntegrationCases(),
     ...buildMultiSeedReportingIntegrationCases(),
+    ...buildObserverSkyCompositionIntegrationCases(),
     ...buildObserverSkyViewIntegrationCases(),
     ...buildPolicySchedulerIntegrationCases(),
     ...buildResearchParameterIntegrationCases(),

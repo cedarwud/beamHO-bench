@@ -1,9 +1,10 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { AdaptiveDpr, OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei';
+import { AdaptiveDpr, Stats } from '@react-three/drei';
 import { NTPUScene } from './NTPUScene';
 import { UAV } from './UAV';
 import { SatelliteSkyLayer } from './SatelliteSkyLayer';
+import { ObserverSkyCameraRig } from './ObserverSkyCameraRig';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
 import { HOEventTimeline, type HOEventTimelineRow } from '../sim/HOEventTimeline';
@@ -29,6 +30,11 @@ import {
 } from '@/config/research-parameters/catalog';
 import type { RuntimeBaseline } from '@/sim/handover/baselines';
 import type { SimSnapshot } from '@/sim/types';
+import {
+  getObserverSkyComposition,
+  listObserverSkyCompositions,
+  type ObserverSkyCompositionModeId,
+} from '@/viz/satellite/view-composition';
 
 const SHOW_DEBUG =
   import.meta.env.DEV && import.meta.env.VITE_SHOW_SCENE_DEBUG === 'true';
@@ -70,11 +76,15 @@ const PROFILE_LABELS: Record<CanonicalProfileId, string> = {
   'oneweb-like': 'OneWeb TLE',
 };
 
+const VIEW_MODE_OPTIONS = listObserverSkyCompositions();
+
 export function MainScene() {
   const [selectedProfileId, setSelectedProfileId] =
     useState<CanonicalProfileId>('case9-default');
   const [selectedBaseline, setSelectedBaseline] =
     useState<RuntimeBaseline>('max-rsrp');
+  const [selectedViewMode, setSelectedViewMode] =
+    useState<ObserverSkyCompositionModeId>('observer-sky-primary');
   const [researchSelection, setResearchSelection] = useState<ResearchParameterSelection>(() =>
     createDefaultResearchSelection(loadPaperProfile('case9-default')),
   );
@@ -91,6 +101,10 @@ export function MainScene() {
   const baseProfile = useMemo(
     () => loadPaperProfile(selectedProfileId),
     [selectedProfileId],
+  );
+  const selectedViewComposition = useMemo(
+    () => getObserverSkyComposition(selectedViewMode),
+    [selectedViewMode],
   );
   const selectedProfileLabel = PROFILE_LABELS[selectedProfileId];
   const researchRuntime = useMemo(
@@ -322,7 +336,32 @@ export function MainScene() {
                     <option value="mc-ho">mc-ho</option>
                   </select>
                 </label>
+                <label className="sim-hud__select">
+                  View
+                  <select
+                    value={selectedViewMode}
+                    onChange={(event) =>
+                      setSelectedViewMode(event.target.value as ObserverSkyCompositionModeId)
+                    }
+                  >
+                    {VIEW_MODE_OPTIONS.map((composition) => (
+                      <option key={composition.modeId} value={composition.modeId}>
+                        {composition.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
               </div>
+              <section className="sim-hud-panel" aria-label="Observer-sky composition mode">
+                <div className="sim-hud-panel__title">Observer-Sky Composition</div>
+                <div>
+                  <strong>{selectedViewComposition.label}</strong>
+                  {selectedViewComposition.primaryAcceptedView
+                    ? ' | primary acceptance view'
+                    : ' | auxiliary context view'}
+                </div>
+                <div>{selectedViewComposition.description}</div>
+              </section>
               <ResearchParameterPanel
                 profile={profile}
                 baseline={baseline}
@@ -391,26 +430,7 @@ export function MainScene() {
               gl.shadowMap.type = PCFSoftShadowMap;
             }}
           >
-            {/* 相機 */}
-            <PerspectiveCamera
-              makeDefault
-              position={NTPU_CONFIG.camera.initialPosition}
-              fov={NTPU_CONFIG.camera.fov}
-              near={NTPU_CONFIG.camera.near}
-              far={NTPU_CONFIG.camera.far}
-            />
-
-            {/* 軌道控制 */}
-            <OrbitControls
-              makeDefault
-              target={NTPU_CONFIG.camera.target}
-              enableDamping={NTPU_CONFIG.controls.enableDamping}
-              dampingFactor={NTPU_CONFIG.controls.dampingFactor}
-              minDistance={NTPU_CONFIG.controls.minDistance}
-              maxDistance={NTPU_CONFIG.controls.maxDistance}
-              minPolarAngle={NTPU_CONFIG.controls.minPolarAngle}
-              maxPolarAngle={NTPU_CONFIG.controls.maxPolarAngle}
-            />
+            <ObserverSkyCameraRig composition={selectedViewComposition} />
 
             {/* 燈光 - 主光源位於正上方中央 */}
             <hemisphereLight args={NTPU_CONFIG.lighting.hemisphere} />
@@ -447,6 +467,7 @@ export function MainScene() {
                 glbModelScale={NTPU_CONFIG.satellite.modelScale}
                 motionTransitionSec={smoothMotionTransitionSec}
                 enableSmoothMotion={isLiveView}
+                composition={selectedViewComposition}
                 continuitySequenceKey={`${displayedSnapshot.scenarioId}:${displayedSnapshot.profileId}`}
                 snapshotTick={displayedSnapshot.tick}
                 snapshotTimeSec={displayedSnapshot.timeSec}

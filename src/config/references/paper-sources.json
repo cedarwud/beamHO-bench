@@ -252,6 +252,26 @@
       "note": "Observer-sky frontend display selection uses deterministic azimuth-sector coverage ranking plus bounded continuity retention so visible passes remain spatially distributed without one-tick display churn."
     },
     {
+      "sourceId": "ASSUME-OBSERVER-SKY-PRIMARY-COMPOSITION",
+      "type": "assumption",
+      "title": "Observer-Sky Primary God-View Composition",
+      "locator": "viz.satellite.view-composition|components.scene.MainScene",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:observer-sky-primary-composition",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "The accepted observer-sky frontend defaults to a dedicated god-view composition that aims the camera into the observer-centric sky pass rather than reusing the generic campus third-person framing."
+    },
+    {
+      "sourceId": "ASSUME-OBSERVER-SKY-SCREENSPACE-ACCEPTANCE",
+      "type": "assumption",
+      "title": "Observer-Sky Screen-Space Acceptance Heuristics",
+      "locator": "viz.satellite.screen-space-acceptance",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:observer-sky-screenspace-acceptance",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Primary-view visual acceptance is evaluated through deterministic screen-space spread, pass-phase readability, and boundary-entry continuity heuristics tied to the observer-sky composition."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

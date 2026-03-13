@@ -1,95 +1,13 @@
 import { loadPaperProfile } from '@/config/paper-profiles/loader';
-import type { PaperProfile } from '@/config/paper-profiles/types';
-import {
-  buildResearchRuntimeOverrides,
-  createResearchParameterSelection,
-  normalizeResearchParameterSelection,
-} from '@/config/research-parameters/catalog';
 import { runBaselineBatch } from '@/sim/bench/runner';
 import type { SatelliteGeometryState, SimSnapshot } from '@/sim/types';
-import {
-  applySatelliteDisplayContinuity,
-  buildSatelliteDisplayContinuityMemory,
-} from '@/viz/satellite/display-continuity';
-import { buildSatelliteDisplayFrame } from '@/viz/satellite/display-adapter';
-import { buildSatelliteDisplayCandidates } from '@/viz/satellite/display-selection';
 import { assertCondition } from './helpers';
+import {
+  buildObserverSkyDisplayView,
+  buildSyntheticObserverSkyProfile,
+  getDisplayPool,
+} from './observer-sky-test-helpers';
 import type { SimTestCase } from './types';
-
-function buildSyntheticObserverSkyProfile(
-  overrides: Partial<Record<string, string>> = {},
-): PaperProfile {
-  const baseProfile = loadPaperProfile('case9-default');
-  const selection = normalizeResearchParameterSelection(baseProfile, {
-    ...createResearchParameterSelection(baseProfile),
-    'constellation.syntheticTrajectoryModel': 'walker-circular',
-    'constellation.altitudeKm': '550',
-    'constellation.inclinationDeg': '53',
-    'constellation.orbitalPlanes': '24',
-    'constellation.satellitesPerPlane': '66',
-    'constellation.activeSatellitesInWindow': '16',
-    'handover.params.candidateSatelliteLimit': '8',
-    ...overrides,
-  });
-  const runtimeOverrides = buildResearchRuntimeOverrides({
-    profile: baseProfile,
-    selection,
-  });
-  return loadPaperProfile('case9-default', runtimeOverrides);
-}
-
-function getDisplayPool(snapshot: SimSnapshot): readonly SatelliteGeometryState[] {
-  return snapshot.observerSkyPhysicalSatellites ?? snapshot.satellites;
-}
-
-function buildObserverSkyDisplayView(options: {
-  profile: PaperProfile;
-  snapshot: SimSnapshot;
-  displayBudget?: number;
-  sequenceKey?: string;
-  memory?: ReturnType<typeof buildSatelliteDisplayContinuityMemory> | null;
-}) {
-  const displayPool = getDisplayPool(options.snapshot);
-  const candidates = buildSatelliteDisplayCandidates({
-    satellites: displayPool,
-    config: {
-      minElevationDeg: options.profile.constellation.minElevationDeg,
-      displayBudget: options.displayBudget,
-      showGhosts: true,
-    },
-  });
-  const sequenceKey =
-    options.sequenceKey ??
-    `${options.snapshot.scenarioId}:${options.snapshot.profileId}`;
-  const selection = applySatelliteDisplayContinuity({
-    candidates,
-    displayBudget: options.displayBudget,
-    sequenceKey,
-    tick: options.snapshot.tick,
-    timeSec: options.snapshot.timeSec,
-    memory: options.memory,
-  });
-  const frame = buildSatelliteDisplayFrame({
-    satellites: selection.selected,
-    config: {
-      areaWidthKm: options.profile.scenario.areaKm.width,
-      areaHeightKm: options.profile.scenario.areaKm.height,
-      minElevationDeg: options.profile.constellation.minElevationDeg,
-    },
-  });
-  return {
-    displayPool,
-    candidates,
-    selection,
-    frame,
-    memory: buildSatelliteDisplayContinuityMemory({
-      sequenceKey,
-      tick: options.snapshot.tick,
-      timeSec: options.snapshot.timeSec,
-      selectedIds: selection.selectedIds,
-    }),
-  };
-}
 
 function computeAzimuthSectorCount(
   satellites: readonly Pick<SatelliteGeometryState, 'azimuthDeg'>[],
@@ -245,7 +163,7 @@ export function buildObserverSkyViewIntegrationCases(): SimTestCase[] {
         );
 
         const displayBudget = profile.constellation.activeSatellitesInWindow ?? 16;
-        let memory: ReturnType<typeof buildSatelliteDisplayContinuityMemory> | null = null;
+        let memory: ReturnType<typeof buildObserverSkyDisplayView>['memory'] | null = null;
         let previousSelectedIds: number[] | null = null;
 
         for (const snapshot of snapshots) {
