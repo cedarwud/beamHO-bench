@@ -2,6 +2,7 @@ import type { SatelliteGeometryState } from '@/sim/types';
 import type {
   RenderableSatelliteVisibilityZone,
   SatelliteDisplayCandidate,
+  SatelliteDisplayPhase,
   SatelliteDisplaySelectionConfig,
   SatelliteDisplaySelectionInput,
 } from './types';
@@ -17,23 +18,6 @@ function compareZonePriority(
   return left === 'active' ? -1 : 1;
 }
 
-function compareCandidatePriority(
-  left: Pick<SatelliteDisplayCandidate, 'zone' | 'satellite'>,
-  right: Pick<SatelliteDisplayCandidate, 'zone' | 'satellite'>,
-): number {
-  const zoneComparison = compareZonePriority(left.zone, right.zone);
-  if (zoneComparison !== 0) {
-    return zoneComparison;
-  }
-  if (left.satellite.elevationDeg !== right.satellite.elevationDeg) {
-    return right.satellite.elevationDeg - left.satellite.elevationDeg;
-  }
-  if (left.satellite.rangeKm !== right.satellite.rangeKm) {
-    return left.satellite.rangeKm - right.satellite.rangeKm;
-  }
-  return left.satellite.id - right.satellite.id;
-}
-
 function normalizeAzimuthDeg(value: number): number {
   if (!Number.isFinite(value)) {
     return 0;
@@ -43,6 +27,71 @@ function normalizeAzimuthDeg(value: number): number {
     normalized += 360;
   }
   return normalized;
+}
+
+function resolvePhaseThresholds(config: SatelliteDisplaySelectionConfig): {
+  low: number;
+  high: number;
+} {
+  const low = Number.isFinite(config.phaseLowElevationDeg)
+    ? Math.max(0, Math.floor(config.phaseLowElevationDeg ?? 0))
+    : Math.max(22, Math.floor(config.minElevationDeg + 12));
+  const highCandidate = Number.isFinite(config.phaseHighElevationDeg)
+    ? Math.max(low + 1, Math.floor(config.phaseHighElevationDeg ?? low + 1))
+    : Math.max(46, low + 18);
+
+  return {
+    low,
+    high: Math.min(89, highCandidate),
+  };
+}
+
+function compareByRangeAndId(
+  left: SatelliteGeometryState,
+  right: SatelliteGeometryState,
+): number {
+  if (left.rangeKm !== right.rangeKm) {
+    return left.rangeKm - right.rangeKm;
+  }
+  return left.id - right.id;
+}
+
+function comparePhasePriority(
+  left: SatelliteDisplayCandidate,
+  right: SatelliteDisplayCandidate,
+  thresholds: { low: number; high: number },
+): number {
+  const zoneComparison = compareZonePriority(left.zone, right.zone);
+  if (zoneComparison !== 0) {
+    return zoneComparison;
+  }
+
+  if (left.phase !== right.phase) {
+    return 0;
+  }
+
+  if (left.phase === 'high-pass') {
+    if (left.satellite.elevationDeg !== right.satellite.elevationDeg) {
+      return right.satellite.elevationDeg - left.satellite.elevationDeg;
+    }
+    return compareByRangeAndId(left.satellite, right.satellite);
+  }
+
+  if (left.phase === 'mid-pass') {
+    const targetElevation = (thresholds.low + thresholds.high) / 2;
+    const leftDistance = Math.abs(left.satellite.elevationDeg - targetElevation);
+    const rightDistance = Math.abs(right.satellite.elevationDeg - targetElevation);
+    if (leftDistance !== rightDistance) {
+      return leftDistance - rightDistance;
+    }
+    return compareByRangeAndId(left.satellite, right.satellite);
+  }
+
+  if (left.satellite.elevationDeg !== right.satellite.elevationDeg) {
+    return left.satellite.elevationDeg - right.satellite.elevationDeg;
+  }
+
+  return compareByRangeAndId(left.satellite, right.satellite);
 }
 
 export function resolveSatelliteDisplayBudget(
@@ -75,6 +124,23 @@ export function resolveCoverageSectorCount(options: {
   return Math.max(1, Math.min(candidateCount, Math.min(8, targetSectorCount)));
 }
 
+function resolveDisplayPhase(options: {
+  satellite: SatelliteGeometryState;
+  config: SatelliteDisplaySelectionConfig;
+}): SatelliteDisplayPhase {
+  const thresholds = resolvePhaseThresholds(options.config);
+  if (options.satellite.elevationDeg < thresholds.low) {
+    const azimuthDeg = normalizeAzimuthDeg(options.satellite.azimuthDeg);
+    return Math.sin((azimuthDeg * Math.PI) / 180) < 0
+      ? 'boundary-ingress'
+      : 'boundary-egress';
+  }
+  if (options.satellite.elevationDeg < thresholds.high) {
+    return 'mid-pass';
+  }
+  return 'high-pass';
+}
+
 function createRenderableCandidate(options: {
   satellite: SatelliteGeometryState;
   config: SatelliteDisplaySelectionConfig;
@@ -100,21 +166,21 @@ function createRenderableCandidate(options: {
     satellite,
     zone: zoneDecision.zone,
     sectorIndex,
+    phase: resolveDisplayPhase({ satellite, config }),
     coverageRank: Number.MAX_SAFE_INTEGER,
   };
 }
 
-function buildCoverageRankedCandidates(
-  candidates: readonly SatelliteDisplayCandidate[],
-  sectorCount: number,
-): SatelliteDisplayCandidate[] {
+function buildSectorRankedPhaseCandidates(options: {
+  candidates: readonly SatelliteDisplayCandidate[];
+  sectorCount: number;
+  thresholds: { low: number; high: number };
+}): SatelliteDisplayCandidate[] {
+  const { candidates, sectorCount, thresholds } = options;
   if (candidates.length <= 1 || sectorCount <= 1) {
-    return [...candidates]
-      .sort(compareCandidatePriority)
-      .map((candidate, index) => ({
-        ...candidate,
-        coverageRank: index,
-      }));
+    return [...candidates].sort((left, right) =>
+      comparePhasePriority(left, right, thresholds),
+    );
   }
 
   const buckets = Array.from({ length: sectorCount }, () => [] as SatelliteDisplayCandidate[]);
@@ -122,7 +188,7 @@ function buildCoverageRankedCandidates(
     buckets[candidate.sectorIndex]?.push(candidate);
   }
   for (const bucket of buckets) {
-    bucket.sort(compareCandidatePriority);
+    bucket.sort((left, right) => comparePhasePriority(left, right, thresholds));
   }
 
   const sectorOrder = buckets
@@ -133,7 +199,7 @@ function buildCoverageRankedCandidates(
     .filter(
       (entry): entry is { index: number; top: SatelliteDisplayCandidate } => entry.top !== null,
     )
-    .sort((left, right) => compareCandidatePriority(left.top, right.top));
+    .sort((left, right) => comparePhasePriority(left.top, right.top, thresholds));
 
   const ranked: SatelliteDisplayCandidate[] = [];
   let appended = true;
@@ -141,6 +207,56 @@ function buildCoverageRankedCandidates(
     appended = false;
     for (const sector of sectorOrder) {
       const candidate = buckets[sector.index]?.shift();
+      if (!candidate) {
+        continue;
+      }
+      ranked.push(candidate);
+      appended = true;
+    }
+  }
+
+  return ranked;
+}
+
+function buildPhaseLayeredRanking(options: {
+  candidates: readonly SatelliteDisplayCandidate[];
+  sectorCount: number;
+  thresholds: { low: number; high: number };
+}): SatelliteDisplayCandidate[] {
+  const phaseOrder: SatelliteDisplayPhase[] = [
+    'boundary-ingress',
+    'mid-pass',
+    'high-pass',
+    'boundary-egress',
+    'mid-pass',
+    'high-pass',
+  ];
+
+  const perPhase = new Map<SatelliteDisplayPhase, SatelliteDisplayCandidate[]>();
+  for (const phase of [
+    'boundary-ingress',
+    'mid-pass',
+    'high-pass',
+    'boundary-egress',
+  ] as SatelliteDisplayPhase[]) {
+    const phaseCandidates = options.candidates.filter((candidate) => candidate.phase === phase);
+    perPhase.set(
+      phase,
+      buildSectorRankedPhaseCandidates({
+        candidates: phaseCandidates,
+        sectorCount: options.sectorCount,
+        thresholds: options.thresholds,
+      }),
+    );
+  }
+
+  const ranked: SatelliteDisplayCandidate[] = [];
+  let appended = true;
+  while (appended) {
+    appended = false;
+    for (const phase of phaseOrder) {
+      const bucket = perPhase.get(phase);
+      const candidate = bucket?.shift();
       if (!candidate) {
         continue;
       }
@@ -158,11 +274,14 @@ function buildCoverageRankedCandidates(
 /**
  * Provenance:
  * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-visual-correction-sdd.md (Section 3.1, 3.3, 3.6, 6)
+ * - sdd/pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md (Section 3.2, 3.3, 3.5, 6)
  * - ASSUME-OBSERVER-SKY-DISPLAY-COVERAGE-POLICY
+ * - ASSUME-OBSERVER-SKY-PHASE-SELECTION-POLICY
  *
  * Notes:
  * - Display selection is deterministic for the same physical pool + config.
- * - The coverage ranking spreads picks across azimuth sectors before pure elevation ordering.
+ * - Ranking now interleaves boundary, mid-pass, and higher-pass layers so the
+ *   visible set preserves phase spread instead of behaving like a high-elevation top-N cut.
  */
 export function buildSatelliteDisplayCandidates(
   input: SatelliteDisplaySelectionInput,
@@ -186,6 +305,7 @@ export function buildSatelliteDisplayCandidates(
     candidateCount: renderableCount,
     requestedSectorCount: input.config.coverageSectorCount,
   });
+  const thresholds = resolvePhaseThresholds(input.config);
   const renderable = input.satellites
     .map((satellite) =>
       createRenderableCandidate({
@@ -195,5 +315,9 @@ export function buildSatelliteDisplayCandidates(
       }),
     )
     .filter((candidate): candidate is SatelliteDisplayCandidate => candidate !== null);
-  return buildCoverageRankedCandidates(renderable, sectorCount);
+  return buildPhaseLayeredRanking({
+    candidates: renderable,
+    sectorCount,
+    thresholds,
+  });
 }

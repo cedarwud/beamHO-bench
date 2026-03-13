@@ -3,6 +3,11 @@ import type { SatelliteGeometryState } from '@/sim/types';
 export type SatelliteVisibilityZone = 'hidden' | 'ghost' | 'active';
 
 export type RenderableSatelliteVisibilityZone = Exclude<SatelliteVisibilityZone, 'hidden'>;
+export type SatelliteDisplayPhase =
+  | 'boundary-ingress'
+  | 'mid-pass'
+  | 'high-pass'
+  | 'boundary-egress';
 
 export interface SatelliteDisplayState {
   satelliteId: number;
@@ -24,6 +29,7 @@ export interface SatelliteDisplayCandidate {
   satellite: SatelliteGeometryState;
   zone: RenderableSatelliteVisibilityZone;
   sectorIndex: number;
+  phase: SatelliteDisplayPhase;
   coverageRank: number;
 }
 
@@ -32,6 +38,8 @@ export interface SatelliteDisplaySelectionConfig {
   displayBudget?: number;
   showGhosts?: boolean;
   coverageSectorCount?: number;
+  phaseLowElevationDeg?: number;
+  phaseHighElevationDeg?: number;
 }
 
 export interface SatelliteDisplaySelectionInput {
@@ -80,6 +88,10 @@ export interface SatelliteDisplayAdapterConfig {
   projection?: {
     horizonLiftRatio?: number;
     domeRadiusRatio?: number;
+    lateralStretchRatio?: number;
+    depthCompressionRatio?: number;
+    centerRetentionRatio?: number;
+    verticalCurveExponent?: number;
     minRenderElevationDeg?: number;
   };
 }
@@ -96,6 +108,10 @@ export interface ObserverSkyProjectionConfig {
   kmToWorldScale: number;
   horizonLiftRatio?: number;
   domeRadiusRatio?: number;
+  lateralStretchRatio?: number;
+  depthCompressionRatio?: number;
+  centerRetentionRatio?: number;
+  verticalCurveExponent?: number;
   minRenderElevationDeg?: number;
 }
 

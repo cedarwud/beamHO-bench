@@ -11,9 +11,18 @@ function clampFinite(value: number, fallback: number): number {
   return value;
 }
 
+function clamp01(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  return Math.min(1, Math.max(0, value));
+}
+
 /**
  * Provenance:
  * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md (Section 1, 3.1, 3.4)
+ * - sdd/pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md (Section 3.1, 3.5, 6)
+ * - ASSUME-OBSERVER-SKY-PROJECTION-CORRIDOR
  *
  * Notes:
  * - This is a frontend-only observer-centric sky projection.
@@ -31,6 +40,7 @@ export function projectObserverSkyPosition(options: {
     minRenderElevationDeg,
     clampFinite(options.elevationDeg, minRenderElevationDeg),
   );
+  const normalizedElevation = clamp01((elevationDeg - minRenderElevationDeg) / Math.max(1, 90 - minRenderElevationDeg));
   const sceneExtentWorld =
     Math.max(options.config.areaWidthKm, options.config.areaHeightKm, 1) *
     Math.max(options.config.kmToWorldScale, 1e-9);
@@ -40,12 +50,19 @@ export function projectObserverSkyPosition(options: {
     sceneExtentWorld * (options.config.horizonLiftRatio ?? 0.28),
   );
   const azimuthRad = degToRad(azimuthDeg);
-  const elevationRad = degToRad(elevationDeg);
-  const horizontalRadiusWorld = domeRadiusWorld * Math.cos(elevationRad);
+  const verticalCurveExponent = Math.max(0.35, options.config.verticalCurveExponent ?? 1);
+  const boundaryWeight = Math.pow(1 - normalizedElevation, 0.58);
+  const centerRetentionRatio = clamp01(options.config.centerRetentionRatio ?? 0);
+  const horizontalRadiusWorld =
+    domeRadiusWorld * (centerRetentionRatio + (1 - centerRetentionRatio) * boundaryWeight);
+  const lateralStretchRatio = Math.max(0.25, options.config.lateralStretchRatio ?? 1);
+  const depthCompressionRatio = Math.max(0.2, options.config.depthCompressionRatio ?? 1);
+  const verticalProgress = Math.pow(normalizedElevation, verticalCurveExponent);
+  const verticalWorld = horizonLiftWorld + domeRadiusWorld * 0.72 * verticalProgress;
 
   return [
-    horizontalRadiusWorld * Math.sin(azimuthRad),
-    horizonLiftWorld + domeRadiusWorld * Math.sin(elevationRad),
-    horizontalRadiusWorld * Math.cos(azimuthRad),
+    horizontalRadiusWorld * lateralStretchRatio * Math.sin(azimuthRad),
+    verticalWorld,
+    horizontalRadiusWorld * depthCompressionRatio * Math.cos(azimuthRad),
   ];
 }

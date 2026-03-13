@@ -272,6 +272,26 @@
       "note": "Primary-view visual acceptance is evaluated through deterministic screen-space spread, pass-phase readability, and boundary-entry continuity heuristics tied to the observer-sky composition."
     },
     {
+      "sourceId": "ASSUME-OBSERVER-SKY-PROJECTION-CORRIDOR",
+      "type": "assumption",
+      "title": "Observer-Sky Horizon Corridor Projection",
+      "locator": "viz.satellite.observer-sky-projection",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:observer-sky-projection-corridor",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Observer-sky frontend projection uses a horizon corridor mapping that keeps low-elevation satellites near readable boundary regions while preserving smooth rise-pass-set arcs in the accepted god-view."
+    },
+    {
+      "sourceId": "ASSUME-OBSERVER-SKY-PHASE-SELECTION-POLICY",
+      "type": "assumption",
+      "title": "Observer-Sky Phase Layered Display Selection",
+      "locator": "viz.satellite.display-selection|viz.satellite.display-pipeline",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:observer-sky-phase-selection-policy",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Observer-sky visible-set selection remains candidate-separated and deterministic while interleaving boundary, mid-pass, and higher-pass layers instead of ranking only by active high-elevation top-N priority."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

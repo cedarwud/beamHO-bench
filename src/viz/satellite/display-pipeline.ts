@@ -43,6 +43,8 @@ export function buildObserverSkyDisplayPipeline(
       minElevationDeg: input.profile.constellation.minElevationDeg,
       displayBudget,
       showGhosts: input.showGhosts,
+      phaseLowElevationDeg: input.composition.screenSpaceAcceptance.phaseLowElevationDeg,
+      phaseHighElevationDeg: input.composition.screenSpaceAcceptance.phaseHighElevationDeg,
     },
   });
   const selection = applySatelliteDisplayContinuity({

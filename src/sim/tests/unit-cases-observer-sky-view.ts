@@ -104,6 +104,69 @@ export function buildObserverSkyViewUnitCases(): SimTestCase[] {
       },
     },
     {
+      name: 'unit: observer-sky display selection preserves boundary and higher-pass layering under a bounded budget',
+      kind: 'unit',
+      run: () => {
+        const selected = buildSatelliteDisplayCandidates({
+          satellites: [
+            {
+              ...createInvisibleSatellite(),
+              id: 101,
+              azimuthDeg: 300,
+              elevationDeg: 14,
+              rangeKm: 16,
+            },
+            {
+              ...createInvisibleSatellite(),
+              id: 102,
+              azimuthDeg: 28,
+              elevationDeg: 17,
+              rangeKm: 18,
+            },
+            {
+              ...createInvisibleSatellite(),
+              id: 103,
+              azimuthDeg: 82,
+              elevationDeg: 34,
+              rangeKm: 11,
+            },
+            {
+              ...createInvisibleSatellite(),
+              id: 104,
+              azimuthDeg: 180,
+              elevationDeg: 52,
+              rangeKm: 9,
+            },
+            {
+              ...createInvisibleSatellite(),
+              id: 105,
+              azimuthDeg: 232,
+              elevationDeg: 38,
+              rangeKm: 10,
+            },
+          ],
+          config: {
+            minElevationDeg: 10,
+            displayBudget: 4,
+            phaseLowElevationDeg: 24,
+            phaseHighElevationDeg: 46,
+          },
+        });
+
+        assertCondition(
+          selected.length === 5,
+          'Expected all above-horizon candidates to remain rankable before continuity truncation.',
+        );
+        assertCondition(
+          selected[0]?.phase === 'boundary-ingress' &&
+            selected[1]?.phase === 'mid-pass' &&
+            selected[2]?.phase === 'high-pass' &&
+            selected[3]?.phase === 'boundary-egress',
+          'Expected ranked candidates to expose ingress, mid-pass, high-pass, and egress layers ahead of repeated mid/high picks.',
+        );
+      },
+    },
+    {
       name: 'unit: observer-sky continuity retains prior members while allowing bounded replacement',
       kind: 'unit',
       run: () => {
@@ -163,7 +226,7 @@ export function buildObserverSkyViewUnitCases(): SimTestCase[] {
             ...createInvisibleSatellite(),
             id: 9,
             azimuthDeg: 305,
-            elevationDeg: 44,
+            elevationDeg: 52,
             rangeKm: 8,
           },
           {
@@ -216,7 +279,7 @@ export function buildObserverSkyViewUnitCases(): SimTestCase[] {
         );
         assertCondition(
           secondSelection.selectedIds.includes(9),
-          'Expected bounded replacement to admit a new high-priority pass when budget pressure exists.',
+          'Expected bounded replacement to admit a new higher-pass satellite when budget pressure exists.',
         );
         assertCondition(
           secondSelection.droppedIds.length <= 1,
