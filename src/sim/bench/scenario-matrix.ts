@@ -10,7 +10,7 @@ import type {
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-common-benchmark-v1-sdd.md (D2 / §3.2)
+ * - sdd/completed/implemented-specs/beamHO-bench-common-benchmark-v1-sdd.md (D2 / §3.2)
  */
 
 export type ScenarioMatrixPreset = 'core-v1' | 'extended-v1';

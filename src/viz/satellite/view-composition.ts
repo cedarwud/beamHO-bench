@@ -3,7 +3,7 @@ import { NTPU_CONFIG, type Vec3 } from '@/config/ntpu.config';
 /**
  * Provenance:
  * - docs/zh-TW/07-observer-sky-visual-acceptance.md (Section 2, 5, 7, 8, 10)
- * - sdd/pending/beamHO-bench-observer-sky-god-view-composition-sdd.md (Section 3.1, 3.2, 3.3, 3.4, 3.6, 7)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md (Section 3.1, 3.2, 3.3, 3.4, 3.6, 7)
  *
  * Notes:
  * - Composition policy stays in the frontend view layer and remains separate

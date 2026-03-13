@@ -12,7 +12,7 @@ import {
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md (D1)
+ * - sdd/completed/implemented-specs/beamHO-bench-repro-bundle-v1-sdd.md (D1)
  *
  * Notes:
  * - Repro bundle v1 composes canonical cross-mode benchmark output and

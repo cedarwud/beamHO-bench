@@ -5,7 +5,7 @@ import { runBaselineBatch } from './runner';
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-common-benchmark-v1-sdd.md (D1 / §3.1)
+ * - sdd/completed/implemented-specs/beamHO-bench-common-benchmark-v1-sdd.md (D1 / §3.1)
  */
 
 export type MultiSeedMetricId =

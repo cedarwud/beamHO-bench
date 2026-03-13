@@ -7,7 +7,7 @@ import type {
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-common-benchmark-v1-sdd.md (D4 / §3.4)
+ * - sdd/completed/implemented-specs/beamHO-bench-common-benchmark-v1-sdd.md (D4 / §3.4)
  */
 
 export interface MultiSeedPaperTuple {

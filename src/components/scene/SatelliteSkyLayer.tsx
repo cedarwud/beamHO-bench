@@ -31,7 +31,7 @@ interface SatelliteSkyLayerProps {
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-observer-sky-view-sdd.md (Section 3.3, 3.4, 7)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md (Section 3.3, 3.4, 7)
  *
  * Notes:
  * - Scene wiring stops at this component boundary.

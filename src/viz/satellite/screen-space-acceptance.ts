@@ -9,7 +9,7 @@ import type {
 /**
  * Provenance:
  * - docs/zh-TW/07-observer-sky-visual-acceptance.md (Section 4, 5, 7, 8, 10, 11)
- * - sdd/pending/beamHO-bench-observer-sky-god-view-composition-sdd.md (Section 3.3, 3.4, 3.5, 4, 5)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md (Section 3.3, 3.4, 3.5, 4, 5)
  *
  * Notes:
  * - This helper evaluates the accepted frontend composition in screen space.

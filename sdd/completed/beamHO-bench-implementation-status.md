@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
-**Date:** 2026-03-12  
-**Status:** v2 Core Scope Complete + Active Observer-Sky God-View Composition Pending
+**Date:** 2026-03-13  
+**Status:** v2 Core Scope Complete + Observer-Sky Visual Acceptance Closed
 
 ---
 
@@ -12,31 +12,31 @@ This status document records whether the active roadmap scope is implemented and
 Current status snapshot means:
 1. v1 M0-M4 core requirements are implemented in code.
 2. v2 feature phases (RL plugin, joint beam-scheduler + HO coupling, baseline-generalization closure) are implemented in code.
-3. Pending closure packages are implemented and closure-tracked:
-   - `sdd/pending/beamHO-bench-gap-closure-sdd.md`
-   - `sdd/pending/beamHO-bench-small-scale-validation-sdd.md`
-4. Closure-tracked pending package `sdd/pending/beamHO-bench-common-benchmark-v1-sdd.md` has D1~D7 implemented with finalized closure evidence.
-5. Closure-tracked pending package `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md` has D1~D4 implemented with closure evidence.
+3. Historical closure packages are implemented and retained under `sdd/completed/implemented-specs/`:
+   - `sdd/completed/implemented-specs/beamHO-bench-gap-closure-sdd.md`
+   - `sdd/completed/implemented-specs/beamHO-bench-small-scale-validation-sdd.md`
+4. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-common-benchmark-v1-sdd.md` has D1~D7 implemented with finalized closure evidence.
+5. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-common-baseline-v2-sdd.md` has D1~D4 implemented with closure evidence.
 6. Stage gate validation is green (`validate:stage`).
 7. Artifacts required by SDD/requirements/validation matrix are generated.
-8. Closure-tracked pending package `sdd/pending/beamHO-bench-complexity-reduction-sdd.md` has D1~D5 implemented with closure evidence.
-9. Closure-tracked pending package `sdd/pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` has D1~D5 implemented with closure evidence.
-10. Closure-tracked pending package `sdd/pending/beamHO-bench-baseline-parameter-envelope-sdd.md` has D1~D5 implemented with closure evidence.
-11. Closure-tracked pending package `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md` has D1~D5 implemented with closure evidence.
-12. Closure-tracked pending package `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md` has D1~D5 implemented with closure evidence.
-13. Closure-tracked pending package `sdd/pending/beamHO-bench-core-extension-governance-sdd.md` has D1~D5 implemented with closure evidence.
-14. Closure-tracked pending package `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md` has D1~D6 implemented with closure evidence.
-15. Closure-tracked pending package `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md` has D1~D5 implemented with backend/runtime evidence and frontend handoff closure.
-16. Closure-tracked pending package `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` has D1~D5 implemented with observer-sky display-layer rewrite evidence and stage-gate verification.
-17. Closure-tracked pending package `sdd/pending/beamHO-bench-observer-sky-visual-correction-sdd.md` has D1~D6 implemented with display/candidate separation, sky-coverage, continuity, and stage-gate closure evidence.
-18. A new active pending package `sdd/pending/beamHO-bench-observer-sky-god-view-composition-sdd.md` is open to resolve the remaining frontend visual acceptance gap: primary-view composition, screen-space spread, and god-view observer-sky readability.
+8. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-complexity-reduction-sdd.md` has D1~D5 implemented with closure evidence.
+9. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` has D1~D5 implemented with closure evidence.
+10. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-baseline-parameter-envelope-sdd.md` has D1~D5 implemented with closure evidence.
+11. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-repro-bundle-v1-sdd.md` has D1~D5 implemented with closure evidence.
+12. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-service-continuity-baseline-sdd.md` has D1~D5 implemented with closure evidence.
+13. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-core-extension-governance-sdd.md` has D1~D5 implemented with closure evidence.
+14. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-parameter-consistency-v1-sdd.md` has D1~D6 implemented with closure evidence.
+15. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-parametric-trajectory-backend-sdd.md` has D1~D5 implemented with backend/runtime evidence and frontend handoff closure.
+16. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md` has D1~D5 implemented with observer-sky display-layer rewrite evidence and stage-gate verification.
+17. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-visual-correction-sdd.md` has D1~D6 implemented with display/candidate separation, sky-coverage, continuity, and stage-gate closure evidence.
+18. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md` has D1~D6 implemented with primary-view composition, screen-space acceptance gates, manual acceptance checklist, and closure evidence.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
 2. RSMA soft-HO and broad large-scale/multi-paper DRL fusion, deferred by BG-6 governance.
 
 Active pending items (implementation open):
-1. `sdd/pending/beamHO-bench-observer-sky-god-view-composition-sdd.md`
+1. none at this time (`2026-03-13`)
 
 ---
 
@@ -66,6 +66,7 @@ Active pending items (implementation open):
 | PTB (D1~D5) | Complete (Closure-Tracked) | paper-tier parametric trajectory backend package: synthetic trajectory model contract + walker-circular backend + discrete trajectory parameters + consistency coupling + deterministic integration gates + frontend handoff closure report |
 | OSV (D1~D5) | Complete (Closure-Tracked) | `src/viz/satellite/*` + `src/components/scene/SatelliteSkyLayer.tsx` + renderer-only `src/components/sim/SatelliteModel.tsx` + observer-sky parity tests + lifecycle closure synchronization; visual acceptance follow-up is closed separately under OSVC |
 | OSVC (D1~D6) | Complete (Closure-Tracked) | observer-sky corrective package: broader physical display pool + deterministic display selection/continuity policy + synthetic sky-coverage fix + bounded adjacent-tick churn + cross-mode acceptance gates + lifecycle closure report |
+| OSGC (D1~D6) | Complete (Closure-Tracked) | primary observer-sky composition mode + camera rig + screen-space spread/pass/continuity acceptance helpers + cross-mode/manual acceptance closure evidence |
 
 ---
 
@@ -102,9 +103,9 @@ Required artifacts:
 
 ## 4. Verification Snapshot (Latest)
 
-Latest local verification (2026-03-12):
+Latest local verification (2026-03-13):
 1. `validate:stage` passed (core scope gate + artifact freshness check).
-2. `test:sim`: 82/82 passed (unit 22/22, integration 60/60).
+2. `test:sim`: 91/91 passed (unit 26/26, integration 65/65).
 3. `validate:val-suite`: 50/50 passed (`scope=core`), warnings=0.
 4. `build` passed (`tsc && vite build`).
 5. Validation artifacts are compact and generated under `dist/`.
@@ -125,27 +126,29 @@ Primary references:
 9. `sdd/completed/beamHO-bench-gap-closure-closure.md`
 10. `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
 11. `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
-12. `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md`
+12. `sdd/completed/implemented-specs/beamHO-bench-common-baseline-v2-sdd.md`
 13. `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
-14. `sdd/pending/beamHO-bench-complexity-reduction-sdd.md`
+14. `sdd/completed/implemented-specs/beamHO-bench-complexity-reduction-sdd.md`
 15. `sdd/completed/beamHO-bench-complexity-reduction-closure.md`
-16. `sdd/pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md`
+16. `sdd/completed/implemented-specs/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md`
 17. `sdd/completed/beamHO-bench-cross-mode-reproducible-benchmark-closure.md`
-18. `sdd/pending/beamHO-bench-baseline-parameter-envelope-sdd.md`
+18. `sdd/completed/implemented-specs/beamHO-bench-baseline-parameter-envelope-sdd.md`
 19. `sdd/completed/beamHO-bench-baseline-parameter-envelope-closure.md`
-20. `sdd/pending/beamHO-bench-repro-bundle-v1-sdd.md`
+20. `sdd/completed/implemented-specs/beamHO-bench-repro-bundle-v1-sdd.md`
 21. `sdd/completed/beamHO-bench-repro-bundle-v1-closure.md`
-22. `sdd/pending/beamHO-bench-service-continuity-baseline-sdd.md`
+22. `sdd/completed/implemented-specs/beamHO-bench-service-continuity-baseline-sdd.md`
 23. `sdd/completed/beamHO-bench-service-continuity-baseline-closure.md`
-24. `sdd/pending/beamHO-bench-core-extension-governance-sdd.md`
+24. `sdd/completed/implemented-specs/beamHO-bench-core-extension-governance-sdd.md`
 25. `sdd/completed/beamHO-bench-core-extension-governance-closure.md`
-26. `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md`
+26. `sdd/completed/implemented-specs/beamHO-bench-parameter-consistency-v1-sdd.md`
 27. `sdd/completed/beamHO-bench-parameter-consistency-v1-closure.md`
-28. `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md`
-29. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md`
-30. `sdd/completed/beamHO-bench-parametric-trajectory-backend-closure.md`
-31. `sdd/completed/beamHO-bench-observer-sky-view-closure.md`
-32. `sdd/completed/beamHO-bench-observer-sky-visual-correction-closure.md`
+28. `sdd/completed/implemented-specs/beamHO-bench-parametric-trajectory-backend-sdd.md`
+29. `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md`
+30. `sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md`
+31. `sdd/completed/beamHO-bench-parametric-trajectory-backend-closure.md`
+32. `sdd/completed/beamHO-bench-observer-sky-view-closure.md`
+33. `sdd/completed/beamHO-bench-observer-sky-visual-correction-closure.md`
+34. `sdd/completed/beamHO-bench-observer-sky-god-view-composition-closure.md`
 
 Code points for v2 closure evidence:
 1. `src/sim/policy/*` + `src/sim/policy/runtime-adapter.ts` (V2-A RL plugin contract/runtime metadata)
@@ -177,3 +180,4 @@ Code points for v2 closure evidence:
 27. `src/sim/scenarios/common/synthetic-orbit.ts` + `src/sim/scenarios/case9-analytic.ts` + `src/config/research-parameters/catalog.ts` + `src/config/research-parameters/consistency.ts` + `src/sim/tests/integration-cases-trajectory-parameters.ts` (PTB deterministic paper-tier parametric trajectory backend + coupling + gate coverage)
 28. `src/viz/satellite/types.ts` + `src/viz/satellite/visibility-zones.ts` + `src/viz/satellite/observer-sky-projection.ts` + `src/viz/satellite/display-adapter.ts` + `src/components/scene/SatelliteSkyLayer.tsx` + `src/components/sim/ConnectionLines.tsx` + `src/components/sim/SatelliteModel.tsx` + `src/sim/tests/unit-cases-observer-sky-view.ts` + `src/sim/tests/integration-cases-observer-sky-view.ts` (OSV observer-centric display-layer split, visibility-zone semantics, scene wiring, and cross-mode deterministic validation evidence)
 29. `src/sim/types.ts` + `src/viz/satellite/display-selection.ts` + `src/viz/satellite/display-continuity.ts` + `src/sim/scenarios/common/synthetic-orbit.ts` + `src/sim/scenarios/case9-analytic.ts` + `src/sim/scenarios/real-trace.ts` + `src/components/scene/MainScene.tsx` + `src/components/scene/SatelliteSkyLayer.tsx` + `src/sim/tests/integration-cases-observer-sky-view.ts` (OSVC broader physical pool contract, deterministic display coverage/continuity policy, and corrective observer-sky acceptance evidence)
+30. `src/viz/satellite/view-composition.ts` + `src/components/scene/ObserverSkyCameraRig.tsx` + `src/viz/satellite/display-pipeline.ts` + `src/viz/satellite/screen-space-acceptance.ts` + `src/sim/tests/unit-cases-observer-sky-composition.ts` + `src/sim/tests/integration-cases-observer-sky-composition.ts` + `sdd/completed/beamHO-bench-observer-sky-god-view-composition-closure.md` (OSGC accepted primary composition, screen-space/manual acceptance, and lifecycle closure evidence)

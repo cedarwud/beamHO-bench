@@ -9,7 +9,7 @@
 ## 1. Purpose
 
 This report records closure evidence for:
-1. `sdd/pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md`
 
 ---
 
@@ -78,6 +78,6 @@ Latest local verification (2026-03-03):
 
 ## 7. References
 
-1. `sdd/pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md`
 2. `sdd/completed/beamHO-bench-implementation-status.md`
 3. `sdd/completed/beamHO-bench-validation-matrix.md`

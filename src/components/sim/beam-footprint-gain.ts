@@ -89,7 +89,7 @@ export function resolveBeamFootprintBands(
   gainModel: GainModel,
   visible: boolean,
 ): BeamFootprintBand[] {
-  // Source: sdd/pending/beamHO-bench-gap-closure-sdd.md §3.2
+  // Source: sdd/completed/implemented-specs/beamHO-bench-gap-closure-sdd.md §3.2
   // Visualization-only intensity profile switches by profile.beam.gainModel.
   const template =
     gainModel === 'bessel-j1'

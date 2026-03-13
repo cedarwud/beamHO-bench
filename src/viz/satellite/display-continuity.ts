@@ -51,7 +51,7 @@ function resolveRetentionRankSlack(displayBudget: number, configured: number | u
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-observer-sky-visual-correction-sdd.md (Section 3.4, 3.6, 6)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-visual-correction-sdd.md (Section 3.4, 3.6, 6)
  *
  * Notes:
  * - Continuity memory is frontend-owned and never mutates simulation/runtime state.

@@ -4,7 +4,7 @@ import type { ObserverSkyCompositionConfig } from '@/viz/satellite/view-composit
 /**
  * Provenance:
  * - docs/zh-TW/07-observer-sky-visual-acceptance.md (Section 7)
- * - sdd/pending/beamHO-bench-observer-sky-god-view-composition-sdd.md (Section 3.1, 3.2, 3.6)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md (Section 3.1, 3.2, 3.6)
  *
  * Notes:
  * - Camera framing is explicitly selected by MainScene rather than inherited

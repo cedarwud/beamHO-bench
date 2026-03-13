@@ -9,7 +9,7 @@ function normalizeElevationDeg(value: number): number {
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-observer-sky-view-sdd.md (Section 3.1, 3.2)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md (Section 3.1, 3.2)
  * - STD-3GPP-TR38.811-6.6.2-1
  *
  * Notes:

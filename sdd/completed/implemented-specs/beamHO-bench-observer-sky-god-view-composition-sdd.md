@@ -1,8 +1,12 @@
-# beamHO-bench — Observer Sky God-View Composition SDD
+# beamHO-bench — Observer Sky God-View Composition SDD (Closure-Tracked Pending)
 
 **Version:** 0.1.0  
-**Date:** 2026-03-12  
-**Status:** Active Pending
+**Date:** 2026-03-13  
+**Status:** Implemented / Closure-Tracked
+
+Follow-up note (2026-03-13):
+1. This package remains closure-tracked for the accepted primary observer-sky composition, screen-space acceptance helpers, and final visual acceptance evidence.
+2. Closure evidence is recorded in `sdd/completed/beamHO-bench-observer-sky-god-view-composition-closure.md`.
 
 ---
 

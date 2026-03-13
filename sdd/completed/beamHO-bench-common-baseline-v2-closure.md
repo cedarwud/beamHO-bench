@@ -9,7 +9,7 @@
 ## 1. Purpose
 
 This report records closure evidence for:
-1. `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-common-baseline-v2-sdd.md`
 
 ---
 
@@ -68,6 +68,6 @@ Latest local verification (2026-03-03):
 
 ## 6. References
 
-1. `sdd/pending/beamHO-bench-common-baseline-v2-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-common-baseline-v2-sdd.md`
 2. `sdd/completed/beamHO-bench-validation-matrix.md`
 3. `sdd/completed/beamHO-bench-implementation-status.md`

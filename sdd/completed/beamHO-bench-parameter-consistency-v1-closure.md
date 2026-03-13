@@ -9,7 +9,7 @@
 ## 1. Purpose
 
 This report records closure evidence for:
-1. `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-parameter-consistency-v1-sdd.md`
 
 ---
 
@@ -85,7 +85,7 @@ Latest local verification (2026-03-04):
 
 ## 7. References
 
-1. `sdd/pending/beamHO-bench-parameter-consistency-v1-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-parameter-consistency-v1-sdd.md`
 2. `sdd/completed/beamHO-bench-implementation-status.md`
 3. `docs/zh-TW/06-research-parameter-governance.md`
 4. `src/config/research-parameters/consistency.ts`

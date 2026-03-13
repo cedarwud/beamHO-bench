@@ -63,7 +63,7 @@ export function buildBaselineComparisonChartFileName(batch: BaselineBatchResult)
 export function buildBaselineComparisonChartArtifact(
   batch: BaselineBatchResult,
 ): BaselineComparisonChartArtifact {
-  // Source: sdd/pending/beamHO-bench-gap-closure-sdd.md §3.4
+  // Source: sdd/completed/implemented-specs/beamHO-bench-gap-closure-sdd.md §3.4
   // Export a dedicated chart artifact with metadata-rich context for reproducible plotting.
   return {
     artifactType: 'baseline-comparison-chart',

@@ -9,7 +9,7 @@
 ## 1. Purpose
 
 This report records closure evidence for:
-1. `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-parametric-trajectory-backend-sdd.md`
 
 ---
 
@@ -33,7 +33,7 @@ Current PTB package state remains within hard constraints:
 | D2 synthetic trajectory backend | Complete | `src/sim/scenarios/common/synthetic-orbit.ts`, `src/sim/scenarios/case9-analytic.ts` |
 | D3 research parameter tiers + coupling | Complete | `src/config/research-parameters/catalog.ts`, `src/config/research-parameters/consistency.ts`, `src/config/research-parameters/types.ts` |
 | D4 deterministic tests and gate verification | Complete | `src/sim/tests/integration-cases-trajectory-parameters.ts`, `src/sim/tests/integration-cases-research-parameters.ts`, `npm run validate:stage` |
-| D5 frontend visualization handoff | Complete | frontend ownership transferred to `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` and implemented in `src/viz/satellite/*`, `src/components/scene/SatelliteSkyLayer.tsx` |
+| D5 frontend visualization handoff | Complete | frontend ownership transferred to `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md` and implemented in `src/viz/satellite/*`, `src/components/scene/SatelliteSkyLayer.tsx` |
 
 Implementation commit references:
 1. `a8da3ff` (`docs(sdd): add active PTB pending plan and status sync`)
@@ -79,8 +79,8 @@ Latest local verification (2026-03-12):
 
 ## 7. References
 
-1. `sdd/pending/beamHO-bench-parametric-trajectory-backend-sdd.md`
-2. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-parametric-trajectory-backend-sdd.md`
+2. `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md`
 3. `sdd/completed/beamHO-bench-implementation-status.md`
 4. `src/sim/scenarios/common/synthetic-orbit.ts`
 5. `src/sim/tests/integration-cases-trajectory-parameters.ts`

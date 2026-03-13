@@ -157,7 +157,7 @@ function buildCoverageRankedCandidates(
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-observer-sky-visual-correction-sdd.md (Section 3.1, 3.3, 3.6, 6)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-visual-correction-sdd.md (Section 3.1, 3.3, 3.6, 6)
  * - ASSUME-OBSERVER-SKY-DISPLAY-COVERAGE-POLICY
  *
  * Notes:

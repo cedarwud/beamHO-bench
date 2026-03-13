@@ -3,7 +3,7 @@ import type { ValidationSuiteCaseDefinition, ValidationSuiteDefinition } from '.
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-baseline-parameter-envelope-sdd.md (D3)
+ * - sdd/completed/implemented-specs/beamHO-bench-baseline-parameter-envelope-sdd.md (D3)
  *
  * Notes:
  * - Validation cases are built from baseline-parameter envelope artifact subsets.

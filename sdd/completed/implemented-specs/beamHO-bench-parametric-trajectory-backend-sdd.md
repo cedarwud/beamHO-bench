@@ -15,7 +15,7 @@ This package explicitly separates:
 2. frontend visualization semantics (now re-scoped into a dedicated observer-sky frontend SDD)
 
 Frontend follow-up is no longer treated as a generic "GLB movement coupling" task. It is now governed by:
-1. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md`
 
 ---
 
@@ -99,7 +99,7 @@ As of 2026-03-04:
 | D2 synthetic trajectory backend | Implemented | `src/sim/scenarios/common/synthetic-orbit.ts`, `src/sim/scenarios/case9-analytic.ts` |
 | D3 research parameter tiers + coupling | Implemented | `src/config/research-parameters/types.ts`, `catalog.ts`, `consistency.ts` |
 | D4 tests and gate verification | Implemented | `src/sim/tests/integration-cases-research-parameters.ts`, `integration-cases-trajectory-parameters.ts`, `npm run validate:stage` pass |
-| D5 frontend visualization handoff | Implemented / Closure-Tracked | handoff completed by `sdd/pending/beamHO-bench-observer-sky-view-sdd.md` implementation (`src/viz/satellite/*`, `src/components/scene/SatelliteSkyLayer.tsx`) |
+| D5 frontend visualization handoff | Implemented / Closure-Tracked | handoff completed by `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md` implementation (`src/viz/satellite/*`, `src/components/scene/SatelliteSkyLayer.tsx`) |
 
 ---
 

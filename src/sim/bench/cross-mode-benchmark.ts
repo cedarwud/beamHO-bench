@@ -9,7 +9,7 @@ import {
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md (D1)
+ * - sdd/completed/implemented-specs/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md (D1)
  *
  * Notes:
  * - Cross-mode benchmark pack keeps a stable tuple contract over canonical profiles.

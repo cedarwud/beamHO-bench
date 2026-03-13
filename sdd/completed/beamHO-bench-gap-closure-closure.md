@@ -9,7 +9,7 @@
 ## 1. Purpose
 
 This report records closure evidence for:
-1. `sdd/pending/beamHO-bench-gap-closure-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-gap-closure-sdd.md`
 
 ---
 
@@ -78,5 +78,5 @@ Latest stage verification (2026-03-02):
 ## 7. References
 
 1. `sdd/completed/beamHO-bench-implementation-status.md`
-2. `sdd/pending/beamHO-bench-gap-closure-sdd.md`
+2. `sdd/completed/implemented-specs/beamHO-bench-gap-closure-sdd.md`
 3. `sdd/completed/beamHO-bench-validation-matrix.md`

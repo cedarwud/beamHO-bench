@@ -1,6 +1,6 @@
 # SDD Document Set
 
-This folder is explicitly split into implemented, pending (active or closure-tracked), and backlog SDD documents.
+This folder is explicitly split into implemented specs, the current pending workspace, and backlog documents.
 
 ## Status Authority
 
@@ -11,11 +11,13 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 ## Folder Structure
 
 1. `completed/`
-   - SDDs implemented in code and closure-tracked with stage-gate evidence.
+   - implemented specs, closure reports, status authority, and long-lived completed references.
 2. `pending/`
-   - pending SDDs (active implementation roadmap items or closure-tracked historical pending specs).
+   - the narrow current-workspace bucket; do not keep historical closure-tracked specs here.
 3. `backlog/`
    - long-term SDD/backlog items out of the current active implementation scope.
+4. `completed/implemented-specs/`
+   - original SDD specs that were implemented and previously closure-tracked under `pending/`.
 
 ## Completed (Implemented / Closure-Tracked)
 
@@ -44,24 +46,29 @@ This folder is explicitly split into implemented, pending (active or closure-tra
 23. `completed/beamHO-bench-parametric-trajectory-backend-closure.md`
 24. `completed/beamHO-bench-observer-sky-view-closure.md`
 25. `completed/beamHO-bench-observer-sky-visual-correction-closure.md`
+26. `completed/beamHO-bench-observer-sky-god-view-composition-closure.md`
+27. `completed/implemented-specs/beamHO-bench-gap-closure-sdd.md`
+28. `completed/implemented-specs/beamHO-bench-small-scale-validation-sdd.md`
+29. `completed/implemented-specs/beamHO-bench-common-benchmark-v1-sdd.md`
+30. `completed/implemented-specs/beamHO-bench-common-baseline-v2-sdd.md`
+31. `completed/implemented-specs/beamHO-bench-complexity-reduction-sdd.md`
+32. `completed/implemented-specs/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md`
+33. `completed/implemented-specs/beamHO-bench-baseline-parameter-envelope-sdd.md`
+34. `completed/implemented-specs/beamHO-bench-repro-bundle-v1-sdd.md`
+35. `completed/implemented-specs/beamHO-bench-service-continuity-baseline-sdd.md`
+36. `completed/implemented-specs/beamHO-bench-core-extension-governance-sdd.md`
+37. `completed/implemented-specs/beamHO-bench-parameter-consistency-v1-sdd.md`
+38. `completed/implemented-specs/beamHO-bench-parametric-trajectory-backend-sdd.md`
+39. `completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md`
+40. `completed/implemented-specs/beamHO-bench-observer-sky-visual-correction-sdd.md`
+41. `completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md`
 
-## Pending (Active + Closure-Tracked Specs)
+## Pending Workspace
 
-1. `pending/beamHO-bench-observer-sky-god-view-composition-sdd.md` (active pending package for primary observer-sky god-view composition and screen-space acceptance)
-2. `pending/beamHO-bench-observer-sky-visual-correction-sdd.md` (implemented/closure-tracked pending corrective package for observer-sky visual acceptance)
-3. `pending/beamHO-bench-parametric-trajectory-backend-sdd.md` (implemented/closure-tracked pending backend package)
-4. `pending/beamHO-bench-observer-sky-view-sdd.md` (implemented/closure-tracked pending frontend display/motion ownership split)
-5. `pending/beamHO-bench-parameter-consistency-v1-sdd.md` (implemented/closure-tracked pending package)
-6. `pending/beamHO-bench-repro-bundle-v1-sdd.md` (implemented/closure-tracked pending package)
-7. `pending/beamHO-bench-baseline-parameter-envelope-sdd.md` (implemented/closure-tracked pending package)
-8. `pending/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (implemented/closure-tracked pending package)
-9. `pending/beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked pending package)
-10. `pending/beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked pending package)
-11. `pending/beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked pending spec)
-12. `pending/beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked pending package)
-13. `pending/beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked pending package)
-14. `pending/beamHO-bench-service-continuity-baseline-sdd.md` (implemented/closure-tracked pending package)
-15. `pending/beamHO-bench-core-extension-governance-sdd.md` (implemented/closure-tracked pending package)
+1. no active pending spec at this time (`2026-03-13`)
+2. lifecycle truth remains in:
+   - `completed/beamHO-bench-implementation-status.md`
+   - `pending/README.md`
 
 ## Backlog (Out of Active Scope)
 

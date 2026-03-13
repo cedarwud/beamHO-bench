@@ -3,7 +3,7 @@ import type { PaperProfile, ProfileMode } from '@/config/paper-profiles/types';
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-baseline-parameter-envelope-sdd.md (D1)
+ * - sdd/completed/implemented-specs/beamHO-bench-baseline-parameter-envelope-sdd.md (D1)
  *
  * Notes:
  * - This module defines a deterministic baseline-parameter envelope artifact

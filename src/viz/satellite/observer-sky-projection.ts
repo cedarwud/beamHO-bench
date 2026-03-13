@@ -13,7 +13,7 @@ function clampFinite(value: number, fallback: number): number {
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-observer-sky-view-sdd.md (Section 1, 3.1, 3.4)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md (Section 1, 3.1, 3.4)
  *
  * Notes:
  * - This is a frontend-only observer-centric sky projection.

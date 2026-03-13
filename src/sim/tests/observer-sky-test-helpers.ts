@@ -15,8 +15,8 @@ import {
 
 /**
  * Provenance:
- * - sdd/pending/beamHO-bench-observer-sky-god-view-composition-sdd.md (Section 4, 5, 6)
- * - sdd/pending/beamHO-bench-observer-sky-visual-correction-sdd.md (Section 4, 5)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md (Section 4, 5, 6)
+ * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-visual-correction-sdd.md (Section 4, 5)
  *
  * Notes:
  * - Test helpers reuse the same display pipeline as the frontend scene wiring.

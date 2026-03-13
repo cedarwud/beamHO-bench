@@ -9,7 +9,7 @@
 ## 1. Purpose
 
 This report records closure evidence for:
-1. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md`
 
 ---
 
@@ -79,7 +79,7 @@ Latest local verification (2026-03-12):
 
 ## 7. References
 
-1. `sdd/pending/beamHO-bench-observer-sky-view-sdd.md`
+1. `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md`
 2. `sdd/completed/beamHO-bench-implementation-status.md`
 3. `src/viz/satellite/display-adapter.ts`
 4. `src/components/scene/SatelliteSkyLayer.tsx`

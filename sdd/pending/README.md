@@ -1,91 +1,41 @@
-# Pending SDD Set
+# Pending SDD Workspace
 
-This folder contains active-pending or closure-tracked pending SDD documents.
+This folder is intentionally narrow. It is currently empty except for this index file.
 
 Status ownership:
-1. milestone completion truth is maintained in `sdd/completed/beamHO-bench-implementation-status.md`.
-2. this file is restricted to pending/closure-tracked index information.
+1. lifecycle truth is maintained in `sdd/completed/beamHO-bench-implementation-status.md`
+2. this file is only the navigation/index entry for what remains physically under `pending/`
 
-## 1. Active Pending Specs
+## 1. Current Workspace File
 
-1. `beamHO-bench-observer-sky-god-view-composition-sdd.md` (active pending on 2026-03-12; primary observer-sky god-view composition and screen-space acceptance package)
+1. none at this time (`2026-03-13`)
 
-## 2. Closure-Tracked Pending Specs
+Notes:
+1. do not add unrelated completed specs back into `pending/`
+2. historical closure-tracked pending specs were moved to `sdd/completed/implemented-specs/`
 
-1. `beamHO-bench-parametric-trajectory-backend-sdd.md` (implemented/closure-tracked on 2026-03-12)
-2. `beamHO-bench-observer-sky-view-sdd.md` (implemented/closure-tracked on 2026-03-12)
-3. `beamHO-bench-observer-sky-visual-correction-sdd.md` (implemented/closure-tracked on 2026-03-12)
-4. `beamHO-bench-repro-bundle-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
-5. `beamHO-bench-baseline-parameter-envelope-sdd.md` (implemented/closure-tracked on 2026-03-03)
-6. `beamHO-bench-cross-mode-reproducible-benchmark-sdd.md` (implemented/closure-tracked on 2026-03-03)
-7. `beamHO-bench-complexity-reduction-sdd.md` (implemented/closure-tracked on 2026-03-03)
-8. `beamHO-bench-common-baseline-v2-sdd.md` (implemented/closure-tracked on 2026-03-03)
-9. `beamHO-bench-common-benchmark-v1-sdd.md` (implemented/closure-tracked on 2026-03-03)
-10. `beamHO-bench-gap-closure-sdd.md` (implemented/closure-tracked on 2026-03-02)
-11. `beamHO-bench-small-scale-validation-sdd.md` (implemented/closure-tracked on 2026-03-02)
-12. `beamHO-bench-service-continuity-baseline-sdd.md` (implemented/closure-tracked on 2026-03-03)
-13. `beamHO-bench-core-extension-governance-sdd.md` (implemented/closure-tracked on 2026-03-03)
-14. `beamHO-bench-parameter-consistency-v1-sdd.md` (implemented/closure-tracked on 2026-03-04)
-15. closure report: `sdd/completed/beamHO-bench-parametric-trajectory-backend-closure.md`
-16. closure report: `sdd/completed/beamHO-bench-observer-sky-view-closure.md`
-17. closure report: `sdd/completed/beamHO-bench-observer-sky-visual-correction-closure.md`
-18. closure report: `sdd/completed/beamHO-bench-repro-bundle-v1-closure.md`
-19. closure report: `sdd/completed/beamHO-bench-baseline-parameter-envelope-closure.md`
-20. closure report: `sdd/completed/beamHO-bench-cross-mode-reproducible-benchmark-closure.md`
-21. closure report: `sdd/completed/beamHO-bench-complexity-reduction-closure.md`
-22. closure report: `sdd/completed/beamHO-bench-common-baseline-v2-closure.md`
-23. closure report: `sdd/completed/beamHO-bench-gap-closure-closure.md`
-24. closure report: `sdd/completed/beamHO-bench-small-scale-validation-closure.md`
-25. closure report: `sdd/completed/beamHO-bench-common-benchmark-v1-closure.md`
-26. closure report: `sdd/completed/beamHO-bench-service-continuity-baseline-closure.md`
-27. closure report: `sdd/completed/beamHO-bench-core-extension-governance-closure.md`
-28. closure report: `sdd/completed/beamHO-bench-parameter-consistency-v1-closure.md`
+## 2. Historical Implemented Specs
 
-Corrective follow-up note:
-1. `beamHO-bench-observer-sky-view-sdd.md` remains closure-tracked for the architecture split.
-2. `beamHO-bench-observer-sky-visual-correction-sdd.md` is now closure-tracked for the corrective package that completed sky coverage, display/candidate separation, and bounded membership continuity.
-3. active frontend visual work is now governed by `beamHO-bench-observer-sky-god-view-composition-sdd.md`.
+Implemented specs that used to remain in `pending/` now live in:
+1. `sdd/completed/implemented-specs/beamHO-bench-gap-closure-sdd.md`
+2. `sdd/completed/implemented-specs/beamHO-bench-small-scale-validation-sdd.md`
+3. `sdd/completed/implemented-specs/beamHO-bench-common-benchmark-v1-sdd.md`
+4. `sdd/completed/implemented-specs/beamHO-bench-common-baseline-v2-sdd.md`
+5. `sdd/completed/implemented-specs/beamHO-bench-complexity-reduction-sdd.md`
+6. `sdd/completed/implemented-specs/beamHO-bench-cross-mode-reproducible-benchmark-sdd.md`
+7. `sdd/completed/implemented-specs/beamHO-bench-baseline-parameter-envelope-sdd.md`
+8. `sdd/completed/implemented-specs/beamHO-bench-repro-bundle-v1-sdd.md`
+9. `sdd/completed/implemented-specs/beamHO-bench-service-continuity-baseline-sdd.md`
+10. `sdd/completed/implemented-specs/beamHO-bench-core-extension-governance-sdd.md`
+11. `sdd/completed/implemented-specs/beamHO-bench-parameter-consistency-v1-sdd.md`
+12. `sdd/completed/implemented-specs/beamHO-bench-parametric-trajectory-backend-sdd.md`
+13. `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md`
+14. `sdd/completed/implemented-specs/beamHO-bench-observer-sky-visual-correction-sdd.md`
+15. `sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md`
 
-## 3. Backlog Location
+## 3. Constraint Binding
 
-1. long-term backlog documents are moved to `sdd/backlog/`.
-2. current backlog item: `sdd/backlog/beamHO-bench-multiorbit-backlog.md`.
-
-## 4. Quality Bar for Pending Specs
-
-A pending SDD is considered implementation-ready only if it includes:
-1. explicit scope boundary.
-2. normative MUST/SHALL requirements.
-3. concrete interface/data contract.
-4. deterministic and traceability requirements.
-5. pass/fail validation gates.
-6. delivery breakdown with dependency order.
-7. explicit binding to `PROJECT_CONSTRAINTS.md` guardrails.
-
-## 5. Constraint Binding (Required)
-
-All active pending items must keep compliance with:
-1. `LEO-only` active scope and fixed NTPU default coordinate.
-2. dual-mode compatibility (`paper-baseline` + `real-trace`).
-3. real-trace compatibility with Starlink/OneWeb TLE daily-update workflow.
-4. code-level provenance comments (`sourceId`) for key KPI-impacting logic.
-5. no hidden KPI-impacting constants (profile or `ASSUME-*` only).
-6. repository copyright policy (`.gitignore` and repo-policy validation).
-7. meaningful file splitting and periodic architecture review per milestone.
-8. required CI artifacts (`sim-test-summary`, `validation-suite`, `validation-gate-summary`).
-
-## 6. Promotion Rule (pending -> completed)
-
-Promotion requires all conditions:
-1. implementation merged.
-2. required tests and stage validation pass.
-3. source-trace and artifact fields are complete.
-4. completed SDD documents are updated to reflect actual code paths.
-
-## 7. Deferred-Scope Checklist (BG-6)
-
-For active v2 milestones, all pending implementations must keep:
-1. no `RSMA` / `soft-HO` runtime path in `src/`.
-2. no broad `large-scale DRL` or `multi-paper DRL fusion` runtime path in `src/`.
-3. deferred items tracked only as pending SDD/backlog text, not partial active feature toggles.
-4. any reactivation must be introduced by a new pending SDD with scope/data contract/validation-gate definition.
+Any future file placed under `pending/` must still comply with:
+1. `PROJECT_CONSTRAINTS.md`
+2. current status authority in `sdd/completed/beamHO-bench-implementation-status.md`
+3. active frontend acceptance requirements when observer-sky behavior is involved
