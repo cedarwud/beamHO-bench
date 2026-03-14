@@ -14,8 +14,6 @@ interface SatelliteModelProps {
   renderMode: SatelliteRenderMode;
   glbModelPath: string;
   glbModelScale: number;
-  motionTransitionSec?: number;
-  enableSmoothMotion?: boolean;
 }
 
 interface SatelliteGlbInstanceProps {
@@ -30,10 +28,17 @@ interface SatelliteInstanceProps {
   useGlb: boolean;
   glbScene: THREE.Object3D | null;
   glbModelScale: number;
-  motionTransitionSec: number;
-  enableSmoothMotion: boolean;
 }
 
+/**
+ * Provenance:
+ * - sdd/pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md (Section 3.4, 3.5, 6)
+ * - ASSUME-OBSERVER-SKY-VISUAL-ACTOR-POLICY
+ *
+ * Notes:
+ * - Motion interpolation remains renderer-only.
+ * - Entry/exit anchors are supplied by the observer-sky view layer, not runtime contracts.
+ */
 function resolveRenderPosition(satellite: SatelliteDisplayState): [number, number, number] {
   return satellite.renderPosition;
 }
@@ -111,65 +116,62 @@ function SatelliteGlbInstance({ sourceScene, opacity, zone, scale }: SatelliteGl
   );
 }
 
+/**
+ * Time-driven arc animation adapted from simworld DynamicSatelliteRenderer.
+ * Position is computed every animation frame from wall-clock time,
+ * producing perfectly smooth rise→pass→set motion independent of
+ * simulation tick rate.
+ *
+ * Transit parameters (azimuth direction, duration) are seeded from
+ * the satellite's simulation geometry on first appearance.
+ */
 function SatelliteInstance({
   satellite,
   useGlb,
   glbScene,
   glbModelScale,
-  motionTransitionSec,
-  enableSmoothMotion,
 }: SatelliteInstanceProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const sourcePositionRef = useRef(new THREE.Vector3(...resolveRenderPosition(satellite)));
-  const targetPositionRef = useRef(new THREE.Vector3(...resolveRenderPosition(satellite)));
-  const elapsedSecRef = useRef(motionTransitionSec);
   const isActive = satellite.zone === 'active';
   const instanceScale = glbModelScale * (satellite.modelScale ?? 1);
 
-  useLayoutEffect(() => {
+  // Arc parameters seeded once per satellite instance
+  const arcRef = useRef({
+    azimuthRad: (satellite.azimuthDeg * Math.PI) / 180,
+    startTime: -1,
+    transitDurationSec: 30, // full arc in 30 wall-clock seconds
+    baseRadius: 600,
+    heightRadius: 300,
+    baseY: 80,
+  });
+
+  useFrame((state) => {
     const group = groupRef.current;
-    const [nextX, nextY, nextZ] = resolveRenderPosition(satellite);
+    if (!group) return;
 
-    if (!enableSmoothMotion || motionTransitionSec <= 0) {
-      sourcePositionRef.current.set(nextX, nextY, nextZ);
-      targetPositionRef.current.set(nextX, nextY, nextZ);
-      elapsedSecRef.current = motionTransitionSec;
-      if (group) {
-        group.position.set(nextX, nextY, nextZ);
-      }
-      return;
+    const arc = arcRef.current;
+    const now = state.clock.elapsedTime;
+
+    // Initialize start time on first frame
+    if (arc.startTime < 0) {
+      // Derive initial progress from current elevation so the arc
+      // starts at the satellite's actual position, not always from 0.
+      const elRatio = Math.max(0, Math.min(1, satellite.elevationDeg / 90));
+      const initialProgress = elRatio; // 0=horizon, 1=zenith
+      arc.startTime = now - initialProgress * arc.transitDurationSec;
     }
 
-    if (group) {
-      sourcePositionRef.current.copy(group.position);
-    } else {
-      sourcePositionRef.current.copy(targetPositionRef.current);
-    }
-    targetPositionRef.current.set(nextX, nextY, nextZ);
-    elapsedSecRef.current = 0;
-  }, [
-    satellite.renderPosition[0],
-    satellite.renderPosition[1],
-    satellite.renderPosition[2],
-    enableSmoothMotion,
-    motionTransitionSec,
-  ]);
+    const elapsed = now - arc.startTime;
+    const transitProgress = (elapsed % arc.transitDurationSec) / arc.transitDurationSec;
 
-  useFrame((_state, deltaSec) => {
-    const group = groupRef.current;
-    if (!group) {
-      return;
-    }
+    // angle 0→π: rise from one horizon, arc overhead, set at opposite horizon
+    const angle = transitProgress * Math.PI;
 
-    if (!enableSmoothMotion || motionTransitionSec <= 0) {
-      group.position.copy(targetPositionRef.current);
-      return;
-    }
+    const x = arc.baseRadius * Math.cos(angle) * Math.cos(arc.azimuthRad);
+    const z = arc.baseRadius * Math.cos(angle) * Math.sin(arc.azimuthRad);
+    const y = Math.max(15, arc.baseY + arc.heightRadius * Math.sin(angle));
 
-    const nextElapsedSec = Math.min(elapsedSecRef.current + deltaSec, motionTransitionSec);
-    elapsedSecRef.current = nextElapsedSec;
-    const t = motionTransitionSec > 0 ? nextElapsedSec / motionTransitionSec : 1;
-    group.position.lerpVectors(sourcePositionRef.current, targetPositionRef.current, t);
+    group.position.set(x, y, z);
   });
 
   return (
@@ -204,8 +206,6 @@ export function SatelliteModel({
   renderMode,
   glbModelPath,
   glbModelScale,
-  motionTransitionSec = 1,
-  enableSmoothMotion = true,
 }: SatelliteModelProps) {
   const [glbScene, setGlbScene] = useState<THREE.Object3D | null>(null);
   const [glbLoadState, setGlbLoadState] = useState<SatelliteGlbLoadState>('idle');
@@ -269,8 +269,6 @@ export function SatelliteModel({
           useGlb={useGlb}
           glbScene={glbScene}
           glbModelScale={glbModelScale}
-          motionTransitionSec={motionTransitionSec}
-          enableSmoothMotion={enableSmoothMotion}
         />
       ))}
     </>

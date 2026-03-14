@@ -12,7 +12,7 @@ import { ResearchParameterPanel } from '../sim/ResearchParameterPanel';
 import { TimelineControls } from '../sim/TimelineControls';
 import { NTPU_CONFIG } from '@/config/ntpu.config';
 import { Starfield } from '../ui/Starfield';
-import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three';
+import { ACESFilmicToneMapping } from 'three';
 import { SceneLoader } from '../ui/SceneLoader';
 import { SceneErrorBoundary } from '../ui/SceneErrorBoundary';
 import { useSimulation } from '@/hooks/useSimulation';
@@ -158,6 +158,7 @@ export function MainScene() {
     start,
     stop,
     step,
+    stepBack,
     reset,
     setPlaybackRate,
   } = useSimulation({
@@ -167,44 +168,17 @@ export function MainScene() {
     baseline: selectedBaseline,
     seed: 42,
     autoStart: true,
+    playbackRate: 32,
   });
 
   const lowPowerMode = useMemo(() => isMobileLikeDevice(), []);
-  const shadowMapSize = lowPowerMode
-    ? NTPU_CONFIG.lighting.directional.shadow.mapSizeMobile
-    : NTPU_CONFIG.lighting.directional.shadow.mapSizeDesktop;
   const maxDpr = lowPowerMode
     ? NTPU_CONFIG.render.mobileMaxDpr
     : NTPU_CONFIG.render.desktopMaxDpr;
-  const cloneSnapshot = useCallback((value: SimSnapshot): SimSnapshot => {
-    if (typeof globalThis.structuredClone === 'function') {
-      return globalThis.structuredClone(value);
-    }
-    return JSON.parse(JSON.stringify(value)) as SimSnapshot;
-  }, []);
 
-  useEffect(() => {
-    setReplaySnapshots((previous) => {
-      const nextSnapshot = cloneSnapshot(snapshot);
-      if (previous.length === 0) {
-        return [nextSnapshot];
-      }
-      const last = previous[previous.length - 1];
-      if (snapshot.tick < last.tick) {
-        return [nextSnapshot];
-      }
-      if (snapshot.tick === last.tick) {
-        const replaced = [...previous];
-        replaced[replaced.length - 1] = nextSnapshot;
-        return replaced;
-      }
-      const appended = [...previous, nextSnapshot];
-      if (appended.length > 7200) {
-        appended.shift();
-      }
-      return appended;
-    });
-  }, [snapshot, cloneSnapshot]);
+  // Replay snapshot accumulation disabled — scrubber is hidden to save memory.
+  // Re-enable this block when the replay scrubber is restored.
+  // useEffect(() => { ... }, [snapshot]);
 
   useEffect(() => {
     if (replayTick === null) {
@@ -222,10 +196,6 @@ export function MainScene() {
     : replaySnapshots.find((candidate) => candidate.tick === replayTick) ?? null;
   const displayedSnapshot = replaySnapshot ?? snapshot;
   const isLiveView = replayTick === null;
-  const smoothMotionTransitionSec = Math.max(
-    profile.timeStepSec / Math.max(playbackRate, 0.25),
-    0.016,
-  );
   const canvasFrameloop: 'always' | 'demand' | 'never' =
     isRunning && isLiveView ? 'always' : NTPU_CONFIG.render.frameloop;
   const hoEventTimeline = useMemo<HOEventTimelineRow[]>(
@@ -274,6 +244,10 @@ export function MainScene() {
     step();
   }, [replayTick, step]);
 
+  const handleStepBack = useCallback(() => {
+    stepBack();
+  }, [stepBack]);
+
   const handleReset = useCallback(() => {
     if (replayTick !== null) {
       setReplayTick(null);
@@ -295,15 +269,6 @@ export function MainScene() {
         </button>
         {!isHudCollapsed ? (
           <div className="sim-hud" role="status" aria-live="polite">
-            <div className="sim-hud__title">{selectedProfileLabel}</div>
-            <div className="sim-hud__meta">
-              orbit: <strong>{selectedProfileLabel}</strong> | tick: <strong>{displayedSnapshot.tick}</strong> |
-              baseline: <strong>{baseline}</strong> | sat: <strong>{displayedSnapshot.satellites.length}</strong> | beams:{' '}
-              <strong>
-                {displayedSnapshot.satellites.reduce((sum, satellite) => sum + satellite.beams.length, 0)}
-              </strong>{' '}
-              | ue: <strong>{displayedSnapshot.ues.length}</strong>
-            </div>
             <div className="sim-hud__actions">
               <div className="sim-hud__controls">
                 <label className="sim-hud__select">
@@ -319,49 +284,7 @@ export function MainScene() {
                     <option value="oneweb-like">OneWeb TLE</option>
                   </select>
                 </label>
-                <label className="sim-hud__select">
-                  Baseline
-                  <select
-                    value={selectedBaseline}
-                    onChange={(event) =>
-                      setSelectedBaseline(event.target.value as RuntimeBaseline)
-                    }
-                  >
-                    <option value="max-rsrp">max-rsrp</option>
-                    <option value="max-elevation">max-elevation</option>
-                    <option value="max-remaining-time">max-remaining-time</option>
-                    <option value="a3">a3</option>
-                    <option value="a4">a4</option>
-                    <option value="cho">cho</option>
-                    <option value="mc-ho">mc-ho</option>
-                  </select>
-                </label>
-                <label className="sim-hud__select">
-                  View
-                  <select
-                    value={selectedViewMode}
-                    onChange={(event) =>
-                      setSelectedViewMode(event.target.value as ObserverSkyCompositionModeId)
-                    }
-                  >
-                    {VIEW_MODE_OPTIONS.map((composition) => (
-                      <option key={composition.modeId} value={composition.modeId}>
-                        {composition.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
               </div>
-              <section className="sim-hud-panel" aria-label="Observer-sky composition mode">
-                <div className="sim-hud-panel__title">Observer-Sky Composition</div>
-                <div>
-                  <strong>{selectedViewComposition.label}</strong>
-                  {selectedViewComposition.primaryAcceptedView
-                    ? ' | primary acceptance view'
-                    : ' | auxiliary context view'}
-                </div>
-                <div>{selectedViewComposition.description}</div>
-              </section>
               <ResearchParameterPanel
                 profile={profile}
                 baseline={baseline}
@@ -372,8 +295,8 @@ export function MainScene() {
                 onConsistencyModeChange={setResearchConsistencyMode}
                 onReset={handleResetResearchParameters}
               />
-              <section className="sim-hud-panel" aria-label="Replay controls">
-                <div className="sim-hud-panel__title">Replay Controls</div>
+              <section className="sim-hud-panel" aria-label="Playback controls">
+                <div className="sim-hud-panel__title">Playback</div>
                 <TimelineControls
                   tick={displayedSnapshot.tick}
                   timeSec={displayedSnapshot.timeSec}
@@ -383,30 +306,14 @@ export function MainScene() {
                   replayMaxTick={replayMaxTick}
                   onToggleRun={handleToggleRun}
                   onStep={handleStep}
+                  onStepBack={handleStepBack}
                   onReset={handleReset}
                   onPlaybackRateChange={setPlaybackRate}
                   onReplayTickChange={(nextTick) => setReplayTick(nextTick)}
                   onReplayLive={() => setReplayTick(null)}
                 />
               </section>
-              <details className="sim-hud-panel sim-hud-panel--details">
-                <summary>View Filters</summary>
-                <ConnectionLegend
-                  ues={displayedSnapshot.ues}
-                  visibility={linkVisibility}
-                  onChange={setLinkVisibility}
-                />
-              </details>
             </div>
-            <div className="sim-failure-overlay">
-              <div className="sim-failure-overlay__header">State1/2/3 Failure Overlay</div>
-              <div className="sim-failure-overlay__stats">
-                S1: <strong>{hoStateCounts.state1}</strong> | S2: <strong>{hoStateCounts.state2}</strong> | S3:{' '}
-                <strong>{hoStateCounts.state3}</strong>
-              </div>
-            </div>
-            <KpiHUD kpi={displayedSnapshot.kpiCumulative} ues={displayedSnapshot.ues} baseline={baseline} />
-            <HOEventTimeline events={hoEventTimeline} maxRows={12} />
           </div>
         ) : null}
       </div>
@@ -418,16 +325,12 @@ export function MainScene() {
             frameloop={canvasFrameloop}
             dpr={[1, maxDpr]}
             performance={{ min: NTPU_CONFIG.render.performanceMin }}
-            shadows
             gl={{
               toneMapping: ACESFilmicToneMapping,
               toneMappingExposure: NTPU_CONFIG.render.toneMappingExposure,
               alpha: true,
               powerPreference: 'high-performance',
               antialias: NTPU_CONFIG.render.antialias,
-            }}
-            onCreated={({ gl }) => {
-              gl.shadowMap.type = PCFSoftShadowMap;
             }}
           >
             <ObserverSkyCameraRig composition={selectedViewComposition} />
@@ -436,19 +339,8 @@ export function MainScene() {
             <hemisphereLight args={NTPU_CONFIG.lighting.hemisphere} />
             <ambientLight intensity={NTPU_CONFIG.lighting.ambientIntensity} />
             <directionalLight
-              castShadow
               position={NTPU_CONFIG.lighting.directional.position}
               intensity={NTPU_CONFIG.lighting.directional.intensity}
-              shadow-mapSize-width={shadowMapSize}
-              shadow-mapSize-height={shadowMapSize}
-              shadow-camera-near={NTPU_CONFIG.lighting.directional.shadow.cameraNear}
-              shadow-camera-far={NTPU_CONFIG.lighting.directional.shadow.cameraFar}
-              shadow-camera-top={NTPU_CONFIG.lighting.directional.shadow.cameraFrustum}
-              shadow-camera-bottom={-NTPU_CONFIG.lighting.directional.shadow.cameraFrustum}
-              shadow-camera-left={-NTPU_CONFIG.lighting.directional.shadow.cameraFrustum}
-              shadow-camera-right={NTPU_CONFIG.lighting.directional.shadow.cameraFrustum}
-              shadow-bias={NTPU_CONFIG.lighting.directional.shadow.bias}
-              shadow-radius={NTPU_CONFIG.lighting.directional.shadow.radius}
             />
 
             {/* 場景模型 */}
@@ -458,15 +350,10 @@ export function MainScene() {
               <SatelliteSkyLayer
                 profile={profile}
                 satellites={displayedSnapshot.satellites}
-                physicalSatellites={
-                  displayedSnapshot.observerSkyPhysicalSatellites ?? displayedSnapshot.satellites
-                }
                 ues={displayedSnapshot.ues}
                 renderMode={NTPU_CONFIG.satellite.renderMode}
                 glbModelPath={NTPU_CONFIG.satellite.modelPath}
                 glbModelScale={NTPU_CONFIG.satellite.modelScale}
-                motionTransitionSec={smoothMotionTransitionSec}
-                enableSmoothMotion={isLiveView}
                 composition={selectedViewComposition}
                 continuitySequenceKey={`${displayedSnapshot.scenarioId}:${displayedSnapshot.profileId}`}
                 snapshotTick={displayedSnapshot.tick}
@@ -474,6 +361,7 @@ export function MainScene() {
                 showServingLinks={linkVisibility.serving}
                 showSecondaryLinks={linkVisibility.secondary}
                 showPreparedLinks={linkVisibility.prepared}
+                playbackRate={playbackRate}
               />
             </Suspense>
 

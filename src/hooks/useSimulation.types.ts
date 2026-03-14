@@ -64,6 +64,7 @@ export interface UseSimulationResult {
   start: () => void;
   stop: () => void;
   step: () => void;
+  stepBack: () => void;
   reset: () => void;
   setPlaybackRate: (value: number) => void;
   exportSourceTrace: () => Promise<SourceTraceArtifact>;

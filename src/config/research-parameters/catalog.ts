@@ -312,7 +312,7 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     description: '每個 tick 保留在場景與模擬視窗中的衛星數量上限。',
     sourceIds: ['PAP-2022-SEAMLESSNTN-CORE', 'PAP-2024-MADRL-CORE', 'PAP-2025-DAPS-CORE'],
     options: [
-      { value: '7', label: '7 satellites' },
+      { value: '1', label: '1 satellite (single-pass debug)' },
       { value: '8', label: '8 satellites' },
       { value: '10', label: '10 satellites' },
       { value: '16', label: '16 satellites' },
@@ -343,6 +343,7 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
       'ASSUME-HANDOVER-CANDIDATE-WINDOW',
     ],
     options: [
+      { value: '1', label: '1 satellite (single-pass debug)' },
       { value: '2', label: '2 satellites' },
       { value: '4', label: '4 satellites' },
       { value: '7', label: '7 satellites' },

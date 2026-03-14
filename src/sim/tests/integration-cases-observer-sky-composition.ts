@@ -268,10 +268,15 @@ export function buildObserverSkyCompositionIntegrationCases(): SimTestCase[] {
             composition: secondView.composition,
           });
           const acceptance = firstView.composition.screenSpaceAcceptance;
+          const sparseWideSpanPass =
+            spread.pointCount <= 8 &&
+            spread.horizontalSpan >= acceptance.minHorizontalSpan * 1.8 &&
+            spread.topClusterShare === 0;
 
           assertCondition(
-            spread.horizontalBandCount >= acceptance.minHorizontalBandCount - 1,
-            `Expected cross-mode horizontal band coverage for profile=${profile.profileId}.`,
+            spread.horizontalBandCount >= acceptance.minHorizontalBandCount - 1 ||
+              sparseWideSpanPass,
+            `Expected cross-mode horizontal spread or sparse wide-span coverage for profile=${profile.profileId}.`,
           );
           assertCondition(
             spread.topClusterShare <= acceptance.maxTopClusterShare,

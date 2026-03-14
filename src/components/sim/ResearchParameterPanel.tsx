@@ -10,13 +10,9 @@ import {
 import type { RuntimeBaseline } from '@/sim/handover/baseline-types';
 
 const CORE_SCENARIO_PARAMETER_IDS: readonly ResearchParameterId[] = [
-  'constellation.syntheticTrajectoryModel',
   'constellation.altitudeKm',
   'constellation.activeSatellitesInWindow',
-  'handover.params.candidateSatelliteLimit',
   'constellation.minElevationDeg',
-  'beam.overlapRatio',
-  'ue.speedKmph',
 ];
 
 const BASELINE_PARAMETER_IDS: Record<RuntimeBaseline, readonly ResearchParameterId[]> = {
@@ -160,11 +156,6 @@ export function ResearchParameterPanel({
     <section className="sim-research-panel" aria-label="Research parameters">
       <div className="sim-research-panel__header">
         <div className="sim-research-panel__title">Research Parameters</div>
-        <div className="sim-research-panel__toolbar">
-          <button type="button" onClick={onReset}>
-            Reset To Profile
-          </button>
-        </div>
       </div>
       <section className="sim-research-section">
         <header className="sim-research-section__header">
@@ -184,64 +175,6 @@ export function ResearchParameterPanel({
           </div>
         </section>
       ) : null}
-      <details className="sim-research-advanced">
-        <summary>
-          Advanced & Diagnostics <span>({advancedSummary})</span>
-        </summary>
-        <div className="sim-research-advanced__body">
-          <section className="sim-research-group">
-            <header className="sim-research-group__header">
-              <h4>Diagnostics</h4>
-            </header>
-            <div className="sim-research-group__grid">
-              <label
-                className="sim-research-param sim-research-param--compact"
-                htmlFor="param-consistency-mode"
-              >
-                <span className="sim-research-param__name">Consistency Mode</span>
-                <select
-                  id="param-consistency-mode"
-                  value={consistencyMode}
-                  onChange={(event) =>
-                    onConsistencyModeChange(event.target.value as ResearchConsistencyMode)
-                  }
-                  aria-label="Consistency Mode"
-                >
-                  <option value="strict">strict</option>
-                  <option value="exploratory">exploratory</option>
-                </select>
-              </label>
-            </div>
-            {consistencyIssues.length > 0 ? (
-              <section className="sim-research-consistency" aria-label="Consistency checks">
-                <div className="sim-research-consistency__title">
-                  Consistency Checks ({consistencyIssues.length})
-                </div>
-                <ul className="sim-research-consistency__list">
-                  {consistencyIssues.map((issue, index) => (
-                    <li
-                      key={`${issue.ruleId}:${issue.messageCode}:${index}`}
-                      className={`sim-research-consistency__item sim-research-consistency__item--${issue.severity}`}
-                    >
-                      [{issue.severity}] {issue.ruleId}: {issue.message}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : null}
-          </section>
-          {advancedGroups.map(({ group, specs }) => (
-            <section key={group.id} className="sim-research-group">
-              <header className="sim-research-group__header">
-                <h4>{group.label}</h4>
-              </header>
-              <div className="sim-research-group__grid">
-                {specs.map((spec) => renderParameterField(spec.id))}
-              </div>
-            </section>
-          ))}
-        </div>
-      </details>
     </section>
   );
 }

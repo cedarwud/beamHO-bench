@@ -6,7 +6,7 @@
  * - UI-only control surface for timeline execution and playback speed.
  */
 
-const PLAYBACK_RATE_OPTIONS = [0.25, 0.5, 1, 2, 4, 8] as const;
+const PLAYBACK_RATE_OPTIONS = [0.25, 0.5, 1, 2, 4, 8, 16, 32] as const;
 
 export interface TimelineControlsProps {
   tick: number;
@@ -17,6 +17,7 @@ export interface TimelineControlsProps {
   replayMaxTick: number;
   onToggleRun: () => void;
   onStep: () => void;
+  onStepBack: () => void;
   onReset: () => void;
   onPlaybackRateChange: (value: number) => void;
   onReplayTickChange: (tick: number) => void;
@@ -39,6 +40,7 @@ export function TimelineControls({
   replayMaxTick,
   onToggleRun,
   onStep,
+  onStepBack,
   onReset,
   onPlaybackRateChange,
   onReplayTickChange,
@@ -54,12 +56,6 @@ export function TimelineControls({
         <button type="button" onClick={onStep} disabled={isRunning}>
           Step
         </button>
-        <button type="button" onClick={onReset}>
-          Reset
-        </button>
-        <button type="button" onClick={onReplayLive} disabled={replayTick === null}>
-          Live
-        </button>
         <label className="sim-hud__select sim-timeline__speed">
           Speed
           <select
@@ -74,19 +70,8 @@ export function TimelineControls({
           </select>
         </label>
       </div>
-      <label className="sim-timeline__scrubber">
-        Replay
-        <input
-          type="range"
-          min={0}
-          max={Math.max(replayMaxTick, 0)}
-          value={Math.min(Math.max(replayValue, 0), Math.max(replayMaxTick, 0))}
-          onChange={(event) => onReplayTickChange(Math.round(Number(event.target.value)))}
-          disabled={isRunning || replayMaxTick <= 0}
-        />
-      </label>
       <span className="sim-timeline__meta">
-        t={timeSec.toFixed(1)}s | tick={tick} | view={replayTick === null ? 'live' : `replay@${replayTick}`}
+        t={timeSec.toFixed(1)}s | tick={tick}
       </span>
     </div>
   );

@@ -273,5 +273,52 @@ export function buildObserverSkyViewIntegrationCases(): SimTestCase[] {
         }
       },
     },
+    {
+      name: 'integration: observer-sky visual actor conversion stays source-agnostic across Synthetic Orbit, Starlink TLE, and OneWeb TLE',
+      kind: 'integration',
+      run: () => {
+        const profiles = [
+          buildSyntheticObserverSkyProfile(),
+          loadPaperProfile('starlink-like'),
+          loadPaperProfile('oneweb-like'),
+        ];
+
+        for (const profile of profiles) {
+          const batch = runBaselineBatch({
+            profile,
+            seed: 42,
+            baselines: ['max-rsrp'],
+            tickCount: 1,
+            captureSnapshots: true,
+          });
+          const snapshot = batch.runs[0]?.snapshots?.[0];
+          assertCondition(
+            Boolean(snapshot),
+            `Expected snapshot for source-agnostic visual actor validation profile=${profile.profileId}.`,
+          );
+
+          const view = buildObserverSkyDisplayView({
+            profile,
+            snapshot: snapshot as SimSnapshot,
+          });
+          const entering = view.frame.satellites.filter(
+            (satellite) => satellite.lifecycle === 'entering',
+          );
+
+          assertCondition(
+            entering.length > 0,
+            `Expected entering visual actors on first displayed frame for profile=${profile.profileId}.`,
+          );
+          assertCondition(
+            entering.some(
+              (satellite) =>
+                JSON.stringify(satellite.motionSourcePosition) !==
+                JSON.stringify(satellite.renderPosition),
+            ),
+            `Expected boundary/approach anchors to differ from final targets for profile=${profile.profileId}.`,
+          );
+        }
+      },
+    },
   ];
 }

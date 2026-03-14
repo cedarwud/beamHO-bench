@@ -36,8 +36,8 @@ export function NTPUScene() {
     clonedScene.traverse((obj: THREE.Object3D) => {
       if ((obj as THREE.Mesh).isMesh) {
         const mesh = obj as THREE.Mesh;
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
 
         // 將 MeshBasicMaterial 轉換為 MeshStandardMaterial
         if (mesh.material) {

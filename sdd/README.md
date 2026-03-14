@@ -65,7 +65,7 @@ This folder is explicitly split into implemented specs, the current pending work
 
 ## Pending Workspace
 
-1. no active pending spec at this time (`2026-03-13`)
+1. `pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md`
 2. lifecycle truth remains in:
    - `completed/beamHO-bench-implementation-status.md`
    - `pending/README.md`

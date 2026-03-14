@@ -9,6 +9,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  optimizeDeps: {
+    include: [
+      'three',
+      'three/examples/jsm/loaders/GLTFLoader.js',
+      '@react-three/fiber',
+      '@react-three/drei',
+    ],
+  },
   server: {
     host: '0.0.0.0', // 允許外部訪問
     port: 3000,

@@ -21,7 +21,7 @@ function clamp01(value: number): number {
 /**
  * Provenance:
  * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md (Section 1, 3.1, 3.4)
- * - sdd/pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md (Section 3.1, 3.5, 6)
+ * - sdd/pending/beamHO-bench-observer-sky-pass-conversion-sdd.md (Section D2)
  * - ASSUME-OBSERVER-SKY-PROJECTION-CORRIDOR
  *
  * Notes:
@@ -44,9 +44,9 @@ export function projectObserverSkyPosition(options: {
   const sceneExtentWorld =
     Math.max(options.config.areaWidthKm, options.config.areaHeightKm, 1) *
     Math.max(options.config.kmToWorldScale, 1e-9);
-  const domeRadiusWorld = Math.max(180, sceneExtentWorld * (options.config.domeRadiusRatio ?? 3.2));
+  const domeRadiusWorld = Math.max(320, sceneExtentWorld * (options.config.domeRadiusRatio ?? 3.2));
   const horizonLiftWorld = Math.max(
-    18,
+    32,
     sceneExtentWorld * (options.config.horizonLiftRatio ?? 0.28),
   );
   const azimuthRad = degToRad(azimuthDeg);

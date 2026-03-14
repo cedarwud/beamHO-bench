@@ -152,8 +152,8 @@ export const NTPU_CONFIG: SceneConfig = {
       position: [0, 50, 0],
       intensity: 1.5,
       shadow: {
-        mapSizeDesktop: 4096,
-        mapSizeMobile: 2048,
+        mapSizeDesktop: 1024,
+        mapSizeMobile: 512,
         cameraNear: 1,
         cameraFar: 1000,
         // 此值需涵蓋場景模型的 bounding box 範圍，否則陰影會被裁切

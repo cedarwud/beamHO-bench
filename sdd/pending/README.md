@@ -1,6 +1,6 @@
 # Pending SDD Workspace
 
-This folder is intentionally narrow. It is currently empty except for this index file.
+This folder is intentionally narrow. It currently holds only the active corrective workspace item.
 
 Status ownership:
 1. lifecycle truth is maintained in `sdd/completed/beamHO-bench-implementation-status.md`
@@ -8,7 +8,7 @@ Status ownership:
 
 ## 1. Current Workspace File
 
-1. none at this time (`2026-03-13`)
+1. `beamHO-bench-observer-sky-projection-selection-correction-sdd.md` (active pending on 2026-03-13)
 
 Notes:
 1. do not add unrelated completed specs back into `pending/`
@@ -35,7 +35,7 @@ Implemented specs that used to remain in `pending/` now live in:
 
 ## 3. Constraint Binding
 
-Any future file placed under `pending/` must still comply with:
+Any file left under `pending/` must still comply with:
 1. `PROJECT_CONSTRAINTS.md`
 2. current status authority in `sdd/completed/beamHO-bench-implementation-status.md`
 3. active frontend acceptance requirements when observer-sky behavior is involved

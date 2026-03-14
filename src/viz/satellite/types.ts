@@ -8,16 +8,22 @@ export type SatelliteDisplayPhase =
   | 'mid-pass'
   | 'high-pass'
   | 'boundary-egress';
+export type SatelliteDisplayEdge = 'left' | 'right';
+export type SatelliteDisplayLifecycle = 'entering' | 'tracked' | 'exiting';
 
 export interface SatelliteDisplayState {
   satelliteId: number;
   zone: RenderableSatelliteVisibilityZone;
   renderPosition: [number, number, number];
+  motionSourcePosition?: [number, number, number];
   azimuthDeg: number;
   elevationDeg: number;
   rangeKm: number;
   opacity: number;
   modelScale?: number;
+  phase?: SatelliteDisplayPhase;
+  edge?: SatelliteDisplayEdge;
+  lifecycle?: SatelliteDisplayLifecycle;
 }
 
 export interface SatelliteDisplayFrame {
@@ -66,6 +72,7 @@ export interface SatelliteDisplayContinuityMemory {
   tick: number;
   timeSec: number;
   selectedIds: number[];
+  actors?: SatelliteDisplayActorMemory[];
 }
 
 export interface SatelliteDisplayContinuityInput {
@@ -76,6 +83,16 @@ export interface SatelliteDisplayContinuityInput {
   timeSec: number;
   memory?: SatelliteDisplayContinuityMemory | null;
   config?: SatelliteDisplayContinuityConfig;
+}
+
+export interface SatelliteDisplayActorMemory {
+  satelliteId: number;
+  renderPosition: [number, number, number];
+  phase: SatelliteDisplayPhase;
+  edge: SatelliteDisplayEdge;
+  zone: RenderableSatelliteVisibilityZone;
+  opacity: number;
+  exitTicksRemaining: number;
 }
 
 export interface SatelliteDisplayAdapterConfig {
@@ -110,6 +127,7 @@ export interface ObserverSkyProjectionConfig {
   domeRadiusRatio?: number;
   lateralStretchRatio?: number;
   depthCompressionRatio?: number;
+  /** @deprecated Set to 0. Retained for type compatibility. */
   centerRetentionRatio?: number;
   verticalCurveExponent?: number;
   minRenderElevationDeg?: number;

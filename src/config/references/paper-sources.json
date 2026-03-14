@@ -292,6 +292,16 @@
       "note": "Observer-sky visible-set selection remains candidate-separated and deterministic while interleaving boundary, mid-pass, and higher-pass layers instead of ranking only by active high-elevation top-N priority."
     },
     {
+      "sourceId": "ASSUME-OBSERVER-SKY-VISUAL-ACTOR-POLICY",
+      "type": "assumption",
+      "title": "Observer-Sky Visual Actor and Pass-Lane Policy",
+      "locator": "viz.satellite.pass-composition-state|viz.satellite.pass-motion-policy|viz.satellite.pass-trajectory-conversion|components.sim.SatelliteModel",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:observer-sky-visual-actor-policy",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Observer-sky frontend uses source-agnostic visual actor state, boundary entry/exit anchors, and deterministic phase-lane offsets so Synthetic and TLE geometry share the same readable pass semantics."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

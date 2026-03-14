@@ -23,6 +23,9 @@ export class SimEngine {
   private snapshot: SimSnapshot;
   private timer: ReturnType<typeof setInterval> | null = null;
   private playbackRate = 1;
+  private lastEmitTime = 0;
+  /** Minimum ms between listener notifications (throttle UI updates). */
+  private static readonly MIN_EMIT_INTERVAL_MS = 64; // ~15fps max UI update rate
 
   constructor(options: SimEngineOptions) {
     this.scenario = options.scenario;
@@ -59,6 +62,7 @@ export class SimEngine {
     }
 
     this.playbackRate = normalized;
+    this.lastEmitTime = 0;
 
     if (this.timer) {
       this.stop();
@@ -83,20 +87,28 @@ export class SimEngine {
 
     clearInterval(this.timer);
     this.timer = null;
+    // Flush any throttled snapshot so UI stays in sync
+    this.lastEmitTime = 0;
+    this.emitToListeners();
   }
 
   step(): void {
     this.snapshot = this.scenario.nextSnapshot(this.snapshot, this.tickContext);
-    this.emit();
+    const now = performance.now();
+    if (now - this.lastEmitTime >= SimEngine.MIN_EMIT_INTERVAL_MS) {
+      this.lastEmitTime = now;
+      this.emitToListeners();
+    }
   }
 
   reset(): void {
     this.stop();
     this.snapshot = this.scenario.createInitialSnapshot();
-    this.emit();
+    this.lastEmitTime = 0;
+    this.emitToListeners();
   }
 
-  private emit(): void {
+  private emitToListeners(): void {
     for (const listener of this.listeners) {
       listener(this.snapshot);
     }
@@ -106,7 +118,7 @@ export class SimEngine {
     if (!Number.isFinite(value)) {
       return 1;
     }
-    return Math.min(Math.max(value, 0.25), 8);
+    return Math.min(Math.max(value, 0.25), 32);
   }
 
   private resolveIntervalMs(): number {

@@ -40,6 +40,29 @@ export interface ObserverSkyProjectionPolicy {
   minRenderElevationDeg: number;
 }
 
+export interface ObserverSkyPassLayoutPolicy {
+  boundaryAnchorXRatio: number;
+  boundaryAnchorYRatio: number;
+  laneSpreadRatio: number;
+  laneDepthSpreadRatio: number;
+  phaseLateralBiasRatio: {
+    boundary: number;
+    mid: number;
+    high: number;
+  };
+  phaseVerticalBiasRatio: {
+    boundary: number;
+    mid: number;
+    high: number;
+  };
+  phaseEntryLeadRatio: {
+    boundary: number;
+    mid: number;
+    high: number;
+  };
+  exitLingerTicks: number;
+}
+
 export interface ObserverSkyEvaluationViewport {
   widthPx: number;
   heightPx: number;
@@ -69,6 +92,7 @@ export interface ObserverSkyCompositionConfig {
   camera: ObserverSkyCompositionCamera;
   controls: ObserverSkyCompositionControls;
   projection: ObserverSkyProjectionPolicy;
+  passLayout: ObserverSkyPassLayoutPolicy;
   evaluationViewport: ObserverSkyEvaluationViewport;
   screenSpaceAcceptance: ObserverSkyScreenSpaceAcceptance;
 }
@@ -89,6 +113,12 @@ function cloneComposition(
     },
     controls: { ...value.controls },
     projection: { ...value.projection },
+    passLayout: {
+      ...value.passLayout,
+      phaseLateralBiasRatio: { ...value.passLayout.phaseLateralBiasRatio },
+      phaseVerticalBiasRatio: { ...value.passLayout.phaseVerticalBiasRatio },
+      phaseEntryLeadRatio: { ...value.passLayout.phaseEntryLeadRatio },
+    },
     evaluationViewport: { ...value.evaluationViewport },
     screenSpaceAcceptance: { ...value.screenSpaceAcceptance },
   };
@@ -110,9 +140,57 @@ const DEFAULT_SCREEN_SPACE_ACCEPTANCE: ObserverSkyScreenSpaceAcceptance = {
   maxTopClusterShare: 0.5,
   phaseLowElevationDeg: 24,
   phaseHighElevationDeg: 46,
-  boundaryEdgeInset: 0.15,
-  boundaryLowerBandY: 0.58,
-  maxRetainedStepDistance: 0.24,
+  boundaryEdgeInset: 0.25,
+  boundaryLowerBandY: 0.42,
+  maxRetainedStepDistance: 0.32,
+};
+
+const PRIMARY_PASS_LAYOUT: ObserverSkyPassLayoutPolicy = {
+  // Source: ASSUME-OBSERVER-SKY-VISUAL-ACTOR-POLICY
+  boundaryAnchorXRatio: 1.18,
+  boundaryAnchorYRatio: 0.22,
+  laneSpreadRatio: 0.22,
+  laneDepthSpreadRatio: 0.08,
+  phaseLateralBiasRatio: {
+    boundary: 0.18,
+    mid: 0.11,
+    high: 0.05,
+  },
+  phaseVerticalBiasRatio: {
+    boundary: -0.08,
+    mid: 0,
+    high: 0.09,
+  },
+  phaseEntryLeadRatio: {
+    boundary: 0.14,
+    mid: 0.18,
+    high: 0.12,
+  },
+  exitLingerTicks: 8,
+};
+
+const CAMPUS_PASS_LAYOUT: ObserverSkyPassLayoutPolicy = {
+  // Source: ASSUME-OBSERVER-SKY-VISUAL-ACTOR-POLICY
+  boundaryAnchorXRatio: 1.08,
+  boundaryAnchorYRatio: 0.18,
+  laneSpreadRatio: 0.12,
+  laneDepthSpreadRatio: 0.05,
+  phaseLateralBiasRatio: {
+    boundary: 0.08,
+    mid: 0.04,
+    high: 0.02,
+  },
+  phaseVerticalBiasRatio: {
+    boundary: -0.04,
+    mid: 0,
+    high: 0.04,
+  },
+  phaseEntryLeadRatio: {
+    boundary: 0.08,
+    mid: 0.1,
+    high: 0.08,
+  },
+  exitLingerTicks: 6,
 };
 
 const COMPOSITIONS: Record<ObserverSkyCompositionModeId, ObserverSkyCompositionConfig> = {
@@ -125,30 +203,31 @@ const COMPOSITIONS: Record<ObserverSkyCompositionModeId, ObserverSkyCompositionC
     primaryAcceptedView: true,
     sourceId: 'ASSUME-OBSERVER-SKY-PRIMARY-COMPOSITION',
     camera: {
-      position: [0, 118, 620],
-      target: [0, 155, 0],
-      fov: 28,
+      position: [0, 900, 1200],
+      target: [0, 100, 0],
+      fov: 38,
       near: NTPU_CONFIG.camera.near,
       far: NTPU_CONFIG.camera.far,
     },
     controls: {
       enableDamping: NTPU_CONFIG.controls.enableDamping,
       dampingFactor: NTPU_CONFIG.controls.dampingFactor,
-      minDistance: 280,
-      maxDistance: 1300,
+      minDistance: 400,
+      maxDistance: 1600,
       minPolarAngle: 0.15,
       maxPolarAngle: 1.25,
     },
     projection: {
       // Source: ASSUME-OBSERVER-SKY-PROJECTION-CORRIDOR
       horizonLiftRatio: 0.18,
-      domeRadiusRatio: 2.95,
-      lateralStretchRatio: 1.42,
-      depthCompressionRatio: 0.56,
-      centerRetentionRatio: 0.18,
-      verticalCurveExponent: 0.86,
+      domeRadiusRatio: 4.5,
+      lateralStretchRatio: 1.3,
+      depthCompressionRatio: 0.65,
+      centerRetentionRatio: 0,
+      verticalCurveExponent: 0.55,
       minRenderElevationDeg: 0,
     },
+    passLayout: PRIMARY_PASS_LAYOUT,
     evaluationViewport: PRIMARY_EVALUATION_VIEWPORT,
     screenSpaceAcceptance: DEFAULT_SCREEN_SPACE_ACCEPTANCE,
   },
@@ -183,6 +262,7 @@ const COMPOSITIONS: Record<ObserverSkyCompositionModeId, ObserverSkyCompositionC
       verticalCurveExponent: 1,
       minRenderElevationDeg: 0,
     },
+    passLayout: CAMPUS_PASS_LAYOUT,
     evaluationViewport: PRIMARY_EVALUATION_VIEWPORT,
     screenSpaceAcceptance: DEFAULT_SCREEN_SPACE_ACCEPTANCE,
   },

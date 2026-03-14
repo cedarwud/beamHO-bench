@@ -112,11 +112,13 @@ export function buildSatelliteDisplayContinuityMemory(options: {
   tick: number;
   timeSec: number;
   selectedIds: readonly number[];
+  actors?: ReadonlyArray<NonNullable<SatelliteDisplayContinuityMemory['actors']>[number]>;
 }): SatelliteDisplayContinuityMemory {
   return {
     sequenceKey: options.sequenceKey,
     tick: options.tick,
     timeSec: options.timeSec,
     selectedIds: [...options.selectedIds],
+    actors: options.actors ? [...options.actors] : undefined,
   };
 }

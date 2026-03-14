@@ -67,7 +67,17 @@ function comparePhasePriority(
   }
 
   if (left.phase !== right.phase) {
-    return 0;
+    // Rank by phase priority so sorting is meaningful across phases.
+    // Note: authoritative phase determination uses real elevation trend
+    // in pass-motion-policy.ts; the sin(azimuth) heuristic here is only
+    // for budget slot allocation at the selection stage.
+    const phaseOrder: Record<string, number> = {
+      'high-pass': 0,
+      'mid-pass': 1,
+      'boundary-ingress': 2,
+      'boundary-egress': 3,
+    };
+    return (phaseOrder[left.phase] ?? 4) - (phaseOrder[right.phase] ?? 4);
   }
 
   if (left.phase === 'high-pass') {

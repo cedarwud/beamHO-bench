@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
 **Date:** 2026-03-13  
-**Status:** v2 Core Scope Complete + Observer-Sky Visual Acceptance Closed
+**Status:** v2 Core Scope Complete + Active Observer-Sky Projection/Selection Correction Pending
 
 ---
 
@@ -30,13 +30,14 @@ Current status snapshot means:
 16. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md` has D1~D5 implemented with observer-sky display-layer rewrite evidence and stage-gate verification.
 17. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-visual-correction-sdd.md` has D1~D6 implemented with display/candidate separation, sky-coverage, continuity, and stage-gate closure evidence.
 18. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md` has D1~D6 implemented with primary-view composition, screen-space acceptance gates, manual acceptance checklist, and closure evidence.
+19. A new active pending package `sdd/pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md` is open because the live frontend still fails observer-sky acceptance in direct Playwright/manual review due to unresolved projection/selection semantics.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
 2. RSMA soft-HO and broad large-scale/multi-paper DRL fusion, deferred by BG-6 governance.
 
 Active pending items (implementation open):
-1. none at this time (`2026-03-13`)
+1. `sdd/pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md`
 
 ---
 

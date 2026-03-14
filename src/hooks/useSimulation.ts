@@ -32,7 +32,7 @@ function normalizePlaybackRate(value: number): number {
   if (!Number.isFinite(value)) {
     return 1;
   }
-  return Math.min(Math.max(value, 0.25), 8);
+  return Math.min(Math.max(value, 0.25), 32);
 }
 
 export function useSimulation(options: UseSimulationOptions = {}): UseSimulationResult {
@@ -92,9 +92,12 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
     const unsubscribe = setup.engine.subscribe((nextSnapshot) => {
       setSnapshot(nextSnapshot);
 
-      historyRef.current.push(cloneSnapshot(nextSnapshot));
-      if (historyRef.current.length > 7200) {
-        historyRef.current.shift();
+      // Only store every 4th snapshot to reduce clone overhead
+      if (nextSnapshot.tick % 4 === 0) {
+        historyRef.current.push(cloneSnapshot(nextSnapshot));
+        if (historyRef.current.length > 600) {
+          historyRef.current = historyRef.current.slice(150);
+        }
       }
     });
 
@@ -130,6 +133,14 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
   const step = useCallback(() => {
     setup.engine.step();
   }, [setup]);
+
+  const stepBack = useCallback(() => {
+    if (historyRef.current.length < 2) return;
+    // Pop current, restore previous
+    historyRef.current.pop();
+    const prev = historyRef.current[historyRef.current.length - 1];
+    if (prev) setSnapshot(prev);
+  }, []);
 
   const reset = useCallback(() => {
     setup.engine.reset();
@@ -172,6 +183,7 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
     start,
     stop,
     step,
+    stepBack,
     reset,
     setPlaybackRate,
     exportSourceTrace: exporters.exportSourceTrace,

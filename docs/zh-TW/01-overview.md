@@ -18,8 +18,8 @@
 
 v2 延伸能力也已落地（RL plugin、joint beam hopping + HO、baseline generalization）。
 
-目前 `pending/` 已清空，不再混放通用 closure-tracked 規格：
-1. 目前 active pending：無
+目前 `pending/` 已重新開啟，但只保留單一前端 corrective spec：
+1. 目前 active pending：`sdd/pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md`
 2. 歷史已完成規格：`sdd/completed/implemented-specs/`
 
 長期 backlog（不納入本期完成率）：
@@ -54,7 +54,7 @@ React + R3F，消費快照資料做 3D 呈現與互動。
 4. `src/data/tle/`：real-trace 使用的 fixture
 5. `scripts/`：測試、驗證、資料同步腳本
 6. `sdd/completed/`：已落地規格
-7. `sdd/pending/`：目前空工作區（僅保留索引）
+7. `sdd/pending/`：目前單一前端 corrective 工作區
 8. `sdd/backlog/`：長期 backlog 規格（不納入本期完成率）
 
 ## 6. 常用命令
