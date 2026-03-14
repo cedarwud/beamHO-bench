@@ -215,7 +215,7 @@ const COMPOSITIONS: Record<ObserverSkyCompositionModeId, ObserverSkyCompositionC
       minDistance: 400,
       maxDistance: 1600,
       minPolarAngle: 0.15,
-      maxPolarAngle: 1.25,
+      maxPolarAngle: Math.PI / 2,
     },
     projection: {
       // Source: ASSUME-OBSERVER-SKY-PROJECTION-CORRIDOR

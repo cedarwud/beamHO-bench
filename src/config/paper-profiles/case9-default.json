@@ -28,8 +28,8 @@
     "minElevationDeg": 10
   },
   "beam": {
-    "beamsPerSatellite": 19,
-    "layout": "hex-19",
+    "beamsPerSatellite": 7,
+    "layout": "hex-7",
     "footprintDiameterKm": 50,
     "beamwidth3dBDeg": 4.4127,
     "overlapRatio": 0.25,

@@ -7,6 +7,7 @@ export type ResearchParameterGroupId =
   | 'ue'
   | 'handover'
   | 'channel'
+  | 'linkbudget'
   | 'scheduler';
 
 export type ResearchParameterId =
@@ -21,6 +22,7 @@ export type ResearchParameterId =
   | 'beam.beamsPerSatellite'
   | 'beam.overlapRatio'
   | 'beam.frequencyReuse'
+  | 'beam.footprintDiameterKm'
   | 'ue.count'
   | 'ue.speedKmph'
   | 'handover.params.a3OffsetDb'
@@ -29,10 +31,15 @@ export type ResearchParameterId =
   | 'handover.params.homDb'
   | 'handover.params.mtsSec'
   | 'handover.params.timerAlpha'
+  | 'channel.carrierFrequencyGHz'
+  | 'channel.bandwidthMHz'
+  | 'beam.eirpDensityDbwPerMHz'
+  | 'scenario.deployment'
   | 'channel.smallScaleModel'
   | 'channel.smallScaleParams.temporalCorrelation.enabled'
   | 'channel.smallScaleParams.dopplerAware.enabled'
-  | 'scheduler.mode';
+  | 'scheduler.mode'
+  | 'scheduler.maxActiveBeamsPerSatellite';
 
 export interface ResearchParameterOption {
   value: string;
@@ -90,8 +97,13 @@ export const RESEARCH_PARAMETER_GROUPS: readonly ResearchParameterGroup[] = [
     description: 'A3/A4/CHO 觸發敏感度。',
   },
   {
+    id: 'linkbudget',
+    label: 'Link Budget',
+    description: '載波頻率、EIRP、頻寬與場景設定。',
+  },
+  {
     id: 'channel',
-    label: 'Channel Realism',
+    label: 'Fading Model',
     description: '小尺度衰落模型與時間相關增量。',
   },
   {

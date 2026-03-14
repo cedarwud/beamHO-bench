@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type { PaperProfile } from '@/config/paper-profiles/types';
 import {
   type ResearchConsistencyIssue,
@@ -7,7 +7,21 @@ import {
   type ResearchParameterSelection,
   listResearchParameterGroups,
 } from '@/config/research-parameters/catalog';
+import type { ResearchParameterGroupId } from '@/config/research-parameters/types';
 import type { RuntimeBaseline } from '@/sim/handover/baseline-types';
+
+type PanelTab = 'satellite' | 'beam' | 'channel';
+
+const TAB_GROUPS: Record<PanelTab, readonly ResearchParameterGroupId[]> = {
+  satellite: ['orbit', 'ue', 'handover'],
+  beam: ['beam', 'scheduler'],
+  channel: ['linkbudget', 'channel'],
+};
+
+const COLLAPSED_BY_DEFAULT: ReadonlySet<ResearchParameterGroupId> = new Set([
+  'handover',
+  'orbit',
+]);
 
 const CORE_SCENARIO_PARAMETER_IDS: readonly ResearchParameterId[] = [
   'constellation.altitudeKm',
@@ -43,6 +57,8 @@ const BASELINE_PARAMETER_IDS: Record<RuntimeBaseline, readonly ResearchParameter
   ],
 };
 
+export type ResearchPanelTab = PanelTab;
+
 export interface ResearchParameterPanelProps {
   profile: PaperProfile;
   baseline: RuntimeBaseline;
@@ -52,6 +68,7 @@ export interface ResearchParameterPanelProps {
   onSelectionChange: (parameterId: ResearchParameterId, value: string) => void;
   onConsistencyModeChange: (mode: ResearchConsistencyMode) => void;
   onReset: () => void;
+  onTabChange?: (tab: PanelTab) => void;
 }
 
 export function ResearchParameterPanel({
@@ -63,7 +80,15 @@ export function ResearchParameterPanel({
   onSelectionChange,
   onConsistencyModeChange,
   onReset,
+  onTabChange,
 }: ResearchParameterPanelProps) {
+  const [activeTab, setActiveTab] = useState<PanelTab>('satellite');
+
+  const handleTabChange = (tab: PanelTab) => {
+    setActiveTab(tab);
+    onTabChange?.(tab);
+  };
+
   const groups = useMemo(
     () =>
       listResearchParameterGroups({
@@ -100,26 +125,17 @@ export function ResearchParameterPanel({
       ),
     [baselineParameterIds, visibleSpecById],
   );
-  const advancedGroups = useMemo(
-    () =>
-      groups
-        .map(({ group, specs }) => ({
-          group,
-          specs: specs.filter((spec) => !coreParameterIds.has(spec.id)),
-        }))
-        .filter((entry) => entry.specs.length > 0),
-    [coreParameterIds, groups],
-  );
-  const advancedCount = useMemo(
-    () => advancedGroups.reduce((sum, entry) => sum + entry.specs.length, 0),
-    [advancedGroups],
-  );
-  const advancedSummary = useMemo(() => {
-    if (consistencyIssues.length > 0) {
-      return `${advancedCount} params | ${consistencyIssues.length} issues`;
-    }
-    return `${advancedCount} params`;
-  }, [advancedCount, consistencyIssues.length]);
+
+  const tabGroups = useMemo(() => {
+    const allowedGroupIds = new Set(TAB_GROUPS[activeTab]);
+    return groups
+      .filter(({ group }) => allowedGroupIds.has(group.id))
+      .map(({ group, specs }) => ({
+        group,
+        specs: specs.filter((spec) => !coreParameterIds.has(spec.id)),
+      }))
+      .filter((entry) => entry.specs.length > 0);
+  }, [activeTab, coreParameterIds, groups]);
 
   const renderParameterField = (parameterId: ResearchParameterId) => {
     const spec = visibleSpecById.get(parameterId);
@@ -152,29 +168,75 @@ export function ResearchParameterPanel({
     );
   };
 
+  const tabs: { key: PanelTab; label: string }[] = [
+    { key: 'satellite', label: 'Satellite' },
+    { key: 'beam', label: 'Beam' },
+    { key: 'channel', label: 'Channel' },
+  ];
+
   return (
     <section className="sim-research-panel" aria-label="Research parameters">
       <div className="sim-research-panel__header">
         <div className="sim-research-panel__title">Research Parameters</div>
       </div>
-      <section className="sim-research-section">
-        <header className="sim-research-section__header">
-          <h4>Core Scenario Controls</h4>
-        </header>
-        <div className="sim-research-group__grid">
-          {coreScenarioSpecs.map((spec) => renderParameterField(spec.id))}
-        </div>
-      </section>
-      {coreBaselineSpecs.length > 0 ? (
-        <section className="sim-research-section">
-          <header className="sim-research-section__header">
-            <h4>Baseline Trigger Controls</h4>
-          </header>
-          <div className="sim-research-group__grid">
-            {coreBaselineSpecs.map((spec) => renderParameterField(spec.id))}
-          </div>
-        </section>
+      <nav className="sim-research-tabs" aria-label="Parameter category">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            className={`sim-research-tab${activeTab === tab.key ? ' sim-research-tab--active' : ''}`}
+            onClick={() => handleTabChange(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
+      {activeTab === 'satellite' ? (
+        <>
+          <section className="sim-research-section">
+            <header className="sim-research-section__header">
+              <h4>Core Scenario Controls</h4>
+            </header>
+            <div className="sim-research-group__grid">
+              {coreScenarioSpecs.map((spec) => renderParameterField(spec.id))}
+            </div>
+          </section>
+          {coreBaselineSpecs.length > 0 ? (
+            <section className="sim-research-section">
+              <header className="sim-research-section__header">
+                <h4>Baseline Trigger Controls</h4>
+              </header>
+              <div className="sim-research-group__grid">
+                {coreBaselineSpecs.map((spec) => renderParameterField(spec.id))}
+              </div>
+            </section>
+          ) : null}
+        </>
       ) : null}
+      {tabGroups.map(({ group, specs }) => {
+        const collapsed = COLLAPSED_BY_DEFAULT.has(group.id);
+        return collapsed ? (
+          <details key={group.id} className="sim-research-collapsible">
+            <summary className="sim-research-collapsible__summary">
+              <span className="sim-research-collapsible__arrow">&#9656;</span>
+              <span>{group.label}</span>
+              <span className="sim-research-collapsible__badge">{specs.length} params</span>
+            </summary>
+            <div className="sim-research-group__grid">
+              {specs.map((spec) => renderParameterField(spec.id))}
+            </div>
+          </details>
+        ) : (
+          <section key={group.id} className="sim-research-section">
+            <header className="sim-research-section__header">
+              <h4>{group.label}</h4>
+            </header>
+            <div className="sim-research-group__grid">
+              {specs.map((spec) => renderParameterField(spec.id))}
+            </div>
+          </section>
+        );
+      })}
     </section>
   );
 }

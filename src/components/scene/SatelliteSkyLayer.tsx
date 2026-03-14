@@ -246,7 +246,7 @@ function SatelliteFleet({
     const simTime = simTimeRef.current;
     const keplerScale = altitudeScale(altitudeKm);
     const visualAltScale = altitudeKm / REFERENCE_ALTITUDE_KM;
-    const ghostHeightThreshold = 400 * visualAltScale * (minElevationDeg / 90);
+    const ghostHeightThreshold = 800 * visualAltScale * (minElevationDeg / 90);
     // Gap matches generateSlots
     const avgPass = 700 * keplerScale;
     const gapSec = Math.max(60, avgPass * 0.15);
@@ -271,7 +271,7 @@ function SatelliteFleet({
 
       // Higher altitude → visually larger arc (farther, higher dome)
       const baseRadius = 900 * visualAltScale;
-      const heightRadius = 400 * visualAltScale * (slot.peakElevationDeg / 90);
+      const heightRadius = 800 * visualAltScale * (slot.peakElevationDeg / 90);
       const currentY = heightRadius * Math.sin(angle);
 
       entry.group.position.set(

@@ -8,7 +8,7 @@ import { ObserverSkyCameraRig } from './ObserverSkyCameraRig';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
 import { HOEventTimeline, type HOEventTimelineRow } from '../sim/HOEventTimeline';
-import { ResearchParameterPanel } from '../sim/ResearchParameterPanel';
+import { ResearchParameterPanel, type ResearchPanelTab } from '../sim/ResearchParameterPanel';
 import { TimelineControls } from '../sim/TimelineControls';
 import { NTPU_CONFIG } from '@/config/ntpu.config';
 import { Starfield } from '../ui/Starfield';
@@ -96,6 +96,7 @@ export function MainScene() {
     prepared: true,
   });
   const [isHudCollapsed, setIsHudCollapsed] = useState(false);
+  const [researchTab, setResearchTab] = useState<ResearchPanelTab>('satellite');
   const [replaySnapshots, setReplaySnapshots] = useState<SimSnapshot[]>([]);
   const [replayTick, setReplayTick] = useState<number | null>(null);
   const baseProfile = useMemo(
@@ -294,8 +295,9 @@ export function MainScene() {
                 onSelectionChange={handleResearchParameterChange}
                 onConsistencyModeChange={setResearchConsistencyMode}
                 onReset={handleResetResearchParameters}
+                onTabChange={setResearchTab}
               />
-              <section className="sim-hud-panel" aria-label="Playback controls">
+              {researchTab === 'satellite' ? <section className="sim-hud-panel" aria-label="Playback controls">
                 <div className="sim-hud-panel__title">Playback</div>
                 <TimelineControls
                   tick={displayedSnapshot.tick}
@@ -312,7 +314,7 @@ export function MainScene() {
                   onReplayTickChange={(nextTick) => setReplayTick(nextTick)}
                   onReplayLive={() => setReplayTick(null)}
                 />
-              </section>
+              </section> : null}
             </div>
           </div>
         ) : null}

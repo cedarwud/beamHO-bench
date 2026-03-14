@@ -238,6 +238,34 @@ canvas {
   background: rgba(14, 116, 144, 0.35);
 }
 
+.sim-research-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(125, 211, 252, 0.24);
+}
+
+.sim-research-tab {
+  flex: 1;
+  padding: 6px 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: rgba(226, 232, 240, 0.55);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.sim-research-tab:hover {
+  color: #e2e8f0;
+}
+
+.sim-research-tab--active {
+  color: #7dd3fc;
+  border-bottom-color: #7dd3fc;
+}
+
 .sim-research-consistency {
   border: 1px dashed rgba(125, 211, 252, 0.3);
   border-radius: 8px;
@@ -389,6 +417,67 @@ canvas {
   margin-top: 10px;
   display: grid;
   gap: 10px;
+}
+
+.sim-research-collapsible {
+  border-top: 1px dashed rgba(125, 211, 252, 0.24);
+  padding-top: 10px;
+}
+
+.sim-research-collapsible__summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7dd3fc;
+  padding: 8px 12px;
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  border-radius: 6px;
+  background: rgba(14, 116, 144, 0.15);
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.sim-research-collapsible__summary::-webkit-details-marker {
+  display: none;
+}
+
+.sim-research-collapsible__arrow {
+  font-size: 14px;
+  display: inline-block;
+  transition: transform 0.15s;
+  color: #7dd3fc;
+}
+
+.sim-research-collapsible[open] > .sim-research-collapsible__summary .sim-research-collapsible__arrow {
+  transform: rotate(90deg);
+}
+
+.sim-research-collapsible[open] > .sim-research-collapsible__summary {
+  border-color: rgba(125, 211, 252, 0.5);
+  background: rgba(14, 116, 144, 0.25);
+}
+
+.sim-research-collapsible__summary:hover {
+  background: rgba(14, 116, 144, 0.3);
+  border-color: rgba(125, 211, 252, 0.55);
+  box-shadow: 0 0 8px rgba(125, 211, 252, 0.15);
+}
+
+.sim-research-collapsible__badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: #0e7490;
+  background: rgba(125, 211, 252, 0.18);
+  padding: 1px 7px;
+  border-radius: 9px;
+  margin-left: auto;
+}
+
+.sim-research-collapsible > .sim-research-group__grid {
+  margin-top: 8px;
 }
 
 .sim-hud__actions button {

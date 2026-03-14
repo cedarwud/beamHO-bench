@@ -1,6 +1,7 @@
 import type { DeepPartial } from '@/config/paper-profiles/loader';
 import type {
   BeamLayout,
+  Deployment,
   FrequencyReuse,
   PaperProfile,
   ProfileMode,
@@ -381,7 +382,7 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
       { value: '19', label: '19 beams' },
       { value: '50', label: '50 beams' },
     ],
-    readFromProfile: (profile) => stringOfNumber(profile.beam.beamsPerSatellite, 19),
+    readFromProfile: (profile) => stringOfNumber(profile.beam.beamsPerSatellite, 7),
     applyToOverrides: (serializedValue, overrides) => {
       const beamCount = Math.max(1, Math.round(toNumber(serializedValue, 'beam.beamsPerSatellite')));
       overrides.beam ??= {};
@@ -422,6 +423,33 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     applyToOverrides: (serializedValue, overrides) => {
       overrides.beam ??= {};
       overrides.beam.frequencyReuse = asFrequencyReuse(serializedValue);
+    },
+  },
+  {
+    id: 'beam.footprintDiameterKm',
+    groupId: 'beam',
+    label: 'Beam Diameter',
+    description: '單一波束地面覆蓋直徑（km）。由高度與 HPBW 推導，也可手動覆寫。',
+    sourceIds: [
+      'PAP-2022-A4EVENT-CORE',
+      'PAP-2025-TIMERCHO-CORE',
+      'PAP-2024-MADRL-CORE',
+      'ASSUME-BEAM-FOOTPRINT-GEOMETRY-COUPLING',
+    ],
+    options: [
+      { value: '50', label: '50 km' },
+      { value: '100', label: '100 km' },
+      { value: '150', label: '150 km' },
+      { value: '200', label: '200 km' },
+    ],
+    readFromProfile: (profile) =>
+      stringOfNumber(profile.beam.footprintDiameterKm, 50),
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.beam ??= {};
+      overrides.beam.footprintDiameterKm = toNumber(
+        serializedValue,
+        'beam.footprintDiameterKm',
+      );
     },
   },
   {
@@ -584,6 +612,111 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     },
   },
   {
+    id: 'channel.carrierFrequencyGHz',
+    groupId: 'linkbudget',
+    label: 'Carrier Frequency',
+    description: '載波頻率，影響 FSPL、SF/CL 查表、波束直徑。',
+    sourceIds: [
+      'PAP-2022-A4EVENT-CORE',
+      'PAP-2025-TIMERCHO-CORE',
+      'PAP-2024-HOBS',
+    ],
+    options: [
+      { value: '2', label: 'S-band (2 GHz)' },
+      { value: '12', label: 'Ku-band (12 GHz)' },
+      { value: '20', label: 'Ka-band (20 GHz)' },
+      { value: '28', label: 'Ka-band (28 GHz)' },
+    ],
+    readFromProfile: (profile) =>
+      stringOfNumber(profile.channel.carrierFrequencyGHz, 2),
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.channel ??= {};
+      overrides.channel.carrierFrequencyGHz = toNumber(
+        serializedValue,
+        'channel.carrierFrequencyGHz',
+      );
+    },
+  },
+  {
+    id: 'beam.eirpDensityDbwPerMHz',
+    groupId: 'linkbudget',
+    label: 'EIRP Density',
+    description: '衛星等效全向輻射功率密度（dBW/MHz）。',
+    sourceIds: [
+      'PAP-2022-A4EVENT-CORE',
+      'PAP-2025-TIMERCHO-CORE',
+      'PAP-2024-BEAM-MGMT-SPECTRUM',
+    ],
+    options: [
+      { value: '30', label: '30 dBW/MHz' },
+      { value: '34', label: '34 dBW/MHz (3GPP Case 9)' },
+      { value: '40', label: '40 dBW/MHz' },
+    ],
+    readFromProfile: (profile) =>
+      stringOfNumber(profile.beam.eirpDensityDbwPerMHz, 34),
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.beam ??= {};
+      overrides.beam.eirpDensityDbwPerMHz = toNumber(
+        serializedValue,
+        'beam.eirpDensityDbwPerMHz',
+      );
+    },
+  },
+  {
+    id: 'channel.bandwidthMHz',
+    groupId: 'linkbudget',
+    label: 'Bandwidth',
+    description: '通道頻寬（MHz），影響噪聲功率與吞吐量。',
+    sourceIds: [
+      'PAP-2022-A4EVENT-CORE',
+      'PAP-2024-BEAM-MGMT-SPECTRUM',
+      'PAP-2026-BHFREQREUSE',
+    ],
+    options: [
+      { value: '10', label: '10 MHz' },
+      { value: '30', label: '30 MHz' },
+      { value: '100', label: '100 MHz' },
+      { value: '400', label: '400 MHz' },
+    ],
+    readFromProfile: (profile) =>
+      stringOfNumber(profile.channel.bandwidthMHz, 30),
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.channel ??= {};
+      overrides.channel.bandwidthMHz = toNumber(
+        serializedValue,
+        'channel.bandwidthMHz',
+      );
+    },
+  },
+  {
+    id: 'scenario.deployment',
+    groupId: 'linkbudget',
+    label: 'Scenario',
+    description: '部署場景，決定 3GPP TR 38.811 SF/CL 查表。',
+    sourceIds: [
+      'PAP-2022-A4EVENT-CORE',
+      'PAP-2025-TIMERCHO-CORE',
+      'PAP-2024-MCCHO-CORE',
+    ],
+    options: [
+      { value: 'rural', label: 'Rural' },
+      { value: 'suburban', label: 'Suburban' },
+      { value: 'dense-urban', label: 'Dense Urban' },
+    ],
+    readFromProfile: (profile) => profile.scenario.deployment,
+    applyToOverrides: (serializedValue, overrides) => {
+      if (
+        serializedValue !== 'rural' &&
+        serializedValue !== 'suburban' &&
+        serializedValue !== 'dense-urban'
+      ) {
+        throw new Error(`Invalid deployment value '${serializedValue}'.`);
+      }
+      overrides.scenario ??= {};
+      overrides.scenario.deployment = serializedValue as Deployment;
+    },
+  },
+  {
     id: 'channel.smallScaleModel',
     groupId: 'channel',
     label: 'Small-Scale Model',
@@ -664,6 +797,33 @@ const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
       }
       overrides.scheduler ??= {};
       overrides.scheduler.mode = serializedValue;
+    },
+  },
+  {
+    id: 'scheduler.maxActiveBeamsPerSatellite',
+    groupId: 'scheduler',
+    label: 'Active Beams',
+    description: 'Beam hopping 每時槽最大活躍波束數。',
+    sourceIds: [
+      'PAP-2020-BHHOPPING',
+      'PAP-2024-BHFREQREUSE',
+      'ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG',
+    ],
+    options: [
+      { value: '4', label: '4 beams' },
+      { value: '6', label: '6 beams' },
+      { value: '8', label: '8 beams' },
+      { value: '10', label: '10 beams' },
+    ],
+    isAvailable: ({ selection }) => selection['scheduler.mode'] === 'coupled',
+    readFromProfile: (profile) =>
+      stringOfNumber(profile.scheduler.maxActiveBeamsPerSatellite, 10),
+    applyToOverrides: (serializedValue, overrides) => {
+      overrides.scheduler ??= {};
+      overrides.scheduler.maxActiveBeamsPerSatellite = Math.max(
+        1,
+        Math.round(toNumber(serializedValue, 'scheduler.maxActiveBeamsPerSatellite')),
+      );
     },
   },
 ];
