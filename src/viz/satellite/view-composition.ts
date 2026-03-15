@@ -35,7 +35,6 @@ export interface ObserverSkyProjectionPolicy {
   domeRadiusRatio: number;
   lateralStretchRatio: number;
   depthCompressionRatio: number;
-  centerRetentionRatio: number;
   verticalCurveExponent: number;
   minRenderElevationDeg: number;
 }
@@ -223,7 +222,6 @@ const COMPOSITIONS: Record<ObserverSkyCompositionModeId, ObserverSkyCompositionC
       domeRadiusRatio: 4.5,
       lateralStretchRatio: 1.3,
       depthCompressionRatio: 0.65,
-      centerRetentionRatio: 0,
       verticalCurveExponent: 0.55,
       minRenderElevationDeg: 0,
     },
@@ -258,7 +256,6 @@ const COMPOSITIONS: Record<ObserverSkyCompositionModeId, ObserverSkyCompositionC
       domeRadiusRatio: 3.2,
       lateralStretchRatio: 1,
       depthCompressionRatio: 1,
-      centerRetentionRatio: 0,
       verticalCurveExponent: 1,
       minRenderElevationDeg: 0,
     },

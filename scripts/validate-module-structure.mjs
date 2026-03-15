@@ -11,7 +11,16 @@ const TARGET_DIRS = [
   'src/sim',
   'src/hooks',
   'src/config/paper-profiles',
+  'src/config/research-parameters',
+  'src/components',
+  'src/viz',
 ];
+
+// Pure data-definition files exempt from line limits (PROJECT_CONSTRAINTS §6.5:
+// "有意義拆分" — splitting a single declarative array across files harms readability).
+const EXEMPT_FILES = new Set([
+  'src/config/research-parameters/specs.ts',
+]);
 
 const SCENARIO_DUPLICATE_PATTERNS = [
   'function worldToLatLon(',
@@ -50,6 +59,9 @@ async function validateLineCounts(files) {
   const failures = [];
 
   for (const file of files) {
+    if (EXEMPT_FILES.has(file)) {
+      continue;
+    }
     const lineCount = await countLines(file);
     if (lineCount > HARD_LINE_LIMIT) {
       failures.push(`${file}: ${lineCount} lines (limit ${HARD_LINE_LIMIT})`);

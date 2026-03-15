@@ -52,9 +52,7 @@ export function projectObserverSkyPosition(options: {
   const azimuthRad = degToRad(azimuthDeg);
   const verticalCurveExponent = Math.max(0.35, options.config.verticalCurveExponent ?? 1);
   const boundaryWeight = Math.pow(1 - normalizedElevation, 0.58);
-  const centerRetentionRatio = clamp01(options.config.centerRetentionRatio ?? 0);
-  const horizontalRadiusWorld =
-    domeRadiusWorld * (centerRetentionRatio + (1 - centerRetentionRatio) * boundaryWeight);
+  const horizontalRadiusWorld = domeRadiusWorld * boundaryWeight;
   const lateralStretchRatio = Math.max(0.25, options.config.lateralStretchRatio ?? 1);
   const depthCompressionRatio = Math.max(0.2, options.config.depthCompressionRatio ?? 1);
   const verticalProgress = Math.pow(normalizedElevation, verticalCurveExponent);

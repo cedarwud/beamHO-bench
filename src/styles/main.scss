@@ -639,29 +639,6 @@ canvas {
   font-weight: 700;
 }
 
-.sim-failure-overlay {
-  margin-top: 8px;
-  border: 1px solid rgba(248, 113, 113, 0.28);
-  border-radius: 8px;
-  padding: 6px 8px;
-  background: rgba(127, 29, 29, 0.2);
-}
-
-.sim-failure-overlay__header {
-  font-size: 14px;
-  color: #fecaca;
-}
-
-.sim-failure-overlay__stats {
-  margin-top: 2px;
-  font-size: 14px;
-  color: #e5e7eb;
-}
-
-.sim-failure-overlay__stats strong {
-  color: #fca5a5;
-}
-
 .sim-ho-timeline {
   margin-top: 8px;
   border: 1px solid rgba(148, 163, 184, 0.28);

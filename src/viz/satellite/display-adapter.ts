@@ -95,7 +95,6 @@ function toDisplayState(options: {
         domeRadiusRatio: config.projection?.domeRadiusRatio,
         lateralStretchRatio: config.projection?.lateralStretchRatio,
         depthCompressionRatio: config.projection?.depthCompressionRatio,
-        centerRetentionRatio: config.projection?.centerRetentionRatio,
         verticalCurveExponent: config.projection?.verticalCurveExponent,
         minRenderElevationDeg: config.projection?.minRenderElevationDeg ?? 0,
       },

@@ -74,7 +74,6 @@ export function buildObserverSkyDisplayPipeline(
   // Display budget: show more than the HO candidate set, but not all above-horizon.
   // Acceptance doc §6: display set should be larger than HO candidate set.
   // Use 2× activeSatellitesInWindow as a reasonable sky-visible pool.
-  // TODO: restore to hoWindowSize * 2 after single-satellite visual verification
   const displayBudget = input.displayBudget ?? 1;
 
   // Step 1: Candidate selection

@@ -107,7 +107,6 @@ export interface SatelliteDisplayAdapterConfig {
     domeRadiusRatio?: number;
     lateralStretchRatio?: number;
     depthCompressionRatio?: number;
-    centerRetentionRatio?: number;
     verticalCurveExponent?: number;
     minRenderElevationDeg?: number;
   };
@@ -127,8 +126,6 @@ export interface ObserverSkyProjectionConfig {
   domeRadiusRatio?: number;
   lateralStretchRatio?: number;
   depthCompressionRatio?: number;
-  /** @deprecated Set to 0. Retained for type compatibility. */
-  centerRetentionRatio?: number;
   verticalCurveExponent?: number;
   minRenderElevationDeg?: number;
 }
