@@ -54,24 +54,10 @@ function isMobileLikeDevice() {
 }
 
 function createDefaultResearchSelection(profile: PaperProfile): ResearchParameterSelection {
-  const baseSelection = createResearchParameterSelection(profile);
-  if (profile.profileId === 'case9-default' && profile.mode === 'paper-baseline') {
-    return normalizeResearchParameterSelection(profile, {
-      ...baseSelection,
-      'constellation.syntheticTrajectoryModel': 'walker-circular',
-      'constellation.altitudeKm': '550',
-      'constellation.inclinationDeg': '53',
-      'constellation.orbitalPlanes': '24',
-      'constellation.satellitesPerPlane': '66',
-      'constellation.activeSatellitesInWindow': '16',
-      'handover.params.candidateSatelliteLimit': '8',
-    });
-  }
-  return baseSelection;
+  return createResearchParameterSelection(profile);
 }
 
 const PROFILE_LABELS: Record<CanonicalProfileId, string> = {
-  'case9-default': 'Synthetic Orbit',
   'starlink-like': 'Starlink TLE',
   'oneweb-like': 'OneWeb TLE',
 };
@@ -80,13 +66,13 @@ const VIEW_MODE_OPTIONS = listObserverSkyCompositions();
 
 export function MainScene() {
   const [selectedProfileId, setSelectedProfileId] =
-    useState<CanonicalProfileId>('case9-default');
+    useState<CanonicalProfileId>('starlink-like');
   const [selectedBaseline, setSelectedBaseline] =
     useState<RuntimeBaseline>('max-rsrp');
   const [selectedViewMode, setSelectedViewMode] =
     useState<ObserverSkyCompositionModeId>('observer-sky-primary');
   const [researchSelection, setResearchSelection] = useState<ResearchParameterSelection>(() =>
-    createDefaultResearchSelection(loadPaperProfile('case9-default')),
+    createDefaultResearchSelection(loadPaperProfile('starlink-like')),
   );
   const [researchConsistencyMode, setResearchConsistencyMode] =
     useState<ResearchConsistencyMode>('strict');
@@ -162,6 +148,7 @@ export function MainScene() {
     stepBack,
     reset,
     setPlaybackRate,
+    trajectoryCache,
   } = useSimulation({
     profileId: selectedProfileId,
     runtimeOverrides,
@@ -280,7 +267,6 @@ export function MainScene() {
                       setSelectedProfileId(event.target.value as CanonicalProfileId)
                     }
                   >
-                    <option value="case9-default">Synthetic Orbit</option>
                     <option value="starlink-like">Starlink TLE</option>
                     <option value="oneweb-like">OneWeb TLE</option>
                   </select>
@@ -350,8 +336,9 @@ export function MainScene() {
               <NTPUScene />
               <UAV position={NTPU_CONFIG.uav.position} scale={NTPU_CONFIG.uav.scale} />
               <SatelliteSkyLayer
+                key={profile.constellation.activeSatellitesInWindow ?? 0}
                 profile={profile}
-                satellites={displayedSnapshot.satellites}
+                satellites={displayedSnapshot.observerSkyPhysicalSatellites ?? displayedSnapshot.satellites}
                 ues={displayedSnapshot.ues}
                 renderMode={NTPU_CONFIG.satellite.renderMode}
                 glbModelPath={NTPU_CONFIG.satellite.modelPath}
@@ -364,6 +351,7 @@ export function MainScene() {
                 showSecondaryLinks={linkVisibility.secondary}
                 showPreparedLinks={linkVisibility.prepared}
                 playbackRate={playbackRate}
+                trajectoryCache={trajectoryCache}
               />
             </Suspense>
 

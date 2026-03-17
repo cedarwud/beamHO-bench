@@ -4,7 +4,7 @@ export function buildModelSweepValidationDefinitions(): ValidationSuiteDefinitio
   return [
     {
       validationId: 'VAL-SMALL-SCALE-MODEL-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       cases: [
         { model: 'none' as const },
@@ -13,7 +13,7 @@ export function buildModelSweepValidationDefinitions(): ValidationSuiteDefinitio
       ].map(({ model }) => ({
         caseId: `small-scale-${model}`,
         baselines: ['max-rsrp'],
-        tickCount: 90,
+        tickCount: 300,
         runtimeOverrides: {
           channel: {
             smallScaleModel: model,
@@ -23,7 +23,7 @@ export function buildModelSweepValidationDefinitions(): ValidationSuiteDefinitio
     },
     {
       validationId: 'VAL-BG-BEAM-COUNT-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       // Source: sdd/completed/beamHO-bench-baseline-generalization-sdd.md (BG-5)
       // Sweep profile-driven beam counts (7/16/50) under fixed seed/scenario for comparability.

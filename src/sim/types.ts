@@ -122,4 +122,6 @@ export interface SimScenario {
   profileId: string;
   createInitialSnapshot: () => SimSnapshot;
   nextSnapshot: (previous: SimSnapshot, context: SimTickContext) => SimSnapshot;
+  /** Pre-computed trajectory cache for observer-sky rendering (real-trace only). */
+  trajectoryCache?: import('./orbit/trajectory-cache').TrajectoryCache;
 }

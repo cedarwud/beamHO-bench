@@ -19,18 +19,18 @@ export function buildReproBundleV1IntegrationCases(): SimTestCase[] {
           'Expected deterministic repro-bundle v1 artifact for fixed options.',
         );
         assertCondition(
-          first.profileCoverage.includes('case9-default') &&
+          first.profileCoverage.includes('starlink-like') &&
             first.profileCoverage.includes('starlink-like') &&
             first.profileCoverage.includes('oneweb-like'),
           'Expected canonical profile coverage in repro-bundle v1 artifact.',
         );
         assertCondition(
-          first.components.crossMode.plan.caseCount === 3,
-          `Expected cross-mode caseCount=3, got ${first.components.crossMode.plan.caseCount}.`,
+          first.components.crossMode.plan.caseCount === 2,
+          `Expected cross-mode caseCount=2, got ${first.components.crossMode.plan.caseCount}.`,
         );
         assertCondition(
-          first.components.baselineParameterEnvelope.caseCount === 72,
-          `Expected baseline envelope caseCount=72, got ${first.components.baselineParameterEnvelope.caseCount}.`,
+          first.components.baselineParameterEnvelope.caseCount === 48,
+          `Expected baseline envelope caseCount=48, got ${first.components.baselineParameterEnvelope.caseCount}.`,
         );
         assertCondition(
           first.componentDigests.crossModeArtifactDigest === first.components.crossMode.artifactDigest,
@@ -64,7 +64,7 @@ export function buildReproBundleV1IntegrationCases(): SimTestCase[] {
           },
           baselineEnvelopeOptions: {
             axes: {
-              profileSequence: ['case9-default'],
+              profileSequence: ['starlink-like'],
               minElevationDegTiers: [10, 20],
               ueCountTiers: [50],
               ueSpeedKmphTiers: [0, 30],
@@ -89,7 +89,7 @@ export function buildReproBundleV1IntegrationCases(): SimTestCase[] {
           `Expected narrowed baseline envelope caseCount=4, got ${first.components.baselineParameterEnvelope.caseCount}.`,
         );
         assertCondition(
-          JSON.stringify(first.profileCoverage) === JSON.stringify(['case9-default', 'oneweb-like', 'starlink-like']),
+          JSON.stringify(first.profileCoverage) === JSON.stringify(['oneweb-like', 'starlink-like']),
           `Expected stable sorted profile coverage, got ${JSON.stringify(first.profileCoverage)}.`,
         );
       },

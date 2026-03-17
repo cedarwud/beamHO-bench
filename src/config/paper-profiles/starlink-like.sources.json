@@ -78,6 +78,14 @@
       "PAP-2024-MADRL-CORE",
       "ASSUME-HANDOVER-CANDIDATE-WINDOW"
     ],
+    "handover.params.a3OffsetDb": [
+      "PAP-2022-A4EVENT-CORE",
+      "STD-3GPP-TS38.331-RRC"
+    ],
+    "handover.params.a3TttMs": [
+      "PAP-2022-A4EVENT-CORE",
+      "STD-3GPP-TS38.331-RRC"
+    ],
     "handover.params.a4ThresholdDbm": [
       "PAP-2022-A4EVENT-CORE",
       "STD-3GPP-TS38.331-RRC"

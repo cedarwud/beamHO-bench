@@ -150,7 +150,7 @@ npm run preview
 | `npm run lint` | 執行 TypeScript 型別檢查（不輸出檔案） |
 | `npm run test:sim` | 執行 SimCore 正式測試層（Unit + Integration），並輸出 `dist/sim-test-summary.json` |
 | `npm run sync:tle-fixtures` | 從 `../tle_data` 同步最新 Starlink/OneWeb 軌道元素 sample |
-| `npm run bench:cross-mode` | 執行 cross-mode reproducible benchmark pack（`case9-default` + `starlink-like` + `oneweb-like`），輸出 `dist/cross-mode-benchmark` 預設 artifact |
+| `npm run bench:cross-mode` | 執行 cross-mode reproducible benchmark pack（`starlink-like` + `oneweb-like`），輸出 `dist/cross-mode-benchmark` 預設 artifact |
 | `npm run bundle:repro-v1` | 匯出 Repro Bundle v1（整合 cross-mode + baseline-parameter-envelope）到 `dist/repro-bundle-v1` |
 | `npm run validate:rigor` | 執行學術追溯驗證（source map、ASSUME、Provenance、FR018 覆蓋） |
 | `npm run validate:structure` | 結構驗證（單檔行數門檻與 scenario helper 去重回歸） |
@@ -484,7 +484,7 @@ The dev server auto-opens the browser and binds to `0.0.0.0:3000`, making it acc
 | `npm run lint` | Run TypeScript type checking (no file output) |
 | `npm run test:sim` | Run formal SimCore test layer (Unit + Integration), and write `dist/sim-test-summary.json` |
 | `npm run sync:tle-fixtures` | Sync latest Starlink/OneWeb orbit-element samples from `../tle_data` |
-| `npm run bench:cross-mode` | Run the cross-mode reproducible benchmark pack (`case9-default` + `starlink-like` + `oneweb-like`) and write default artifacts under `dist/cross-mode-benchmark` |
+| `npm run bench:cross-mode` | Run the cross-mode reproducible benchmark pack (`starlink-like` + `oneweb-like`) and write default artifacts under `dist/cross-mode-benchmark` |
 | `npm run bundle:repro-v1` | Export Repro Bundle v1 (cross-mode + baseline-parameter-envelope) under `dist/repro-bundle-v1` |
 | `npm run validate:rigor` | Run academic-rigor checks (source map, ASSUME, Provenance, FR018 coverage) |
 | `npm run validate:structure` | Structure checks (file-size thresholds and scenario-helper de-dup guard) |

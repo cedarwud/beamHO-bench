@@ -10,6 +10,7 @@
     "lint": "tsc --noEmit",
     "test:sim": "node scripts/run-sim-tests.mjs",
     "sync:tle-fixtures": "node scripts/sync-tle-fixtures.mjs",
+    "enrich:tle-fixtures": "node scripts/enrich-tle-fixtures.mjs",
     "validate:rigor": "node scripts/validate-academic-rigor.mjs",
     "bench:cross-mode": "node scripts/run-cross-mode-benchmark.mjs",
     "bundle:repro-v1": "node scripts/run-repro-bundle-v1.mjs",
@@ -39,6 +40,7 @@
     "three": "^0.180.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/three": "^0.180.0",

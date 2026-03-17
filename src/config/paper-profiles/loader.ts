@@ -1,6 +1,4 @@
 import sourceCatalogJson from '../references/paper-sources.json';
-import case9DefaultProfile from './case9-default.json';
-import case9DefaultSourceMap from './case9-default.sources.json';
 import onewebLikeProfile from './oneweb-like.json';
 import onewebLikeSourceMap from './oneweb-like.sources.json';
 import paperProfileSchema from './paper-profile.schema.json';
@@ -27,7 +25,7 @@ import type { PaperProfile } from './types';
  * - This loader is the authoritative gate for profile schema validation and source-map validation.
  */
 
-export type CanonicalProfileId = 'case9-default' | 'starlink-like' | 'oneweb-like';
+export type CanonicalProfileId = 'starlink-like' | 'oneweb-like';
 
 export type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends Array<infer U>
@@ -59,13 +57,11 @@ export interface SourceTracePayload {
 }
 
 const PROFILE_CATALOG: Record<CanonicalProfileId, PaperProfile> = {
-  'case9-default': case9DefaultProfile as PaperProfile,
   'starlink-like': starlinkLikeProfile as PaperProfile,
   'oneweb-like': onewebLikeProfile as PaperProfile,
 };
 
 const PROFILE_SOURCE_MAP_CATALOG: Record<CanonicalProfileId, ProfileSourceMap> = {
-  'case9-default': case9DefaultSourceMap as ProfileSourceMap,
   'starlink-like': starlinkLikeSourceMap as ProfileSourceMap,
   'oneweb-like': onewebLikeSourceMap as ProfileSourceMap,
 };
@@ -77,7 +73,6 @@ const SOURCE_CATALOG_BY_ID = new Map<string, SourceCatalogEntry>(
 );
 
 const CANONICAL_PROFILE_IDS: CanonicalProfileId[] = [
-  'case9-default',
   'starlink-like',
   'oneweb-like',
 ];

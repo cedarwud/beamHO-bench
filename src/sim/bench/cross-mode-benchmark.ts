@@ -82,13 +82,11 @@ const DEFAULT_SEED_SET: MultiSeedSeedSetSpec = {
 };
 
 const DEFAULT_PROFILE_SEQUENCE: CanonicalProfileId[] = [
-  'case9-default',
   'starlink-like',
   'oneweb-like',
 ];
 
 const DEFAULT_SCENARIO_BY_PROFILE: Record<CanonicalProfileId, string> = {
-  'case9-default': 'cmr-case9-default',
   'starlink-like': 'cmr-realtrace-starlink-like',
   'oneweb-like': 'cmr-realtrace-oneweb-like',
 };

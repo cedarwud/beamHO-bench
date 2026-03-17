@@ -4,10 +4,8 @@ This folder defines reproducible scenario profiles for `beamHO-bench`.
 
 ## Files
 - `paper-profile.schema.json`: JSON schema for profile validation.
-- `case9-default.json`: synthetic 3GPP case-9 style baseline profile.
 - `starlink-like.json`: real-trace profile using Starlink TLE files.
 - `oneweb-like.json`: real-trace profile using OneWeb TLE files.
-- `case9-default.sources.json`: parameter-to-source mapping for traceability.
 - `starlink-like.sources.json`: parameter-to-source mapping for traceability.
 - `oneweb-like.sources.json`: parameter-to-source mapping for traceability.
 - `loader.ts`: canonical profile loader, deep merge, schema and source-map validation.
@@ -31,15 +29,15 @@ Minimal example:
 ```ts
 import { loadPaperProfile, loadProfileSourceMap } from '@/config/paper-profiles/loader';
 
-const profile = loadPaperProfile('case9-default', {
+const profile = loadPaperProfile('starlink-like', {
   handover: { params: { a4ThresholdDbm: -101 } },
 });
 
-const sourceMap = loadProfileSourceMap('case9-default');
+const sourceMap = loadProfileSourceMap('starlink-like');
 ```
 
 ## Notes
-- `case9-default` is the default first implementation target.
-- `starlink-like` and `oneweb-like` are for SGP4/TLE real-trace mode.
+- `starlink-like` is the default profile.
+- `oneweb-like` is an alternative real-trace profile using OneWeb TLE files.
 - Keep KPI definitions unchanged across profiles to ensure fair comparisons.
 - Source catalog is defined at `src/config/references/paper-sources.json`.

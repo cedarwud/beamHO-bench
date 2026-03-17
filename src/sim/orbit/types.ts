@@ -29,7 +29,30 @@ export interface OrbitCatalog {
   sourceRecordCount: number;
   sampledRecordCount: number;
   records: OrbitElement[];
+  /** @deprecated Use replayWindowStartUtcMs. Kept for backward compat. */
   startTimeUtcMs: number;
+  /**
+   * Fixture-defined replay window start (UTC ms).
+   * Deterministic for the same fixture; independent of wall-clock date.
+   * Source: SDD RTLP §4.1 epoch contract.
+   */
+  replayWindowStartUtcMs: number;
+  /**
+   * Replay window duration in seconds (default 6000 s ≈ 100 min).
+   * Used for demo-loop mode seam boundary.
+   */
+  replayWindowDurationSec: number;
+  /**
+   * Offset in seconds from replayWindowStartUtcMs that maximises NTPU-visible
+   * satellite count (deterministic bootstrap, based on physical geometry only).
+   * 0 if fixture does not include bootstrap metadata.
+   */
+  bootstrapStartOffsetSec: number;
+  /**
+   * Selection policy mode from fixture metadata.
+   * 'constellation-even' = current default; 'observer-local-pass' = RTLP D2 target.
+   */
+  selectionPolicyMode: 'constellation-even' | 'observer-local-pass' | 'unknown';
 }
 
 export interface ObserverContext {

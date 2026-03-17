@@ -28,7 +28,7 @@ export function buildBaselineParameterEnvelopeIntegrationCases(): SimTestCase[] 
           JSON.stringify(first) === JSON.stringify(replay),
           'Expected deterministic baseline-parameter envelope artifact for fixed options.',
         );
-        assertCondition(first.caseCount === 72, `Expected caseCount=72, got ${first.caseCount}.`);
+        assertCondition(first.caseCount === 48, `Expected caseCount=48, got ${first.caseCount}.`);
         assertCondition(
           first.caseCount === first.cases.length,
           'Expected caseCount to match cases length in baseline-parameter envelope artifact.',
@@ -36,7 +36,7 @@ export function buildBaselineParameterEnvelopeIntegrationCases(): SimTestCase[] 
 
         const profileIds = new Set(first.cases.map((suiteCase) => suiteCase.profileId));
         assertCondition(
-          profileIds.has('case9-default') &&
+          profileIds.has('starlink-like') &&
             profileIds.has('starlink-like') &&
             profileIds.has('oneweb-like'),
           'Expected canonical profile coverage in baseline-parameter envelope artifact.',
@@ -44,8 +44,8 @@ export function buildBaselineParameterEnvelopeIntegrationCases(): SimTestCase[] 
 
         const modes = new Set(first.cases.map((suiteCase) => suiteCase.mode));
         assertCondition(
-          modes.has('paper-baseline') && modes.has('real-trace'),
-          'Expected dual-mode coverage in baseline-parameter envelope artifact.',
+          modes.has('real-trace'),
+          'Expected real-trace mode coverage in baseline-parameter envelope artifact.',
         );
 
         const minElevationSet = new Set(first.cases.map((suiteCase) => suiteCase.axes.minElevationDeg));

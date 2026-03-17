@@ -16,17 +16,17 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
       name: 'integration: non-none small-scale models are deterministic and distinguishable from none',
       kind: 'integration',
       run: () => {
-        const noneProfile = loadPaperProfile('case9-default', {
+        const noneProfile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'none',
           },
         });
-        const shadowedProfile = loadPaperProfile('case9-default', {
+        const shadowedProfile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'shadowed-rician',
           },
         });
-        const looProfile = loadPaperProfile('case9-default', {
+        const looProfile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'loo',
           },
@@ -37,13 +37,13 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
             profile,
             seed: 42,
             baselines: ['max-rsrp'],
-            tickCount: 18,
+            tickCount: 300,
           });
           const second = runBaselineBatch({
             profile,
             seed: 42,
             baselines: ['max-rsrp'],
-            tickCount: 18,
+            tickCount: 300,
           });
 
           assertCondition(
@@ -122,7 +122,7 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
       name: 'integration: realism-enabled small-scale batch remains deterministic and diverges from disabled path',
       kind: 'integration',
       run: () => {
-        const disabledProfile = loadPaperProfile('case9-default', {
+        const disabledProfile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'shadowed-rician',
             smallScaleParams: {
@@ -138,7 +138,7 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
             },
           },
         });
-        const enabledProfile = loadPaperProfile('case9-default', {
+        const enabledProfile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'shadowed-rician',
             smallScaleParams: {
@@ -160,13 +160,13 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
             profile,
             seed: 77,
             baselines: ['max-rsrp'],
-            tickCount: 20,
+            tickCount: 300,
           });
           const replay = runBaselineBatch({
             profile,
             seed: 77,
             baselines: ['max-rsrp'],
-            tickCount: 20,
+            tickCount: 300,
           });
           assertCondition(
             JSON.stringify(normalizeBatchForDeterminism(first)) ===
@@ -191,7 +191,7 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
       name: 'integration: small-scale model and params are exported in metadata/source-trace/manifest',
       kind: 'integration',
       run: async () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'shadowed-rician',
           },
@@ -215,7 +215,7 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
 
         const sourceTrace = await createSourceTraceArtifact({
           scenarioId: run.result.metadata.scenarioId,
-          profileId: 'case9-default',
+          profileId: 'starlink-like',
           baseline: run.baseline,
           algorithmFidelity: profile.handover.algorithmFidelity,
           seed: 52,
@@ -262,7 +262,7 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
       kind: 'integration',
       run: () => {
         const options = {
-          profileId: 'case9-default' as const,
+          profileId: 'starlink-like' as const,
           seed: 42,
           tickCount: 18,
           baselines: ['max-rsrp', 'a3'] as const,
@@ -284,7 +284,7 @@ export function buildSmallScaleIntegrationCases(): SimTestCase[] {
         });
 
         assertCondition(
-          fileName.includes('case9-default') &&
+          fileName.includes('starlink-like') &&
             fileName.includes('seed-42') &&
             fileName.includes('ticks-18'),
           'Expected small-scale template filename to include profile/seed/tick metadata.',

@@ -20,7 +20,7 @@
     "inclinationDeg": 53,
     "orbitalPlanes": 24,
     "satellitesPerPlane": 66,
-    "activeSatellitesInWindow": 7,
+    "activeSatellitesInWindow": 16,
     "satelliteSpeedKmps": 7.6,
     "minElevationDeg": 10,
     "tle": {

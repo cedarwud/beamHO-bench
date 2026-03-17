@@ -29,6 +29,13 @@ interface TleFixtureRecord {
   revAtEpoch?: number;
 }
 
+interface TleFixtureSelectionPolicy {
+  mode: string;
+  serviceMinElevationDeg?: number;
+  analysisWindowSec?: number;
+  rankingPolicyId?: string;
+}
+
 interface TleFixtureFile {
   generatedAtUtc: string;
   provider: Provider;
@@ -36,6 +43,13 @@ interface TleFixtureFile {
   sourceRecordCount: number;
   sampledRecordCount: number;
   records: TleFixtureRecord[];
+  /** Added by enrich-tle-fixtures.mjs / sync-tle-fixtures.mjs (RTLP D3). */
+  replayWindowStartUtc?: string;
+  replayWindowDurationSec?: number;
+  bootstrapStartOffsetSec?: number;
+  observer?: { latDeg: number; lonDeg: number; altKm: number };
+  selectionPolicy?: TleFixtureSelectionPolicy;
+  replayModeSupport?: { researchDefault: boolean; demoLoopSupported: boolean };
 }
 
 const STARLINK_FIXTURE = starlinkFixtureJson as TleFixtureFile;
@@ -185,10 +199,35 @@ export function loadOrbitCatalog(profile: PaperProfile): OrbitCatalog {
     throw new Error(`No valid orbit records available for provider '${provider}'`);
   }
 
-  const startTimeUtcMs = records.reduce(
+  // Epoch origin: prefer explicit fixture replay-window metadata (RTLP §4.1).
+  // Fall back to max record epoch for backward compat with older fixtures.
+  const maxRecordEpochMs = records.reduce(
     (maxValue, record) => Math.max(maxValue, record.epochUtcMs),
     0,
   );
+  const fixtureReplayWindowMs = fixture.replayWindowStartUtc
+    ? Date.parse(fixture.replayWindowStartUtc)
+    : Number.NaN;
+  const replayWindowStartUtcMs = Number.isFinite(fixtureReplayWindowMs)
+    ? fixtureReplayWindowMs
+    : maxRecordEpochMs;
+  const startTimeUtcMs = replayWindowStartUtcMs;
+
+  const replayWindowDurationSec =
+    typeof fixture.replayWindowDurationSec === 'number' && fixture.replayWindowDurationSec > 0
+      ? fixture.replayWindowDurationSec
+      : 6000;
+
+  const bootstrapStartOffsetSec =
+    typeof fixture.bootstrapStartOffsetSec === 'number' && fixture.bootstrapStartOffsetSec >= 0
+      ? fixture.bootstrapStartOffsetSec
+      : 0;
+
+  const rawPolicyMode = fixture.selectionPolicy?.mode ?? 'unknown';
+  const selectionPolicyMode: 'constellation-even' | 'observer-local-pass' | 'unknown' =
+    rawPolicyMode === 'constellation-even' || rawPolicyMode === 'observer-local-pass'
+      ? rawPolicyMode
+      : 'unknown';
 
   if (propagationEngine === 'sgp4-satellitejs') {
     const sgp4ReadyCount = records.reduce(
@@ -210,5 +249,9 @@ export function loadOrbitCatalog(profile: PaperProfile): OrbitCatalog {
     sampledRecordCount: records.length,
     records,
     startTimeUtcMs,
+    replayWindowStartUtcMs,
+    replayWindowDurationSec,
+    bootstrapStartOffsetSec,
+    selectionPolicyMode,
   };
 }

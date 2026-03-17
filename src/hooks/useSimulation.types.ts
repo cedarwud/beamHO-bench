@@ -56,6 +56,7 @@ export interface UseSimulationResult {
   profile: PaperProfile;
   snapshot: SimSnapshot;
   baseline: RuntimeBaseline;
+  trajectoryCache?: import('@/sim/orbit/trajectory-cache').TrajectoryCache;
   isRunning: boolean;
   playbackRate: number;
   sourceTraceFileName: string;

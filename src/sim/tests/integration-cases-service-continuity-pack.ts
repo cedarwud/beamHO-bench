@@ -31,7 +31,7 @@ export function buildServiceContinuityPackIntegrationCases(): SimTestCase[] {
 
         const profileIds = new Set(first.map((definition) => definition.profileId));
         assertCondition(
-          profileIds.has('case9-default') &&
+          profileIds.has('starlink-like') &&
             profileIds.has('starlink-like') &&
             profileIds.has('oneweb-like'),
           'Expected canonical profile coverage in service continuity baseline pack.',

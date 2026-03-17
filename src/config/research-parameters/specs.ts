@@ -290,7 +290,6 @@ export const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     options: [
       { value: '1', label: '1 satellite (single-pass debug)' },
       { value: '8', label: '8 satellites' },
-      { value: '10', label: '10 satellites' },
       { value: '16', label: '16 satellites' },
       { value: '30', label: '30 satellites' },
     ],

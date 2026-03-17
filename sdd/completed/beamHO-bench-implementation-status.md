@@ -1,7 +1,7 @@
 # beamHO-bench — SDD Implementation Status
 
-**Date:** 2026-03-13  
-**Status:** v2 Core Scope Complete + Active Observer-Sky Projection/Selection Correction Pending
+**Date:** 2026-03-15
+**Status:** v2 Core Scope Complete + Observer-Sky Pass-Conversion Layer Complete (OSPC closure-tracked)
 
 ---
 
@@ -30,14 +30,14 @@ Current status snapshot means:
 16. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-view-sdd.md` has D1~D5 implemented with observer-sky display-layer rewrite evidence and stage-gate verification.
 17. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-visual-correction-sdd.md` has D1~D6 implemented with display/candidate separation, sky-coverage, continuity, and stage-gate closure evidence.
 18. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md` has D1~D6 implemented with primary-view composition, screen-space acceptance gates, manual acceptance checklist, and closure evidence.
-19. A new active pending package `sdd/pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md` is open because the live frontend still fails observer-sky acceptance in direct Playwright/manual review due to unresolved projection/selection semantics.
+19. Closure-tracked implemented spec `sdd/completed/implemented-specs/beamHO-bench-observer-sky-pass-conversion-sdd.md` has D1–D10 implemented with pass-conversion layer (pass-composition-state, pass-motion-policy, pass-trajectory-conversion), live scene wiring (SatelliteSkyLayer pipeline boundary), OSPC-1–7 automated gates, and OSPC-8 Playwright visual acceptance closure evidence.
 
 Deferred items remain out of active scope:
 1. Multi-orbit unified scheduler (LEO/MEO/GEO), reserved for long-term backlog and out of current LEO-only scope.
 2. RSMA soft-HO and broad large-scale/multi-paper DRL fusion, deferred by BG-6 governance.
 
 Active pending items (implementation open):
-1. `sdd/pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md`
+1. `sdd/pending/beamHO-bench-real-trace-local-pass-replay-sdd.md` (RTLP) — promoted 2026-03-16; epoch contract, startup bootstrap, demo-loop mode, and RTLP-1–6 tests implemented; D2 (observer-local pass filtering in sync script) and D7 (traceability/manifest) remain open.
 
 ---
 
@@ -104,9 +104,9 @@ Required artifacts:
 
 ## 4. Verification Snapshot (Latest)
 
-Latest local verification (2026-03-13):
+Latest local verification (2026-03-15):
 1. `validate:stage` passed (core scope gate + artifact freshness check).
-2. `test:sim`: 91/91 passed (unit 26/26, integration 65/65).
+2. `test:sim`: 93/93 passed (unit 27/27, integration 66/66).
 3. `validate:val-suite`: 50/50 passed (`scope=core`), warnings=0.
 4. `build` passed (`tsc && vite build`).
 5. Validation artifacts are compact and generated under `dist/`.

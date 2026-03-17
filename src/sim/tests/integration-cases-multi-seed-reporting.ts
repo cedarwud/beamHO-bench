@@ -10,7 +10,7 @@ export function buildMultiSeedReportingIntegrationCases(): SimTestCase[] {
       name: 'integration: multi-seed paper report exports deterministic cdf/boxplot raw artifacts',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const benchmark = runMultiSeedBaselineBenchmark({
           profile,
           baselines: ['max-rsrp', 'a3', 'cho'],
@@ -50,7 +50,7 @@ export function buildMultiSeedReportingIntegrationCases(): SimTestCase[] {
       name: 'integration: multi-seed paper report exports ranking stability and significance summary',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const benchmark = runMultiSeedBaselineBenchmark({
           profile,
           baselines: ['max-rsrp', 'a3', 'cho'],

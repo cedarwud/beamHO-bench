@@ -17,7 +17,7 @@ export function buildSmallScaleUnitCases(): SimTestCase[] {
       name: 'unit: small-scale none model returns zero fading',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'none',
           },
@@ -31,7 +31,7 @@ export function buildSmallScaleUnitCases(): SimTestCase[] {
       name: 'unit: shadowed-rician small-scale fading is deterministic for fixed context',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'shadowed-rician',
           },
@@ -48,7 +48,7 @@ export function buildSmallScaleUnitCases(): SimTestCase[] {
       name: 'unit: loo small-scale fading is deterministic for fixed context',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'loo',
           },
@@ -65,7 +65,7 @@ export function buildSmallScaleUnitCases(): SimTestCase[] {
       name: 'unit: small-scale realism options keep legacy-compatible output when disabled',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'shadowed-rician',
             smallScaleParams: {
@@ -104,7 +104,7 @@ export function buildSmallScaleUnitCases(): SimTestCase[] {
       name: 'unit: temporal correlation and doppler-aware options are deterministic and time-varying when enabled',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           channel: {
             smallScaleModel: 'shadowed-rician',
             smallScaleParams: {

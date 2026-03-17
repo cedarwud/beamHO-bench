@@ -90,7 +90,11 @@ function createScenario(
     plugin?: PolicyPlugin;
   },
 ) {
-  return profile.mode === 'real-trace'
+  // Synthetic trajectory override: walker-circular requires case9-analytic even in real-trace mode.
+  // Explicit syntheticTrajectoryModel='walker-circular' requests parametric orbit, not TLE replay.
+  const usesSyntheticOrbit =
+    profile.constellation.syntheticTrajectoryModel === 'walker-circular';
+  return profile.mode === 'real-trace' && !usesSyntheticOrbit
     ? createRealTraceScenario({ profile, seed, baseline, policyRuntime, scenarioId })
     : createCase9AnalyticScenario({ profile, seed, baseline, policyRuntime, scenarioId });
 }

@@ -37,7 +37,7 @@ function normalizePlaybackRate(value: number): number {
 
 export function useSimulation(options: UseSimulationOptions = {}): UseSimulationResult {
   const {
-    profileId = 'case9-default',
+    profileId = 'starlink-like',
     runtimeOverrides = {},
     researchConsistency = null,
     baseline = 'max-rsrp',
@@ -175,6 +175,7 @@ export function useSimulation(options: UseSimulationOptions = {}): UseSimulation
     profile: setup.profile,
     snapshot,
     baseline,
+    trajectoryCache: setup.scenario.trajectoryCache,
     isRunning,
     playbackRate,
     sourceTraceFileName: `source-trace_${setup.scenario.id}_${profileId}_${seed}_${baseline}.json`,

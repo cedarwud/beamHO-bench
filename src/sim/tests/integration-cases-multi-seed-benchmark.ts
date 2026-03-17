@@ -9,7 +9,7 @@ export function buildMultiSeedBenchmarkIntegrationCases(): SimTestCase[] {
       name: 'integration: multi-seed benchmark artifact is deterministic and contains stats/effect-size fields',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const first = runMultiSeedBaselineBenchmark({
           profile,
           baselines: ['max-rsrp', 'a3', 'cho'],
@@ -67,7 +67,7 @@ export function buildMultiSeedBenchmarkIntegrationCases(): SimTestCase[] {
       name: 'integration: multi-seed benchmark supports deterministic range expansion',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const artifact = runMultiSeedBaselineBenchmark({
           profile,
           baselines: ['max-rsrp', 'a3'],

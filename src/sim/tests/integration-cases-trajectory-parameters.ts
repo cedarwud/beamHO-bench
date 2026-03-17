@@ -15,7 +15,7 @@ import { assertCondition } from './helpers';
 import type { SimTestCase } from './types';
 
 function buildTrajectoryKinematicSignature(options: {
-  profileId: 'case9-default';
+  profileId: 'starlink-like';
   selection: ResearchParameterSelection;
   tickCount: number;
 }): string {
@@ -56,7 +56,7 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
       name: 'integration: walker-circular trajectory backend is deterministic and responds to paper-tier parameters',
       kind: 'integration',
       run: () => {
-        const baseProfile = loadPaperProfile('case9-default');
+        const baseProfile = loadPaperProfile('starlink-like');
         const baseSelection = createResearchParameterSelection(baseProfile);
         const walkerSelection = normalizeResearchParameterSelection(baseProfile, {
           ...baseSelection,
@@ -68,17 +68,17 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
         });
 
         const linearSignature = buildTrajectoryKinematicSignature({
-          profileId: 'case9-default',
+          profileId: 'starlink-like',
           selection: baseSelection,
           tickCount: 12,
         });
         const walkerSignatureFirst = buildTrajectoryKinematicSignature({
-          profileId: 'case9-default',
+          profileId: 'starlink-like',
           selection: walkerSelection,
           tickCount: 12,
         });
         const walkerSignatureSecond = buildTrajectoryKinematicSignature({
-          profileId: 'case9-default',
+          profileId: 'starlink-like',
           selection: walkerSelection,
           tickCount: 12,
         });
@@ -96,7 +96,7 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
           profile: baseProfile,
           selection: walkerSelection,
         });
-        const resolvedWalkerProfile = loadPaperProfile('case9-default', walkerOverrides);
+        const resolvedWalkerProfile = loadPaperProfile('starlink-like', walkerOverrides);
         assertCondition(
           resolvedWalkerProfile.constellation.syntheticTrajectoryModel === 'walker-circular',
           'Expected resolved profile synthetic trajectory mode to be walker-circular.',
@@ -125,7 +125,7 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
       name: 'integration: walker-circular synthetic orbit starts with at least one visible satellite for the observer scene',
       kind: 'integration',
       run: () => {
-        const baseProfile = loadPaperProfile('case9-default');
+        const baseProfile = loadPaperProfile('starlink-like');
         const walkerSelection = normalizeResearchParameterSelection(baseProfile, {
           ...createResearchParameterSelection(baseProfile),
           'constellation.syntheticTrajectoryModel': 'walker-circular',
@@ -139,7 +139,7 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
           profile: baseProfile,
           selection: walkerSelection,
         });
-        const resolvedWalkerProfile = loadPaperProfile('case9-default', walkerOverrides);
+        const resolvedWalkerProfile = loadPaperProfile('starlink-like', walkerOverrides);
         const batch = runBaselineBatch({
           profile: resolvedWalkerProfile,
           seed: 42,
@@ -165,7 +165,7 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
       name: 'integration: walker-circular backend window selection stays deterministic and azimuth-diversified',
       kind: 'integration',
       run: () => {
-        const baseProfile = loadPaperProfile('case9-default');
+        const baseProfile = loadPaperProfile('starlink-like');
         const walkerSelection = normalizeResearchParameterSelection(baseProfile, {
           ...createResearchParameterSelection(baseProfile),
           'constellation.syntheticTrajectoryModel': 'walker-circular',
@@ -179,7 +179,7 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
           profile: baseProfile,
           selection: walkerSelection,
         });
-        const resolvedWalkerProfile = loadPaperProfile('case9-default', walkerOverrides);
+        const resolvedWalkerProfile = loadPaperProfile('starlink-like', walkerOverrides);
         const orbitContext = createParametricOrbitContext({
           profile: resolvedWalkerProfile,
           observerLat: 24.9441667,

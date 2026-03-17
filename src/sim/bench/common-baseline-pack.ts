@@ -55,7 +55,7 @@ function buildPropagationRealismCases(): ValidationSuiteCaseDefinition[] {
     toCaseDefinition({
       caseId: 'prop-none',
       baselines: ['max-rsrp'],
-      tickCount: 90,
+      tickCount: 300,
       runtimeOverrides: {
         channel: {
           smallScaleModel: 'none',
@@ -65,7 +65,7 @@ function buildPropagationRealismCases(): ValidationSuiteCaseDefinition[] {
     toCaseDefinition({
       caseId: 'prop-shadowed-static',
       baselines: ['max-rsrp'],
-      tickCount: 90,
+      tickCount: 300,
       runtimeOverrides: {
         channel: {
           smallScaleModel: 'shadowed-rician',
@@ -86,7 +86,7 @@ function buildPropagationRealismCases(): ValidationSuiteCaseDefinition[] {
     toCaseDefinition({
       caseId: 'prop-shadowed-temporal',
       baselines: ['max-rsrp'],
-      tickCount: 90,
+      tickCount: 300,
       runtimeOverrides: {
         channel: {
           smallScaleModel: 'shadowed-rician',
@@ -107,7 +107,7 @@ function buildPropagationRealismCases(): ValidationSuiteCaseDefinition[] {
     toCaseDefinition({
       caseId: 'prop-shadowed-temporal-doppler',
       baselines: ['max-rsrp'],
-      tickCount: 90,
+      tickCount: 300,
       runtimeOverrides: {
         channel: {
           smallScaleModel: 'shadowed-rician',
@@ -296,19 +296,19 @@ export function buildCommonBaselineV2ValidationDefinitions(): ValidationSuiteDef
   return [
     {
       validationId: 'VAL-CB2-PROPAGATION-REALISM-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       cases: buildPropagationRealismCases(),
     },
     {
       validationId: 'VAL-CB2-PROTOCOL-RLF-TIMING-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       cases: buildProtocolSensitivityCases(),
     },
     {
       validationId: 'VAL-CB2-CHO-MC-GEOMETRY-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       cases: buildChoMcGeometryCases(),
     },

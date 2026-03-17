@@ -8,7 +8,7 @@
 
 ## 2. Config -> SimCore -> Viz 資料路徑
 
-1. 載入 profile（`case9-default` / `starlink-like` / `oneweb-like`）
+1. 載入 profile（`starlink-like` / `oneweb-like`）
 2. 建立 scenario（paper-baseline 或 real-trace）
 3. SimEngine 每 tick 產生 `SimSnapshot`
 4. Viz 層顯示衛星、beam、UE、連線與 KPI

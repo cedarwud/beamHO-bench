@@ -158,11 +158,11 @@ export function buildObserverSkyViewUnitCases(): SimTestCase[] {
           'Expected all above-horizon candidates to remain rankable before continuity truncation.',
         );
         assertCondition(
-          selected[0]?.phase === 'boundary-ingress' &&
+          selected[0]?.phase === 'high-pass' &&
             selected[1]?.phase === 'mid-pass' &&
-            selected[2]?.phase === 'high-pass' &&
-            selected[3]?.phase === 'boundary-egress',
-          'Expected ranked candidates to expose ingress, mid-pass, high-pass, and egress layers ahead of repeated mid/high picks.',
+            selected[2]?.phase === 'mid-pass' &&
+            selected[3]?.phase === 'boundary-ingress',
+          'Expected ranked candidates to prioritise high-pass and mid-pass layers (readable arcs) ahead of boundary picks.',
         );
       },
     },

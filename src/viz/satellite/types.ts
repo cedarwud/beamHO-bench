@@ -67,12 +67,27 @@ export interface SatelliteDisplayContinuityConfig {
   retentionRankSlack?: number;
 }
 
+export interface PassActorMemory {
+  satelliteId: number;
+  lifecycle: SatelliteDisplayLifecycle;
+  entryAzimuthDeg: number;
+  entryElevationDeg: number;
+  predictedExitAzimuthDeg: number;
+  lastAzimuthDeg: number;
+  lastElevationDeg: number;
+  firstSeenTick: number;
+  exitTicksRemaining: number;
+  /** Stable lane slot — assigned at entry and preserved through exit linger. */
+  laneIndex: number;
+}
+
 export interface SatelliteDisplayContinuityMemory {
   sequenceKey: string;
   tick: number;
   timeSec: number;
   selectedIds: number[];
   actors?: SatelliteDisplayActorMemory[];
+  passActors?: PassActorMemory[];
 }
 
 export interface SatelliteDisplayContinuityInput {

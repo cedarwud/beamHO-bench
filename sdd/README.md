@@ -65,14 +65,16 @@ This folder is explicitly split into implemented specs, the current pending work
 
 ## Pending Workspace
 
-1. `pending/beamHO-bench-observer-sky-projection-selection-correction-sdd.md`
-2. lifecycle truth remains in:
+1. `pending/beamHO-bench-beam-layout-sdd.md` (Active Pending, stub phase)
+2. `pending/beamHO-bench-real-trace-local-pass-replay-sdd.md` (Active Pending, promoted 2026-03-16; D1/D3/D4/D5/D6 done; D2/D7 open)
+3. lifecycle truth remains in:
    - `completed/beamHO-bench-implementation-status.md`
    - `pending/README.md`
 
 ## Backlog (Out of Active Scope)
 
 1. `backlog/beamHO-bench-multiorbit-backlog.md` (LEO+MEO+GEO long-term reference)
+2. `backlog/beamHO-bench-real-trace-local-pass-replay-backlog.md` (pre-implementation draft, superseded by `pending/beamHO-bench-real-trace-local-pass-replay-sdd.md`)
 
 ## Reference Locks (outside `sdd/`)
 

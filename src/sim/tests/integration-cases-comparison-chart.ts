@@ -13,7 +13,7 @@ export function buildComparisonChartIntegrationCases(): SimTestCase[] {
       name: 'integration: baseline comparison chart artifact includes metadata-rich filename and rows',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const batch = runBaselineBatch({
           profile,
           seed: 42,

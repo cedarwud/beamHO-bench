@@ -21,7 +21,7 @@
     "inclinationDeg": 87.9,
     "orbitalPlanes": 18,
     "satellitesPerPlane": 40,
-    "activeSatellitesInWindow": 10,
+    "activeSatellitesInWindow": 16,
     "satelliteSpeedKmps": 7.4,
     "minElevationDeg": 10,
     "tle": {
@@ -150,6 +150,6 @@
   ],
   "notes": [
     "OneWeb profile focuses on higher-altitude LEO dynamics.",
-    "Use same KPI definitions as case9-default for comparability."
+    "Use same KPI definitions as starlink-like for comparability."
   ]
 }

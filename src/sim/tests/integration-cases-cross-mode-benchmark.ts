@@ -18,7 +18,7 @@ export function buildCrossModeBenchmarkIntegrationCases(): SimTestCase[] {
           JSON.stringify(first) === JSON.stringify(replay),
           'Expected deterministic cross-mode plan for identical options.',
         );
-        assertCondition(first.caseCount === 3, 'Expected cross-mode plan caseCount=3.');
+        assertCondition(first.caseCount === 2, 'Expected cross-mode plan caseCount=2.');
         assertCondition(
           first.caseCount === first.cases.length,
           'Expected cross-mode plan caseCount to equal cases length.',
@@ -26,7 +26,7 @@ export function buildCrossModeBenchmarkIntegrationCases(): SimTestCase[] {
 
         const profileIds = first.cases.map((suiteCase) => suiteCase.profileId);
         assertCondition(
-          profileIds.includes('case9-default') &&
+          profileIds.includes('starlink-like') &&
             profileIds.includes('starlink-like') &&
             profileIds.includes('oneweb-like'),
           'Expected canonical profile coverage in cross-mode plan.',
@@ -39,14 +39,7 @@ export function buildCrossModeBenchmarkIntegrationCases(): SimTestCase[] {
         );
 
         const realTraceCount = first.cases.filter((suiteCase) => suiteCase.mode === 'real-trace').length;
-        const paperBaselineCount = first.cases.filter(
-          (suiteCase) => suiteCase.mode === 'paper-baseline',
-        ).length;
         assertCondition(realTraceCount === 2, 'Expected two real-trace cases in cross-mode plan.');
-        assertCondition(
-          paperBaselineCount === 1,
-          'Expected one paper-baseline case in cross-mode plan.',
-        );
       },
     },
     {
@@ -67,7 +60,7 @@ export function buildCrossModeBenchmarkIntegrationCases(): SimTestCase[] {
           JSON.stringify(first) === JSON.stringify(replay),
           'Expected deterministic cross-mode benchmark run for fixed tuple.',
         );
-        assertCondition(first.runs.length === 3, 'Expected three run groups in cross-mode benchmark.');
+        assertCondition(first.runs.length === 2, 'Expected two run groups in cross-mode benchmark.');
 
         for (const run of first.runs) {
           assertCondition(

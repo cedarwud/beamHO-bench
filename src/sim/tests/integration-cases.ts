@@ -33,7 +33,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
       name: 'integration: runBaselineBatch deterministic for same profile/seed',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const baselines: RuntimeBaseline[] = ['max-rsrp', 'a3'];
 
         const first = runBaselineBatch({
@@ -124,7 +124,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
         const execute = () =>
           runRerunContract({
             scenarioId: 'phase1a-case9-analytic-rerun-test',
-            profileId: 'case9-default',
+            profileId: 'starlink-like',
             seed: 123,
             baselineOrPolicy: 'policy:greedy-sinr@max-rsrp',
             tickCount: 40,
@@ -165,7 +165,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
       name: 'integration: timer-cho countdown and geometry fields are replay deterministic',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const execute = (seed: number) =>
           runBaselineBatch({
             profile,
@@ -305,8 +305,8 @@ export function buildIntegrationTestCases(): SimTestCase[] {
       name: 'integration: gain-model visualization route is profile-driven and deterministic',
       kind: 'integration',
       run: () => {
-        const besselProfile = loadPaperProfile('case9-default');
-        const flatProfile = loadPaperProfile('case9-default', {
+        const besselProfile = loadPaperProfile('starlink-like');
+        const flatProfile = loadPaperProfile('starlink-like', {
           beam: {
             gainModel: 'flat',
           },
@@ -351,7 +351,7 @@ export function buildIntegrationTestCases(): SimTestCase[] {
       name: 'integration: deterministic throughput summary value is stable',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const batch = runBaselineBatch({
           profile,
           seed: 7,

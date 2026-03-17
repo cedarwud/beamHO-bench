@@ -25,7 +25,7 @@ export class SimEngine {
   private playbackRate = 1;
   private lastEmitTime = 0;
   /** Minimum ms between listener notifications (throttle UI updates). */
-  private static readonly MIN_EMIT_INTERVAL_MS = 64; // ~15fps max UI update rate
+  private static readonly MIN_EMIT_INTERVAL_MS = 0; // emit every tick for smooth interpolation
 
   constructor(options: SimEngineOptions) {
     this.scenario = options.scenario;

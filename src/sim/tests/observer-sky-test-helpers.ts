@@ -25,7 +25,7 @@ import {
 export function buildSyntheticObserverSkyProfile(
   overrides: Partial<Record<string, string>> = {},
 ): PaperProfile {
-  const baseProfile = loadPaperProfile('case9-default');
+  const baseProfile = loadPaperProfile('starlink-like');
   const selection = normalizeResearchParameterSelection(baseProfile, {
     ...createResearchParameterSelection(baseProfile),
     'constellation.syntheticTrajectoryModel': 'walker-circular',
@@ -41,7 +41,7 @@ export function buildSyntheticObserverSkyProfile(
     profile: baseProfile,
     selection,
   });
-  return loadPaperProfile('case9-default', runtimeOverrides);
+  return loadPaperProfile('starlink-like', runtimeOverrides);
 }
 
 export function getDisplayPool(snapshot: SimSnapshot): readonly SatelliteGeometryState[] {

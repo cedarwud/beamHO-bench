@@ -4,7 +4,7 @@ export function buildCoreValidationDefinitions(): ValidationSuiteDefinition[] {
   return [
     {
       validationId: 'VAL-A4-THRESH-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       cases: [-100, -101, -102].map((threshold) => ({
         caseId: `a4-threshold-${threshold}`,
@@ -21,7 +21,7 @@ export function buildCoreValidationDefinitions(): ValidationSuiteDefinition[] {
     },
     {
       validationId: 'VAL-A3-TTT-HOM-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       trendPolicy: {
         metric: 'handover-rate',
@@ -71,7 +71,7 @@ export function buildCoreValidationDefinitions(): ValidationSuiteDefinition[] {
     },
     {
       validationId: 'VAL-TIMER-ALPHA-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       trendPolicy: {
         metric: 'hopp',
@@ -92,7 +92,7 @@ export function buildCoreValidationDefinitions(): ValidationSuiteDefinition[] {
     },
     {
       validationId: 'VAL-MC-OVERLAP-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       cases: [0.15, 0.25, 0.35].map((overlapRatio) => ({
         caseId: `mc-overlap-${overlapRatio}`,
@@ -155,7 +155,7 @@ export function buildCoreValidationDefinitions(): ValidationSuiteDefinition[] {
     },
     {
       validationId: 'VAL-CHO-MCHO-FULLMODE-SMOKE',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       cases: [
         {

@@ -15,8 +15,8 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       name: 'integration: scheduler uncoupled mode preserves baseline parity',
       kind: 'integration',
       run: () => {
-        const baseProfile = loadPaperProfile('case9-default');
-        const uncoupledProfile = loadPaperProfile('case9-default', {
+        const baseProfile = loadPaperProfile('starlink-like');
+        const uncoupledProfile = loadPaperProfile('starlink-like', {
           scheduler: {
             mode: 'uncoupled',
           },
@@ -46,7 +46,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       name: 'integration: scheduler coupled mode emits constrained active beam state',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           scheduler: {
             mode: 'coupled',
           },
@@ -77,7 +77,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       name: 'integration: scheduler coupled mode is deterministic for fixed seed/profile',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           scheduler: {
             mode: 'coupled',
           },
@@ -107,7 +107,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       name: 'integration: scheduler coupled mode exports guard counters and auditable block reason map',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           scheduler: {
             mode: 'coupled',
             activeWindowFraction: 0.2,
@@ -174,7 +174,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       name: 'integration: scheduler metadata is exported to source-trace and manifest artifacts',
       kind: 'integration',
       run: async () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           scheduler: {
             mode: 'coupled',
           },
@@ -193,7 +193,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
 
         const sourceTrace = await createSourceTraceArtifact({
           scenarioId: run.result.metadata.scenarioId,
-          profileId: 'case9-default',
+          profileId: 'starlink-like',
           baseline: run.baseline,
           algorithmFidelity: profile.handover.algorithmFidelity,
           seed: 21,
@@ -247,7 +247,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       name: 'integration: policy-off batch path keeps deterministic parity with baseline path',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const baseBatch = runBaselineBatch({
           profile,
           seed: 17,
@@ -275,7 +275,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       name: 'integration: policy-on greedy plugin is deterministic for same seed/profile/metadata',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const execute = () =>
           runBaselineBatch({
             profile,
@@ -301,7 +301,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       name: 'integration: invalid policy action is rejected with deterministic hold fallback and audit event',
       kind: 'integration',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const batch = runBaselineBatch({
           profile,
           seed: 29,
@@ -374,7 +374,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
       name: 'integration: policy metadata is exported to source-trace and manifest artifacts',
       kind: 'integration',
       run: async () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const batch = runBaselineBatch({
           profile,
           seed: 37,
@@ -390,7 +390,7 @@ export function buildPolicySchedulerIntegrationCases(): SimTestCase[] {
 
         const sourceTrace = await createSourceTraceArtifact({
           scenarioId: run.result.metadata.scenarioId,
-          profileId: 'case9-default',
+          profileId: 'starlink-like',
           baseline: run.baseline,
           algorithmFidelity: profile.handover.algorithmFidelity,
           seed: 37,

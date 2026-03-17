@@ -71,7 +71,7 @@ export function buildUnitTestCases(): SimTestCase[] {
       name: 'unit: throughput monotonic with SINR',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const low = computeThroughputMbps(profile, -10);
         const mid = computeThroughputMbps(profile, 0);
         const high = computeThroughputMbps(profile, 10);
@@ -83,7 +83,7 @@ export function buildUnitTestCases(): SimTestCase[] {
       name: 'unit: mcs-mapped throughput is non-decreasing with SINR',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           channel: {
             throughputModel: {
               model: 'mcs-mapped',
@@ -124,7 +124,7 @@ export function buildUnitTestCases(): SimTestCase[] {
       name: 'unit: evaluateLinksForUe returns no samples for invisible satellite set',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default');
+        const profile = loadPaperProfile('starlink-like');
         const ue = createBaseUe();
         const samples = evaluateLinksForUe(profile, ue, [createInvisibleSatellite()]);
         assertCondition(samples.length === 0, 'No visible beam should produce no link samples.');
@@ -134,12 +134,12 @@ export function buildUnitTestCases(): SimTestCase[] {
       name: 'unit: reuse-4 link-budget partitions cross-color interference',
       kind: 'unit',
       run: () => {
-        const fr1Profile = loadPaperProfile('case9-default', {
+        const fr1Profile = loadPaperProfile('starlink-like', {
           beam: {
             frequencyReuse: 'FR1',
           },
         });
-        const reuse4Profile = loadPaperProfile('case9-default', {
+        const reuse4Profile = loadPaperProfile('starlink-like', {
           beam: {
             frequencyReuse: 'reuse-4',
           },
@@ -186,7 +186,7 @@ export function buildUnitTestCases(): SimTestCase[] {
       name: 'unit: state machine transitions 1 -> 2 -> 3 -> 1',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           rlfStateMachine: {
             n310: 1000,
             n311: 1,
@@ -229,7 +229,7 @@ export function buildUnitTestCases(): SimTestCase[] {
       name: 'unit: RLF declaration clears serving link under sustained out-of-sync',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           rlfStateMachine: {
             qOutDb: 10,
             qInDb: 20,
@@ -260,7 +260,7 @@ export function buildUnitTestCases(): SimTestCase[] {
       name: 'unit: coupled resolver enforces per-beam capacity with deterministic tie-break',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           scheduler: {
             mode: 'coupled',
             maxUsersPerActiveBeam: 1,
@@ -347,7 +347,7 @@ export function buildUnitTestCases(): SimTestCase[] {
       name: 'unit: coupled resolver enforces overlap constraint',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           scheduler: {
             mode: 'coupled',
             fairnessTargetJain: 0,
@@ -414,7 +414,7 @@ export function buildUnitTestCases(): SimTestCase[] {
       name: 'unit: coupled resolver enforces fairness guard target',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           scheduler: {
             mode: 'coupled',
             maxUsersPerActiveBeam: 10,

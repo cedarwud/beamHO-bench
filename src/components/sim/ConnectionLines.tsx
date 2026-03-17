@@ -14,6 +14,9 @@ import type { SatelliteDisplayFrame } from '@/viz/satellite/types';
 export interface ConnectionLinesProps {
   satelliteRenderPositions: SatelliteDisplayFrame['renderPositionsById'];
   ues: readonly UEState[];
+  /** When provided, lines are only drawn to satellites whose ID is in this set.
+   *  Prevents stale lines from flashing during active-window transitions. */
+  activeSatelliteIds?: ReadonlySet<number>;
   showServing?: boolean;
   showSecondary?: boolean;
   showPrepared?: boolean;
@@ -37,6 +40,7 @@ function toSegmentArray(values: number[]): Float32Array {
 export function ConnectionLines({
   satelliteRenderPositions,
   ues,
+  activeSatelliteIds,
   showServing = true,
   showSecondary = true,
   showPrepared = true,
@@ -46,35 +50,35 @@ export function ConnectionLines({
     const secondary: number[] = [];
     const prepared: number[] = [];
 
+    const isActive = (id: number | null | undefined): boolean => {
+      if (id === null || id === undefined) return false;
+      return activeSatelliteIds ? activeSatelliteIds.has(id) : true;
+    };
+
     for (const ue of ues) {
       const servingSat =
-        ue.servingSatId !== null && ue.servingSatId !== undefined
-          ? satelliteRenderPositions.get(ue.servingSatId)
+        isActive(ue.servingSatId)
+          ? satelliteRenderPositions.get(ue.servingSatId!)
           : undefined;
       if (servingSat) {
         appendSegment(serving, ue.positionWorld, servingSat);
       }
 
       const secondarySat =
-        ue.secondarySatId !== null && ue.secondarySatId !== undefined
-          ? satelliteRenderPositions.get(ue.secondarySatId)
+        isActive(ue.secondarySatId) && ue.secondarySatId !== ue.servingSatId
+          ? satelliteRenderPositions.get(ue.secondarySatId!)
           : undefined;
-      if (
-        secondarySat &&
-        ue.secondarySatId !== ue.servingSatId
-      ) {
+      if (secondarySat) {
         appendSegment(secondary, ue.positionWorld, secondarySat);
       }
 
       const preparedSat =
-        ue.choPreparedSatId !== null && ue.choPreparedSatId !== undefined
-          ? satelliteRenderPositions.get(ue.choPreparedSatId)
-          : undefined;
-      if (
-        preparedSat &&
+        isActive(ue.choPreparedSatId) &&
         ue.choPreparedSatId !== ue.servingSatId &&
         ue.choPreparedSatId !== ue.secondarySatId
-      ) {
+          ? satelliteRenderPositions.get(ue.choPreparedSatId!)
+          : undefined;
+      if (preparedSat) {
         appendSegment(prepared, ue.positionWorld, preparedSat);
       }
     }
@@ -84,7 +88,7 @@ export function ConnectionLines({
       secondarySegments: toSegmentArray(secondary),
       preparedSegments: toSegmentArray(prepared),
     };
-  }, [satelliteRenderPositions, ues]);
+  }, [satelliteRenderPositions, ues, activeSatelliteIds]);
 
   return (
     <group name="connection-lines">

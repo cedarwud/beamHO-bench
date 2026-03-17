@@ -47,7 +47,7 @@ const DEFAULT_AXES: BaselineParameterEnvelopeAxes = {
   minElevationDegTiers: [10, 20, 35],
   ueCountTiers: [50, 100],
   ueSpeedKmphTiers: [0, 3, 30, 60],
-  profileSequence: ['case9-default', 'starlink-like', 'oneweb-like'],
+  profileSequence: ['starlink-like', 'starlink-like', 'oneweb-like'],
 };
 
 function stableStringify(value: unknown): string {

@@ -233,13 +233,16 @@ function buildPhaseLayeredRanking(options: {
   sectorCount: number;
   thresholds: { low: number; high: number };
 }): SatelliteDisplayCandidate[] {
+  // Prioritise high-elevation passes so the display set shows readable arcs.
+  // Previous order started with boundary-ingress, which filled the budget
+  // with near-horizon satellites that never traced a visible arc.
   const phaseOrder: SatelliteDisplayPhase[] = [
+    'high-pass',
+    'mid-pass',
+    'high-pass',
+    'mid-pass',
     'boundary-ingress',
-    'mid-pass',
-    'high-pass',
     'boundary-egress',
-    'mid-pass',
-    'high-pass',
   ];
 
   const perPhase = new Map<SatelliteDisplayPhase, SatelliteDisplayCandidate[]>();

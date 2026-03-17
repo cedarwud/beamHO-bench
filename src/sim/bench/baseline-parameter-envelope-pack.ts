@@ -25,7 +25,7 @@ function toValidationCase(
 function buildElevationSweepCases(): ValidationSuiteCaseDefinition[] {
   const artifact = buildBaselineParameterEnvelopeArtifact({
     axes: {
-      profileSequence: ['case9-default'],
+      profileSequence: ['starlink-like'],
       minElevationDegTiers: [10, 20, 35],
       ueCountTiers: [100],
       ueSpeedKmphTiers: [30],
@@ -68,7 +68,7 @@ export function buildBaselineParameterEnvelopeValidationDefinitions(): Validatio
   return [
     {
       validationId: 'VAL-BPE-ELEVATION-THRESH-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       cases: buildElevationSweepCases(),
     },

@@ -216,7 +216,7 @@ export function buildServiceContinuityBaselineValidationDefinitions(): Validatio
     },
     {
       validationId: 'VAL-SCB-COUPLED-SCHEDULER-CONTINUITY-SWEEP',
-      profileId: 'case9-default',
+      profileId: 'starlink-like',
       requiresFullFidelity: true,
       trendPolicy: {
         metric: 'scheduler-overlap-blocked-count',

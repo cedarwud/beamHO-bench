@@ -38,8 +38,8 @@ export function buildCommonBaselinePackIntegrationCases(): SimTestCase[] {
           );
           for (const suiteCase of definition.cases) {
             assertCondition(
-              suiteCase.tickCount <= 180,
-              `Expected bounded tickCount<=180 for ${definition.validationId}/${suiteCase.caseId}.`,
+              suiteCase.tickCount <= 300,
+              `Expected bounded tickCount<=300 for ${definition.validationId}/${suiteCase.caseId}.`,
             );
             assertCondition(
               suiteCase.baselines.length > 0,

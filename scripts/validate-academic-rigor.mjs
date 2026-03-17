@@ -5,7 +5,7 @@ import path from 'node:path';
 
 const ROOT = process.cwd();
 
-const PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
+const PROFILE_IDS = ['starlink-like', 'oneweb-like'];
 const REQUIRED_LAYER_D_ROLE_IDS = ['morl', 'c-ucgm', 'ldaps-daps'];
 
 const REQUIRED_SOURCE_PATHS = [

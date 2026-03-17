@@ -1,4 +1,4 @@
-import type { PaperProfile } from '@/config/paper-profiles/types';
+import type { PaperProfile, SyntheticTrajectoryModel } from '@/config/paper-profiles/types';
 import { createRuntimeParameterAuditSession } from '@/sim/audit/runtime-parameter-audit';
 import {
   runHandoverBaseline,
@@ -11,8 +11,6 @@ import { PolicyRuntimeSession } from '@/sim/policy/runtime-session';
 import type { PolicyMode, PolicyPlugin } from '@/sim/policy/types';
 import { BeamSchedulerWindowEngine } from '@/sim/scheduler/window-engine';
 import type {
-  KpiResult,
-  SatelliteGeometryState,
   SatelliteState,
   SimScenario,
   SimSnapshot,
@@ -33,6 +31,12 @@ import {
   type ParametricOrbitContext,
   selectParametricOrbitRuntimeWindow,
 } from './common/synthetic-orbit';
+import {
+  DEFAULT_OBSERVER,
+  EMPTY_KPI,
+  assignInitialServing,
+  type SatelliteStateFrame,
+} from './common/scenario-defaults';
 
 /**
  * Provenance:
@@ -46,10 +50,6 @@ import {
  * - ASSUME-WALKER-CIRCULAR-PHASING
  */
 
-const DEFAULT_OBSERVER = {
-  lat: 24.9441667,
-  lon: 121.3713889,
-};
 
 interface Case9AnalyticScenarioOptions {
   profile: PaperProfile;
@@ -65,22 +65,6 @@ interface Case9AnalyticScenarioOptions {
   observerLon?: number;
 }
 
-const EMPTY_KPI: KpiResult = {
-  throughput: 0,
-  handoverRate: 0,
-  hof: {
-    state2: 0,
-    state3: 0,
-  },
-  rlf: {
-    state1: 0,
-    state2: 0,
-  },
-  uho: 0,
-  hopp: 0,
-  avgDlSinr: 0,
-  jainFairness: 0,
-};
 
 function buildInitialUEs(options: {
   profile: PaperProfile;
@@ -130,8 +114,6 @@ function buildInitialUEs(options: {
   });
 }
 
-type SyntheticTrajectoryModel = 'linear-drift' | 'walker-circular';
-
 interface LegacySatelliteKinematicContext {
   profile: PaperProfile;
   timeSec: number;
@@ -154,11 +136,6 @@ interface ParametricSatelliteKinematicContext {
   beamRadiusWorld: number;
   beamSpacingWorld: number;
   orbitContext: ParametricOrbitContext;
-}
-
-interface SatelliteStateFrame {
-  runtimeSatellites: SatelliteState[];
-  observerSkyPhysicalSatellites?: SatelliteGeometryState[];
 }
 
 function resolveSyntheticTrajectoryModel(profile: PaperProfile): SyntheticTrajectoryModel {
@@ -373,6 +350,8 @@ export function createCase9AnalyticScenario(options: Case9AnalyticScenarioOption
       observerLat,
       observerLon,
     });
+    // Assign initial serving satellite so tick-0 scene shows active links
+    assignInitialServing(ues, satelliteFrame.runtimeSatellites);
 
     return {
       tick: 0,

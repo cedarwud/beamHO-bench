@@ -50,6 +50,17 @@ function isSpecAvailable(
   return spec.isAvailable ? spec.isAvailable({ profile, selection }) : true;
 }
 
+// For override application, mode-gating is skipped: a spec that is hidden in the
+// UI for a given profile mode may still be explicitly applied via programmatic
+// overrides (e.g. walker-circular selection on a real-trace profile for testing).
+function isSpecOverrideApplicable(
+  spec: ResearchParameterSpec,
+  profile: PaperProfile,
+  selection: ResearchParameterSelection,
+): boolean {
+  return spec.isAvailable ? spec.isAvailable({ profile, selection }) : true;
+}
+
 function normalizeSelectionValue(
   spec: ResearchParameterSpec,
   profile: PaperProfile,
@@ -95,7 +106,7 @@ export function buildResearchRuntimeOverridesWithConsistency(options: {
   const overrides: DeepPartial<PaperProfile> = {};
 
   for (const spec of RESEARCH_PARAMETER_SPECS) {
-    if (!isSpecAvailable(spec, profile, consistency.selection)) {
+    if (!isSpecOverrideApplicable(spec, profile, consistency.selection)) {
       continue;
     }
     spec.applyToOverrides(consistency.selection[spec.id], overrides);

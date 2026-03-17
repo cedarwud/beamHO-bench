@@ -6,13 +6,17 @@ Status ownership:
 1. lifecycle truth is maintained in `sdd/completed/beamHO-bench-implementation-status.md`
 2. this file is only the navigation/index entry for what remains physically under `pending/`
 
-## 1. Current Workspace File
+## 1. Current Workspace Files
 
-1. `beamHO-bench-observer-sky-projection-selection-correction-sdd.md` (active pending on 2026-03-13)
+`beamHO-bench-beam-layout-sdd.md` — Active Pending (2026-03-15 opened, stub phase)
+
+`beamHO-bench-real-trace-local-pass-replay-sdd.md` — Active Pending (2026-03-16 promoted from backlog; D1/D3/D4/D5/D6 implemented; D2/D7 open)
 
 Notes:
-1. do not add unrelated completed specs back into `pending/`
-2. historical closure-tracked pending specs were moved to `sdd/completed/implemented-specs/`
+1. `beamHO-bench-observer-sky-pass-conversion-sdd.md` closed on 2026-03-15 — moved to `sdd/completed/implemented-specs/`.
+2. `beamHO-bench-observer-sky-projection-selection-correction-sdd.md` is deleted — superseded.
+3. do not add unrelated completed specs back into `pending/`
+4. historical closure-tracked pending specs were moved to `sdd/completed/implemented-specs/`
 
 ## 2. Historical Implemented Specs
 

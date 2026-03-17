@@ -5,7 +5,11 @@ import {
   buildSatelliteDisplayContinuityMemory,
 } from './display-continuity';
 import { buildSatelliteDisplayCandidates } from './display-selection';
+import { applyPassCompositionState } from './pass-composition-state';
+import { buildPassMotionDecisions } from './pass-motion-policy';
+import { buildPassTrajectoryOutputs } from './pass-trajectory-conversion';
 import type {
+  PassActorMemory,
   SatelliteDisplayContinuityMemory,
   SatelliteDisplayFrame,
   SatelliteDisplayState,
@@ -15,12 +19,14 @@ import type { ObserverSkyCompositionConfig } from './view-composition';
 /**
  * Provenance:
  * - sdd/completed/implemented-specs/beamHO-bench-observer-sky-god-view-composition-sdd.md (Section 3.2, 3.5, 3.6, 6)
+ * - sdd/pending/beamHO-bench-observer-sky-pass-conversion-sdd.md (Section 3.2, 4.1, 5, 6, D6)
  * - ASSUME-OBSERVER-SKY-PROJECTION-CORRIDOR
+ * - ASSUME-OBSERVER-SKY-VISUAL-ACTOR-POLICY
  *
  * Notes:
- * - Analytic arc projection adapted from simworld DynamicSatelliteRenderer.
- * - Elevation drives transit progress (0°=horizon → 90°=zenith → 0°=horizon).
- * - Azimuth drives the arc's horizontal sweep direction.
+ * - Orchestrates the full display pipeline:
+ *   candidate selection → continuity → pass composition state →
+ *   pass motion policy → pass trajectory conversion → frame assembly.
  * - View-only: no writes back to simulation/handover contracts.
  */
 
@@ -36,45 +42,20 @@ export interface ObserverSkyDisplayPipelineInput {
   showGhosts?: boolean;
 }
 
-/**
- * Hemisphere arc position from azimuth/elevation.
- *
- * - Azimuth controls the horizontal sweep direction on the dome.
- * - Elevation controls height: 0° = horizon edge, 90° = zenith.
- * - Horizontal radius shrinks with elevation so overhead sats are near center.
- *
- * As a satellite naturally sweeps in azimuth with elevation rising then
- * falling, it traces a continuous rise→pass→set arc with no reversal.
- */
-function projectArcPosition(
-  azimuthDeg: number,
-  elevationDeg: number,
-): [number, number, number] {
-  const baseRadius = 600;
-  const baseY = 60;
-  const heightScale = 320;
-
-  const clampedElevation = Math.max(0, Math.min(90, elevationDeg));
-  const elevationRad = (clampedElevation * Math.PI) / 180;
-  const azimuthRad = (azimuthDeg * Math.PI) / 180;
-
-  // Horizontal radius shrinks as elevation increases (cos 0°=1, cos 90°=0)
-  const horizontalRadius = baseRadius * Math.cos(elevationRad);
-
-  const x = horizontalRadius * Math.sin(azimuthRad);
-  const z = horizontalRadius * Math.cos(azimuthRad);
-  const y = baseY + heightScale * Math.sin(elevationRad);
-
-  return [x, y, z];
-}
-
 export function buildObserverSkyDisplayPipeline(
   input: ObserverSkyDisplayPipelineInput,
 ) {
   // Display budget: show more than the HO candidate set, but not all above-horizon.
   // Acceptance doc §6: display set should be larger than HO candidate set.
-  // Use 2× activeSatellitesInWindow as a reasonable sky-visible pool.
-  const displayBudget = input.displayBudget ?? 1;
+  // Default: keep enough budget for screen-space spread (boundary satellites
+  // contribute horizontal span) while the high-pass-first phase order ensures
+  // the most readable arcs appear first.
+  const activeSatsInWindow =
+    input.profile.constellation.activeSatellitesInWindow ??
+    input.profile.constellation.satellitesPerPlane ??
+    8;
+  const displayBudget =
+    input.displayBudget ?? Math.max(4, 2 * activeSatsInWindow);
 
   // Step 1: Candidate selection
   const candidates = buildSatelliteDisplayCandidates({
@@ -98,17 +79,62 @@ export function buildObserverSkyDisplayPipeline(
     memory: input.memory,
   });
 
-  // Step 3: Analytic arc projection
-  const satellites: SatelliteDisplayState[] = selection.selected.map((c) => ({
-    satelliteId: c.satellite.id,
-    zone: c.zone,
-    renderPosition: projectArcPosition(c.satellite.azimuthDeg, c.satellite.elevationDeg),
-    azimuthDeg: c.satellite.azimuthDeg,
-    elevationDeg: c.satellite.elevationDeg,
-    rangeKm: c.satellite.rangeKm,
-    opacity: c.zone === 'active' ? 1 : 0.35,
-    phase: c.phase,
-  }));
+  // Step 3: Pass composition state — lifecycle (entering / tracked / exiting)
+  const previousActors: readonly PassActorMemory[] = input.memory?.passActors ?? [];
+  const passActors = applyPassCompositionState({
+    selectedCandidates: selection.selected,
+    previousActors,
+    tick: input.snapshotTick,
+    exitLingerTicks: input.composition.passLayout.exitLingerTicks,
+  });
+
+  // Step 4: Pass motion policy — authoritative phase from elevation trend
+  const currentGeometryById = new Map(
+    input.satellites.map((s) => [
+      s.id,
+      { azimuthDeg: s.azimuthDeg, elevationDeg: s.elevationDeg },
+    ]),
+  );
+  const motionDecisions = buildPassMotionDecisions({
+    actors: passActors,
+    currentElevationById: currentGeometryById,
+    phaseLowElevationDeg: input.composition.screenSpaceAcceptance.phaseLowElevationDeg,
+    phaseHighElevationDeg: input.composition.screenSpaceAcceptance.phaseHighElevationDeg,
+  });
+
+  // Step 5: Pass trajectory conversion — visual render targets
+  const trajectoryOutputs = buildPassTrajectoryOutputs({
+    actors: passActors,
+    decisions: motionDecisions,
+    currentGeometryById,
+    exitLingerTicks: input.composition.passLayout.exitLingerTicks,
+  });
+
+  // Step 6: Assemble frame
+  const trajectoryById = new Map(trajectoryOutputs.map((t) => [t.satelliteId, t]));
+  const BASE_Y_FALLBACK = 60;
+
+  const satellites: SatelliteDisplayState[] = passActors.map((actor) => {
+    const trajectory = trajectoryById.get(actor.satelliteId);
+    const geom = input.satellites.find((s) => s.id === actor.satelliteId);
+    const decision = motionDecisions.get(actor.satelliteId);
+    // Exiting actors don't appear in selection.selected; find their original zone.
+    const candidate = selection.selected.find((c) => c.satellite.id === actor.satelliteId);
+    const zone = candidate?.zone ?? 'active';
+
+    return {
+      satelliteId: actor.satelliteId,
+      zone,
+      renderPosition: trajectory?.visualTargetPosition ?? [0, BASE_Y_FALLBACK, 0],
+      motionSourcePosition: trajectory?.motionSourcePosition,
+      azimuthDeg: geom?.azimuthDeg ?? 0,
+      elevationDeg: geom?.elevationDeg ?? 0,
+      rangeKm: geom?.rangeKm ?? 0,
+      opacity: trajectory?.opacity ?? (zone === 'active' ? 1 : 0.35),
+      phase: trajectory?.phase ?? decision?.phase,
+      lifecycle: actor.lifecycle,
+    };
+  });
 
   // Sort: active first, then by elevation desc
   satellites.sort((a, b) => {
@@ -129,7 +155,10 @@ export function buildObserverSkyDisplayPipeline(
     tick: input.snapshotTick,
     timeSec: input.snapshotTimeSec,
     selectedIds: selection.selectedIds,
+    actors: input.memory?.actors,
   });
+  // Attach pass actor state to carry forward.
+  (memory as SatelliteDisplayContinuityMemory).passActors = passActors;
 
   return {
     displayBudget,

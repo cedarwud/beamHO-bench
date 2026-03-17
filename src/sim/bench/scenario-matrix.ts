@@ -63,7 +63,7 @@ export interface BuildScenarioMatrixOptions {
 }
 
 const CORE_AXES: ScenarioMatrixAxes = {
-  orbitModes: ['paper-baseline', 'real-trace'],
+  orbitModes: ['real-trace'],
   beamCounts: [16],
   overlapRatios: [0.25],
   ueSpeedGroups: ['pedestrian', 'vehicular'],
@@ -72,7 +72,7 @@ const CORE_AXES: ScenarioMatrixAxes = {
 };
 
 const EXTENDED_AXES: ScenarioMatrixAxes = {
-  orbitModes: ['paper-baseline', 'real-trace'],
+  orbitModes: ['real-trace'],
   beamCounts: [7, 16, 50],
   overlapRatios: [0.15, 0.25, 0.35],
   ueSpeedGroups: ['stationary', 'pedestrian', 'urban', 'vehicular'],
@@ -81,7 +81,7 @@ const EXTENDED_AXES: ScenarioMatrixAxes = {
 };
 
 const DEFAULT_PROFILE_BY_MODE: Record<ProfileMode, CanonicalProfileId> = {
-  'paper-baseline': 'case9-default',
+  'paper-baseline': 'starlink-like',
   'real-trace': 'starlink-like',
 };
 

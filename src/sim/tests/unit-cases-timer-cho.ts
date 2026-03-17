@@ -29,7 +29,7 @@ export function buildTimerChoUnitCases(): SimTestCase[] {
       name: 'unit: timer-cho prepared countdown exposes geometry fields in full fidelity',
       kind: 'unit',
       run: () => {
-        const profile = loadPaperProfile('case9-default', {
+        const profile = loadPaperProfile('starlink-like', {
           constellation: {
             satelliteSpeedKmps: 1,
           },

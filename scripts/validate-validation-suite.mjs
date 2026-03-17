@@ -53,10 +53,10 @@ const VALIDATION_DEFINITIONS_DIR = path.join(
 const PROFILE_SOURCE_MAP_DIR = path.join(ROOT, 'src', 'config', 'paper-profiles');
 const MATRIX_CORE_SUBSECTION_HEADING = '### 5.1 Core Stage Runs';
 const MATRIX_EXTENSION_SUBSECTION_HEADING = '### 5.2 Extension Runs (Nightly/Research)';
-const REQUIRED_CROSS_MODE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
-const REQUIRED_BPE_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
-const REQUIRED_SCB_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
-const REQUIRED_RB1_PROFILE_IDS = ['case9-default', 'starlink-like', 'oneweb-like'];
+const REQUIRED_CROSS_MODE_PROFILE_IDS = ['starlink-like', 'oneweb-like'];
+const REQUIRED_BPE_PROFILE_IDS = ['starlink-like', 'oneweb-like'];
+const REQUIRED_SCB_PROFILE_IDS = ['starlink-like', 'oneweb-like'];
+const REQUIRED_RB1_PROFILE_IDS = ['starlink-like', 'oneweb-like'];
 const REQUIRED_BPE_VALIDATION_CASE_COUNTS = {
   'VAL-BPE-ELEVATION-THRESH-SWEEP': 3,
   'VAL-BPE-LOAD-MOBILITY-SWEEP': 4,

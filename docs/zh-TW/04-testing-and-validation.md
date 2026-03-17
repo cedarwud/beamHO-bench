@@ -20,8 +20,8 @@
 3. `npm run validate:val-suite:all`  
 執行 `scope=all` 完整驗證套件（67 cases），包含 extension groups（`VAL-RL-*`/`VAL-JBH-*`/`VAL-BG-*`）與 cross-mode/BPE/repro-bundle/SCB contract checks。
 
-4. `npm run bench:cross-mode`  
-執行 cross-mode reproducible benchmark pack（`case9-default` + `starlink-like` + `oneweb-like`），預設輸出到 `dist/cross-mode-benchmark/`。
+4. `npm run bench:cross-mode`
+執行 cross-mode reproducible benchmark pack（`starlink-like` + `oneweb-like`），預設輸出到 `dist/cross-mode-benchmark/`。
 
 5. `npm run bundle:repro-v1`  
 輸出 Repro Bundle v1（cross-mode + baseline-parameter-envelope）到 `dist/repro-bundle-v1/`。

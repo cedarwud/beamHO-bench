@@ -17,9 +17,8 @@ import {
   loadOrbitCatalog,
   propagateOrbitElement,
 } from '@/sim/orbit/sgp4';
+import { buildTrajectoryCache } from '@/sim/orbit/trajectory-cache';
 import type {
-  KpiResult,
-  SatelliteGeometryState,
   SatelliteState,
   SimScenario,
   SimSnapshot,
@@ -28,6 +27,12 @@ import type {
 } from '@/sim/types';
 import { SeededRng } from '@/sim/util/rng';
 import { buildBeamsForSatellite, computeBeamSpacingWorld } from './common/beam-layout';
+import {
+  DEFAULT_OBSERVER,
+  EMPTY_KPI,
+  assignInitialServing,
+  type SatelliteStateFrame,
+} from './common/scenario-defaults';
 import { worldToLatLon } from './common/geo';
 import { attachUesToBeams, moveUesLinearX } from './common/runtime';
 
@@ -40,10 +45,15 @@ import { attachUesToBeams, moveUesLinearX } from './common/runtime';
  * - STD-3GPP-TR38.811-6.6.2-1
  */
 
-const DEFAULT_OBSERVER = {
-  lat: 24.9441667,
-  lon: 121.3713889,
-};
+
+/**
+ * Replay mode contract (RTLP §4.4):
+ * - 'research-default': continuous propagation from fixture epoch origin (DEFAULT).
+ *   No forced looping; physical truth is preserved.
+ * - 'demo-loop': wraps simulation time at the fixture replay-window boundary.
+ *   NOT the default; labeled as presentation behavior. Seam is explicit reset.
+ */
+export type RealTraceReplayMode = 'research-default' | 'demo-loop';
 
 interface RealTraceScenarioOptions {
   profile: PaperProfile;
@@ -57,29 +67,21 @@ interface RealTraceScenarioOptions {
   kmToWorldScale?: number;
   observerLat?: number;
   observerLon?: number;
+  /**
+   * Replay mode: 'research-default' (default) or 'demo-loop'.
+   * Source: SDD RTLP §4.4 — research-default is the normative path.
+   */
+  replayMode?: RealTraceReplayMode;
+  /**
+   * When true, apply bootstrap offset from fixture metadata to the initial
+   * simulation epoch so the first frame starts at the most observer-readable
+   * point in the replay window.
+   * Source: SDD RTLP §4.3.
+   */
+  applyBootstrap?: boolean;
 }
 
-const EMPTY_KPI: KpiResult = {
-  throughput: 0,
-  handoverRate: 0,
-  hof: {
-    state2: 0,
-    state3: 0,
-  },
-  rlf: {
-    state1: 0,
-    state2: 0,
-  },
-  uho: 0,
-  hopp: 0,
-  avgDlSinr: 0,
-  jainFairness: 0,
-};
 
-interface SatelliteStateFrame {
-  runtimeSatellites: SatelliteState[];
-  observerSkyPhysicalSatellites: SatelliteGeometryState[];
-}
 
 function buildInitialUEs(options: {
   profile: PaperProfile;
@@ -133,6 +135,12 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
   const profile = options.profile;
   const catalog = loadOrbitCatalog(profile);
   const baseline = options.baseline ?? 'max-rsrp';
+  // Replay mode: 'research-default' is the normative path (RTLP §4.4).
+  // 'demo-loop' is presentation-only and must be explicitly requested.
+  const replayMode: RealTraceReplayMode = options.replayMode ?? 'research-default';
+  // Bootstrap: apply fixture-computed offset so the initial frame starts at the
+  // most NTPU-visible epoch within the replay window (RTLP §4.3).
+  const applyBootstrap = options.applyBootstrap ?? true;
   const scenarioId =
     options.scenarioId ??
     `phase1b-real-trace-${catalog.provider}-${catalog.propagationEngine}`;
@@ -162,8 +170,39 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
     profile.constellation.activeSatellitesInWindow ?? profile.constellation.satellitesPerPlane;
   let triggerMemory: TriggerMemoryStore = new Map();
 
+  /**
+   * Epoch origin for propagation (RTLP §4.1):
+   * Use fixture replay-window start + bootstrap offset (if enabled).
+   * This is deterministic for the same fixture independent of wall-clock date.
+   */
+  const bootstrapOffsetMs = applyBootstrap
+    ? Math.round(catalog.bootstrapStartOffsetSec * 1000)
+    : 0;
+  const epochOriginMs = catalog.replayWindowStartUtcMs + bootstrapOffsetMs;
+
+  /**
+   * Demo-loop seam (RTLP §4.4, §4.6):
+   * When replayMode='demo-loop', simulation time wraps at replayWindowDurationSec.
+   * The seam is an explicit reset boundary (not silent mid-pass teleport).
+   * Research-default: no wrapping, continuous propagation.
+   */
+  const replayWindowDurationMs = catalog.replayWindowDurationSec * 1000;
+
+  function resolveSimUtcMs(timeSec: number): number {
+    const elapsed = Math.round(timeSec * 1000);
+    if (replayMode === 'demo-loop') {
+      // Explicit reset at seam: wrap elapsed inside the remaining window
+      // (window duration minus bootstrap offset to stay within window bounds).
+      const remainingWindowMs = replayWindowDurationMs - bootstrapOffsetMs;
+      const wrappedMs = remainingWindowMs > 0 ? elapsed % remainingWindowMs : elapsed;
+      return epochOriginMs + wrappedMs;
+    }
+    // research-default: continuous propagation from epoch origin
+    return epochOriginMs + elapsed;
+  }
+
   function buildSatellitesAt(timeSec: number): SatelliteStateFrame {
-    const simUtcMs = catalog.startTimeUtcMs + Math.round(timeSec * 1000);
+    const simUtcMs = resolveSimUtcMs(timeSec);
     const minElevationDeg = profile.constellation.minElevationDeg;
 
     const propagated = catalog.records.map((record) => {
@@ -242,6 +281,18 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
     };
   }
 
+  // Pre-compute full trajectory cache for smooth observer-sky rendering.
+  // Start 600s before epoch so satellites already in the sky at t=0
+  // have their full entry arc from the horizon included.
+  const TRAJ_LOOKBACK_SEC = 600;
+  const trajCache = buildTrajectoryCache(
+    catalog.records,
+    observer,
+    epochOriginMs - TRAJ_LOOKBACK_SEC * 1000,
+    (catalog.replayWindowDurationSec ?? 6000) + TRAJ_LOOKBACK_SEC,
+    TRAJ_LOOKBACK_SEC,
+  );
+
   const initialSatelliteFrame = buildSatellitesAt(0);
   const initialUes = buildInitialUEs({
     profile,
@@ -250,6 +301,8 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
     observerLat,
     observerLon,
   });
+  // Assign initial serving satellite so tick-0 scene shows active links
+  assignInitialServing(initialUes, initialSatelliteFrame.runtimeSatellites);
 
   const initialSnapshot: SimSnapshot = {
     tick: 0,
@@ -338,7 +391,7 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
       profileId: profile.profileId,
       satellites: satellitesWithConnections,
       observerSkyPhysicalSatellites: satelliteFrame.observerSkyPhysicalSatellites,
-      ues: stateMachine.ues,
+        ues: stateMachine.ues,
       hoEvents: decision.events,
       kpiCumulative,
       runtimeParameterAudit: runtimeParameterAudit.snapshot(previous.tick + 1),
@@ -351,6 +404,7 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
   return {
     id: scenarioId,
     profileId: profile.profileId,
+    trajectoryCache: trajCache,
     createInitialSnapshot: () => {
       triggerMemory = new Map();
       runtimeParameterAudit.reset();

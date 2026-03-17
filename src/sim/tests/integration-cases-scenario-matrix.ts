@@ -15,7 +15,7 @@ export function buildScenarioMatrixIntegrationCases(): SimTestCase[] {
           JSON.stringify(first) === JSON.stringify(replay),
           'Expected deterministic core-v1 matrix artifact for identical options.',
         );
-        assertCondition(first.caseCount === 16, 'Expected bounded core-v1 matrix size of 16 cases.');
+        assertCondition(first.caseCount === 8, 'Expected bounded core-v1 matrix size of 8 cases.');
         assertCondition(first.caseCount === first.cases.length, 'Expected caseCount to match cases length.');
         assertCondition(
           first.cases.every((row) => row.matrixCaseId.startsWith('mxv1-')),
@@ -28,9 +28,8 @@ export function buildScenarioMatrixIntegrationCases(): SimTestCase[] {
           'Expected matrix_case_id values to be unique in core-v1 matrix.',
         );
         assertCondition(
-          first.cases.some((row) => row.mode === 'paper-baseline') &&
-            first.cases.some((row) => row.mode === 'real-trace'),
-          'Expected core-v1 matrix to include both paper-baseline and real-trace modes.',
+          first.cases.every((row) => row.mode === 'real-trace'),
+          'Expected core-v1 matrix to include only real-trace modes.',
         );
         assertCondition(
           first.cases.every((row) => Number.isFinite(row.axes.ueSpeedKmph)),

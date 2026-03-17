@@ -68,12 +68,16 @@ export function buildObserverSkyCompositionUnitCases(): SimTestCase[] {
       name: 'unit: observer-sky screen-space spread helper distinguishes broad sky spread from center-top clustering',
       kind: 'unit',
       run: () => {
+        // Positions from projectArcPosition(az, el): satellite positions that span
+        // all 4 horizontal screen-space bands under the primary camera (FOV=38°).
+        // az=270°,el=10° → band 0 (screenX≈0.16); az=330°,el=25° → band 1 (screenX≈0.28);
+        // az=30°,el=25° → band 2 (screenX≈0.72); az=90°,el=10° → band 3 (screenX≈0.84).
         const broadFrame = createFrame([
-          createDisplayState(1, [-180, 35, 180], 15),
-          createDisplayState(2, [-60, 90, 170], 30),
-          createDisplayState(3, [0, 145, 150], 52),
-          createDisplayState(4, [90, 95, 150], 33),
-          createDisplayState(5, [185, 38, 170], 14),
+          createDisplayState(1, [-591, 116, 0], 10),
+          createDisplayState(2, [-272, 195, 471], 25),
+          createDisplayState(3, [0, 305, 386], 50),
+          createDisplayState(4, [272, 195, 471], 25),
+          createDisplayState(5, [591, 116, 0], 10),
         ]);
         const clusteredFrame = createFrame([
           createDisplayState(1, [-20, 160, 110], 52),
