@@ -182,8 +182,8 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
         const resolvedWalkerProfile = loadPaperProfile('starlink-like', walkerOverrides);
         const orbitContext = createParametricOrbitContext({
           profile: resolvedWalkerProfile,
-          observerLat: 24.9441667,
-          observerLon: 121.3713889,
+          observerLat: 40.0,
+          observerLon: 116.0,
           kmToWorldScale: 0.6,
         });
         const initialPhysicalPool = buildParametricOrbitSatelliteStateAtTime(orbitContext, 0);

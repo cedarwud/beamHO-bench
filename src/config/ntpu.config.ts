@@ -4,8 +4,8 @@
  * - todo.md
  *
  * Notes:
- * - NTPU observer coordinates are the project default and should stay fixed
- *   unless a scenario explicitly overrides them.
+ * - NTPU scene config retains original campus coordinates for GLB model placement.
+ *   Simulation observer location is defined separately in scenario-defaults.ts (40°N, 116°E).
  */
 
 export type Vec3 = [number, number, number];

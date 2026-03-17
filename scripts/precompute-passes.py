@@ -18,9 +18,10 @@ from skyfield.timelib import Time
 import numpy as np
 
 
-# NTPU ground station - SOURCE: beamHO-bench/src/config/ntpu.config.ts
-OBSERVER_LAT = 24.9441667
-OBSERVER_LON = 121.3713889
+# Beijing region observer — ASSUME-OBSERVER-LOCATION-BEIJING
+# See scenario-defaults.ts for rationale (50-paper corpus consensus).
+OBSERVER_LAT = 40.0
+OBSERVER_LON = 116.0
 OBSERVER_ALT_M = 50.0
 
 # Simulation window

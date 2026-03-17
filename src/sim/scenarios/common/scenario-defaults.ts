@@ -2,16 +2,27 @@
  * Shared constants and types for scenario builders (case9-analytic, real-trace).
  *
  * Provenance:
- * - ASSUME-NTPU-OBSERVER-LOCATION
+ * - ASSUME-OBSERVER-LOCATION-BEIJING
  * - STD-3GPP-TR38.811-6.6.2-1
  */
 
 import type { KpiResult, SatelliteGeometryState, SatelliteState, UEState } from '@/sim/types';
 
-/** NTPU campus observer location (fixed per PROJECT_CONSTRAINTS §2.4). */
+/**
+ * Default observer location: Beijing region (40°N, 116°E).
+ *
+ * ASSUME-OBSERVER-LOCATION-BEIJING
+ * Changed from NTPU (24.94°N, 121.37°E) to align with the most common
+ * simulation reference across the 50-paper corpus (5+ papers use 40°N, 116°E):
+ *   - PAP-2024-MADRL-CORE, PAP-2024-MAFDDQN, PAP-2024-MORL-MULTIBEAM,
+ *     PAP-2025-OHO-USERCENTRIC, PAP-2025-BIPARTITE-HO
+ * At 40°N with Starlink inclination 53°, max elevation reaches ~77°,
+ * producing representative high-elevation passes near observer zenith.
+ * The 3D scene NTPU building GLB is retained as visual decoration only.
+ */
 export const DEFAULT_OBSERVER = {
-  lat: 24.9441667,
-  lon: 121.3713889,
+  lat: 40.0,
+  lon: 116.0,
 };
 
 /** Zero-valued KPI accumulator for snapshot initialization. */

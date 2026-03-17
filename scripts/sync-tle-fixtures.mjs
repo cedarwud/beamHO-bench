@@ -78,9 +78,9 @@ const PROVIDERS = [
 const RAAN_BIN_DEG = 1;
 const SAME_PASS_THRESHOLD_SEC = 600;
 
-// NTPU campus observer — matches DEFAULT_OBSERVER in scenario-defaults.ts
-// Source: ASSUME-NTPU-OBSERVER-LOCATION
-const NTPU_OBSERVER = { latDeg: 24.9441667, lonDeg: 121.3713889, altKm: 0.05 };
+// Beijing region observer — matches DEFAULT_OBSERVER in scenario-defaults.ts
+// Source: ASSUME-OBSERVER-LOCATION-BEIJING (50-paper corpus consensus)
+const OBSERVER = { latDeg: 40.0, lonDeg: 116.0, altKm: 0.05 };
 
 // Bootstrap scan step (seconds) for finding the most observer-readable epoch
 const BOOTSTRAP_SCAN_STEP_SEC = 60;
@@ -262,7 +262,7 @@ function analysePass(record, obsLatDeg, obsLonDeg, obsECEF, windowStartMs, windo
  * 6. Return retained records + metadata.
  */
 function selectObserverLocalPasses(normalized, maxRecords, windowDurationSec) {
-  const { latDeg, lonDeg, altKm } = NTPU_OBSERVER;
+  const { latDeg, lonDeg, altKm } = OBSERVER;
   const obsECEF = observerECEF(latDeg, lonDeg, altKm);
 
   const windowStartMs = normalized.reduce((max, rec) => {
@@ -343,7 +343,7 @@ function selectObserverLocalPasses(normalized, maxRecords, windowDurationSec) {
 const BOOTSTRAP_WINDOW_GUARD_SEC = 1200;
 
 function computeBootstrapOffsetSec(records, windowStartMs, windowDurationSec) {
-  const { latDeg, lonDeg, altKm } = NTPU_OBSERVER;
+  const { latDeg, lonDeg, altKm } = OBSERVER;
   const obsECEF = observerECEF(latDeg, lonDeg, altKm);
   // Cap scan to window - BOOTSTRAP_WINDOW_GUARD_SEC so the simulation stays in coverage
   const scanDurationSec = Math.max(0, windowDurationSec - BOOTSTRAP_WINDOW_GUARD_SEC);
@@ -537,9 +537,9 @@ function buildFixture(provider, latestFile, maxRecords, providerSelectionMode) {
     replayWindowDurationSec: ANALYSIS_WINDOW_SEC,
     bootstrapStartOffsetSec,
     observer: {
-      latDeg: NTPU_OBSERVER.latDeg,
-      lonDeg: NTPU_OBSERVER.lonDeg,
-      altKm: NTPU_OBSERVER.altKm,
+      latDeg: OBSERVER.latDeg,
+      lonDeg: OBSERVER.lonDeg,
+      altKm: OBSERVER.altKm,
     },
     selectionPolicy,
     replayModeSupport: {

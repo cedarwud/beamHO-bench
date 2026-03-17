@@ -22,9 +22,9 @@ import path from 'node:path';
 const PROJECT_ROOT = process.cwd();
 const FIXTURE_DIR = path.resolve(PROJECT_ROOT, 'src/data/tle');
 
-// NTPU campus observer — matches DEFAULT_OBSERVER in scenario-defaults.ts
-// Source: ASSUME-NTPU-OBSERVER-LOCATION
-const NTPU_OBSERVER = { latDeg: 24.9441667, lonDeg: 121.3713889, altKm: 0.05 };
+// Beijing region observer — matches DEFAULT_OBSERVER in scenario-defaults.ts
+// Source: ASSUME-OBSERVER-LOCATION-BEIJING (50-paper corpus consensus)
+const OBSERVER = { latDeg: 40.0, lonDeg: 116.0, altKm: 0.05 };
 
 // Analysis window: 6000 s ≈ 100 min ≈ one LEO orbital period
 const REPLAY_WINDOW_DURATION_SEC = 6000;
@@ -193,7 +193,7 @@ function computeReplayWindowStartMs(records) {
  * Ties: prefer the smallest offset (earliest readable frame).
  */
 function computeBootstrapOffsetSec(records, windowStartMs, windowDurationSec, obsECEF) {
-  const { latDeg, lonDeg } = NTPU_OBSERVER;
+  const { latDeg, lonDeg } = OBSERVER;
   const steps = Math.floor(windowDurationSec / BOOTSTRAP_SCAN_STEP_SEC);
   let bestOffset = 0;
   let bestCount = -1;
@@ -241,7 +241,7 @@ function enrichFixture(fixtureFile) {
     throw new Error(`${fixtureFile}: no valid epochUtc found in records`);
   }
 
-  const obsECEF = observerECEF(NTPU_OBSERVER.latDeg, NTPU_OBSERVER.lonDeg, NTPU_OBSERVER.altKm);
+  const obsECEF = observerECEF(OBSERVER.latDeg, OBSERVER.lonDeg, OBSERVER.altKm);
 
   console.log(`[enrich-tle] ${path.basename(fixtureFile)}: computing bootstrap offset over ${records.length} records...`);
   const bootstrapStartOffsetSec = computeBootstrapOffsetSec(
@@ -257,9 +257,9 @@ function enrichFixture(fixtureFile) {
     replayWindowDurationSec: REPLAY_WINDOW_DURATION_SEC,
     bootstrapStartOffsetSec,
     observer: {
-      latDeg: NTPU_OBSERVER.latDeg,
-      lonDeg: NTPU_OBSERVER.lonDeg,
-      altKm: NTPU_OBSERVER.altKm,
+      latDeg: OBSERVER.latDeg,
+      lonDeg: OBSERVER.lonDeg,
+      altKm: OBSERVER.altKm,
     },
     selectionPolicy: {
       mode: 'constellation-even',
