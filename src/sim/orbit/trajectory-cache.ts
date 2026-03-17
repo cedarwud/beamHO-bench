@@ -218,24 +218,56 @@ export function buildTrajectoryCache(
     const idx2 = Math.min(maxIdx, idx1 + 1);
     const idx3 = Math.min(maxIdx, idx1 + 2);
 
-    // Azimuth was unwrapped to continuous values during pre-computation,
-    // so cubic interpolation works correctly. Mod back to [0, 360).
+    const s0 = samples[idx0], s1 = samples[idx1];
+    const s2 = samples[idx2], s3 = samples[idx3];
+
+    // Near zenith, azimuth is ill-conditioned (atan2 singularity).
+    // Switch to Cartesian hemisphere interpolation which is naturally smooth:
+    // hx = cos(el)*sin(az), hy = sin(el), hz = cos(el)*cos(az)
+    // cos(el)→0 at zenith dampens azimuth instability automatically.
+    const highEl = s0.elevationDeg > 55 || s1.elevationDeg > 55
+      || s2.elevationDeg > 55 || s3.elevationDeg > 55;
+
+    const range = cubicHermite(s0.rangeKm, s1.rangeKm, s2.rangeKm, s3.rangeKm, t);
+
+    if (highEl) {
+      const toRad = Math.PI / 180;
+      const hx0 = Math.cos(s0.elevationDeg * toRad) * Math.sin(s0.azimuthDeg * toRad);
+      const hy0 = Math.sin(s0.elevationDeg * toRad);
+      const hz0 = Math.cos(s0.elevationDeg * toRad) * Math.cos(s0.azimuthDeg * toRad);
+      const hx1 = Math.cos(s1.elevationDeg * toRad) * Math.sin(s1.azimuthDeg * toRad);
+      const hy1 = Math.sin(s1.elevationDeg * toRad);
+      const hz1 = Math.cos(s1.elevationDeg * toRad) * Math.cos(s1.azimuthDeg * toRad);
+      const hx2 = Math.cos(s2.elevationDeg * toRad) * Math.sin(s2.azimuthDeg * toRad);
+      const hy2 = Math.sin(s2.elevationDeg * toRad);
+      const hz2 = Math.cos(s2.elevationDeg * toRad) * Math.cos(s2.azimuthDeg * toRad);
+      const hx3 = Math.cos(s3.elevationDeg * toRad) * Math.sin(s3.azimuthDeg * toRad);
+      const hy3 = Math.sin(s3.elevationDeg * toRad);
+      const hz3 = Math.cos(s3.elevationDeg * toRad) * Math.cos(s3.azimuthDeg * toRad);
+
+      const hx = cubicHermite(hx0, hx1, hx2, hx3, t);
+      const hy = cubicHermite(hy0, hy1, hy2, hy3, t);
+      const hz = cubicHermite(hz0, hz1, hz2, hz3, t);
+
+      const el = Math.asin(Math.max(-1, Math.min(1, hy))) / toRad;
+      let az = Math.atan2(hx, hz) / toRad;
+      if (az < 0) az += 360;
+
+      return { az, el, range };
+    }
+
+    // Low elevation: standard az/el interpolation (azimuth already unwrapped)
     let az = cubicHermite(
-      samples[idx0].azimuthDeg, samples[idx1].azimuthDeg,
-      samples[idx2].azimuthDeg, samples[idx3].azimuthDeg, t,
+      s0.azimuthDeg, s1.azimuthDeg, s2.azimuthDeg, s3.azimuthDeg, t,
     );
     az = ((az % 360) + 360) % 360;
 
     return {
       az,
       el: cubicHermite(
-        samples[idx0].elevationDeg, samples[idx1].elevationDeg,
-        samples[idx2].elevationDeg, samples[idx3].elevationDeg, t,
+        s0.elevationDeg, s1.elevationDeg, s2.elevationDeg, s3.elevationDeg, t,
       ),
-      range: cubicHermite(
-        samples[idx0].rangeKm, samples[idx1].rangeKm,
-        samples[idx2].rangeKm, samples[idx3].rangeKm, t,
-      ),
+      range,
     };
   }
 

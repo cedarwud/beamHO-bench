@@ -366,18 +366,7 @@ function SatelliteFleet({
 
       // Position from trajectory cache (already cubic-interpolated)
       const [tx, ty, tz] = projectArcPosition(tp.azimuthDeg, tp.elevationDeg);
-      // At high elevation, azimuth jumps wildly near zenith.
-      // Use progressively stronger smoothing as elevation increases.
-      // At el=50° lerp=0.08, at el=90° lerp≈0.01 — smooth enough to kill spinning
-      // but still tracks the general direction of motion.
-      if (tp.elevationDeg > 45 && st.age > 0) {
-        const t = Math.max(0.01, 0.1 - (tp.elevationDeg - 45) * 0.002);
-        st.smoothPos.x += (tx - st.smoothPos.x) * t;
-        st.smoothPos.y += (ty - st.smoothPos.y) * 0.1;
-        st.smoothPos.z += (tz - st.smoothPos.z) * t;
-      } else {
-        st.smoothPos.set(tx, ty, tz);
-      }
+      st.smoothPos.set(tx, ty, tz);
       st.age++;
 
       // Opacity based on elevation
