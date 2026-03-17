@@ -27,6 +27,15 @@ All changes must pass: `npm run lint && npm run test:sim && npm run build`
 - Physical parameters must have paper or standard source; stop and ask if no source exists
 - SINR baseline: A4EVENT (PAP-2022-A4EVENT-CORE) equations (1)–(9), 100% from 3GPP/ITU standards
 
+### Parameter Integrity（參數正確性檢查流程）
+新增或修改任何 profile / scenario / 腳本中的物理參數時，必須依序完成：
+
+1. **公式驗算** — 派生物理量（速度、覆蓋直徑、週期）不得手寫近似值，必須用公式從基礎參數推導（見 PROJECT_CONSTRAINTS §2.6）
+2. **跨星座獨立檢查** — Starlink (550 km) 和 OneWeb (1200 km) 的派生值必然不同；不得複製貼上同一數值（§2.9）
+3. **單一來源一致性** — 同一參數（如最低仰角、觀測站座標）在 profile JSON、scenario-defaults.ts、scripts/ 中只能有一個定義來源（§2.7）。修改時必須搜尋所有引用處同步更新
+4. **物理 vs 視覺分離** — 純視覺常數（投影曲線、穹頂半徑、不透明度）必須標註 `VISUAL-ONLY`，不得影響模擬邏輯（§2.8）
+5. **ASSUME 登錄** — 無論文來源的參數必須標記 `ASSUME-*` 並在 paper-sources.json 登錄 rationale（§8）
+
 ### Documentation Accuracy (Write-time Verification)
 When writing or updating documentation that describes the repo's current state:
 
