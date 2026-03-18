@@ -1,3 +1,6 @@
+// Inlined by esbuild in test builds to cap trajectory cache window (OOM prevention).
+declare const __SIM_TEST_TRAJ_WINDOW_SEC__: number | undefined;
+
 import type { PaperProfile } from '@/config/paper-profiles/types';
 import { createRuntimeParameterAuditSession } from '@/sim/audit/runtime-parameter-audit';
 import {
@@ -79,6 +82,17 @@ interface RealTraceScenarioOptions {
    * Source: SDD RTLP §4.3.
    */
   applyBootstrap?: boolean;
+  /**
+   * Override the trajectory cache window duration (seconds).
+   * Only used in tests to reduce memory consumption; production uses the
+   * full fixture replayWindowDurationSec.
+   */
+  maxTrajWindowSec?: number;
+  /**
+   * Limit the number of catalog records used for propagation.
+   * Only used in tests to reduce memory consumption.
+   */
+  maxCatalogRecords?: number;
 }
 
 
@@ -133,7 +147,13 @@ function buildInitialUEs(options: {
 
 export function createRealTraceScenario(options: RealTraceScenarioOptions): SimScenario {
   const profile = options.profile;
-  const catalog = loadOrbitCatalog(profile);
+  const fullCatalog = loadOrbitCatalog(profile);
+  // In test builds, limit catalog records to reduce memory from SGP4 propagation.
+  const testMaxRecords = typeof __SIM_TEST_TRAJ_WINDOW_SEC__ !== 'undefined' ? 30 : undefined;
+  const maxRecords = options.maxCatalogRecords ?? testMaxRecords;
+  const catalog = maxRecords != null && maxRecords < fullCatalog.records.length
+    ? { ...fullCatalog, records: fullCatalog.records.slice(0, maxRecords) }
+    : fullCatalog;
   const baseline = options.baseline ?? 'max-rsrp';
   // Replay mode: 'research-default' is the normative path (RTLP §4.4).
   // 'demo-loop' is presentation-only and must be explicitly requested.
@@ -285,11 +305,20 @@ export function createRealTraceScenario(options: RealTraceScenarioOptions): SimS
   // Start 600s before epoch so satellites already in the sky at t=0
   // have their full entry arc from the horizon included.
   const TRAJ_LOOKBACK_SEC = 600;
+  // In test/CI environments, cap the trajectory window to reduce memory usage.
+  // The full 6000s window is only needed for browser rendering.
+  // __SIM_TEST_TRAJ_WINDOW_SEC__ is inlined by esbuild define in test builds.
+  const testWindowOverride = typeof __SIM_TEST_TRAJ_WINDOW_SEC__ !== 'undefined'
+    ? __SIM_TEST_TRAJ_WINDOW_SEC__ as number : undefined;
+  const effectiveReplaySec = options.maxTrajWindowSec
+    ?? testWindowOverride
+    ?? (catalog.replayWindowDurationSec ?? 6000);
+  const trajWindowSec = effectiveReplaySec + TRAJ_LOOKBACK_SEC;
   const trajCache = buildTrajectoryCache(
     catalog.records,
     observer,
     epochOriginMs - TRAJ_LOOKBACK_SEC * 1000,
-    (catalog.replayWindowDurationSec ?? 6000) + TRAJ_LOOKBACK_SEC,
+    trajWindowSec,
     TRAJ_LOOKBACK_SEC,
   );
 

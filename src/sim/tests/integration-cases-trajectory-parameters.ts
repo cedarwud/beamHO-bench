@@ -115,9 +115,11 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
           captureSnapshots: true,
         });
         const initialWalkerSnapshot = walkerBatch.runs[0]?.snapshots?.[0];
+        const expectedSatCount = resolvedWalkerProfile.constellation.activeSatellitesInWindow
+          ?? resolvedWalkerProfile.constellation.satellitesPerPlane;
         assertCondition(
-          Boolean(initialWalkerSnapshot && initialWalkerSnapshot.satellites.length === 16),
-          'Expected walker-circular scene window to emit the configured 16 satellites instead of the full constellation size.',
+          Boolean(initialWalkerSnapshot && initialWalkerSnapshot.satellites.length === expectedSatCount),
+          `Expected walker-circular scene window to emit the configured ${expectedSatCount} satellites instead of the full constellation size.`,
         );
       },
     },
@@ -202,9 +204,11 @@ export function buildTrajectoryParameterIntegrationCases(): SimTestCase[] {
           orbitContext.desiredSatelliteCount,
         );
 
+        const expectedWindowSize = resolvedWalkerProfile.constellation.activeSatellitesInWindow
+          ?? resolvedWalkerProfile.constellation.satellitesPerPlane;
         assertCondition(
-          initialWindow.length === 16,
-          'Expected walker-circular backend window selection to honor the configured active satellite count.',
+          initialWindow.length === expectedWindowSize,
+          `Expected walker-circular backend window selection to honor the configured active satellite count (${expectedWindowSize}).`,
         );
         assertCondition(
           initialPhysicalPool.length > initialWindow.length,

@@ -47,6 +47,11 @@ async function bundleCli() {
     format: 'esm',
     target: ['node20'],
     sourcemap: false,
+    define: {
+      // Cap trajectory cache window to 300s in tests to avoid OOM from
+      // SGP4 propagation of 400+ satellites over 6600s.
+      '__SIM_TEST_TRAJ_WINDOW_SEC__': '300',
+    },
     plugins: [
       {
         name: 'alias-at',

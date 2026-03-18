@@ -211,6 +211,8 @@ export function buildRealTraceArtifactIntegrationCases(): SimTestCase[] {
           profile,
           seed: 1,
           applyBootstrap: true,
+          maxTrajWindowSec: 600,
+          maxCatalogRecords: 30,
         });
         const snapshot0 = scenario.createInitialSnapshot();
         assertCondition(
@@ -233,7 +235,7 @@ export function buildRealTraceArtifactIntegrationCases(): SimTestCase[] {
         const catalog = loadOrbitCatalog(profile);
         const validNoradIds = new Set(catalog.records.map((r) => r.noradId));
 
-        const scenario = createRealTraceScenario({ profile, seed: 7 });
+        const scenario = createRealTraceScenario({ profile, seed: 7, maxTrajWindowSec: 600, maxCatalogRecords: 30 });
         const snapshot0 = scenario.createInitialSnapshot();
 
         for (const sat of snapshot0.satellites) {
@@ -259,7 +261,7 @@ export function buildRealTraceArtifactIntegrationCases(): SimTestCase[] {
         const profile = loadPaperProfile('starlink-like');
 
         // Default scenario must run without looping (research-default)
-        const defaultScenario = createRealTraceScenario({ profile, seed: 3 });
+        const defaultScenario = createRealTraceScenario({ profile, seed: 3, maxTrajWindowSec: 600, maxCatalogRecords: 30 });
         const snap0 = defaultScenario.createInitialSnapshot();
         const snap1 = defaultScenario.nextSnapshot(snap0, { timeStepSec: 1 });
         const snap2 = defaultScenario.nextSnapshot(snap1, { timeStepSec: 1 });
@@ -289,16 +291,19 @@ export function buildRealTraceArtifactIntegrationCases(): SimTestCase[] {
           seed: 5,
           replayMode: 'demo-loop',
           applyBootstrap: false, // test seam without bootstrap shift
+          maxTrajWindowSec: 600,
+          maxCatalogRecords: 30,
         });
 
         // Advance to just before the seam
         const snap0 = demoScenario.createInitialSnapshot();
         const windowDurationSec = catalog.replayWindowDurationSec;
 
-        // Step just past one full window (should wrap, not continue unbounded)
+        // Step just past one full window (should wrap, not continue unbounded).
+        // Use large steps to reduce memory pressure from per-tick SGP4 propagation.
         const nearSeamSec = windowDurationSec - 1;
         let snap = snap0;
-        const stepSec = 10;
+        const stepSec = 100;
         while (snap.timeSec < nearSeamSec) {
           snap = demoScenario.nextSnapshot(snap, { timeStepSec: stepSec });
         }

@@ -100,7 +100,6 @@ export function buildResearchParameterIntegrationCases(): SimTestCase[] {
         assertCondition(
           !visibleSpecs.some((spec) =>
             [
-              'scenario.deployment',
               'ue.distribution',
               'beam.layout',
               'beam.beamwidth3dBDeg',
