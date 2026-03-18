@@ -5,6 +5,7 @@ import { NTPUScene } from './NTPUScene';
 import { UAV } from './UAV';
 import { SatelliteSkyLayer } from './SatelliteSkyLayer';
 import { BeamSkyLayer } from './BeamSkyLayer';
+import { BeamFootprint } from '@/components/sim/BeamFootprint';
 import { ObserverSkyCameraRig } from './ObserverSkyCameraRig';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
@@ -157,7 +158,7 @@ export function MainScene() {
     baseline: selectedBaseline,
     seed: 42,
     autoStart: true,
-    playbackRate: 32,
+    playbackRate: 16,
   });
 
   const satRenderPositionsRef = useRef<Map<number, [number, number, number]>>(new Map());
@@ -355,6 +356,13 @@ export function MainScene() {
                 playbackRate={playbackRate}
                 trajectoryCache={trajectoryCache}
                 renderPositionsOut={satRenderPositionsRef}
+              />
+              <BeamFootprint
+                satellites={displayedSnapshot.satellites}
+                gainModel={profile.beam.gainModel}
+                ues={displayedSnapshot.ues}
+                beamScheduler={displayedSnapshot.beamScheduler}
+                renderPositionsRef={satRenderPositionsRef}
               />
               <BeamSkyLayer
                 renderPositionsRef={satRenderPositionsRef}
