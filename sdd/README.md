@@ -65,7 +65,7 @@ This folder is explicitly split into implemented specs, the current pending work
 
 ## Pending Workspace
 
-1. `pending/beamHO-bench-beam-layout-sdd.md` (Active Pending, stub phase)
+1. `pending/beamHO-bench-beam-layout-sdd.md` (Active Pending, design-spec updated 2026-03-18; implementation open)
 2. `pending/beamHO-bench-real-trace-local-pass-replay-sdd.md` (Active Pending, promoted 2026-03-16; D1/D3/D4/D5/D6 done; D2/D7 open)
 3. lifecycle truth remains in:
    - `completed/beamHO-bench-implementation-status.md`

@@ -11,6 +11,7 @@ import { buildObserverSkyCompositionUnitCases } from './unit-cases-observer-sky-
 import { buildObserverSkyViewUnitCases } from './unit-cases-observer-sky-view';
 import { buildSatelliteRenderUnitCases } from './unit-cases-satellite-render';
 import { buildSmallScaleUnitCases } from './unit-cases-small-scale';
+import { buildBeamGainUnitCases } from './unit-cases-beam-gain';
 import { buildTimerChoUnitCases } from './unit-cases-timer-cho';
 import type { SimTestCase } from './types';
 
@@ -478,6 +479,7 @@ export function buildUnitTestCases(): SimTestCase[] {
         );
       },
     },
+    ...buildBeamGainUnitCases(),
     ...buildGainModelUnitCases(),
     ...buildObserverSkyCompositionUnitCases(),
     ...buildObserverSkyViewUnitCases(),

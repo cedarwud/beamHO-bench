@@ -1,11 +1,15 @@
 import type { PaperProfile } from '@/config/paper-profiles/types';
 import type { SatelliteState, UEState } from '@/sim/types';
 import {
-  beamContainsUe,
   computeNoiseDbm,
   computeRsrpDbm,
   estimateRangeKm,
 } from './large-scale';
+import {
+  BEAM_GAIN_FLOOR_DB,
+  computeBeamGainDb,
+  computeOffAxisDeg,
+} from './beam-gain';
 import { computeSmallScaleFadingDb } from './small-scale';
 
 /**
@@ -92,8 +96,32 @@ export function evaluateLinksForUe(
     const rangeKm = estimateRangeKm(ue, satellite);
 
     for (const beam of satellite.beams) {
-      if (!beamContainsUe(ue, beam.centerWorld, beam.radiusWorld)) {
+      // Fast distance pre-check: if UE is far beyond beam radius in world coords,
+      // skip expensive Bessel computation. At 3× beam radius the gain is well below
+      // the -20 dB floor for all supported gain models.
+      const dx = ue.positionWorld[0] - beam.centerWorld[0];
+      const dz = ue.positionWorld[2] - beam.centerWorld[2];
+      const distWorldSq = dx * dx + dz * dz;
+      const rejectRadius = beam.radiusWorld * 3;
+      if (distWorldSq > rejectRadius * rejectRadius) {
         continue;
+      }
+
+      // Beam gain replaces boolean containment check.
+      const distWorld = Math.sqrt(distWorldSq);
+      const worldPerKm = beam.radiusWorld / Math.max(beam.radiusKm, 1e-9);
+      const distanceKm = distWorld / Math.max(worldPerKm, 1e-9);
+      const offAxisDeg = computeOffAxisDeg(
+        distanceKm,
+        profile.constellation.altitudeKm,
+      );
+      const beamGainDb = computeBeamGainDb(
+        offAxisDeg,
+        profile.beam.beamwidth3dBDeg,
+        profile.beam.gainModel,
+      );
+      if (beamGainDb <= BEAM_GAIN_FLOOR_DB) {
+        continue; // below gain floor — no meaningful signal
       }
 
       const smallScaleFadingDb = computeSmallScaleFadingDb(profile, {
@@ -115,7 +143,7 @@ export function evaluateLinksForUe(
           ueAntennaGainDbi: profile.channel.ueAntennaGainDbi,
           systemLossDb: profile.channel.systemLossDb,
           rangeKm,
-        }) + smallScaleFadingDb;
+        }) + smallScaleFadingDb + beamGainDb;
       entries.push({
         sample: {
           satId: satellite.id,

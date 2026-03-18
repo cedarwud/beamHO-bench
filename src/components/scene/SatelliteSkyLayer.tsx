@@ -39,6 +39,8 @@ interface SatelliteSkyLayerProps {
   playbackRate?: number;
   renderMode?: unknown;
   trajectoryCache?: TrajectoryCache;
+  /** External ref to receive satellite render positions (noradId → world xyz). */
+  renderPositionsOut?: React.MutableRefObject<Map<number, [number, number, number]>>;
 }
 
 interface SlotEntry {
@@ -474,6 +476,7 @@ export function SatelliteSkyLayer({
   showPreparedLinks = true,
   playbackRate = 1,
   trajectoryCache,
+  renderPositionsOut,
 }: SatelliteSkyLayerProps) {
   const trajCacheRef = useRef(trajectoryCache);
   trajCacheRef.current = trajectoryCache;
@@ -496,7 +499,9 @@ export function SatelliteSkyLayer({
   // preventing mid-sky appearance from late slot assignment.
   const displayCount = DEFAULT_DISPLAY_COUNT;
 
-  const renderPositionsRef = useRef<Map<number, [number, number, number]>>(new Map());
+  const internalRenderPositionsRef = useRef<Map<number, [number, number, number]>>(new Map());
+  // Use external ref if provided (shared with BeamSkyLayer), otherwise internal.
+  const renderPositionsRef = renderPositionsOut ?? internalRenderPositionsRef;
 
   const activeSatIds = useMemo(
     () => new Set(satellites.map((s) => s.id)),

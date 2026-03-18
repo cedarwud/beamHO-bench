@@ -97,6 +97,23 @@ export function estimateRangeKm(ue: UEState, satellite: SatelliteState): number 
   return estimateRangeKmFromWorld(ue, satellite);
 }
 
+/**
+ * Compute UE-to-beam-center distance in km using world-coordinate proxy.
+ * Converts world distance to physical km using the beam's scale factor.
+ */
+export function computeUeToBeamDistanceKm(
+  ue: UEState,
+  beamCenter: [number, number, number],
+  beamRadiusWorld: number,
+  beamRadiusKm: number,
+): number {
+  const dx = ue.positionWorld[0] - beamCenter[0];
+  const dz = ue.positionWorld[2] - beamCenter[2];
+  const distWorld = Math.hypot(dx, dz);
+  const worldPerKm = beamRadiusWorld / Math.max(beamRadiusKm, 1e-9);
+  return distWorld / Math.max(worldPerKm, 1e-9);
+}
+
 export function beamContainsUe(
   ue: UEState,
   beamCenter: [number, number, number],

@@ -1,9 +1,10 @@
-import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { AdaptiveDpr, Stats } from '@react-three/drei';
 import { NTPUScene } from './NTPUScene';
 import { UAV } from './UAV';
 import { SatelliteSkyLayer } from './SatelliteSkyLayer';
+import { BeamSkyLayer } from './BeamSkyLayer';
 import { ObserverSkyCameraRig } from './ObserverSkyCameraRig';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
@@ -159,6 +160,7 @@ export function MainScene() {
     playbackRate: 32,
   });
 
+  const satRenderPositionsRef = useRef<Map<number, [number, number, number]>>(new Map());
   const lowPowerMode = useMemo(() => isMobileLikeDevice(), []);
   const maxDpr = lowPowerMode
     ? NTPU_CONFIG.render.mobileMaxDpr
@@ -352,6 +354,13 @@ export function MainScene() {
                 showPreparedLinks={linkVisibility.prepared}
                 playbackRate={playbackRate}
                 trajectoryCache={trajectoryCache}
+                renderPositionsOut={satRenderPositionsRef}
+              />
+              <BeamSkyLayer
+                renderPositionsRef={satRenderPositionsRef}
+                ues={displayedSnapshot.ues}
+                gainModel={profile.beam.gainModel}
+                beamAngularRadiusDeg={profile.beam.beamwidth3dBDeg}
               />
             </Suspense>
 

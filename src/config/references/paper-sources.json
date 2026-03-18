@@ -302,6 +302,26 @@
       "note": "Observer-sky frontend uses source-agnostic visual actor state, boundary entry/exit anchors, and deterministic phase-lane offsets so Synthetic and TLE geometry share the same readable pass semantics."
     },
     {
+      "sourceId": "ASSUME-BEAM-GAIN-FLOOR-DB",
+      "type": "assumption",
+      "title": "Beam Antenna Gain Pattern Floor",
+      "locator": "beam-gain.ts:GAIN_FLOOR_DB",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:beam-gain-floor-db",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Beam antenna gain is clamped at -20 dB floor. Pattern nulls in ITU-R S.672-4 and PAP-2023-BHFREQREUSE are typically -20 to -25 dB; -20 dB is a conservative choice that avoids numerical noise from deep nulls."
+    },
+    {
+      "sourceId": "ASSUME-BEAM-OFFAXIS-SMALL-ANGLE",
+      "type": "assumption",
+      "title": "Beam Off-Axis Small Angle Approximation",
+      "locator": "beam-gain.ts:computeOffAxisDeg",
+      "year": 2026,
+      "canonicalUrl": "urn:assumption:beam-offaxis-small-angle",
+      "licenseNote": "Project assumption registry entry for traceability.",
+      "note": "Off-axis angle computed as atan(d/h) where d is ground distance and h is altitude. Valid for LEO beam footprints where beam radius (25-50 km) << altitude (550-1200 km)."
+    },
+    {
       "sourceId": "PAP-2022-A4EVENT-CORE",
       "type": "paper",
       "title": "Performance Evaluation of Handover using A4 Event in LEO Satellites Network",

@@ -8,7 +8,7 @@ Status ownership:
 
 ## 1. Current Workspace Files
 
-`beamHO-bench-beam-layout-sdd.md` — Active Pending (2026-03-15 opened, stub phase)
+`beamHO-bench-beam-layout-sdd.md` — Active Pending (2026-03-15 opened; 2026-03-18 design-spec update complete, implementation open)
 
 `beamHO-bench-real-trace-local-pass-replay-sdd.md` — Active Pending (2026-03-16 promoted from backlog; D1/D3/D4/D5/D6 implemented; D2/D7 open)
 
