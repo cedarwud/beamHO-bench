@@ -142,6 +142,11 @@ function resolveSyntheticTrajectoryModel(profile: PaperProfile): SyntheticTrajec
   if (profile.constellation.syntheticTrajectoryModel === 'walker-circular') {
     return 'walker-circular';
   }
+  // ASSUME-LINEAR-DRIFT-SYNTHETIC-FALLBACK
+  // linear-drift is a simplified synthetic model (constant east-west velocity)
+  // used only as engineering fallback when walker-circular is not configured.
+  // It does NOT represent any published UE or satellite mobility model.
+  // For academic use, prefer walker-circular (Kepler propagation) or real-trace (TLE/SGP4).
   return 'linear-drift';
 }
 

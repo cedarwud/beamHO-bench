@@ -289,9 +289,11 @@ export const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     sourceIds: ['PAP-2022-SEAMLESSNTN-CORE', 'PAP-2024-MADRL-CORE', 'PAP-2025-DAPS-CORE'],
     options: [
       { value: '1', label: '1 satellite (single-pass debug)' },
-      { value: '8', label: '8 satellites' },
-      { value: '16', label: '16 satellites' },
-      { value: '30', label: '30 satellites' },
+      { value: '5', label: '5 satellites' },
+      { value: '10', label: '10 satellites' },
+      { value: '20', label: '20 satellites' },
+      { value: '35', label: '35 satellites' },
+      { value: '55', label: '55 satellites (full window)' },
     ],
     readFromProfile: (profile) =>
       stringOfNumber(
@@ -326,6 +328,7 @@ export const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
       { value: '10', label: '10 satellites' },
       { value: '16', label: '16 satellites' },
       { value: '30', label: '30 satellites' },
+      { value: '55', label: '55 satellites' },
     ],
     readFromProfile: (profile) =>
       stringOfNumber(

@@ -66,6 +66,13 @@ export interface PaperProfile {
     inclinationDeg: number;
     orbitalPlanes: number;
     satellitesPerPlane: number;
+    /**
+     * Runtime display/compute budget: max satellites tracked per tick.
+     * NOT a physical constraint — actual visible count is much higher
+     * (e.g. Starlink ~74, OneWeb ~62 above 10° at any instant).
+     * Handover decisions use candidateSatelliteLimit, not this value.
+     * ASSUME-ACTIVE-WINDOW-DISPLAY-BUDGET
+     */
     activeSatellitesInWindow?: number;
     satelliteSpeedKmps?: number;
     minElevationDeg: number;

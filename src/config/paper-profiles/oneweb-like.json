@@ -21,8 +21,8 @@
     "inclinationDeg": 87.9,
     "orbitalPlanes": 18,
     "satellitesPerPlane": 40,
-    "activeSatellitesInWindow": 16,
-    "satelliteSpeedKmps": 7.4,
+    "activeSatellitesInWindow": 55,
+    "satelliteSpeedKmps": 7.26,
     "minElevationDeg": 10,
     "tle": {
       "provider": "oneweb",
@@ -36,7 +36,7 @@
   "beam": {
     "beamsPerSatellite": 19,
     "layout": "hex-19",
-    "footprintDiameterKm": 50,
+    "footprintDiameterKm": 92,
     "beamwidth3dBDeg": 4.4,
     "overlapRatio": 0.25,
     "gainModel": "bessel-j1",

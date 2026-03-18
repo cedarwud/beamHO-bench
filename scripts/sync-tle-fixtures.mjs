@@ -68,15 +68,23 @@ const PROVIDERS = [
 // RAAN_BIN_DEG = 2  →  satellites within 2° RAAN are considered same plane
 // Orbital-plane pass diversity:
 //   Satellites in the same plane (RAAN within RAAN_BIN_DEG) that peak within
-//   SAME_PASS_THRESHOLD_SEC of each other are from the SAME pass (consecutive
-//   sats in the train, ~86s apart).  We keep only 1 per pass to avoid the
-//   "twin/train" visual artifact.
-//
-//   The same plane may cross NTPU multiple times in the 6000s window (~96min
-//   orbital period → up to 2 passes).  We allow one satellite from EACH pass,
-//   giving temporal coverage without simultaneous duplicates.
+//   the dedup threshold are considered the same visual event.  Tiered thresholds:
+//   high-elevation (≥40°) uses 45s — keeps nearly all center-crossing sats;
+//   mid-elevation (10°–40°) uses 120s — moderate dedup for edge satellites.
+//   Edge-only satellites (peak < 10°) are filtered out entirely.
+// ASSUME-TLE-RAAN-BIN-DIVERSITY: 1° bin groups co-planar satellites
 const RAAN_BIN_DEG = 1;
-const SAME_PASS_THRESHOLD_SEC = 600;
+// Tiered dedup thresholds by peak elevation:
+//   High-elevation passes (≥ 40°) traverse the scene center — most valuable for
+//   beam handover visualisation.  Only dedup truly overlapping sats (< 45s).
+//   Mid-elevation passes (10°–40°): moderate dedup (120s) to balance density.
+//   Low-elevation passes (< 10°): filtered out entirely (never reach service
+//   elevation, invisible in scene).
+// ASSUME-TLE-TIERED-DEDUP-THRESHOLDS
+const HIGH_ELEV_DEG = 40;
+const MID_ELEV_DEG = 10;
+const DEDUP_THRESHOLD_HIGH_SEC = 45;
+const DEDUP_THRESHOLD_MID_SEC = 120;
 
 // Beijing region observer — matches DEFAULT_OBSERVER in scenario-defaults.ts
 // Source: ASSUME-OBSERVER-LOCATION-BEIJING (50-paper corpus consensus)
@@ -85,7 +93,11 @@ const OBSERVER = { latDeg: 40.0, lonDeg: 116.0, altKm: 0.05 };
 // Bootstrap scan step (seconds) for finding the most observer-readable epoch
 const BOOTSTRAP_SCAN_STEP_SEC = 60;
 
-// Minimum service elevation for bootstrap scoring (matches 3GPP TR 38.811 §6.6.2)
+// Minimum service elevation for TLE bootstrap scoring.
+// This is intentionally higher than the profile's minElevationDeg (10°) because
+// bootstrap scoring selects epochs with high-quality passes (peak elevation > 25°),
+// not the visibility threshold. Simulation visibility uses profile.constellation.minElevationDeg.
+// ASSUME-TLE-BOOTSTRAP-ELEVATION-THRESHOLD
 const SERVICE_MIN_ELEVATION_DEG = 25;
 
 // ─── Kepler / Topocentric helpers ─────────────────────────────────────────────
@@ -213,6 +225,64 @@ function propagateElevationDeg(record, obsLatDeg, obsLonDeg, obsECEF, tUtcMs) {
   return (Math.asin(rU / rangeKm) * 180) / Math.PI;
 }
 
+/**
+ * Compute azimuth (degrees, 0=N, 90=E) from observer to satellite.
+ * Uses the same ENU frame as elevation: East, North, Up.
+ */
+function propagateAzElDeg(record, obsLatDeg, obsLonDeg, obsECEF, tUtcMs) {
+  const epochMs = Date.parse(toUtcEpoch(record.epochUtc));
+  if (!Number.isFinite(epochMs)) return { azDeg: NaN, elDeg: NaN };
+  const dtSec = (tUtcMs - epochMs) / 1000;
+
+  const n = (record.meanMotionRevPerDay * 2 * Math.PI) / 86400;
+  const rawM = degToRad(record.meanAnomalyDeg) + n * dtSec;
+  const M = rawM - TWO_PI * Math.floor(rawM / TWO_PI);
+  const e = record.eccentricity;
+  const E = solveKepler(M, e);
+  const cosE = Math.cos(E);
+  const sinE = Math.sin(E);
+  const nu = Math.atan2(Math.sqrt(1 - e * e) * sinE, cosE - e);
+  const a = Math.cbrt(GM_KM3_S2 / (n * n));
+  const r = a * (1 - e * cosE);
+
+  const incRad = degToRad(record.inclinationDeg);
+  const raanRad = degToRad(record.raanDeg);
+  const argPRad = degToRad(record.argPerigeeDeg);
+  const cosO = Math.cos(raanRad); const sinO = Math.sin(raanRad);
+  const cosI = Math.cos(incRad);  const sinI = Math.sin(incRad);
+  const cosW = Math.cos(argPRad); const sinW = Math.sin(argPRad);
+  const cosNu = Math.cos(nu);     const sinNu = Math.sin(nu);
+
+  const x_eci = r * ((cosO * cosW - sinO * sinW * cosI) * cosNu + (-cosO * sinW - sinO * cosW * cosI) * sinNu);
+  const y_eci = r * ((sinO * cosW + cosO * sinW * cosI) * cosNu + (-sinO * sinW + cosO * cosW * cosI) * sinNu);
+  const z_eci = r * (sinW * sinI * cosNu + cosW * sinI * sinNu);
+
+  const thetaGMST = gmstRad(tUtcMs);
+  const cosT = Math.cos(thetaGMST); const sinT = Math.sin(thetaGMST);
+  const x_ecef = cosT * x_eci + sinT * y_eci;
+  const y_ecef = -sinT * x_eci + cosT * y_eci;
+  const z_ecef = z_eci;
+
+  const [ox, oy, oz] = obsECEF;
+  const dx = x_ecef - ox; const dy = y_ecef - oy; const dz = z_ecef - oz;
+  const rangeKm = Math.sqrt(dx * dx + dy * dy + dz * dz);
+  if (rangeKm < 1) return { azDeg: NaN, elDeg: NaN };
+
+  const latRad = degToRad(obsLatDeg); const lonRad = degToRad(obsLonDeg);
+  const sinLat = Math.sin(latRad); const cosLat = Math.cos(latRad);
+  const cosLon = Math.cos(lonRad); const sinLon = Math.sin(lonRad);
+
+  // ENU components
+  const rE = -sinLon * dx + cosLon * dy;
+  const rN = -sinLat * cosLon * dx - sinLat * sinLon * dy + cosLat * dz;
+  const rU = cosLat * cosLon * dx + cosLat * sinLon * dy + sinLat * dz;
+
+  const elDeg = (Math.asin(rU / rangeKm) * 180) / Math.PI;
+  let azDeg = (Math.atan2(rE, rN) * 180) / Math.PI;
+  if (azDeg < 0) azDeg += 360;
+  return { azDeg, elDeg };
+}
+
 // ─── Pass analysis helpers ─────────────────────────────────────────────────────
 
 /**
@@ -226,23 +296,25 @@ function analysePass(record, obsLatDeg, obsLonDeg, obsECEF, windowStartMs, windo
   const steps = Math.floor((windowDurationSec * 1000) / stepMs);
   let maxElevation = -90;
   let peakOffsetSec = 0;
+  let peakAzDeg = 0;
   let passCount = 0;
   let prevAbove = false;
 
   for (let i = 0; i <= steps; i++) {
     const tMs = windowStartMs + i * stepMs;
-    const elev = propagateElevationDeg(record, obsLatDeg, obsLonDeg, obsECEF, tMs);
-    if (!Number.isFinite(elev)) continue;
-    if (elev > maxElevation) {
-      maxElevation = elev;
+    const { azDeg, elDeg } = propagateAzElDeg(record, obsLatDeg, obsLonDeg, obsECEF, tMs);
+    if (!Number.isFinite(elDeg)) continue;
+    if (elDeg > maxElevation) {
+      maxElevation = elDeg;
       peakOffsetSec = i * 60;
+      peakAzDeg = azDeg;
     }
-    const above = elev >= 0;
+    const above = elDeg >= 0;
     if (above && !prevAbove) passCount += 1;
     prevAbove = above;
   }
 
-  return { maxElevationDeg: maxElevation, peakOffsetSec, passCount };
+  return { maxElevationDeg: maxElevation, peakOffsetSec, peakAzDeg, passCount };
 }
 
 /**
@@ -271,7 +343,7 @@ function selectObserverLocalPasses(normalized, maxRecords, windowDurationSec) {
   }, 0);
 
   const candidates = normalized.map((rec) => {
-    const { maxElevationDeg, peakOffsetSec, passCount } = analysePass(
+    const { maxElevationDeg, peakOffsetSec, peakAzDeg, passCount } = analysePass(
       rec,
       latDeg,
       lonDeg,
@@ -279,51 +351,101 @@ function selectObserverLocalPasses(normalized, maxRecords, windowDurationSec) {
       windowStartMs,
       windowDurationSec,
     );
-    return { rec, maxElevationDeg, peakOffsetSec, passCount };
+    return { rec, maxElevationDeg, peakOffsetSec, peakAzDeg, passCount };
   });
 
-  // Retain only records that cross the horizon
-  const local = candidates.filter((c) => c.maxElevationDeg >= 0);
+  // Phase 1: Filter out edge-only satellites (peak < MID_ELEV_DEG).
+  // These never reach service elevation and are invisible in the scene.
+  const aboveMinElev = candidates.filter((c) => c.maxElevationDeg >= MID_ELEV_DEG);
+  const edgeFiltered = candidates.filter((c) => c.maxElevationDeg >= 0 && c.maxElevationDeg < MID_ELEV_DEG).length;
 
   // Sort by peak elevation descending so per-plane cap retains the best passes.
-  local.sort((a, b) => b.maxElevationDeg - a.maxElevationDeg || b.passCount - a.passCount);
+  aboveMinElev.sort((a, b) => b.maxElevationDeg - a.maxElevationDeg || b.passCount - a.passCount);
 
-  // Per-pass diversity: for each orbital plane (RAAN bin), group satellites
-  // by pass (peak times within SAME_PASS_THRESHOLD_SEC are the same pass).
-  // Keep only the highest-elevation satellite from each pass.
+  // Phase 2: Tiered per-plane dedup.
+  //   High-elevation (≥ 40°): dedup only within 45s — nearly all center-crossing
+  //     satellites are kept, only truly simultaneous duplicates removed.
+  //   Mid-elevation (10°–40°): dedup within 120s — moderate density.
   //
-  // This eliminates the "satellite train" (consecutive same-plane sats ~86s
-  // apart all visible at once) while allowing the same plane to contribute
-  // satellites from DIFFERENT passes (e.g. two crossings in a 6000s window).
-  //
-  // Result: temporal + spatial diversity without simultaneous duplicates.
-  const planePassPeaks = new Map(); // key: raanBin → array of accepted peakOffsetSec
-  const planeSeen = new Set(); // strict 1-per-plane cap
-  const diversified = local.filter((c) => {
+  // Within each RAAN bin (orbital plane), satellites whose peak times are within
+  // the threshold are considered the same visual event.  Keep only the highest-
+  // elevation one (list is already sorted).
+  const planePassPeaks = new Map(); // key: raanBin → array of { peakSec, isHigh }
+  const diversified = aboveMinElev.filter((c) => {
     const raanBin = Math.round(c.rec.raanDeg / RAAN_BIN_DEG);
     const accepted = planePassPeaks.get(raanBin) ?? [];
+    const isHigh = c.maxElevationDeg >= HIGH_ELEV_DEG;
+    const threshold = isHigh ? DEDUP_THRESHOLD_HIGH_SEC : DEDUP_THRESHOLD_MID_SEC;
     // Check if this satellite's peak is too close to an already-accepted one
+    // in the same elevation tier
     const tooClose = accepted.some(
-      (t) => Math.abs(c.peakOffsetSec - t) < SAME_PASS_THRESHOLD_SEC,
+      (a) => Math.abs(c.peakOffsetSec - a.peakSec) < threshold,
     );
     if (tooClose) return false;
-    accepted.push(c.peakOffsetSec);
+    accepted.push({ peakSec: c.peakOffsetSec, isHigh });
     planePassPeaks.set(raanBin, accepted);
     return true;
   });
 
-  const retained = diversified.slice(0, maxRecords);
+  // Phase 3: Azimuth-balanced budget allocation.
+  // Divide 360° into AZ_BUDGET_SECTORS sectors and distribute maxRecords evenly.
+  // Within each sector, prioritise by peak elevation (already sorted).
+  // This ensures satellites enter from all sky directions, preventing temporal
+  // gaps caused by directional clustering.
+  const AZ_BUDGET_SECTORS = 8;
+  const sectorSize = 360 / AZ_BUDGET_SECTORS;
+  const perSectorBudget = Math.ceil(maxRecords / AZ_BUDGET_SECTORS);
 
+  // Bucket candidates by azimuth sector
+  const azBuckets = Array.from({ length: AZ_BUDGET_SECTORS }, () => []);
+  for (const c of diversified) {
+    const az = ((c.peakAzDeg % 360) + 360) % 360;
+    const sector = Math.min(AZ_BUDGET_SECTORS - 1, Math.floor(az / sectorSize));
+    azBuckets[sector].push(c);
+  }
+
+  // Round-robin fill: take one from each sector in rotation until budget full.
+  // This guarantees even distribution even when some sectors have fewer candidates.
+  const retained = [];
+  const sectorIdx = azBuckets.map(() => 0);
+  while (retained.length < maxRecords) {
+    let added = false;
+    for (let s = 0; s < AZ_BUDGET_SECTORS; s++) {
+      if (retained.length >= maxRecords) break;
+      if (sectorIdx[s] < azBuckets[s].length && sectorIdx[s] < perSectorBudget) {
+        retained.push(azBuckets[s][sectorIdx[s]++]);
+        added = true;
+      }
+    }
+    if (!added) break; // all sectors exhausted
+  }
+  // If budget not full, fill remaining from any sector
+  if (retained.length < maxRecords) {
+    const retainedSet = new Set(retained.map((c) => c.rec.noradId));
+    for (const c of diversified) {
+      if (retained.length >= maxRecords) break;
+      if (!retainedSet.has(c.rec.noradId)) retained.push(c);
+    }
+  }
+
+  const highCount = retained.filter((c) => c.maxElevationDeg >= HIGH_ELEV_DEG).length;
+  const midCount = retained.length - highCount;
+  const sectorCounts = azBuckets.map((b, i) => {
+    const used = Math.min(sectorIdx[i], b.length);
+    return `${Math.round(i * sectorSize)}°:${used}`;
+  });
   console.log(
-    `[sync-tle]   observer-local: ${local.length}/${normalized.length} records cross horizon` +
-      ` over NTPU; after per-pass cap(1/pass, ${SAME_PASS_THRESHOLD_SEC}s threshold, ${RAAN_BIN_DEG}° bin): ${diversified.length}` +
-      ` from ${planePassPeaks.size} orbital planes; capped to ${retained.length}`,
+    `[sync-tle]   observer-local: ${aboveMinElev.length}/${normalized.length} records above ${MID_ELEV_DEG}°` +
+      ` (${edgeFiltered} edge-only filtered); after tiered dedup: ${diversified.length}` +
+      ` from ${planePassPeaks.size} planes; az-balanced to ${retained.length}` +
+      ` (high≥${HIGH_ELEV_DEG}°: ${highCount}, mid: ${midCount})` +
+      `\n[sync-tle]   azimuth sectors: [${sectorCounts.join(', ')}]`,
   );
 
   return {
     records: retained.map((c) => c.rec).sort((a, b) => a.noradId - b.noradId),
     windowStartMs,
-    localCount: local.length,
+    localCount: aboveMinElev.length,
   };
 }
 
@@ -520,9 +642,12 @@ function buildFixture(provider, latestFile, maxRecords, providerSelectionMode) {
       mode: 'observer-local-pass',
       serviceMinElevationDeg: SERVICE_MIN_ELEVATION_DEG,
       analysisWindowSec: ANALYSIS_WINDOW_SEC,
-      rankingPolicyId: 'per-pass-diversity-peak-elevation',
+      rankingPolicyId: 'tiered-dedup-peak-elevation',
       raanBinDeg: RAAN_BIN_DEG,
-      samePassThresholdSec: SAME_PASS_THRESHOLD_SEC,
+      minPeakElevDeg: MID_ELEV_DEG,
+      dedupHighElDeg: HIGH_ELEV_DEG,
+      dedupHighThresholdSec: DEDUP_THRESHOLD_HIGH_SEC,
+      dedupMidThresholdSec: DEDUP_THRESHOLD_MID_SEC,
     };
   }
 

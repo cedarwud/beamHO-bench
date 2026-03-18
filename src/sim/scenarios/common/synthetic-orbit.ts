@@ -224,6 +224,9 @@ function buildParametricOrbitSeeds(options: {
   const allSeeds: ParametricOrbitSeed[] = [];
   for (let planeIndex = 0; planeIndex < orbitalPlanes; planeIndex += 1) {
     const raanRad = (TWO_PI * planeIndex) / orbitalPlanes;
+    // Walker-δ inter-plane phase: δ = π per constellation (F = T/2).
+    // Standard Walker Star pattern used by Starlink/OneWeb papers.
+    // ASSUME-WALKER-DELTA-PHASE-FACTOR
     const planePhaseRad = (Math.PI * planeIndex) / orbitalPlanes;
     for (let slotIndex = 0; slotIndex < satellitesPerPlane; slotIndex += 1) {
       const slotPhaseRad = (TWO_PI * slotIndex) / satellitesPerPlane;

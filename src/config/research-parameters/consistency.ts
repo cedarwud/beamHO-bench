@@ -202,6 +202,23 @@ export function resolveResearchParameterConsistency(options: {
     }
   }
 
+  // Cross-check profile speed against orbital mechanics formula (all modes).
+  // PROJECT_CONSTRAINTS §2.6: derived physical quantities must match formulas.
+  {
+    const profileAlt = options.profile.constellation.altitudeKm;
+    const profileSpeed = options.profile.constellation.satelliteSpeedKmps ?? 0;
+    const expectedSpeed = toRounded(deriveCircularOrbitSpeedKmps(profileAlt), 2);
+    if (profileSpeed > 0 && Math.abs(profileSpeed - expectedSpeed) > 0.05) {
+      issues.push({
+        ruleId: 'PC-CHECK-SPEED-FORMULA',
+        messageCode: 'profile_speed_diverges_from_formula',
+        severity: 'warn',
+        parameterIds: ['constellation.satelliteSpeedKmps', 'constellation.altitudeKm'],
+        message: `Profile satelliteSpeedKmps=${profileSpeed} diverges from v=√(μ/r)=${expectedSpeed} at altitude=${profileAlt}km (Δ=${toRounded(Math.abs(profileSpeed - expectedSpeed), 3)} km/s).`,
+      });
+    }
+  }
+
   // Derived coupling is only applied in synthetic paper-baseline mode.
   if (options.profile.mode === 'paper-baseline') {
     const requestedAltitudeKm = Number(selection['constellation.altitudeKm']);

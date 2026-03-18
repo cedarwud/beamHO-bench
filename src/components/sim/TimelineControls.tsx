@@ -71,7 +71,7 @@ export function TimelineControls({
         </label>
       </div>
       <span className="sim-timeline__meta">
-        t={timeSec.toFixed(1)}s | tick={tick}
+        t={timeSec.toFixed(1)}s
       </span>
     </div>
   );

@@ -1,23 +1,24 @@
 {
-  "generatedAtUtc": "2026-03-17T12:19:50.774Z",
+  "generatedAtUtc": "2026-03-18T01:18:46.536Z",
   "provider": "oneweb",
   "sourceRootHint": "../tle_data",
   "sourceFile": "oneweb/json/oneweb_20260316.json",
   "sourceRecordCount": 651,
   "sampledRecordCount": 120,
   "replayWindowStartUtc": "2026-03-16T05:35:22.584Z",
-  "replayWindowDurationSec": 18000,
-  "bootstrapStartOffsetSec": 2940,
+  "replayWindowDurationSec": 6000,
+  "bootstrapStartOffsetSec": 3240,
   "observer": {
-    "latDeg": 24.9441667,
-    "lonDeg": 121.3713889,
+    "latDeg": 40,
+    "lonDeg": 116,
     "altKm": 0.05
   },
   "selectionPolicy": {
     "mode": "constellation-even",
     "serviceMinElevationDeg": 25,
-    "analysisWindowSec": 18000,
-    "rankingPolicyId": "even-norad-order"
+    "analysisWindowSec": 6000,
+    "rankingPolicyId": "even-norad-order",
+    "note": "Current fixture was generated with constellation-wide even sampling. Future fixtures should use observer-local-pass mode (RTLP D2)."
   },
   "replayModeSupport": {
     "researchDefault": true,

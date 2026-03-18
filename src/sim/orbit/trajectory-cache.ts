@@ -67,8 +67,10 @@ export interface TrajectoryCache {
   satelliteCount: number;
   /** Total number of passes across all satellites. */
   passCount: number;
-  /** Duration of the pre-computed window in seconds (for time wrapping). */
+  /** Duration of the pre-computed window in seconds (includes lookback). */
   windowDurationSec: number;
+  /** Effective replay duration in sim-time seconds (excludes lookback). */
+  replayDurationSec: number;
 }
 
 // ── Configuration ──
@@ -275,6 +277,7 @@ export function buildTrajectoryCache(
     satelliteCount: trajectories.length,
     passCount: totalPassCount,
     windowDurationSec,
+    replayDurationSec: windowDurationSec - timeOffsetSec,
 
     getActiveAt(simTimeSec: number): TrajectoryPosition[] {
       // Map simulation time to cache time (cache starts timeOffsetSec before sim)

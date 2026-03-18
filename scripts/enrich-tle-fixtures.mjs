@@ -32,8 +32,10 @@ const REPLAY_WINDOW_DURATION_SEC = 6000;
 // Bootstrap scan step in seconds
 const BOOTSTRAP_SCAN_STEP_SEC = 60;
 
-// Minimum elevation for "service visible" in bootstrap scoring (deg)
-// Matches 3GPP TR 38.811 §6.6.2 default used in profiles
+// Minimum elevation for TLE bootstrap scoring (deg).
+// Intentionally higher than profile minElevationDeg (10°): selects epochs with
+// high-quality passes, not the simulation visibility threshold.
+// ASSUME-TLE-BOOTSTRAP-ELEVATION-THRESHOLD
 const SERVICE_MIN_ELEVATION_DEG = 25;
 
 // ─── Kepler / Topocentric helpers ────────────────────────────────────────────

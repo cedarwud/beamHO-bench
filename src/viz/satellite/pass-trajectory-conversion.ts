@@ -22,21 +22,21 @@ export interface PassTrajectoryOutput {
   opacity: number;
 }
 
-// Arc projection constants (same as display-pipeline.ts internal formula).
+// ── VISUAL-ONLY constants ──
+// These control 3D rendering appearance only. They do NOT affect simulation
+// physics, SINR calculations, or handover decisions.
+//
 // BASE_RADIUS must exceed the camera's visible x/z range at the dome base
 // so that horizon-level satellites (el≈0°) are outside the frustum.
 // Camera at [0,900,1200] with FOV=38° sees ±927 at y=60.
-// BASE_RADIUS must exceed 927 so el=0° (radius=BASE_RADIUS) is off-screen.
-// With non-linear power mapping, el=5° jumps to ~0.36 fraction = radius 620,
-// so the entry transition from off-screen to visible is at el≈1-2°.
+// With POWER=0.7, el=2° → radius ≈ 889 (near edge, entering from outside).
 const BASE_RADIUS = 960;
-const BASE_Y = 60;
+const BASE_Y = 60;  // VISUAL-ONLY: dome base height in world units
 // HEIGHT_SCALE controls dome height. Keep moderate so high-elevation
 // satellites stay visually within the scene (not flying above it).
-const HEIGHT_SCALE = 320;
-// Per-lane depth offset to separate simultaneous passes without disturbing
-// horizontal screen-space spread. X-axis offset is intentionally avoided
-// because it shifts screen-space position and reduces horizontal band count.
+const HEIGHT_SCALE = 320;  // VISUAL-ONLY
+// VISUAL-ONLY: Per-lane depth offset to separate simultaneous passes without
+// disturbing horizontal screen-space spread.
 const LANE_DEPTH_SPREAD_WORLD = 25;
 
 /**
@@ -55,13 +55,18 @@ export function projectArcPosition(
   // satellites enter/exit from outside the visible scene, not at the edge.
   const clamped = Math.min(90, elevationDeg);
   const azRad = (azimuthDeg * Math.PI) / 180;
-  // Non-linear (sqrt) projection: compresses the outer ring and spreads
-  // mid-elevation satellites toward the center. With 25-55 satellites above
-  // horizon at any time, most at el 5-30°, linear projection clusters them
-  // at the edge. Sqrt mapping pulls el=15° from radius 667 → 474, el=30°
-  // from 533 → 319, making the scene center visually populated.
+  // VISUAL-ONLY: Non-linear projection for balanced spatial distribution.
+  // POWER < 1 compresses outer ring, pulling mid-elevation satellites inward.
+  // POWER = 0.7 balances center density with natural edge entry/exit:
+  //   el=2° → radius 889 (near 927 frustum edge, smooth entry from outside)
+  //   el=15° → radius 669 (moderate inward pull)
+  //   el=30° → radius 504 (visible in mid-scene)
+  //   el=60° → radius 265 (near center)
+  // Previous value 0.35 was needed at observer lat 24.9°N where max elevation
+  // was ~62°; at 40°N with Starlink inclination 53°, max elevation reaches ~77°
+  // so less aggressive compression is needed.
   const linearFrac = clamped / 90; // -∞..1, 0 at horizon, 1 at zenith
-  const POWER = 0.35; // <1 compresses outer ring, pulls satellites toward center
+  const POWER = 0.7; // VISUAL-ONLY: <1 compresses outer ring
   const elevFraction = linearFrac >= 0
     ? Math.pow(linearFrac, POWER)
     : -Math.pow(-linearFrac, POWER); // preserve negative for sub-horizon

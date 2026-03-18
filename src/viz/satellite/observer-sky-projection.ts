@@ -50,6 +50,7 @@ export function projectObserverSkyPosition(options: {
     sceneExtentWorld * (options.config.horizonLiftRatio ?? 0.28),
   );
   const azimuthRad = degToRad(azimuthDeg);
+  // VISUAL-ONLY: controls elevation-to-radius mapping curvature
   const verticalCurveExponent = Math.max(0.35, options.config.verticalCurveExponent ?? 1);
   const boundaryWeight = Math.pow(1 - normalizedElevation, 0.58);
   const horizontalRadiusWorld = domeRadiusWorld * boundaryWeight;

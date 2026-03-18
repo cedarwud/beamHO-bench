@@ -74,6 +74,7 @@ function SatelliteFleet({
   simTimeRef,
   playbackRateRef,
   uesRef,
+  rosterBudgetRef,
   minElevationDeg,
   displayCount,
   renderPositionsRef,
@@ -84,6 +85,7 @@ function SatelliteFleet({
   simTimeRef: React.RefObject<number>;
   playbackRateRef: React.RefObject<number>;
   uesRef: React.RefObject<readonly UEState[]>;
+  rosterBudgetRef: React.RefObject<number>;
   minElevationDeg: number;
   displayCount: number;
   renderPositionsRef: React.MutableRefObject<Map<number, [number, number, number]>>;
@@ -95,8 +97,16 @@ function SatelliteFleet({
   // syncs to engine tick time periodically to avoid drift.
   const continuousTimeRef = useRef(0);
   const lastSyncTimeRef = useRef(0);
-  /** First frame flag: satellites already in the sky at t=0 should show immediately. */
+  /** First frame flag: warm-start at WARM_START_SEC so the sky is pre-populated. */
   const firstFrameRef = useRef(true);
+  // VISUAL-ONLY: scene opens as if it has been running for this many seconds,
+  // so satellites are already distributed across the sky instead of all entering
+  // from edges simultaneously.
+  const WARM_START_SEC = 300;
+  /** Track lowest elevation at which each pass was first observed (passIndex → deg).
+   *  Only passes first seen near the horizon are eligible for slot assignment,
+   *  preventing mid-sky pop-in. Cleared on trajectory loop reset. */
+  const firstSeenElevRef = useRef(new Map<number, number>());
 
   // ── GLB loading + slot creation ──
   useEffect(() => {
@@ -192,32 +202,47 @@ function SatelliteFleet({
     // ── Continuous time: advance every frame, sync to engine tick periodically ──
     const engineTime = simTimeRef.current;
     const rate = playbackRateRef.current;
-    // When engine tick updates (engineTime changed), sync our continuous time
+    // VISUAL-ONLY: loop before the end of the replay window to avoid
+    // sparse pass data near the boundary causing interpolation artifacts.
+    const LOOP_END_SEC = 5500;
+    const loopLen = Math.min(cache.replayDurationSec, LOOP_END_SEC) - WARM_START_SEC;
+    // Map engine time into [WARM_START_SEC .. WARM_START_SEC + loopLen) seamlessly.
+    // This ensures the sky is always pre-populated (never starts at t=0 where
+    // no satellites have entered yet).
+    const mappedTime = loopLen > 0
+      ? WARM_START_SEC + (engineTime % loopLen)
+      : engineTime;
+    // When engine tick updates, sync continuous time to the mapped value.
     if (engineTime !== lastSyncTimeRef.current) {
-      continuousTimeRef.current = engineTime;
+      // Detect loop wrap: mapped time jumped backwards → new loop iteration.
+      const prevMapped = continuousTimeRef.current;
+      if (mappedTime < prevMapped - 60) {
+        // Loop boundary crossed — reset slot assignments so warm-start
+        // re-populates the sky with satellites already mid-pass.
+        firstFrameRef.current = true;
+        firstSeenElevRef.current.clear();
+        for (const st of states) {
+          st.passIdx = -1;
+          st.noradId = -1;
+          st.opacity = 0;
+          st.age = 0;
+        }
+      }
+      continuousTimeRef.current = mappedTime;
       lastSyncTimeRef.current = engineTime;
     } else {
-      // Between ticks: advance continuously using frame delta × playback rate
+      // Between ticks: advance continuously using frame delta × playback rate.
       continuousTimeRef.current += delta * rate;
-    }
-    // Loop trajectory: when reaching the end, reset to beginning.
-    const rawTimeSec = continuousTimeRef.current;
-    const windowSec = cache.windowDurationSec;
-    if (windowSec > 0 && rawTimeSec >= windowSec) {
-      continuousTimeRef.current = 0;
-      firstFrameRef.current = true;
-      // Clear all slot assignments so satellites re-enter naturally
-      for (const st of states) {
-        st.passIdx = -1;
-        st.noradId = -1;
-        st.opacity = 0;
-        st.age = 0;
+      // Clamp to avoid overshooting into sparse data region.
+      const maxTime = WARM_START_SEC + loopLen;
+      if (continuousTimeRef.current >= maxTime) {
+        continuousTimeRef.current = maxTime - 1;
       }
     }
     const timeSec = continuousTimeRef.current;
 
     // ── 1. Get all active passes at current time from trajectory cache ──
-    const activePasses = cache.getActiveAt(timeSec);
+    const allPasses = cache.getActiveAt(timeSec);
 
     // ── 2. Priority IDs (serving / secondary / CHO-prepared) ──
     const priorityIds = new Set<number>();
@@ -231,7 +256,7 @@ function SatelliteFleet({
     // Peak elevation first: passes that traverse the high sky (near zenith)
     // get slots over low-skimming passes — keeps the scene center populated.
     // Current elevation as tiebreaker within similar peak groups.
-    activePasses.sort((a, b) => {
+    allPasses.sort((a, b) => {
       const ap = priorityIds.has(a.noradId) ? 1 : 0;
       const bp = priorityIds.has(b.noradId) ? 1 : 0;
       if (ap !== bp) return bp - ap;
@@ -239,6 +264,13 @@ function SatelliteFleet({
       if (Math.abs(peakDiff) > 5) return peakDiff;
       return b.elevationDeg - a.elevationDeg;
     });
+
+    // ── 3b. Cap to sidebar roster budget (activeSatellitesInWindow) ──
+    // Sort first, then trim — keeps high-elevation + priority satellites.
+    const rosterBudget = rosterBudgetRef.current;
+    const activePasses = allPasses.length <= rosterBudget
+      ? allPasses
+      : allPasses.slice(0, rosterBudget);
 
     // Build lookup: passIndex → TrajectoryPosition
     const passByIdx = new Map<number, TrajectoryPosition>();
@@ -267,30 +299,54 @@ function SatelliteFleet({
       }
     }
 
-    // ── 5. Fill empty slots ──
-    // Stagger entries: max 1 new satellite per 45° azimuth sector per frame.
+    // ── 5. Fill empty slots with temporal-spatial stagger ──
+    // Stagger entries: max 2 new satellites per 45° azimuth sector per frame.
     // Same orbital plane satellites have similar azimuths and cross the
     // threshold together — without staggering they all appear at once.
+    // This stagger applies to ALL frames including the first frame.
     const SECTOR_SIZE = 45;
-    const sectorsUsedThisFrame = new Set<number>();
-    const isFirstFrame = firstFrameRef.current;
+    const MAX_NEW_PER_SECTOR = 3;
+    const sectorNewCount = new Map<number, number>();
 
-    // Only assign passes that are still near the horizon (el < 8°).
-    // Passes already at high elevation missed their entry window —
-    // skip them so satellites never appear mid-sky.
-    // Exception: first frame shows all existing satellites.
-    const MAX_ENTRY_ELEV = 8;
-    const unassigned = activePasses.filter(
-      (p) => !assignedPassIds.has(p.passIndex) && p.elevationDeg > -2
-        && (isFirstFrame || p.elevationDeg < MAX_ENTRY_ELEV),
-    );
+    // Track first-seen elevation for each pass.  Only passes first observed
+    // near the horizon (< ENTRY_ELEV_THRESHOLD) are eligible for slot
+    // assignment — this guarantees every satellite enters from the scene edge
+    // with a low-elevation fade-in, never popping in mid-sky.
+    const ENTRY_ELEV_THRESHOLD = 20; // VISUAL-ONLY: max first-seen elevation for entry
+    const firstSeen = firstSeenElevRef.current;
+    for (const p of activePasses) {
+      if (!firstSeen.has(p.passIndex)) {
+        firstSeen.set(p.passIndex, p.elevationDeg);
+      }
+    }
+    // Prune passes that are no longer active
+    for (const pid of firstSeen.keys()) {
+      if (!passByIdx.has(pid)) firstSeen.delete(pid);
+    }
+
+    // VISUAL-ONLY: max current elevation for slot assignment.  Even if a pass
+    // was first seen near the horizon, we only assign it while it's still near
+    // the edge so the user sees it enter from outside, not pop in mid-sky.
+    const MAX_CURRENT_ELEV_FOR_ENTRY = 12;
+
+    const isFirstFrame = firstFrameRef.current;
+    const unassigned = activePasses.filter((p) => {
+      if (assignedPassIds.has(p.passIndex)) return false;
+      if (p.elevationDeg < -2) return false;
+      // First frame (warm-start): accept all above-horizon passes so the sky
+      // is pre-populated — these are satellites that would have entered earlier.
+      if (isFirstFrame) return true;
+      // Must have been first seen near horizon AND still be near the edge
+      if ((firstSeen.get(p.passIndex) ?? 90) >= ENTRY_ELEV_THRESHOLD) return false;
+      return p.elevationDeg < MAX_CURRENT_ELEV_FOR_ENTRY;
+    });
 
     // Balance across screen quadrants and azimuth sectors (orbital plane proxy).
     // Scene: Z+ = bottom (toward camera), Z- = top, X- = left, X+ = right
     const quadCounts = [0, 0, 0, 0]; // TL, TR, BL, BR
     const azSectorSlotCount = new Map<number, number>(); // 20° az bin → slot count
     const AZ_DIVERSITY_BIN = 20;
-    const MAX_PER_AZ_BIN = 2; // max 2 slots per 20° azimuth bin
+    const MAX_PER_AZ_BIN = 4; // max slots per 20° azimuth bin
     for (const st of states) {
       if (st.passIdx < 0) continue;
       const tp = passByIdx.get(st.passIdx);
@@ -310,10 +366,11 @@ function SatelliteFleet({
         const p = unassigned[nextUnassigned++];
         const sector = Math.floor(((p.azimuthDeg % 360) + 360) % 360 / SECTOR_SIZE);
 
-        // First frame: skip staggering (show all existing satellites)
-        if (!isFirstFrame && sectorsUsedThisFrame.has(sector)) continue;
+        // Stagger: limit new entries per azimuth sector (skip on first frame warm-start)
+        if (!isFirstFrame && (sectorNewCount.get(sector) ?? 0) >= MAX_NEW_PER_SECTOR) continue;
 
-        // Balance: skip if this quadrant or azimuth bin is over-represented.
+        // Balance: skip if this quadrant or azimuth bin is over-represented
+        // (skip balance checks on first frame warm-start — accept all).
         if (!isFirstFrame) {
           const [sx, , sz] = projectArcPosition(p.azimuthDeg, p.elevationDeg);
           const qi = (sz < 0 ? 0 : 2) + (sx >= 0 ? 1 : 0);
@@ -327,12 +384,13 @@ function SatelliteFleet({
         const st = states[slotIdx];
         st.passIdx = p.passIndex;
         st.noradId = p.noradId;
-        st.age = 0;
-        st.opacity = (isFirstFrame && p.elevationDeg > 3) ? 1 : 0;
+        // Warm-start: satellites already in sky appear immediately at full opacity
+        st.age = isFirstFrame ? 999 : 0;
+        st.opacity = isFirstFrame ? 1 : 0;
         const [px, py, pz] = projectArcPosition(p.azimuthDeg, p.elevationDeg);
         st.smoothPos.set(px, py, pz);
         assignedPassIds.add(p.passIndex);
-        sectorsUsedThisFrame.add(sector);
+        sectorNewCount.set(sector, (sectorNewCount.get(sector) ?? 0) + 1);
         // Update balance counters
         const [qx, , qz] = projectArcPosition(p.azimuthDeg, p.elevationDeg);
         quadCounts[(qz < 0 ? 0 : 2) + (qx >= 0 ? 1 : 0)]++;
@@ -369,9 +427,12 @@ function SatelliteFleet({
       st.smoothPos.set(tx, ty, tz);
       st.age++;
 
-      // Opacity based on elevation
+      // Opacity based on elevation — VISUAL-ONLY fade ramp.
+      // New entries must spend MIN_VISIBLE_AGE frames invisible so the user
+      // sees them move from the dome edge before they become visible.
+      const MIN_VISIBLE_AGE = 8; // VISUAL-ONLY: frames before satellite can be seen
       let targetOpacity: number;
-      if (tp.elevationDeg < 0) {
+      if (st.age < MIN_VISIBLE_AGE || tp.elevationDeg < 0) {
         targetOpacity = 0;
       } else if (tp.elevationDeg < minElevationDeg) {
         const frac = tp.elevationDeg / Math.max(1, minElevationDeg);
@@ -382,9 +443,9 @@ function SatelliteFleet({
       } else {
         targetOpacity = 1.0;
       }
-      st.opacity += (targetOpacity - st.opacity) * 0.15;
+      st.opacity += (targetOpacity - st.opacity) * 0.12;
 
-      slot.group.visible = st.opacity > 0.01;
+      slot.group.visible = st.opacity > 0.03;
       slot.group.position.copy(st.smoothPos);
       for (const m of slot.materials) m.opacity = st.opacity;
 
@@ -422,9 +483,18 @@ export function SatelliteSkyLayer({
   playbackRateRef.current = playbackRate;
   const uesRef = useRef(ues);
   uesRef.current = ues;
+  const rosterBudgetRef = useRef(
+    profile.constellation.activeSatellitesInWindow ??
+    profile.constellation.satellitesPerPlane ?? 55,
+  );
+  rosterBudgetRef.current =
+    profile.constellation.activeSatellitesInWindow ??
+    profile.constellation.satellitesPerPlane ?? 55;
 
-  const displayCount =
-    profile.constellation.activeSatellitesInWindow ?? DEFAULT_DISPLAY_COUNT;
+  // VISUAL-ONLY: rendering slot budget is separate from simulation active window.
+  // Use DEFAULT_DISPLAY_COUNT (80) so every concurrent pass gets a slot,
+  // preventing mid-sky appearance from late slot assignment.
+  const displayCount = DEFAULT_DISPLAY_COUNT;
 
   const renderPositionsRef = useRef<Map<number, [number, number, number]>>(new Map());
 
@@ -450,6 +520,7 @@ export function SatelliteSkyLayer({
         simTimeRef={simTimeRef}
         playbackRateRef={playbackRateRef}
         uesRef={uesRef}
+        rosterBudgetRef={rosterBudgetRef}
         minElevationDeg={profile.constellation.minElevationDeg}
         displayCount={displayCount}
         renderPositionsRef={renderPositionsRef}
