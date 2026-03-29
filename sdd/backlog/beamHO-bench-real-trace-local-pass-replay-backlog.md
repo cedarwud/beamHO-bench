@@ -2,7 +2,7 @@
 
 **Version:** 0.1.0
 **Date:** 2026-03-16
-**Status:** Backlog Draft / Not Active Pending
+**Status:** Backlog Draft / Deferred
 
 ---
 

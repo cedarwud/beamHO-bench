@@ -1,6 +1,6 @@
 # beamHO-bench — SDD Implementation Status
 
-**Date:** 2026-03-15
+**Date:** 2026-03-19
 **Status:** v2 Core Scope Complete + Observer-Sky Pass-Conversion Layer Complete (OSPC closure-tracked)
 
 ---
@@ -37,7 +37,9 @@ Deferred items remain out of active scope:
 2. RSMA soft-HO and broad large-scale/multi-paper DRL fusion, deferred by BG-6 governance.
 
 Active pending items (implementation open):
-1. `sdd/pending/beamHO-bench-real-trace-local-pass-replay-sdd.md` (RTLP) — promoted 2026-03-16; epoch contract, startup bootstrap, demo-loop mode, and RTLP-1–6 tests implemented; D2 (observer-local pass filtering in sync script) and D7 (traceability/manifest) remain open.
+1. `sdd/pending/beamHO-bench-beam-layout-sdd.md` (BL) — opened 2026-03-15; beam-layout / beam-visualization design-spec updated 2026-03-18; implementation remains open.
+2. `sdd/pending/beamHO-bench-real-trace-local-pass-replay-sdd.md` (RTLP) — promoted 2026-03-16; epoch contract, startup bootstrap, demo-loop mode, and RTLP-1–6 tests implemented; D2 (observer-local pass filtering in sync script) and D7 (traceability/manifest) remain open.
+3. `sdd/pending/beamHO-bench-observer-sky-handover-presentation-sdd.md` (OSHP) — opened 2026-03-19; independent package for central-readable handover-event presentation, mode separation, and event-legibility gates; implementation not started.
 
 ---
 

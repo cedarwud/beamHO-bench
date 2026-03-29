@@ -72,14 +72,14 @@ interface RealTraceScenarioOptions {
   observerLon?: number;
   /**
    * Replay mode: 'research-default' (default) or 'demo-loop'.
-   * Source: SDD RTLP §4.4 — research-default is the normative path.
+   * Normative note: the RTLP SDD treats research-default as the primary mode.
    */
   replayMode?: RealTraceReplayMode;
   /**
    * When true, apply bootstrap offset from fixture metadata to the initial
    * simulation epoch so the first frame starts at the most observer-readable
    * point in the replay window.
-   * Source: SDD RTLP §4.3.
+   * Normative note: bootstrap behavior follows the RTLP SDD replay bootstrap rule.
    */
   applyBootstrap?: boolean;
   /**

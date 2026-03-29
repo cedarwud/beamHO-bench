@@ -34,7 +34,7 @@ export interface OrbitCatalog {
   /**
    * Fixture-defined replay window start (UTC ms).
    * Deterministic for the same fixture; independent of wall-clock date.
-   * Source: SDD RTLP §4.1 epoch contract.
+   * Normative note: aligned with the RTLP SDD epoch contract.
    */
   replayWindowStartUtcMs: number;
   /**

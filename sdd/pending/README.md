@@ -1,6 +1,6 @@
 # Pending SDD Workspace
 
-This folder is intentionally narrow. It currently holds only the active corrective workspace item.
+This folder is intentionally narrow. It currently holds only active workspace items.
 
 Status ownership:
 1. lifecycle truth is maintained in `sdd/completed/beamHO-bench-implementation-status.md`
@@ -11,6 +11,8 @@ Status ownership:
 `beamHO-bench-beam-layout-sdd.md` — Active Pending (2026-03-15 opened; 2026-03-18 design-spec update complete, implementation open)
 
 `beamHO-bench-real-trace-local-pass-replay-sdd.md` — Active Pending (2026-03-16 promoted from backlog; D1/D3/D4/D5/D6 implemented; D2/D7 open)
+
+`beamHO-bench-observer-sky-handover-presentation-sdd.md` — Active Pending (2026-03-19 opened; design-spec only, implementation not started)
 
 Notes:
 1. `beamHO-bench-observer-sky-pass-conversion-sdd.md` closed on 2026-03-15 — moved to `sdd/completed/implemented-specs/`.

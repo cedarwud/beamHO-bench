@@ -52,24 +52,24 @@
       "artifactSha256": "c21f6621ab058e214f2832e9ae41b0fe77c908ce45a6d837f9ae6bca786df8c0"
     },
     {
-      "sourceId": "ASSUME-LINK-SYSTEM-LOSS-DB",
-      "type": "assumption",
-      "title": "Link Budget Aggregate System Loss",
-      "locator": "channel.systemLossDb",
-      "year": 2026,
-      "canonicalUrl": "urn:assumption:link-system-loss-db",
-      "licenseNote": "Project assumption registry entry for traceability.",
-      "note": "Used when paper/standard does not provide a single aggregate implementation loss term."
+      "sourceId": "PAP-2022-SENSORS-BH-TABLE3-LOSSES",
+      "type": "paper",
+      "title": "PAP-2022-SENSORS-BH Table 3 — Implementation Losses",
+      "locator": "Table 3: L_feeder = 0.5 dB (feeder/cable loss); L_pointing = 2.0 dB (pointing/beam alignment loss); total = 2.5 dB",
+      "year": 2022,
+      "canonicalUrl": "https://doi.org/10.3390/s22239304",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF.",
+      "note": "systemLossDb = L_feeder + L_pointing = 0.5 + 2.0 = 2.5 dB. These are hardware implementation losses in the satellite TX chain, distinct from path loss. Prior value of 70 dB was an uncalibrated fudge factor that rendered A4 events physically unreachable."
     },
     {
-      "sourceId": "ASSUME-RX-NOISE-FIGURE-DB",
-      "type": "assumption",
-      "title": "Receiver Noise Figure",
-      "locator": "channel.noiseFigureDb",
-      "year": 2026,
-      "canonicalUrl": "urn:assumption:rx-noise-figure-db",
-      "licenseNote": "Project assumption registry entry for traceability.",
-      "note": "Applied on top of thermal noise derived from kTB."
+      "sourceId": "STD-3GPP-TR38.811-TABLE-4.4-1",
+      "type": "standard",
+      "title": "3GPP TR 38.811 Table 4.4-1 — UE Noise Figure",
+      "locator": "Table 4.4-1: handheld UE NF = 9 dB; laptop/VSAT NF = 5 dB",
+      "year": 2020,
+      "canonicalUrl": "https://www.3gpp.org/ftp/Specs/archive/38_series/38.811/38811-f40.zip",
+      "licenseNote": "3GPP copyrighted standard; do not redistribute full text in public repo.",
+      "note": "Profiles targeting handheld UE (SLS case 9: 600 km, S-band, 2 GHz) must use NF = 9 dB. Laptop/VSAT profiles may use 5 dB."
     },
     {
       "sourceId": "ASSUME-SMALL-SCALE-PARAMS-DEFAULT",
@@ -380,6 +380,42 @@
       "canonicalUrl": "https://doi.org/10.1109/APWCS67981.2025.11151939",
       "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF.",
       "artifactSha256": "5c216b705e2600bd0c2266f8d94e8fd248d67c1e06de3edc9f72e7644f68b5d8"
+    },
+    {
+      "sourceId": "PAP-2020-BEAMHOP-DRL",
+      "type": "paper",
+      "title": "Dynamic Beam Hopping Method Based on Multi-Objective Deep Reinforcement Learning for Next Generation Satellite Broadband Systems",
+      "locator": "BH scheduling policy; beam-slot assignment; max active beams per frame (Section IV)",
+      "year": 2020,
+      "canonicalUrl": "https://doi.org/10.1109/TCOMM.2020.3041066",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF."
+    },
+    {
+      "sourceId": "PAP-2024-BEAM-MGMT-SPECTRUM",
+      "type": "paper",
+      "title": "Beam Management in Low Earth Orbit Satellite Communication With Handover Frequency Control and Satellite-Terrestrial Spectrum Sharing",
+      "locator": "EIRP density; bandwidth; FRF settings (Table I/II)",
+      "year": 2024,
+      "canonicalUrl": "https://doi.org/10.1109/TWC.2024.3382396",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF."
+    },
+    {
+      "sourceId": "PAP-2024-HOBS",
+      "type": "paper",
+      "title": "Energy-Efficient Joint Handover and Beam Switching Scheme for Multi-LEO Networks",
+      "locator": "Table I: 37 beams, 100 MHz BW, 50 dBm Pmax, γ_thr=10 dB; Table II: 20 W active / 5 W idle; SINR Eq.(4)-(6); EE=throughput/power",
+      "year": 2024,
+      "canonicalUrl": "https://doi.org/10.1109/JIOT.2024.3463241",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF."
+    },
+    {
+      "sourceId": "PAP-2026-BHFREQREUSE",
+      "type": "paper",
+      "title": "Resource Allocation in Multibeam LEO Satellite Systems Based on Beam Hopping and Frequency Reuse",
+      "locator": "BH slot scheduling; frequency reuse factor; beam activation indicator z_{s,b}^t (Section III)",
+      "year": 2026,
+      "canonicalUrl": "https://doi.org/10.1109/ACCESS.2026.3526318",
+      "licenseNote": "Use DOI/citation metadata in public repo; avoid redistributing publisher PDF."
     }
   ]
 }

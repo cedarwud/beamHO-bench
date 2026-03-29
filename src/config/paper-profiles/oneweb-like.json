@@ -86,8 +86,8 @@
     "ueGTdBPerK": -33.6,
     "ueAntennaGainDbi": 0,
     "noiseTemperatureK": 290,
-    "noiseFigureDb": 5,
-    "systemLossDb": 70
+    "noiseFigureDb": 9,
+    "systemLossDb": 2.5
   },
   "rlfStateMachine": {
     "qOutDb": -8,

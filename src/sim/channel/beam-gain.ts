@@ -17,9 +17,13 @@ import type { GainModel } from '@/config/paper-profiles/types';
 /** Gain floor in dB — pattern nulls below this are clamped. */
 const GAIN_FLOOR_DB = -20; // ASSUME-BEAM-GAIN-FLOOR-DB
 
-/** α scaling constant: first zero of 2·J₁(u)/u occurs at u ≈ 3.8317,
- *  and 3dB point is at u ≈ 2.07123. */
-const ALPHA_3DB = 2.07123;
+/** α scaling constant for the normalized Airy pattern [2·J₁(u)/u]².
+ *  The -3 dB point occurs at u ≈ 1.613741. */
+const ALPHA_3DB_BESSEL_J1 = 1.6137411963697343;
+/** For [2·J₁(u)/u + 36·J₃(u)/u³], the boresight envelope tends to 1.75,
+ *  so we normalize by 1.75 and use the corresponding -3 dB point. */
+const BESSEL_J1_J3_BORESIGHT_ENVELOPE = 1.75;
+const ALPHA_3DB_BESSEL_J1_J3 = 1.835239914925094;
 
 // ── Taylor-series Bessel functions ──
 
@@ -72,7 +76,11 @@ export function computeBeamGainDb(
 
   const sinTheta = Math.sin((offAxisDeg * Math.PI) / 180);
   const sin3dB = Math.sin((beamwidth3dBDeg * Math.PI) / 180);
-  const alpha = ALPHA_3DB * sinTheta / Math.max(sin3dB, 1e-12);
+  const alphaScale =
+    gainModel === 'bessel-j1'
+      ? ALPHA_3DB_BESSEL_J1
+      : ALPHA_3DB_BESSEL_J1_J3;
+  const alpha = alphaScale * sinTheta / Math.max(sin3dB, 1e-12);
 
   if (alpha < 1e-9) {
     return 0; // effectively at boresight
@@ -85,10 +93,11 @@ export function computeBeamGainDb(
     const envelope = 2 * besselJ1(alpha) / alpha;
     normalizedPattern = envelope * envelope;
   } else {
-    // bessel-j1-j3: G(θ) = [2·J₁(α)/α + 36·J₃(α)/α³]²
+    // bessel-j1-j3: normalize by the boresight envelope limit (1.75)
+    // so the pattern remains 0 dB at the center continuously.
     const term1 = 2 * besselJ1(alpha) / alpha;
     const term2 = 36 * besselJ3(alpha) / (alpha * alpha * alpha);
-    const envelope = term1 + term2;
+    const envelope = (term1 + term2) / BESSEL_J1_J3_BORESIGHT_ENVELOPE;
     normalizedPattern = envelope * envelope;
   }
 

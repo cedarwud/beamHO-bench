@@ -85,8 +85,8 @@
     "ueGTdBPerK": -33.6,
     "ueAntennaGainDbi": 0,
     "noiseTemperatureK": 290,
-    "noiseFigureDb": 5,
-    "systemLossDb": 70
+    "noiseFigureDb": 9,
+    "systemLossDb": 2.5
   },
   "rlfStateMachine": {
     "qOutDb": -8,
@@ -131,7 +131,7 @@
       "candidateSatelliteLimit": 7,
       "a3OffsetDb": 2,
       "a3TttMs": 0,
-      "a4ThresholdDbm": -101,
+      "a4ThresholdDbm": -98,
       "homDb": 2,
       "mtsSec": 1,
       "timerAlphaOptions": [0.8, 0.85, 0.9]

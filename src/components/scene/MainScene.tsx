@@ -4,8 +4,8 @@ import { AdaptiveDpr, Stats } from '@react-three/drei';
 import { NTPUScene } from './NTPUScene';
 import { UAV } from './UAV';
 import { SatelliteSkyLayer } from './SatelliteSkyLayer';
-import { BeamSkyLayer } from './BeamSkyLayer';
 import { BeamFootprint } from '@/components/sim/BeamFootprint';
+import { BeamPrototypeLayer } from '@/components/sim/BeamPrototypeLayer';
 import { ObserverSkyCameraRig } from './ObserverSkyCameraRig';
 import { ConnectionLegend, type LinkVisibility } from '../sim/ConnectionLegend';
 import { KpiHUD } from '../sim/KpiHUD';
@@ -66,6 +66,8 @@ const PROFILE_LABELS: Record<CanonicalProfileId, string> = {
 
 const VIEW_MODE_OPTIONS = listObserverSkyCompositions();
 
+type BeamVisualMode = 'research-default' | 'prototype-cones-sinr';
+
 export function MainScene() {
   const [selectedProfileId, setSelectedProfileId] =
     useState<CanonicalProfileId>('starlink-like');
@@ -73,6 +75,8 @@ export function MainScene() {
     useState<RuntimeBaseline>('max-rsrp');
   const [selectedViewMode, setSelectedViewMode] =
     useState<ObserverSkyCompositionModeId>('observer-sky-primary');
+  const [beamVisualMode, setBeamVisualMode] =
+    useState<BeamVisualMode>('prototype-cones-sinr');
   const [researchSelection, setResearchSelection] = useState<ResearchParameterSelection>(() =>
     createDefaultResearchSelection(loadPaperProfile('starlink-like')),
   );
@@ -91,9 +95,12 @@ export function MainScene() {
     () => loadPaperProfile(selectedProfileId),
     [selectedProfileId],
   );
+  const effectiveViewMode = beamVisualMode === 'prototype-cones-sinr'
+    ? 'campus-overview'
+    : selectedViewMode;
   const selectedViewComposition = useMemo(
-    () => getObserverSkyComposition(selectedViewMode),
-    [selectedViewMode],
+    () => getObserverSkyComposition(effectiveViewMode),
+    [effectiveViewMode],
   );
   const selectedProfileLabel = PROFILE_LABELS[selectedProfileId];
   const researchRuntime = useMemo(
@@ -274,6 +281,18 @@ export function MainScene() {
                     <option value="oneweb-like">OneWeb TLE</option>
                   </select>
                 </label>
+                <label className="sim-hud__select">
+                  Beam Layer
+                  <select
+                    value={beamVisualMode}
+                    onChange={(event) =>
+                      setBeamVisualMode(event.target.value as BeamVisualMode)
+                    }
+                  >
+                    <option value="research-default">Research Default</option>
+                    <option value="prototype-cones-sinr">Prototype Cones + SINR</option>
+                  </select>
+                </label>
               </div>
               <ResearchParameterPanel
                 profile={profile}
@@ -357,19 +376,24 @@ export function MainScene() {
                 trajectoryCache={trajectoryCache}
                 renderPositionsOut={satRenderPositionsRef}
               />
-              <BeamFootprint
-                satellites={displayedSnapshot.satellites}
-                gainModel={profile.beam.gainModel}
-                ues={displayedSnapshot.ues}
-                beamScheduler={displayedSnapshot.beamScheduler}
-                renderPositionsRef={satRenderPositionsRef}
-              />
-              <BeamSkyLayer
-                renderPositionsRef={satRenderPositionsRef}
-                ues={displayedSnapshot.ues}
-                gainModel={profile.beam.gainModel}
-                beamAngularRadiusDeg={profile.beam.beamwidth3dBDeg}
-              />
+              {beamVisualMode === 'research-default' ? (
+                <BeamFootprint
+                  satellites={displayedSnapshot.satellites}
+                  gainModel={profile.beam.gainModel}
+                  frequencyReuse={profile.beam.frequencyReuse}
+                  beamScheduler={displayedSnapshot.beamScheduler}
+                  focusWorldXz={[NTPU_CONFIG.uav.position[0], NTPU_CONFIG.uav.position[2]]}
+                />
+              ) : null}
+              {beamVisualMode === 'prototype-cones-sinr' ? (
+                <BeamPrototypeLayer
+                  profile={profile}
+                  satellites={displayedSnapshot.satellites}
+                  beamScheduler={displayedSnapshot.beamScheduler}
+                  renderPositionsRef={satRenderPositionsRef}
+                  focusWorldXz={[NTPU_CONFIG.uav.position[0], NTPU_CONFIG.uav.position[2]]}
+                />
+              ) : null}
             </Suspense>
 
             {/* 動態 DPR 調整 */}

@@ -2,6 +2,17 @@
 
 This file is the repo-local workflow entrypoint for agents working inside `beamHO-bench/`.
 
+## 0. Current Repo Role
+
+1. `beamHO-bench` is currently retained as a donor/reference project inside the broader `papers` workspace.
+2. It is not the active primary implementation target; `ntn-sim-core` now holds that role.
+3. Only use this workflow when the task explicitly requires:
+   - donor inspection
+   - parity lookup
+   - selective backport
+   - direct fixes inside `beamHO-bench`
+4. Do not let `beamHO-bench` local conventions override the active authority set for `ntn-sim-core`.
+
 ## 1. Authority Order
 
 When instructions conflict, use this order:

@@ -65,10 +65,10 @@
       "ASSUME-SMALL-SCALE-REALISM-OPTIONS"
     ],
     "channel.noiseFigureDb": [
-      "ASSUME-RX-NOISE-FIGURE-DB"
+      "STD-3GPP-TR38.811-TABLE-4.4-1"
     ],
     "channel.systemLossDb": [
-      "ASSUME-LINK-SYSTEM-LOSS-DB"
+      "PAP-2022-SENSORS-BH-TABLE3-LOSSES"
     ],
     "handover.algorithmFidelity": [
       "ASSUME-HANDOVER-FIDELITY-FULL"

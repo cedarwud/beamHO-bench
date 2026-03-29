@@ -117,26 +117,59 @@ Current repo status after v0.2.0 partial implementation:
    - `secondaryBeamId`
    - `choPreparedBeamId`
 
-### 5.3 Per-beam 3D cone rendering (NEW)
+### 5.3 Scene-focus serving-satellite rendering (REVISED)
 
-Each **active** beam shall be rendered as a translucent open-ended cone from the satellite's sky render position to the beam's ground footprint center.
+Current frontend beam rendering shall be constrained to the satellite that actually covers the scene focus point.
 
-1. **Granularity**: one cone per beam, not one cone per satellite.
-2. **Cone scope**: only beams that are active — determined by:
-   - In coupled scheduler mode: `beamScheduler.states` where `powerClass === 'active'`
-   - In uncoupled mode: beams with `connectedUeIds.length > 0`, or all beams of displayed satellites if UE data is unavailable
-3. **Cone geometry**: open-ended (`openEnded: true`), 8 radial segments, apex at satellite position, base radius = `beam.radiusWorld`.
-4. **Cone material**:
-   - `transparent: true`
-   - `depthWrite: false`
-   - `side: DoubleSide`
-   - `blending: AdditiveBlending` (see §5.5)
-   - Opacity: `0.3` for serving beam, `0.12` for others (`VISUAL-ONLY`)
-5. **Center line**: each cone includes a line from satellite to beam ground center.
-   - Serving beam: solid line, lineWidth 3
-   - Others: dashed line, lineWidth 1.5
-6. **Orientation**: cone apex points at the satellite sky position; base faces the ground footprint. Computed via quaternion from default +Y axis to the satellite→ground direction vector.
-7. **Position tracking**: cones must update each frame from `renderPositionsRef` (satellite sky render positions), using `useFrame` imperative updates for performance.
+1. **No sky-to-ground cone rendering** in the default frontend path.
+   - Reason: the previous cone visualization visually exaggerated off-nadir steering and misread as satellites arbitrarily aiming at the scene center.
+2. **Scene focus point** is the ground-projected `UAV`/scene-center anchor in the 3D scene (`VISUAL-ONLY`).
+3. **Serving-beam selection for visualization**:
+   - inspect visible beams only
+   - a beam qualifies only if its ground footprint contains the scene focus point
+   - among qualifying beams, choose the one with the smallest normalized center offset `distance_to_focus / beam.radiusWorld`
+   - tie-breaker: higher satellite elevation
+4. **Display scope**:
+   - render beam footprints only for the parent satellite of the selected serving beam
+   - if no visible beam covers the focus point, render no beam footprint layer
+5. **Highlight semantics**:
+   - the selected serving beam is rendered brighter with a solid outer boundary
+   - non-serving beams of the same satellite are rendered more faintly
+6. This selection is **frontend-only** and does **not** change runtime HO/KPI semantics.
+
+### 5.3.1 Explicit non-default prototype cone + SINR mode (NEW)
+
+The repo may provide a **user-opt-in prototype mode** for faster visual iteration, but it must remain outside the research-default path.
+
+1. **Mode boundary**:
+   - default mode remains the §5.3 scene-focus footprint path
+   - prototype mode must be explicitly labeled `prototype` / `non-default`
+   - prototype mode must never silently replace the default beam layer
+   - when the explicit prototype toggle is enabled, prototype mode may replace the default footprint renderer for that session so the visual language is clearly distinct
+   - prototype mode may also switch to a beam-readable non-primary camera composition while the research-default mode remains bound to the accepted observer-sky primary composition
+2. **Prototype cone scope**:
+   - reuse the same scene-focus serving-satellite selection from §5.3
+   - render per-beam cones only for the selected satellite
+   - cone apex uses the current satellite sky render position from the observer-sky display layer
+   - cone base uses the beam's existing `centerWorld` / `radiusWorld` geometry from SimCore
+   - prototype mode owns its own ground ring, center line, and compact beam label rendering rather than inheriting the default footprint layer
+   - prototype mode may render a shortened near-ground beam shell plus a separate guide line to the true sky satellite position when full-length cones are unreadable in observer-sky view
+   - prototype mode may remap beam targets into a scene-focus-centered visual cluster to approximate leo-style multi-beam layout, provided the mapping is explicitly visual-only and radio metrics still come from the true SimCore beam state
+3. **Prototype SINR display**:
+   - SINR/RSRP labels or HUD values must come from the existing link-budget path
+   - the display probe is the scene-focus point (`UAV` ground projection) unless a later SDD promotes a different probe definition
+   - renderer geometry must not be used to derive radio metrics
+4. **Runtime isolation**:
+   - prototype mode is display-only
+   - it must not change HO candidate sets, scheduler state, KPI accumulation, or UE attachment semantics
+5. **Prototype-only rendering allowances** (`VISUAL-ONLY`):
+   - cone opacity, segment count, line style, label placement, panel layout, and depth-test policy
+   - prototype mode may lift the visual beam target slightly above the terrain to preserve readability in observer-sky view, as long as radio metrics still come from SimCore geometry
+   - prototype mode may use an explicit visual cone/ring radius multiplier, separated from physical `radiusWorld`, when the physical beam radius is too small to read in the observer-sky composition
+   - when a scheduler sleep beam is present, prototype mode may dim or ghost the cone, but must not rewrite scheduler state
+6. **Failure behavior**:
+   - if no visible beam covers the scene focus point, prototype mode renders nothing
+   - if no valid link-budget sample exists for a beam, prototype mode may still draw the beam geometry but must display radio metrics as unavailable rather than fabricating values
 
 ### 5.4 Frequency-reuse color mapping (NEW)
 
@@ -174,13 +207,11 @@ This keeps frequency reuse visible at all times while HO state is still distingu
 
 ### 5.6 Display-set policy (revised)
 
-1. Rendering all beams of all 55 runtime satellites is not feasible (55 × 16 = 880 beams).
-2. The display set is capped at `MAX_DISPLAY_SATELLITES` (default: 5, `VISUAL-ONLY`).
-3. Selection priority:
-   a. Satellites with HO-state beams (serving/secondary/CHO-prepared) — always included
-   b. Remaining budget filled by highest-elevation visible satellites
-4. Within each displayed satellite, **cone rendering** is further limited to active beams only (see §5.3.2).
-5. **Ground footprint rings** may render for all beams of displayed satellites (lightweight geometry, no performance concern).
+1. The current beam layer does **not** render all visible satellites.
+2. The display set is a single satellite:
+   - the visible satellite whose beam footprint covers the scene focus point under §5.3
+3. The beam layer shall therefore not collapse to HO candidate satellites; it collapses only to the single scene-focus serving satellite for this visual mode.
+4. If no visible beam covers the scene focus point, the beam layer stays empty rather than inventing a fallback beam.
 
 ### 5.7 Scheduler coupling semantics (unchanged from v0.2.0)
 
@@ -224,16 +255,19 @@ The following remain frontend-only and must not be treated as paper-derived phys
 
 | Gate | Criterion |
 |---|---|
-| BL-1 | Per-beam cones render from satellite sky position to individual `beam.centerWorld`, not one aggregate cone per satellite |
-| BL-2 | Cone count is limited to active beams only (scheduler-active or UE-connected), not all 16/19 beams |
-| BL-3 | Beam base color follows `profile.beam.frequencyReuse`: single color for `FR1`, 4-color cycle for `reuse-4` |
-| BL-4 | HO state (serving/secondary/prepared) is an opacity/line-style overlay, not the base color |
-| BL-5 | `AdditiveBlending` is used on cones and ground rings so overlapping beams produce visible brightness increase |
-| BL-6 | Display satellite budget caps at `MAX_DISPLAY_SATELLITES` (default 5); HO-state satellites always included |
+| BL-1 | Default frontend beam rendering does not use satellite-to-ground cones |
+| BL-2 | Beam visibility requires actual scene-focus footprint containment, not generic HO-state membership |
+| BL-3 | Only the selected scene-focus serving satellite renders beam footprints |
+| BL-4 | The selected serving beam is brighter/solid-lined than sibling beams of the same satellite |
+| BL-5 | Beam base color follows `profile.beam.frequencyReuse`: single color for `FR1`, 4-color cycle for `reuse-4` |
+| BL-6 | `AdditiveBlending` is used on ground rings so overlapping rings within the serving satellite remain legible |
 | BL-7 | Coupled scheduler mode dims sleep beams from `beamScheduler.states`; uncoupled mode does not fabricate states |
 | BL-8 | Ground footprint rings retain gain-model-aware bands from `resolveBeamFootprintBands()` |
 | BL-9 | No Earth-Fixed Cell grid is introduced (handover model, not beam-hopping model) |
 | BL-10 | `npm run lint && npm run test:sim && npm run build` pass |
+| BL-P1 | Any cone + SINR visualization is behind an explicit non-default prototype mode toggle |
+| BL-P2 | Prototype SINR display is sourced from the existing link-budget path, not renderer-derived geometry |
+| BL-P3 | With prototype mode disabled, default beam behavior remains the §5.3 scene-focus footprint path |
 
 ---
 
@@ -241,10 +275,12 @@ The following remain frontend-only and must not be treated as paper-derived phys
 
 | File | Action |
 |---|---|
-| `src/components/sim/BeamFootprint.tsx` | **Rewrite** — per-beam cones (Drei `Cone` + `Line`), frequency-reuse colors, `AdditiveBlending` |
+| `src/components/sim/BeamFootprint.tsx` | **Rewrite** — scene-focus serving-satellite-only ground footprints; no sky-to-ground cones |
+| `src/components/sim/BeamPrototypeLayer.tsx` | **New** — non-default per-beam cone overlay + focus-probe SINR display |
+| `src/viz/satellite/beam-visual-selection.ts` | **New** — scene-focus serving-beam selection helper |
 | `src/components/sim/beam-footprint-gain.ts` | **No change** — gain band profiles are correct |
-| `src/components/scene/MainScene.tsx` | **Minor** — pass `frequencyReuse` prop to `BeamFootprint` |
-| `src/components/scene/BeamSkyLayer.tsx` | **No change** — remains secondary observer-sky cue |
+| `src/components/scene/MainScene.tsx` | **Minor** — wire scene-focus serving-beam rendering, explicit prototype mode toggle, and keep research-default as the default beam path |
+| `src/components/scene/BeamSkyLayer.tsx` | **No change** — retained on disk but not mounted in the default scene path |
 | `src/sim/scenarios/common/beam-layout.ts` | **No change** — beam geometry is correct |
 
 ---

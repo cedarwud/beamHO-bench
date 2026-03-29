@@ -782,8 +782,8 @@ export const RESEARCH_PARAMETER_SPECS: ResearchParameterSpec[] = [
     label: 'Active Beams',
     description: 'Beam hopping 每時槽最大活躍波束數。',
     sourceIds: [
-      'PAP-2020-BHHOPPING',
-      'PAP-2024-BHFREQREUSE',
+      'PAP-2020-BEAMHOP-DRL',
+      'PAP-2026-BHFREQREUSE',
       'ASSUME-BEAM-SCHEDULER-WINDOW-CONFIG',
     ],
     options: [
